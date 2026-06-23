@@ -48,7 +48,7 @@ Select a network → click **Calculate** → predictions run for all objects in 
 
 From the Results section of a network:
 - **Open** — display the prediction result layer on the map
-- **Export** — save result as GeoTIFF raster
+- **Export** — save result as [GeoTIFF](https://www.google.com/search?q=GeoTIFF+raster+geospatial+format) raster
 - Toggle result layers on/off
 
 ## Network Publishing Settings
@@ -56,7 +56,7 @@ From the Results section of a network:
 Configure automatic publishing when the network is recalculated:
 1. Open the calculation result layer → configure colour band values
 2. Enable **auto-publish** in publishing settings
-3. When the network recalculates, results are automatically published to ArcGIS Portal as a feature layer
+3. When the network recalculates, results are automatically published to [ArcGIS Portal](https://www.google.com/search?q=ArcGIS+platform)+Portal+enterprise+GIS) as a feature layer
 
 ## Editing a Network
 

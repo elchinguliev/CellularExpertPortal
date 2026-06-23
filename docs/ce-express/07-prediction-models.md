@@ -17,37 +17,37 @@ Prediction models define how **signal propagation losses** are calculated across
 
 ## How CE Evaluates Propagation
 
-Instead of applying a single formula everywhere, CE Express evaluates the **radio visibility condition** between each transmitter and each receiver pixel, then applies the most appropriate loss model:
+Instead of applying a single formula everywhere, [CE Express](https://www.google.com/search?q=Cellular+Expert+CE+Express+web+platform) evaluates the **radio visibility condition** between each transmitter and each receiver pixel, then applies the most appropriate loss model:
 
 | Visibility Condition | Abbreviation | Description |
 |---------------------|--------------|-------------|
 | Line-of-Sight | LOS | Clear unobstructed path |
-| Near Line-of-Sight | NLOS1 | Marginally obstructed (Fresnel zone partially blocked) |
+| Near Line-of-Sight | NLOS1 | Marginally obstructed ([Fresnel zone](https://www.google.com/search?q=Fresnel+zone+radio+link+clearance) partially blocked) |
 | Non-Line-of-Sight | NLOS | Fully obstructed path |
 
-Radio visibility is evaluated using: DTM (terrain), Obstacles, and Clutter path profiles.
+Radio visibility is evaluated using: [DTM](https://www.google.com/search?q=DTM+Digital+Terrain+Model+elevation) (terrain), Obstacles, and Clutter path profiles.
 
-This approach enables **near-deterministic modeling** — terrain, obstacles, and clutter are explicitly considered for every calculation pixel.
+This approach enables **near-deterministic modeling** — terrain, obstacles, and [clutter](https://www.google.com/search?q=clutter+land+use+classification+radio+planning) are explicitly considered for every calculation pixel.
 
 ## Available Models
 
-### Okumura-Hata
+### [Okumura-Hata](https://www.google.com/search?q=Okumura-Hata+propagation+model+radio+frequency)
 
 - **Type:** Empirical
 - **Frequency range:** 150 – 1500 MHz
 - **Environments:** Urban, Suburban, Rural, Open
 - **Use case:** Macro cells, large coverage areas, legacy 2G/3G networks
-- **Data needed:** DEM + Clutter (optional)
+- **Data needed:** [DEM](https://www.google.com/search?q=DEM+Digital+Elevation+Model+terrain) + Clutter (optional)
 
-### COST-231 Hata
+### [COST-231 Hata](https://www.google.com/search?q=COST-231+Hata+propagation+model)
 
 - **Type:** Empirical (extension of Okumura-Hata)
 - **Frequency range:** Up to 2 GHz
 - **Environments:** Urban, Suburban
-- **Use case:** 3G/UMTS macro planning
+- **Use case:** 3G/[UMTS](https://www.google.com/search?q=UMTS+3G+mobile+network) macro planning
 - **Data needed:** DEM + Clutter
 
-### COST-231 Walfisch-Ikegami
+### [COST-231 Walfisch-Ikegami](https://www.google.com/search?q=COST-231+Walfisch-Ikegami+propagation+model+urban)
 
 - **Type:** Semi-empirical (considers building geometry)
 - **Frequency range:** 800 MHz – 2 GHz
@@ -55,7 +55,7 @@ This approach enables **near-deterministic modeling** — terrain, obstacles, an
 - **Use case:** Dense urban environments, small cells
 - **Data needed:** DEM + Clutter + Building data (heights)
 
-### SPM (Standard Propagation Model)
+### [SPM](https://www.google.com/search?q=SPM+Standard+Propagation+Model+radio) (Standard Propagation Model)
 
 - **Type:** Configurable empirical
 - **Frequency range:** Wide (depends on configuration)
@@ -63,7 +63,7 @@ This approach enables **near-deterministic modeling** — terrain, obstacles, an
 - **Data needed:** DEM + Clutter
 - **Key feature:** Adjustable coefficients (K1–K6) for local tuning
 
-### Ray Tracing (3D)
+### [Ray Tracing](https://www.google.com/search?q=ray+tracing+radio+propagation+3D+model) (3D)
 
 - **Type:** Physics-based (deterministic)
 - **Accuracy:** Highest
@@ -93,7 +93,7 @@ Models can be set:
 
 Improve prediction accuracy by calibrating against real measurements:
 
-1. Import drive-test data (CSV with Lat/Lon/Signal level/Cell ID)
+1. Import drive-test data ([CSV](https://www.google.com/search?q=CSV+comma-separated+values+file+format) with Lat/Lon/Signal level/Cell ID)
 2. CE Express → **Model Tuning** tool
 3. The wizard compares predicted vs. measured values
 4. Adjusts model coefficients to minimize mean error

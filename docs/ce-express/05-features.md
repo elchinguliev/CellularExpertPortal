@@ -30,7 +30,7 @@ Click **Import features** to create objects from a file.
 
 1. Click **Import features**
 2. Select the **object type** (Site, Cell, Repeater, Mesh Node, etc.)
-3. Select or drag-and-drop your CSV or KMZ file
+3. Select or drag-and-drop your [CSV](https://www.google.com/search?q=CSV+comma-separated+values+file+format) or [KMZ](https://www.google.com/search?q=KMZ+Google+Earth+file+format) file
 4. Map columns using the **Mapping** feature if field names differ from CE format
 5. Click **Import** — objects appear on the map automatically
 
@@ -95,14 +95,14 @@ A radio sector or cell on a site.
 | Misc. loss | dB | Cable and connector losses |
 | Bandwidth | MHz | Required for 4G/5G. Use 0.015 for 2G/3G. |
 | Noise figure | dB | Required for 4G/5G |
-| Downlink duplex factor | 0–1 | For TDD (4G/5G). 0.7 = 70% DL, 30% UL. |
+| Downlink duplex factor | 0–1 | For [TDD](https://www.google.com/search?q=TDD+Time+Division+Duplex+LTE+5G) (4G/5G). 0.7 = 70% DL, 30% UL. |
 | Subcarrier spacing | kHz | Required for 4G/5G. Use 15 for 2G/3G. |
-| Tx MIMO | — | 1, 2, 4, 8, 16, 32, or 64 |
+| Tx [MIMO](https://www.google.com/search?q=MIMO+Multiple+Input+Multiple+Output+antenna) | — | 1, 2, 4, 8, 16, 32, or 64 |
 | Rx MIMO | — | 1, 2, 4, 8, 16, 32, or 64 |
 | Active antenna effect | dB | For massive MIMO. MIMO 32×32: use 6. MIMO 64×64: use 9. |
 | Cell load | % | 0–100. Higher load = lower DL throughput. |
 | Technology | — | 2G, 3G, 4G, or 5G |
-| Duplex mode | FDD/TDD | Required for 4G/5G. Use FDD for 2G/3G. |
+| Duplex mode | [FDD](https://www.google.com/search?q=FDD+Frequency+Division+Duplex+LTE)/TDD | Required for 4G/5G. Use FDD for 2G/3G. |
 | Prediction model | — | Path loss model for this cell |
 | Antenna | — | Antenna pattern from library |
 | Site ID | — | Parent site reference |
@@ -207,7 +207,7 @@ Select objects on the map, then:
 - **Move** — drag selected objects to new location → Accept to save
 - **Duplicate** — copy objects, optionally to another workspace → Accept to save
 - **Delete** — removes from map and database → Accept to confirm
-- **Publish** — publish selected features as an ArcGIS Portal feature layer (select sharing: organization/public/groups)
+- **Publish** — publish selected features as an [ArcGIS Portal](https://www.google.com/search?q=ArcGIS+platform)+Portal+enterprise+GIS) feature layer (select sharing: organization/public/groups)
 
 ---
 

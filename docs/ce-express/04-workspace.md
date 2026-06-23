@@ -14,16 +14,16 @@ related:
 
 # Workspaces
 
-A **workspace** is a project container in CE Express that holds all network objects, geodata references, and settings for a specific planning area.
+A **workspace** is a project container in [CE Express](https://www.google.com/search?q=Cellular+Expert+CE+Express+web+platform) that holds all network objects, geodata references, and settings for a specific planning area.
 
 ## What a Workspace Contains
 
 - Network objects (sites, cells, links, repeaters, etc.)
-- Geodata set reference (terrain, clutter, buildings)
-- Coordinate system (EPSG code)
-- Visualization layers (external services, GIS layers)
+- Geodata set reference (terrain, [clutter](https://www.google.com/search?q=clutter+land+use+classification+radio+planning), buildings)
+- Coordinate system ([EPSG](https://www.google.com/search?q=EPSG+coordinate+reference+system+code) code)
+- Visualization layers (external services, [GIS](https://www.google.com/search?q=GIS+Geographic+Information+System) layers)
 - User group assignments
-- Calculation settings (EIRP, height references, clutter use)
+- Calculation settings ([EIRP](https://www.google.com/search?q=EIRP+Effective+Isotropic+Radiated+Power), height references, clutter use)
 
 Workspaces can be:
 - Assigned to one or multiple user groups
@@ -49,7 +49,7 @@ Click **New workspace** in the Workspaces panel.
 | Field | Description |
 |-------|-------------|
 | **Workspace name** | Unique workspace identifier |
-| **Coordinate system EPSG** | EPSG code of the projected coordinate system. Default: 4326 (WGS84). **Use a projected system (UTM, national grid) for accurate distance calculations.** |
+| **Coordinate system EPSG** | EPSG code of the projected coordinate system. Default: 4326 ([WGS84](https://www.google.com/search?q=WGS84+geographic+coordinate+system+EPSG+4326)). **Use a projected system ([UTM](https://www.google.com/search?q=UTM+Universal+Transverse+Mercator+projection), national grid) for accurate distance calculations.** |
 | **Group** | Group workspaces by setting the same value for multiple workspaces |
 | **Locked** | Prevents feature editing. Only admins can unlock. Use for archiving. |
 
@@ -83,7 +83,7 @@ Add external map layers:
 
 | Field | Description |
 |-------|-------------|
-| **URL / Portal ItemID** | Direct URL or ArcGIS Portal Item ID |
+| **URL / Portal ItemID** | Direct URL or [ArcGIS Portal](https://www.google.com/search?q=ArcGIS+Portal+enterprise+GIS) Item ID |
 | **Title** | Layer name in the layer list |
 | **Opacity** | Layer transparency (0–100%) |
 | **Visible** | Show/hide on load |

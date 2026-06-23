@@ -11,7 +11,7 @@ related:
   - geodata-requirements
 ---
 
-# Line of Sight and Profile Analysis
+# [Line of Sight](https://www.google.com/search?q=Line+of+Sight+LOS+radio+propagation) and Profile Analysis
 
 The **Profile** tool computes terrain cross-sections and checks whether two points have a clear radio path.
 
@@ -23,7 +23,7 @@ Click **Profile** in the left toolbar.
 
 1. Click **Draw Profile** in the tool panel
 2. Click two points on the map (start and end)
-3. CE Express computes the terrain profile using the loaded DEM
+3. [CE Express](https://www.google.com/search?q=Cellular+Expert+CE+Express+web+platform) computes the terrain profile using the loaded [DEM](https://www.google.com/search?q=DEM+Digital+Elevation+Model+terrain)
 
 Alternatively:
 - Select two existing network objects → Profile is drawn between them
@@ -35,7 +35,7 @@ Configure before drawing:
 
 | Property | Description |
 |----------|-------------|
-| **Frequency (MHz)** | Affects Fresnel zone radius calculation |
+| **Frequency (MHz)** | Affects [Fresnel zone](https://www.google.com/search?q=Fresnel+zone+radio+link+clearance) radius calculation |
 | **K-factor** | Earth curvature correction. Default: 4/3 (standard atmosphere). Use 2/3 for worst-case diffraction. |
 | **Antenna height A** | Height at start point (m AGL) |
 | **Antenna height B** | Height at end point (m AGL) |
@@ -87,7 +87,7 @@ Configure display options:
 
 ## Import
 
-Import profile endpoints from coordinates (CSV) or from existing network objects.
+Import profile endpoints from coordinates ([CSV](https://www.google.com/search?q=CSV+comma-separated+values+file+format)) or from existing network objects.
 
 ## Related Topics
 

@@ -10,23 +10,23 @@ related:
   - ce-express-admin-workspace
 ---
 
-# CE Express Installation Guide
+# [CE Express](https://www.google.com/search?q=Cellular+Expert+CE+Express+web+platform) Installation Guide
 
 ## Prerequisites
 
 Before installing CE Express, ensure the following are installed and configured:
 
-### 1. ArcGIS Server
+### 1. [ArcGIS](https://www.google.com/search?q=ArcGIS+Esri+GIS+platform) Server
 - ArcGIS Server 10.9.1 or later
 - Configured and licensed
 - Site created and accessible
 
-### 2. PostgreSQL
+### 2. [PostgreSQL](https://www.google.com/search?q=PostgreSQL+database)
 - PostgreSQL 13+ with **PostGIS** extension installed
 - Database user with CREATE privileges
 - Remote connections enabled (pg_hba.conf)
 
-### 3. PHP Server
+### 3. [PHP](https://www.google.com/search?q=PHP+server-side+scripting+language) Server
 - PHP 7.4 or later
 - Extensions: `pdo_pgsql`, `curl`, `json`, `mbstring`
 
@@ -85,7 +85,7 @@ Run the CE Express database setup script:
 
 ### Step 6: Enable SSL (Recommended)
 
-Configure your web server to enforce HTTPS:
+Configure your web server to enforce [HTTPS](https://www.google.com/search?q=HTTPS+SSL+TLS+secure+protocol):
 
 **IIS:** Enable SSL certificate → Require SSL in site bindings
 
@@ -99,7 +99,7 @@ server {
 }
 ```
 
-### Step 7: Configure ArcGIS Portal Publishing (Optional)
+### Step 7: Configure [ArcGIS Portal](https://www.google.com/search?q=ArcGIS+Portal+enterprise+GIS) Publishing (Optional)
 
 To allow CE Express to publish layers to ArcGIS Portal:
 1. Create a dedicated ArcGIS Portal service account for CE Express
@@ -112,7 +112,7 @@ For password reset and ticket notifications:
 1. Edit `ce_express_config.php` → set `$smtp_host`, `$smtp_port`, `$smtp_user`, `$smtp_pass`
 2. Test: CE Express → Settings → Send test email
 
-### Step 9: Create Database Structure (Inventory3D)
+### Step 9: Create Database Structure ([Inventory3D](https://www.google.com/search?q=Cellular+Expert+Inventory3D+asset+management))
 
 Run the Inventory3D database initialization:
 ```bash
@@ -140,7 +140,7 @@ CEInventory3D\
 2. Log in with ArcGIS credentials
 3. Verify Map view loads
 4. Create a test workspace
-5. Run a test RF prediction
+5. Run a test [RF prediction](https://www.google.com/search?q=RF+radio+frequency+prediction+coverage+planning)
 
 ## Related Topics
 

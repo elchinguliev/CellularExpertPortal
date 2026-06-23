@@ -12,7 +12,7 @@ related:
 
 # User Management
 
-Administrators manage users through the **CE Inventory3D web application admin interface**.
+Administrators manage users through the **CE [Inventory3D](https://www.google.com/search?q=Cellular+Expert+Inventory3D+asset+management) web application admin interface**.
 
 ## User Roles
 
@@ -26,7 +26,7 @@ Administrators manage users through the **CE Inventory3D web application admin i
 ## Adding a User
 
 1. Admin Panel → **User Management** → **Add User**
-2. Enter: Username, Email, Password (or ArcGIS account link)
+2. Enter: Username, Email, Password (or [ArcGIS](https://www.google.com/search?q=ArcGIS+Esri+GIS+platform) account link)
 3. Select **Role**
 4. Assign **Workspace access** (which workspaces the user can see)
 5. Click **Save**
@@ -48,7 +48,7 @@ Group users to assign workspace permissions efficiently:
 
 ## Resetting Passwords
 
-### CE Express Account (local)
+### [CE Express](https://www.google.com/search?q=Cellular+Expert+CE+Express+web+platform) Account (local)
 
 Admin Panel → Users → select user → **Reset Password** → enter new password.
 
@@ -56,7 +56,7 @@ Or the user can use **Reset password** on the login page (requires email configu
 
 ### ArcGIS Account
 
-Use ArcGIS Portal admin tools to reset. CE Express does not manage ArcGIS passwords.
+Use [ArcGIS Portal](https://www.google.com/search?q=ArcGIS+Portal+enterprise+GIS) admin tools to reset. CE Express does not manage ArcGIS passwords.
 
 ## License Management
 
@@ -70,7 +70,7 @@ Admin Panel → **License Manager**:
 Admin Panel → **History**:
 - View all user actions (object creation, edits, deletions, predictions)
 - Filter by user, date, action type
-- Export to CSV
+- Export to [CSV](https://www.google.com/search?q=CSV+comma-separated+values+file+format)
 
 ## Related Topics
 

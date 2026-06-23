@@ -13,7 +13,7 @@ related:
 
 # Introduction to Cellular Expert Express
 
-Cellular Expert Express (CE Express) is a **web-based** telecommunication network planning, optimization, and data management solution built on **Esri ArcGIS Enterprise**.
+Cellular Expert Express ([CE Express](https://www.google.com/search?q=Cellular+Expert+CE+Express+web+platform)) is a **web-based** telecommunication network planning, optimization, and data management solution built on **Esri [ArcGIS](https://www.google.com/search?q=ArcGIS+Esri+GIS+platform) Enterprise**.
 
 CE Express is the merged **Inventory 3D** and **Cellular Expert Express** solution in one product:
 - **Inventory 3D** — data management (sites, assets, equipment inventory)
@@ -25,16 +25,16 @@ From a desktop, laptop, or tablet with internet access, users connect to a centr
 
 | Capability | Description |
 |-----------|-------------|
-| RF Coverage Prediction | Signal level, RSRP, RSRQ, SINR, throughput maps |
+| RF Coverage Prediction | Signal level, [RSRP](https://www.google.com/search?q=RSRP+Reference+Signal+Received+Power+LTE+4G), [RSRQ](https://www.google.com/search?q=RSRQ+Reference+Signal+Received+Quality+LTE+4G), [SINR](https://www.google.com/search?q=SINR+Signal+to+Interference+Noise+Ratio), throughput maps |
 | 3D RF Prediction | Full 3D propagation with building data |
 | Quick RF Prediction | Rapid what-if testing without DB changes |
-| Microwave / Radio Link | Link budgets, path profiles, rain fade, availability |
+| Microwave / Radio Link | Link budgets, path profiles, [rain fade](https://www.google.com/search?q=rain+fade+attenuation+microwave+link), availability |
 | Network Optimization | Best server, interference, C/I analysis |
 | Mesh Network Planning | Connectivity, automatic frequency planning |
-| Line of Sight / Profile | Terrain cross-sections, Fresnel zones |
+| [Line of Sight](https://www.google.com/search?q=Line+of+Sight+LOS+radio+propagation) / Profile | Terrain cross-sections, Fresnel zones |
 | Visibility Prediction | Radar and antenna visibility analysis |
 | Indoor Planning | In-building signal propagation |
-| Sound Propagation | Siren audibility, acoustic analysis (ISO9613) |
+| Sound Propagation | Siren audibility, acoustic analysis ([ISO9613](https://www.google.com/search?q=ISO+9613+acoustic+propagation+standard)) |
 | Light / Lux Prediction | Lighting design calculations |
 | EMF Analysis | Electromagnetic field compliance |
 | Model Tuning | Calibrate propagation models against drive-test data |
@@ -54,7 +54,7 @@ PostgreSQL + PostGIS Database
 CE Calculation Engine (multi-threaded C++, optional GPU)
 ```
 
-> CE Express is **not** intended to replicate CE Desktop Pro feature-for-feature. It provides a simplified, task-oriented interface for shared workflows.
+> CE Express is **not** intended to replicate [CE Desktop](https://www.google.com/search?q=Cellular+Expert+CE+Desktop+ArcGIS+Pro) Pro feature-for-feature. It provides a simplified, task-oriented interface for shared workflows.
 
 ## Supported Browsers
 

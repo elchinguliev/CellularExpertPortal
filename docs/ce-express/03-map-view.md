@@ -13,7 +13,7 @@ related:
 
 # Map View
 
-The CE Express Map view is the primary workspace for network planning and analysis.
+The [CE Express](https://www.google.com/search?q=Cellular+Expert+CE+Express+web+platform) Map view is the primary workspace for network planning and analysis.
 
 ## Layout
 
@@ -21,7 +21,7 @@ The Map view is divided into six areas:
 
 | Area | Description |
 |------|-------------|
-| 1. Top bar | Inventory3D window layout, settings, user menu |
+| 1. Top bar | [Inventory3D](https://www.google.com/search?q=Cellular+Expert+Inventory3D+asset+management) window layout, settings, user menu |
 | 2. Left toolbar | Data management and visualization tools |
 | 3. Map canvas | Graphical data management, object placement |
 | 4. Table panel | Attribute data management (bottom) |
@@ -40,7 +40,7 @@ All main tools are accessed from the left toolbar:
 | [Layers](#ce-express-layers) | 🗺 | Control map layer visibility |
 | [Prediction History](#ce-express-prediction-history) | 📊 | Browse and manage prediction results |
 | [Antennas](#ce-express-antennas) | 📡 | Antenna pattern library |
-| [Geodata Sets](#ce-express-geodata-sets) | 🌍 | Manage terrain, clutter, building data |
+| [Geodata Sets](#ce-express-geodata-sets) | 🌍 | Manage terrain, [clutter](https://www.google.com/search?q=clutter+land+use+classification+radio+planning), building data |
 | [Feature Templates](#ce-express-feature-templates) | 📋 | Reusable object configurations |
 | [Prediction Models](#ce-express-prediction-models) | 🧮 | Configure propagation models |
 | [Profile](#ce-express-profile) | 📈 | Line-of-sight and terrain profile |

@@ -21,8 +21,8 @@ RF Prediction calculates **map-based raster outputs** representing expected sign
 
 Predictions are influenced by:
 - **Network objects** — cells, sites, antennas (azimuth, tilt, height, power, frequency, technology)
-- **Configuration parameters** — bandwidth, MIMO, duplex mode, losses
-- **Geodata** — terrain elevation (DEM), clutter/land use, buildings
+- **Configuration parameters** — bandwidth, [MIMO](https://www.google.com/search?q=MIMO+Multiple+Input+Multiple+Output+antenna), duplex mode, losses
+- **Geodata** — terrain elevation ([DEM](https://www.google.com/search?q=DEM+Digital+Elevation+Model+terrain)), [clutter](https://www.google.com/search?q=clutter+land+use+classification+radio+planning)/land use, buildings
 - **Equipment definitions** — antenna patterns, propagation models, calculation templates
 
 ## Prediction Types
@@ -33,10 +33,10 @@ Predictions are influenced by:
 | Path Loss | Signal attenuation in dB |
 | Best Server | Which cell provides the best signal at each point |
 | Interference | Interference level across the area |
-| RSRP | Reference Signal Received Power (4G/5G) |
-| RSRQ | Reference Signal Received Quality (4G/5G) |
-| SINR | Signal-to-Interference-plus-Noise Ratio |
-| DL Throughput | Downlink data rate estimate (Mb/s) |
+| [RSRP](https://www.google.com/search?q=RSRP+Reference+Signal+Received+Power+LTE+4G) | Reference Signal Received Power (4G/5G) |
+| [RSRQ](https://www.google.com/search?q=RSRQ+Reference+Signal+Received+Quality+LTE+4G) | Reference Signal Received Quality (4G/5G) |
+| [SINR](https://www.google.com/search?q=SINR+Signal+to+Interference+Noise+Ratio) | Signal-to-Interference-plus-Noise Ratio |
+| [DL Throughput](https://www.google.com/search?q=downlink+throughput+LTE+4G+calculation) | Downlink data rate estimate (Mb/s) |
 | Visibility | Radio visibility (LOS/NLOS) |
 
 ## Quick RF Prediction vs Full RF Prediction
@@ -92,7 +92,7 @@ Click **Run** — a progress indicator appears. Results render as raster layers 
 |-------|-----------|-------|
 | DEM (terrain) | **Mandatory** | Must cover the full prediction area with correct projection |
 | Clutter/land use | Recommended | Significantly improves accuracy in mixed environments |
-| 3D buildings | For urban micro / ray-tracing | Required for COST-231 W-I and ray-tracing models |
+| 3D buildings | For urban micro / ray-tracing | Required for [COST-231](https://www.google.com/search?q=COST-231+propagation+model+telecom) W-I and ray-tracing models |
 | Antenna pattern | **Mandatory** | Each cell must have an antenna assigned (.msi or .pln) |
 | Propagation model | **Mandatory** | Configured in workspace or per-cell |
 
@@ -111,7 +111,7 @@ Results appear as raster layers in the map. From the [Prediction History](#ce-ex
 | Problem | Cause | Fix |
 |---------|-------|-----|
 | Empty/blank result | DEM not loaded or wrong projection | Check geodata set coverage and projection |
-| No result layer | Antenna not assigned to cell | Assign antenna pattern in cell properties |
+| No result layer | Antenna not assigned to cell | Assign [antenna pattern](https://www.google.com/search?q=antenna+radiation+pattern+file+format) in cell properties |
 | Very slow prediction | Fine resolution over large area | Increase resolution to 50–100m; reduce radius |
 | Out of memory | Large area at fine resolution | Split area, reduce radius, use coarser resolution |
 | License error | Prediction module not licensed | Check License Manager — contact support |

@@ -11,7 +11,7 @@ related:
   - ce-express-admin-user-management
 ---
 
-# Logging In to CE Express
+# Logging In to [CE Express](https://www.google.com/search?q=Cellular+Expert+CE+Express+web+platform)
 
 ## Accessing the Application
 
@@ -27,15 +27,15 @@ The URL is configured by your administrator. CE Express **requires HTTPS** — H
 
 CE Express offers two login options:
 
-### 1. Login with ArcGIS (Recommended)
+### 1. Login with [ArcGIS](https://www.google.com/search?q=ArcGIS+Esri+GIS+platform) (Recommended)
 
-Click **Login as ArcGIS** to authenticate with your ArcGIS Enterprise organization account.
+Click **Login as ArcGIS** to authenticate with your [ArcGIS Enterprise](https://www.google.com/search?q=ArcGIS+Enterprise+server+deployment) organization account.
 
 **This gives access to:**
 - Network Data Management view (database tables)
 - Map view (RF calculations, analysis tools, visualization)
 
-An ArcGIS Portal account is required. Contact your administrator if you do not have one.
+An [ArcGIS Portal](https://www.google.com/search?q=ArcGIS+Portal+enterprise+GIS) account is required. Contact your administrator if you do not have one.
 
 ### 2. Login with Express Account
 

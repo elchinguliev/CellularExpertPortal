@@ -13,7 +13,7 @@ related:
 
 # Radio Link (Microwave) Prediction
 
-CE Express includes a complete **microwave (MW) backhaul planning** module for point-to-point and point-to-multipoint radio links.
+[CE Express](https://www.google.com/search?q=Cellular+Expert+CE+Express+web+platform) includes a complete **microwave (MW) backhaul planning** module for point-to-point and point-to-multipoint radio links.
 
 ## Creating a Radio Link
 
@@ -39,7 +39,7 @@ Click **Link Prediction** → **Calculation** to compute:
 | Output | Description |
 |--------|-------------|
 | **Free-space path loss** | FSPL = 20·log(d) + 20·log(f) + 32.44 (dB) |
-| **Atmospheric absorption** | Gas absorption (oxygen, water vapour) per ITU-R P.676 |
+| **Atmospheric absorption** | Gas absorption (oxygen, water vapour) per [ITU-R P.676](https://www.google.com/search?q=ITU-R+P.676+atmospheric+attenuation) |
 | **Received Signal Level (RSL)** | Signal strength at receiver (dBm) |
 | **System gain** | Tx power + both antenna gains − losses |
 | **Fade margin** | RSL minus receiver sensitivity (dB) |
@@ -58,7 +58,7 @@ CE Express uses ITU-R P-series recommendations for fade calculations:
 
 ## Availability Calculation
 
-The link budget includes ITU-R **availability prediction**:
+The [link budget](https://www.google.com/search?q=link+budget+microwave+radio+calculation) includes ITU-R **availability prediction**:
 
 | Availability | Typical Use |
 |-------------|------------|
