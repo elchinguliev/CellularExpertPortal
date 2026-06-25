@@ -56,23 +56,25 @@ if __name__ == "__main__":
     CHUNKS_DIR.mkdir(parents=True, exist_ok=True)
 
     documents = load_all_markdown_files()
-    all_chunks = []
+    total_chunks = 0
 
     for document in documents:
         chunks = split_by_markdown_headings(document)
-        all_chunks.extend(chunks)
 
-    output_path = CHUNKS_DIR / "chunks.json"
-    output_path.write_text(
-        json.dumps(all_chunks, indent=2, ensure_ascii=False),
-        encoding="utf-8"
-    )
+        output_path = (
+            CHUNKS_DIR /
+            f"{document['source_file'].replace('.md', '')}_chunks.json"
+        )
 
-    print(f"Created {len(all_chunks)} chunk(s).")
-    print(f"Chunks saved to: {output_path}")
+        output_path.write_text(
+            json.dumps(chunks, indent=2, ensure_ascii=False),
+            encoding="utf-8"
+        )
 
-    for chunk in all_chunks:
-        print("\n--- Chunk ---")
-        print("Chunk ID:", chunk["chunk_id"])
-        print("Section:", chunk["section_title"])
-        print("Preview:", chunk["text"][:250])
+        total_chunks += len(chunks)
+
+        print(f"\n✓ {document['title']}")
+        print(f"  {len(chunks)} chunk(s)")
+        print(f"  Saved -> {output_path.name}")
+
+    print(f"\nTotal chunks created: {total_chunks}")
