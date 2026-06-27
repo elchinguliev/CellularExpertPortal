@@ -1,6 +1,6 @@
 node_modules/
 build/
 .env
-ai-backend/data/vector_db/
+ai-backend/vector_db/
 __pycache__/
 *.pyc
