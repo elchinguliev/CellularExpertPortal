@@ -23,9 +23,15 @@ app.add_middleware(
 )
 
 
+class ChatMessage(BaseModel):
+    role: str
+    message: str
+
+
 class QuestionRequest(BaseModel):
     question: str
     user: str = "Demo User"
+    conversation: list[ChatMessage] = []
 
 
 class TicketRequest(BaseModel):
@@ -49,7 +55,8 @@ def health():
 def ask(request: QuestionRequest):
     return generate_answer(
         question=request.question,
-        user=request.user
+        user=request.user,
+        conversation=[msg.dict() for msg in request.conversation]
     )
 
 

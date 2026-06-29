@@ -14,6 +14,8 @@ const chip = (color, text) => (
 );
 const now = () => new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});
 const boldify = (text) => text.split('**').map((p,i) => i%2===1 ? <strong key={i} style={{color:'var(--text-bright)'}}>{p}</strong> : p);
+const cleanMarkdownLinks = (text = '') =>
+  text.replace(/\[([^\]]+)\]\([^)]+\)/g, '$1');
 
 export default function SupportPortal({ onViewDocs }) {
   const [currentUser, setCurrentUser] = useState(null);
@@ -30,6 +32,7 @@ export default function SupportPortal({ onViewDocs }) {
   // Ticket state
   const [showNewTkt, setShowNewTkt] = useState(false);
   const [activeTkt,  setActiveTkt]  = useState(null);
+  const [ticketDraft, setTicketDraft] = useState(null);
 
   // Admin state
   const [admFilter, setAdmFilter] = useState('All');
@@ -67,23 +70,88 @@ export default function SupportPortal({ onViewDocs }) {
   };
 
   // ── Chat ──────────────────────────────────────────────────────────────────
-  const sendMsg = (text) => {
-    const t = text.trim(); if (!t) return;
-    setShowSug(false);
-    setMessages(p => [...p, {from:'user', text:t, time:now()}]);
-    setTyping(true);
-    setTimeout(() => {
-      setTyping(false);
-      const res = findAnswer(t);
-      if (res) {
-        setMessages(p => [...p, {from:'bot', time:now(), type:'article', title:res.title, text:res.answer}]);
-        setTimeout(() => setMessages(p => [...p, {from:'bot', time:now(), type:'followup', text:'Was this helpful? Ask another question or use the options below:'}]), 500);
-      } else {
-        setMessages(p => [...p, {from:'bot', time:now(), type:'no-answer',
-          text:`I don't have a specific answer for that in my knowledge base.\n\nPlease contact our support team:\n📧 **${SUPPORT_EMAIL}**\n\nOr open a support ticket and an engineer will respond.`}]);
+  const sendMsg = async (text) => {
+  const t = text.trim();
+  if (!t) return;
+
+  setShowSug(false);
+  setMessages(p => [...p, { from: 'user', text: t, time: now() }]);
+  setTyping(true);
+
+  try {
+    const response = await fetch('http://127.0.0.1:8000/ask', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        question: t,
+        user: currentUser?.name || 'Demo User',
+        conversation: messages.map(m => ({
+          role: m.from === 'bot' ? 'assistant' : 'user',
+          message: m.text || ''
+        }))
+      })
+    });
+
+    const data = await response.json();
+
+    setTyping(false);
+
+    if (!data.ticket_needed) {
+      setMessages(p => [
+        ...p,
+        {
+          from: 'bot',
+          time: now(),
+          type: 'article',
+          title: 'AI Documentation Answer',
+          text:
+            `Answer:\n${data.answer}\n\n` +
+            `Confidence:\n${Math.round(data.confidence * 100)}%\n\n` +
+            `Sources used:\n` +
+            data.sources.map((s, index) =>
+              `${index + 1}. ${s.document}\n   Section: ${s.section}\n   Product: ${s.product} ${s.version}`
+            ).join('\n\n')
+        }
+      ]);
+    } else {
+      const ticket = data.ticket_prefill;
+      setTicketDraft(ticket);
+
+      setMessages(p => [
+        ...p,
+        {
+          from: 'bot',
+          time: now(),
+          type: 'no-answer',
+          text:
+            `${cleanMarkdownLinks(data.answer)}\n\n`
+            `I can prepare a support ticket for review.\n\n` +
+            `**Ticket draft:**\n` +
+            `Product: ${ticket.product}\n` +
+            `Version: ${ticket.version}\n` +
+            `Title: ${ticket.ticket_title}\n` +
+            `Issue type: ${ticket.issue_type}\n` +
+            `Priority suggestion: ${ticket.priority_suggestion}\n\n` +
+            `**Question:**\n${ticket.full_question}`
+        }
+      ]);
+    }
+
+  } catch (error) {
+    setTyping(false);
+    setMessages(p => [
+      ...p,
+      {
+        from: 'bot',
+        time: now(),
+        type: 'no-answer',
+        text: 'AI backend is not reachable. Please check if FastAPI is running on http://127.0.0.1:8000.'
       }
-    }, 800 + Math.random()*600);
-  };
+    ]);
+  }
+};
 
   // ── Tickets ───────────────────────────────────────────────────────────────
   const createTicket = (data) => {
@@ -92,8 +160,11 @@ export default function SupportPortal({ onViewDocs }) {
       status:'Open', created:new Date().toISOString().split('T')[0],
       updated:new Date().toISOString().split('T')[0], assignedTo:'u4',
       messages:[{from:currentUser.id, text:data.description, time:new Date().toLocaleString()}] };
-    setTickets(p=>[t,...p]); setShowNewTkt(false);
-    setActiveTkt(t.id); setTab('tickets');
+    setTickets(p=>[t,...p]);
+    setShowNewTkt(false);
+    setTicketDraft(null);
+    setActiveTkt(t.id);
+    setTab('tickets');
   };
   const replyTicket = (id, text) => {
     setTickets(p => p.map(t => t.id===id ? {...t, messages:[...t.messages,{from:currentUser.id,text,time:new Date().toLocaleString()}]} : t));
@@ -162,34 +233,180 @@ export default function SupportPortal({ onViewDocs }) {
                     {m.type==='no-answer' && (
                       <div style={{marginTop:10,display:'flex',gap:7,flexWrap:'wrap'}}>
                         <a href={`mailto:${SUPPORT_EMAIL}`} style={{padding:'6px 12px',background:'var(--accent)',borderRadius:7,color:'#fff',fontSize:11,textDecoration:'none',fontFamily:'var(--font-mono)',letterSpacing:'.06em'}}>✉ Email Support</a>
-                        <button onClick={() => setTab('tickets')} style={{padding:'6px 12px',background:'transparent',border:'1px solid var(--accent)',borderRadius:7,color:'var(--accent)',fontSize:11,cursor:'pointer',fontFamily:'var(--font-mono)',letterSpacing:'.06em'}}>◉ Open Ticket</button>
+                       <button
+  onClick={() => {
+    setShowNewTkt(true);
+    setTab('tickets');
+  }}
+  style={{
+    padding:'6px 12px',
+    background:'transparent',
+    border:'1px solid var(--accent)',
+    borderRadius:7,
+    color:'var(--accent)',
+    fontSize:11,
+    cursor:'pointer',
+    fontFamily:'var(--font-mono)',
+    letterSpacing:'.06em'
+  }}
+>
+  ◉ Open Ticket
+</button>
                       </div>
                     )}
                     {m.type==='followup' && (
                       <div style={{marginTop:10,display:'flex',gap:7,flexWrap:'wrap'}}>
-                        <button onClick={() => setTab('tickets')} style={{padding:'5px 11px',background:'transparent',border:'1px solid var(--border2)',borderRadius:7,color:'var(--text-dim)',fontSize:11,cursor:'pointer'}}>◉ Open a ticket</button>
-                        <a href={`mailto:${SUPPORT_EMAIL}`} style={{padding:'5px 11px',background:'transparent',border:'1px solid var(--border2)',borderRadius:7,color:'var(--text-dim)',fontSize:11,textDecoration:'none'}}>✉ Email support</a>
-                        <button onClick={onViewDocs} style={{padding:'5px 11px',background:'transparent',border:'1px solid var(--border2)',borderRadius:7,color:'var(--text-dim)',fontSize:11,cursor:'pointer'}}>▤ View docs</button>
+                        <button
+                          onClick={() => {
+                            setShowNewTkt(true);
+                            setTab('tickets');
+                          }}
+                          style={{
+                            padding:'5px 11px',
+                            background:'transparent',
+                            border:'1px solid var(--border2)',
+                            borderRadius:7,
+                            color:'var(--text-dim)',
+                            fontSize:11,
+                            cursor:'pointer'
+                          }}
+                        >
+                          ◉ Open a ticket
+                        </button>
+
+                        <a
+                          href={`mailto:${SUPPORT_EMAIL}`}
+                          style={{
+                            padding:'5px 11px',
+                            background:'transparent',
+                            border:'1px solid var(--border2)',
+                            borderRadius:7,
+                            color:'var(--text-dim)',
+                            fontSize:11,
+                            textDecoration:'none'
+                          }}
+                        >
+                          ✉ Email support
+                        </a>
+
+                        <button
+                          onClick={onViewDocs}
+                          style={{
+                            padding:'5px 11px',
+                            background:'transparent',
+                            border:'1px solid var(--border2)',
+                            borderRadius:7,
+                            color:'var(--text-dim)',
+                            fontSize:11,
+                            cursor:'pointer'
+                          }}
+                        >
+                          ▤ View docs
+                        </button>
                       </div>
                     )}
                   </div>
                 )}
                 {m.type==='article' && (
                   <div style={{maxWidth:'92%'}}>
-                    <div style={{padding:'8px 13px',background:'var(--bg2)',border:'1px solid var(--border)',borderRadius:'4px 12px 12px 4px',fontSize:12,color:'var(--text)',marginBottom:6}}>Here's what I found:</div>
-                    <div style={{background:'var(--bg2)',border:'1px solid var(--accent)',borderRadius:11,overflow:'hidden',boxShadow:'var(--shadow)'}}>
-                      <div style={{padding:'10px 14px',background:'var(--accent-l)',borderBottom:'1px solid var(--border)',display:'flex',alignItems:'center',gap:7}}>
+                    <div style={{
+                      padding:'8px 13px',
+                      background:'var(--bg2)',
+                      border:'1px solid var(--border)',
+                      borderRadius:'4px 12px 12px 4px',
+                      fontSize:12,
+                      color:'var(--text)',
+                      marginBottom:6
+                    }}>
+                      Here's what I found:
+                    </div>
+
+                    <div style={{
+                      background:'var(--bg2)',
+                      border:'1px solid var(--accent)',
+                      borderRadius:11,
+                      overflow:'hidden',
+                      boxShadow:'var(--shadow)'
+                    }}>
+                      <div style={{
+                        padding:'10px 14px',
+                        background:'var(--accent-l)',
+                        borderBottom:'1px solid var(--border)',
+                        display:'flex',
+                        alignItems:'center',
+                        gap:7
+                      }}>
                         <span style={{fontSize:13}}>✦</span>
-                        <div style={{fontWeight:600,color:'var(--text-bright)',fontSize:13}}>{m.title}</div>
+                        <div style={{
+                          fontWeight:600,
+                          color:'var(--text-bright)',
+                          fontSize:13
+                        }}>
+                          {m.title}
+                        </div>
                       </div>
-                      <div style={{padding:'12px 14px',fontSize:12,color:'var(--text)',lineHeight:1.8,whiteSpace:'pre-line',maxHeight:240,overflowY:'auto'}}>
+
+                      <div style={{
+                        padding:'12px 14px',
+                        fontSize:12,
+                        color:'var(--text)',
+                        lineHeight:1.8,
+                        whiteSpace:'pre-line',
+                        maxHeight:240,
+                        overflowY:'auto'
+                      }}>
                         {boldify(m.text)}
                       </div>
                     </div>
+
                     <div style={{display:'flex',gap:7,marginTop:8,flexWrap:'wrap'}}>
-                      <button onClick={() => setTab('tickets')} style={{padding:'5px 11px',background:'transparent',border:'1px solid var(--border2)',borderRadius:7,color:'var(--text-dim)',fontSize:11,cursor:'pointer'}}>◉ Still need help?</button>
-                      <a href={`mailto:${SUPPORT_EMAIL}`} style={{padding:'5px 11px',background:'transparent',border:'1px solid var(--border2)',borderRadius:7,color:'var(--text-dim)',fontSize:11,textDecoration:'none'}}>✉ Email support</a>
-                      <button onClick={onViewDocs} style={{padding:'5px 11px',background:'transparent',border:'1px solid var(--border2)',borderRadius:7,color:'var(--text-dim)',fontSize:11,cursor:'pointer'}}>▤ Full docs</button>
+                      <button
+                        onClick={() => {
+                          setShowNewTkt(true);
+                          setTab('tickets');
+                        }}
+                        style={{
+                          padding:'5px 11px',
+                          background:'transparent',
+                          border:'1px solid var(--border2)',
+                          borderRadius:7,
+                          color:'var(--text-dim)',
+                          fontSize:11,
+                          cursor:'pointer'
+                        }}
+                      >
+                        ◉ Still need help?
+                      </button>
+
+                      <a
+                        href={`mailto:${SUPPORT_EMAIL}`}
+                        style={{
+                          padding:'5px 11px',
+                          background:'transparent',
+                          border:'1px solid var(--border2)',
+                          borderRadius:7,
+                          color:'var(--text-dim)',
+                          fontSize:11,
+                          textDecoration:'none'
+                        }}
+                      >
+                        ✉ Email support
+                      </a>
+
+                      <button
+                        onClick={onViewDocs}
+                        style={{
+                          padding:'5px 11px',
+                          background:'transparent',
+                          border:'1px solid var(--border2)',
+                          borderRadius:7,
+                          color:'var(--text-dim)',
+                          fontSize:11,
+                          cursor:'pointer'
+                        }}
+                      >
+                        ▤ Full docs
+                      </button>
                     </div>
                   </div>
                 )}
@@ -238,7 +455,16 @@ export default function SupportPortal({ onViewDocs }) {
         <div style={{fontWeight:700,color:'var(--text-bright)',fontSize:13}}>My Tickets ({myTickets.length})</div>
         <button onClick={() => setShowNewTkt(true)} style={{padding:'7px 14px',background:'linear-gradient(135deg, var(--accent), var(--accent2))',border:'none',color:'#fff',borderRadius:8,fontSize:11,cursor:'pointer',fontFamily:'var(--font-mono)',letterSpacing:'.06em',fontWeight:600}}>+ New</button>
       </div>
-      {showNewTkt && <NewTicketForm onSubmit={createTicket} onCancel={() => setShowNewTkt(false)}/>}
+      {showNewTkt && (
+        <NewTicketForm
+          draft={ticketDraft}
+          onSubmit={createTicket}
+          onCancel={() => {
+            setShowNewTkt(false);
+            setTicketDraft(null);
+          }}
+        />
+      )}
       {myTickets.length===0 && !showNewTkt && (
         <div style={{textAlign:'center',padding:'36px 16px',color:'var(--text-dim)'}}>
           <div style={{fontSize:30,marginBottom:8,opacity:.5}}>◉</div>
