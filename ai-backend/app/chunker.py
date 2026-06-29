@@ -1,6 +1,6 @@
 from pathlib import Path
 import json
-from knowledge_loader import load_all_markdown_files
+from app.knowledge_loader import load_all_markdown_files
 
 
 BASE_DIR = Path(__file__).resolve().parents[1]

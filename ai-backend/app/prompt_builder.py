@@ -27,7 +27,6 @@ Answer the user's question using ONLY the documentation context below.
 
 Rules:
 - Give a clear and short answer.
-- If the answer is available, explain it step by step when useful.
 - Mention the document and section used.
 - If the documentation does not contain enough information, say that you cannot find a reliable answer.
 - Do not invent information.
@@ -42,14 +41,3 @@ Answer:
 """.strip()
 
     return prompt
-
-
-if __name__ == "__main__":
-    from retriever import search
-
-    question = "What is CE Express?"
-    results = search(question)
-
-    prompt = build_rag_prompt(question, results)
-
-    print(prompt)
