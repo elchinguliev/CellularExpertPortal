@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { searchIndex } from '../useGithubDocs';
+import { searchIndex, searchAPI } from '../useGithubDocs';
 
 const SUPPORT_EMAIL = 'support@cellular-expert.com';
 const PC = {'CE Express':'#0077cc','CE Pro':'#059669','Both':'#d97706','Training':'#7c3aed','Inventory3D':'#0ea5e9'};
@@ -11,22 +11,21 @@ export default function SearchBar({ onSelectDoc }) {
   const wrapRef = useRef(null);
 
   useEffect(() => {
-    if (q.trim().length > 1) {
-      setResults(searchIndex(q));
-      setShowDrop(true);
-    } else {
+    if (q.trim().length <= 1) {
       setResults([]);
       setShowDrop(false);
+      return;
     }
+    setShowDrop(true);
+    // Show instant local results immediately...
+    setResults(searchIndex(q));
+    // ...then replace with real backend full-text results when they arrive
+    let cancelled = false;
+    searchAPI(q).then(apiResults => {
+      if (!cancelled && apiResults.length > 0) setResults(apiResults);
+    });
+    return () => { cancelled = true; };
   }, [q]);
-
-  // Re-run search periodically while open, so results improve as background
-  // preload finishes filling the content cache (cheap, no-op once stable)
-  useEffect(() => {
-    if (!showDrop || q.trim().length <= 1) return;
-    const t = setInterval(() => setResults(searchIndex(q)), 800);
-    return () => clearInterval(t);
-  }, [showDrop, q]);
 
   useEffect(() => {
     const h = (e) => { if (!wrapRef.current?.contains(e.target)) setShowDrop(false); };
