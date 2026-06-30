@@ -17,17 +17,8 @@ export const DOC_INDEX = [
   { id:'ce-express-street-view',      path:'docs/ce-express/street-view.md',                    title:'Street View',                     product:'CE Express', category:'Calculations',    order:9  },
 
   // ── CE Express — Reference (numbered, hyperlinkli) ──────────────────────────
-  { id:'ce-express-introduction',     path:'docs/ce-express/01-introduction.md',                title:'Introduction (Detailed)',          product:'CE Express', category:'Reference',       order:10 },
-  { id:'ce-express-map-view',         path:'docs/ce-express/03-map-view.md',                    title:'Map View',                        product:'CE Express', category:'Reference',       order:11 },
-  { id:'ce-express-features',         path:'docs/ce-express/05-features.md',                    title:'Features Tool',                   product:'CE Express', category:'Reference',       order:12 },
-  { id:'ce-express-prediction-models',path:'docs/ce-express/07-prediction-models.md',           title:'Prediction Models',               product:'CE Express', category:'Reference',       order:13 },
-  { id:'ce-express-radio-link',       path:'docs/ce-express/09-radio-link.md',                  title:'Radio Link (Microwave)',           product:'CE Express', category:'Reference',       order:14 },
-  { id:'ce-express-networks',         path:'docs/ce-express/10-networks.md',                    title:'Networks — Batch Prediction',     product:'CE Express', category:'Reference',       order:15 },
 
   // ── CE Express — Administration ─────────────────────────────────────────────
-  { id:'ce-express-admin-requirements',path:'docs/ce-express/admin-01-requirements.md',         title:'System Requirements',             product:'CE Express', category:'Administration',  order:20 },
-  { id:'ce-express-admin-installation',path:'docs/ce-express/admin-02-installation.md',         title:'Installation Guide',              product:'CE Express', category:'Administration',  order:21 },
-  { id:'ce-express-admin-users',      path:'docs/ce-express/admin-03-user-management.md',       title:'User Management',                 product:'CE Express', category:'Administration',  order:22 },
 
   // ── CE Express — User Guides ────────────────────────────────────────────────
   { id:'ce-express-user-guide',       path:'docs/ce-express/user-guide/user-guide-v7.3.md',     title:'User Guide v7.3',                 product:'CE Express', category:'User Guides',     order:30 },
@@ -67,9 +58,6 @@ export const DOC_INDEX = [
   // ── Geodata ─────────────────────────────────────────────────────────────────
   { id:'geodata-requirements',        path:'docs/geodata/geodata-requirements.md',              title:'Geodata Requirements',            product:'Both',       category:'Geodata',         order:1  },
   { id:'geodata-network-objects',     path:'docs/geodata/network-objects-requirements.md',      title:'Network Object Requirements',     product:'Both',       category:'Geodata',         order:2  },
-  { id:'geodata-overview',            path:'docs/geodata/01-overview.md',                       title:'Overview (Detailed)',             product:'Both',       category:'Geodata',         order:3  },
-  { id:'geodata-dem',                 path:'docs/geodata/02-dem.md',                            title:'Digital Terrain Model (DEM)',     product:'Both',       category:'Geodata',         order:4  },
-  { id:'geodata-clutter',             path:'docs/geodata/03-clutter.md',                        title:'Clutter Classes & Heights',       product:'Both',       category:'Geodata',         order:5  },
 
   // ── Inventory3D ─────────────────────────────────────────────────────────────
   { id:'inventory3d-user-guide',      path:'docs/inventory3d/user-guide.md',                    title:'Inventory3D User Guide v4.6',     product:'Inventory3D',category:'User Guides',     order:1  },
@@ -96,6 +84,17 @@ export const NAV = {
 };
 
 const cache = {};
+let preloadStarted = false;
+
+// Preload all docs in the background so full-text search works everywhere
+export function preloadAllDocs() {
+  if (preloadStarted) return;
+  preloadStarted = true;
+  // Stagger requests slightly to avoid hammering GitHub at once
+  DOC_INDEX.forEach((entry, i) => {
+    setTimeout(() => { fetchDoc(entry.id).catch(() => {}); }, i * 60);
+  });
+}
 
 export async function fetchDoc(docId) {
   const entry = DOC_INDEX.find(d => d.id === docId);
@@ -120,6 +119,19 @@ export async function fetchDoc(docId) {
   }
 }
 
+function snippetAround(content, word) {
+  if (!content) return '';
+  const idx = content.toLowerCase().indexOf(word.toLowerCase());
+  if (idx === -1) return '';
+  const start = Math.max(0, idx - 40);
+  const end = Math.min(content.length, idx + 80);
+  let snippet = content.slice(start, end).replace(/\n/g, ' ').replace(/[#*`]/g, '');
+  return (start > 0 ? '…' : '') + snippet.trim() + (end < content.length ? '…' : '');
+}
+
+// Synchronous search over title/category/product + whatever is cached so far.
+// Call preloadAllDocs() once at app start so cache fills in the background —
+// search quality improves automatically as more docs finish loading.
 export function searchIndex(query) {
   const q = query.toLowerCase().trim();
   if (!q) return [];
@@ -127,17 +139,25 @@ export function searchIndex(query) {
   return DOC_INDEX
     .map(doc => {
       let score = 0;
+      let snippet = '';
+      const content = cache[doc.id]?.content || '';
       words.forEach(w => {
-        if (doc.title.toLowerCase().includes(w))    score += 8;
+        if (doc.title.toLowerCase().includes(w))    score += 10;
         if (doc.category.toLowerCase().includes(w)) score += 4;
         if (doc.product.toLowerCase().includes(w))  score += 2;
-        if (cache[doc.id]?.content?.toLowerCase().includes(w)) score += 1;
+        if (content) {
+          const occurrences = content.toLowerCase().split(w.toLowerCase()).length - 1;
+          if (occurrences > 0) {
+            score += Math.min(occurrences, 5); // cap so one giant doc doesn't dominate
+            if (!snippet) snippet = snippetAround(content, w);
+          }
+        }
       });
-      return { ...doc, score };
+      return { ...doc, score, snippet };
     })
     .filter(d => d.score > 0)
     .sort((a, b) => b.score - a.score)
-    .slice(0, 8);
+    .slice(0, 10);
 }
 
 export { GITHUB_RAW };

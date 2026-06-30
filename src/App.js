@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
-import { DOC_INDEX, NAV, fetchDoc } from './useGithubDocs';
+import { DOC_INDEX, NAV, fetchDoc, preloadAllDocs } from './useGithubDocs';
 import SupportPortal from './components/SupportPortal';
 import SearchBar from './components/SearchBar';
 
@@ -131,11 +131,11 @@ const Navbar = React.memo(function Navbar({ view, setView, dark, toggleDark, onD
     <nav style={{
       position:'fixed',top:0,left:0,right:0,zIndex:1000,
       height:'var(--nav-h)',
-      background: scrolled ? 'rgba(5,14,26,0.95)' : 'transparent',
-      backdropFilter: scrolled ? 'blur(20px)' : 'none',
-      borderBottom: scrolled ? '1px solid var(--border)' : 'none',
+      background: (scrolled || view!=='main') ? 'rgba(5,14,26,0.95)' : 'transparent',
+      backdropFilter: (scrolled || view!=='main') ? 'blur(20px)' : 'none',
+      borderBottom: (scrolled || view!=='main') ? '1px solid var(--border)' : 'none',
       display:'flex',alignItems:'center',justifyContent:'space-between',
-      padding:'0 48px',transition:'all 0.3s',
+      padding:'0 32px',transition:'all 0.3s',gap:20,
     }}>
       <div onClick={()=>handleNav('home')} style={{display:'flex',alignItems:'center',gap:10,cursor:'pointer',flexShrink:0}}>
         <Logo size={30}/>
@@ -145,7 +145,13 @@ const Navbar = React.memo(function Navbar({ view, setView, dark, toggleDark, onD
         </div>
       </div>
 
-      <ul style={{display:'flex',alignItems:'center',gap:6,listStyle:'none',margin:0}}>
+      {view==='docs' && (
+        <div style={{flex:1,maxWidth:420}}>
+          <SearchBar onSelectDoc={onDocsSelect}/>
+        </div>
+      )}
+
+      <ul style={{display:'flex',alignItems:'center',gap:6,listStyle:'none',margin:0,marginLeft:'auto',flexShrink:0}}>
         {navLinks.map(link => {
           const isActive = (link.id==='docs' && view==='docs') || (link.id==='support' && view==='support');
           return (
@@ -155,7 +161,7 @@ const Navbar = React.memo(function Navbar({ view, setView, dark, toggleDark, onD
                 background: isActive ? 'var(--accent)' : 'transparent',
                 color: isActive ? (dark?'#050e1a':'#fff') : 'var(--text)',
                 fontFamily:'var(--font-mono)',fontSize:11,letterSpacing:'0.08em',
-                textTransform:'uppercase',transition:'all 0.2s',
+                textTransform:'uppercase',transition:'all 0.2s',whiteSpace:'nowrap',
               }}
               onMouseEnter={e=>{ if(!isActive) e.currentTarget.style.color='var(--accent)'; }}
               onMouseLeave={e=>{ if(!isActive) e.currentTarget.style.color='var(--text)'; }}>
@@ -601,9 +607,38 @@ export default function App() {
   const [doc,    setDoc]       = useState(null);
   const [loading,setLoading]   = useState(false);
 
+  // Preload all docs in background so search has full-text data to work with
+  useEffect(() => { preloadAllDocs(); }, []);
+
   // Handle doc-link clicks inside rendered markdown
   useEffect(() => {
-    const h = (e) => { const a=e.target.closest('a[data-doc]'); if(a){e.preventDefault();loadDoc(a.dataset.doc);} };
+    const h = (e) => {
+      const a = e.target.closest('a[data-doc]');
+      if (!a) return;
+      e.preventDefault();
+      const target = a.dataset.doc;
+
+      // Smart keyword links use prefix "kw:slug:docId" — try in-page anchor first
+      if (target.startsWith('kw:')) {
+        const [, slug, fallbackDocId] = target.split(':');
+        const localEl = document.getElementById(slug);
+        if (localEl) {
+          localEl.scrollIntoView({ behavior:'smooth' });
+          return;
+        }
+        if (fallbackDocId && fallbackDocId !== 'none') {
+          loadDoc(fallbackDocId);
+        }
+        return;
+      }
+
+      // Plain in-page anchor (#some-heading)
+      const localEl = document.getElementById(target);
+      if (localEl) { localEl.scrollIntoView({ behavior:'smooth' }); return; }
+
+      // Otherwise treat as a doc id navigation
+      loadDoc(target);
+    };
     document.addEventListener('click', h);
     return () => document.removeEventListener('click', h);
   }, []);
