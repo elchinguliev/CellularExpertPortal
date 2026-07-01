@@ -4,3 +4,4 @@ build/
 ai-backend/vector_db/
 __pycache__/
 *.pyc
+ai-backend/knowledge_base/chunks/
