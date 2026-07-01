@@ -1,68 +1,191 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react';
-import { DOC_INDEX, NAV, fetchDoc, preloadAllDocs } from './useGithubDocs';
-import SupportPortal from './components/SupportPortal';
-import SearchBar from './components/SearchBar';
+import React, { useState, useEffect, useRef, useCallback } from "react";
+import { DOC_INDEX, NAV, fetchDoc, preloadAllDocs } from "./useGithubDocs";
+import SupportPortal from "./components/SupportPortal";
+import SearchBar from "./components/SearchBar";
 
 // ── Theme ─────────────────────────────────────────────────────────────────────
 function useTheme() {
   const [dark, setDark] = useState(true);
-  useEffect(() => { document.body.classList.toggle('light', !dark); }, [dark]);
-  return [dark, () => setDark(d => !d)];
+  useEffect(() => {
+    document.body.classList.toggle("light", !dark);
+  }, [dark]);
+  return [dark, () => setDark((d) => !d)];
 }
 
 // ── Markdown renderer ─────────────────────────────────────────────────────────
-function esc(s) { return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function esc(s) {
+  return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+}
 function inline(t) {
   return t
-    .replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>')
-    .replace(/\*(.+?)\*/g,'<em>$1</em>')
-    .replace(/`(.+?)`/g,'<code>$1</code>')
-    .replace(/\[(.+?)\]\(#(.+?)\)/g,'<a href="#" data-doc="$2" class="doc-lnk">$1 →</a>')
-    .replace(/\[(.+?)\]\(mailto:(.+?)\)/g,'<a href="mailto:$2">$1</a>')
-    .replace(/\[(.+?)\]\((.+?)\)/g,'<a href="$2" target="_blank" rel="noopener">$1</a>');
+    .replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>")
+    .replace(/\*(.+?)\*/g, "<em>$1</em>")
+    .replace(/`(.+?)`/g, "<code>$1</code>")
+    .replace(
+      /\[(.+?)\]\(#(.+?)\)/g,
+      '<a href="#" data-doc="$2" class="doc-lnk">$1 →</a>',
+    )
+    .replace(/\[(.+?)\]\(mailto:(.+?)\)/g, '<a href="mailto:$2">$1</a>')
+    .replace(
+      /\[(.+?)\]\((.+?)\)/g,
+      '<a href="$2" target="_blank" rel="noopener">$1</a>',
+    );
 }
 function renderMD(text) {
-  if (!text) return '';
-  const lines = text.split('\n');
-  let html='',inCode=false,inTable=false,inList=false,lt='',inBq=false;
-  const closeL=()=>{if(inList){html+=`</${lt}>`;inList=false;}};
-  const closeBq=()=>{if(inBq){html+='</blockquote>';inBq=false;}};
-  for(let i=0;i<lines.length;i++){
-    const line=lines[i];
-    if(line.trim().startsWith('```')){if(inCode){html+='</code></pre>';inCode=false;}else{closeL();closeBq();html+='<pre><code>';inCode=true;}continue;}
-    if(inCode){html+=esc(line)+'\n';continue;}
-    if(inList&&!/^\s*[-*]\s|^\d+\.\s/.test(line)&&line.trim())closeL();
-    if(inBq&&!line.startsWith('>'))closeBq();
-    if(line.includes('|')&&line.trim().startsWith('|')){
-      const cells=line.trim().split('|').filter((_,i2,a)=>i2>0&&i2<a.length-1);
-      const isSep=cells.every(c=>c.trim().replace(/[-:]/g,'').trim()==='');
-      if(isSep){if(!inTable){html+='<table>';inTable=true;}continue;}
-      if(!inTable){html+='<table>';inTable=true;}
-      const isH=lines[i+1]?.includes('---');
-      html+=`<tr>${cells.map(c=>`<${isH?'th':'td'}>${inline(c.trim())}</${isH?'th':'td'}>`).join('')}</tr>`;
+  if (!text) return "";
+  const lines = text.split("\n");
+  let html = "",
+    inCode = false,
+    inTable = false,
+    inList = false,
+    lt = "",
+    inBq = false;
+  const closeL = () => {
+    if (inList) {
+      html += `</${lt}>`;
+      inList = false;
+    }
+  };
+  const closeBq = () => {
+    if (inBq) {
+      html += "</blockquote>";
+      inBq = false;
+    }
+  };
+  for (let i = 0; i < lines.length; i++) {
+    const line = lines[i];
+    if (line.trim().startsWith("```")) {
+      if (inCode) {
+        html += "</code></pre>";
+        inCode = false;
+      } else {
+        closeL();
+        closeBq();
+        html += "<pre><code>";
+        inCode = true;
+      }
       continue;
-    }else if(inTable){html+='</table>';inTable=false;}
-    const hm=line.match(/^(#{1,6})\s(.+)/);
-    if(hm){closeL();closeBq();const lvl=hm[1].length;const id=hm[2].toLowerCase().replace(/[^a-z0-9\s]/g,'').trim().replace(/\s+/g,'-');html+=`<h${lvl} id="${id}">${inline(hm[2])}</h${lvl}>`;continue;}
-    if(/^---+$/.test(line.trim())){closeL();closeBq();html+='<hr/>';continue;}
-    if(line.startsWith('> ')){if(!inBq){html+='<blockquote>';inBq=true;}html+=`<p>${inline(line.slice(2))}</p>`;continue;}
-    if(/^\s*[-*]\s/.test(line)){if(!inList||lt!=='ul'){closeL();html+='<ul>';inList=true;lt='ul';}html+=`<li>${inline(line.trim().slice(2))}</li>`;continue;}
-    if(/^\s*\d+\.\s/.test(line)){if(!inList||lt!=='ol'){closeL();html+='<ol>';inList=true;lt='ol';}html+=`<li>${inline(line.replace(/^\s*\d+\.\s/,'').trim())}</li>`;continue;}
-    if(line.trim()===''){closeL();closeBq();html+='<div class="sp"></div>';continue;}
-    html+=`<p>${inline(line)}</p>`;
+    }
+    if (inCode) {
+      html += esc(line) + "\n";
+      continue;
+    }
+    if (inList && !/^\s*[-*]\s|^\d+\.\s/.test(line) && line.trim()) closeL();
+    if (inBq && !line.startsWith(">")) closeBq();
+    if (line.includes("|") && line.trim().startsWith("|")) {
+      const cells = line
+        .trim()
+        .split("|")
+        .filter((_, i2, a) => i2 > 0 && i2 < a.length - 1);
+      const isSep = cells.every(
+        (c) => c.trim().replace(/[-:]/g, "").trim() === "",
+      );
+      if (isSep) {
+        if (!inTable) {
+          html += "<table>";
+          inTable = true;
+        }
+        continue;
+      }
+      if (!inTable) {
+        html += "<table>";
+        inTable = true;
+      }
+      const isH = lines[i + 1]?.includes("---");
+      html += `<tr>${cells.map((c) => `<${isH ? "th" : "td"}>${inline(c.trim())}</${isH ? "th" : "td"}>`).join("")}</tr>`;
+      continue;
+    } else if (inTable) {
+      html += "</table>";
+      inTable = false;
+    }
+    const hm = line.match(/^(#{1,6})\s(.+)/);
+    if (hm) {
+      closeL();
+      closeBq();
+      const lvl = hm[1].length;
+      const id = hm[2]
+        .toLowerCase()
+        .replace(/[^a-z0-9\s]/g, "")
+        .trim()
+        .replace(/\s+/g, "-");
+      html += `<h${lvl} id="${id}">${inline(hm[2])}</h${lvl}>`;
+      continue;
+    }
+    if (/^---+$/.test(line.trim())) {
+      closeL();
+      closeBq();
+      html += "<hr/>";
+      continue;
+    }
+    if (line.startsWith("> ")) {
+      if (!inBq) {
+        html += "<blockquote>";
+        inBq = true;
+      }
+      html += `<p>${inline(line.slice(2))}</p>`;
+      continue;
+    }
+    if (/^\s*[-*]\s/.test(line)) {
+      if (!inList || lt !== "ul") {
+        closeL();
+        html += "<ul>";
+        inList = true;
+        lt = "ul";
+      }
+      html += `<li>${inline(line.trim().slice(2))}</li>`;
+      continue;
+    }
+    if (/^\s*\d+\.\s/.test(line)) {
+      if (!inList || lt !== "ol") {
+        closeL();
+        html += "<ol>";
+        inList = true;
+        lt = "ol";
+      }
+      html += `<li>${inline(line.replace(/^\s*\d+\.\s/, "").trim())}</li>`;
+      continue;
+    }
+    if (line.trim() === "") {
+      closeL();
+      closeBq();
+      html += '<div class="sp"></div>';
+      continue;
+    }
+    html += `<p>${inline(line)}</p>`;
   }
-  if(inCode)html+='</code></pre>';
-  if(inTable)html+='</table>';
-  if(inList)html+=`</${lt}>`;
-  if(inBq)html+='</blockquote>';
+  if (inCode) html += "</code></pre>";
+  if (inTable) html += "</table>";
+  if (inList) html += `</${lt}>`;
+  if (inBq) html += "</blockquote>";
   return html;
 }
-function extractTOC(c){return(c||'').split('\n').filter(l=>/^#{2,4}\s/.test(l)).map(l=>{const m=l.match(/^(#{2,4})\s(.+)/);return{level:m[1].length,text:m[2],id:m[2].toLowerCase().replace(/[^a-z0-9\s]/g,'').trim().replace(/\s+/g,'-')};});}
+function extractTOC(c) {
+  return (c || "")
+    .split("\n")
+    .filter((l) => /^#{2,4}\s/.test(l))
+    .map((l) => {
+      const m = l.match(/^(#{2,4})\s(.+)/);
+      return {
+        level: m[1].length,
+        text: m[2],
+        id: m[2]
+          .toLowerCase()
+          .replace(/[^a-z0-9\s]/g, "")
+          .trim()
+          .replace(/\s+/g, "-"),
+      };
+    });
+}
 
-const PC={'CE Express':['#00b4ff','rgba(0,180,255,0.1)'],'CE Pro':['#00d4a0','rgba(0,212,160,0.1)'],'Both':['#f59e0b','rgba(245,158,11,0.1)'],'Training':['#a78bfa','rgba(167,139,250,0.1)']};
-const PI={'CE Express':'🌐','CE Pro':'🖥','Both':'🗺','Training':'🎓'};
+const PC = {
+  "CE Express": ["#00b4ff", "rgba(0,180,255,0.1)"],
+  "CE Pro": ["#00d4a0", "rgba(0,212,160,0.1)"],
+  Both: ["#f59e0b", "rgba(245,158,11,0.1)"],
+  Training: ["#a78bfa", "rgba(167,139,250,0.1)"],
+};
+const PI = { "CE Express": "🌐", "CE Pro": "🖥", Both: "🗺", Training: "🎓" };
 
-const ART_CSS=`
+const ART_CSS = `
   .art h1{font-size:26px;font-weight:700;color:var(--text-bright);letter-spacing:-0.02em;margin:0 0 8px}
   .art h2{font-size:18px;font-weight:600;color:var(--text-bright);margin:32px 0 12px;padding-top:10px;border-top:1px solid var(--border)}
   .art h3{font-size:15px;font-weight:600;color:var(--text-bright);margin:22px 0 8px}
@@ -91,88 +214,201 @@ const ART_CSS=`
 `;
 
 // ── CE Logo SVG ───────────────────────────────────────────────────────────────
-const Logo = ({ size=32, color='var(--accent)' }) => (
+const Logo = ({ size = 32, color = "var(--accent)" }) => (
   <svg width={size} height={size} viewBox="0 0 32 32" fill="none">
-    <circle cx="16" cy="16" r="15" stroke={color} strokeWidth="1.2"/>
-    <path d="M8 16 Q16 6 24 16 Q16 26 8 16Z" fill="none" stroke={color} strokeWidth="1.4"/>
-    <circle cx="16" cy="16" r="3" fill={color}/>
-    <path d="M16 4L16 8M16 24L16 28M4 16L8 16M24 16L28 16" stroke={color} strokeWidth="0.8" opacity="0.5"/>
+    <circle cx="16" cy="16" r="15" stroke={color} strokeWidth="1.2" />
+    <path
+      d="M8 16 Q16 6 24 16 Q16 26 8 16Z"
+      fill="none"
+      stroke={color}
+      strokeWidth="1.4"
+    />
+    <circle cx="16" cy="16" r="3" fill={color} />
+    <path
+      d="M16 4L16 8M16 24L16 28M4 16L8 16M24 16L28 16"
+      stroke={color}
+      strokeWidth="0.8"
+      opacity="0.5"
+    />
   </svg>
 );
 
 // ── Navbar ────────────────────────────────────────────────────────────────────
-const Navbar = React.memo(function Navbar({ view, setView, dark, toggleDark, onDocsSelect, docsActive }) {
+const Navbar = React.memo(function Navbar({
+  view,
+  setView,
+  dark,
+  toggleDark,
+  onDocsSelect,
+  docsActive,
+}) {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   useEffect(() => {
     const h = () => setScrolled(window.scrollY > 20);
-    window.addEventListener('scroll', h);
-    return () => window.removeEventListener('scroll', h);
+    window.addEventListener("scroll", h);
+    return () => window.removeEventListener("scroll", h);
   }, []);
 
   const navLinks = [
-    { id:'home',    label:'Home' },
-    { id:'products',label:'Products' },
-    { id:'solutions',label:'Solutions' },
-    { id:'docs',    label:'Documentation' },
-    { id:'about',   label:'About' },
-    { id:'support', label:'Support' },
+    { id: "home", label: "Home" },
+    { id: "products", label: "Products" },
+    { id: "solutions", label: "Solutions" },
+    { id: "docs", label: "Documentation" },
+    { id: "about", label: "About" },
+    { id: "support", label: "Support" },
   ];
 
   const handleNav = (id) => {
     setMobileOpen(false);
-    if (id==='docs') { setView('docs'); onDocsSelect(null); return; }
-    if (id==='support') { setView('support'); return; }
-    if (view!=='main') { setView('main'); setTimeout(()=>{ document.getElementById(id)?.scrollIntoView({behavior:'smooth'}); },100); return; }
-    document.getElementById(id)?.scrollIntoView({behavior:'smooth'});
+    if (id === "docs") {
+      setView("docs");
+      onDocsSelect(null);
+      return;
+    }
+    if (id === "support") {
+      setView("support");
+      return;
+    }
+    if (view !== "main") {
+      setView("main");
+      setTimeout(() => {
+        document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
+      }, 100);
+      return;
+    }
+    document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
   };
 
   return (
-    <nav style={{
-      position:'fixed',top:0,left:0,right:0,zIndex:1000,
-      height:'var(--nav-h)',
-      background: (scrolled || view!=='main') ? 'rgba(5,14,26,0.95)' : 'transparent',
-      backdropFilter: (scrolled || view!=='main') ? 'blur(20px)' : 'none',
-      borderBottom: (scrolled || view!=='main') ? '1px solid var(--border)' : 'none',
-      display:'flex',alignItems:'center',justifyContent:'space-between',
-      padding:'0 32px',transition:'all 0.3s',gap:20,
-    }}>
-      <div onClick={()=>handleNav('home')} style={{display:'flex',alignItems:'center',gap:10,cursor:'pointer',flexShrink:0}}>
-        <Logo size={30}/>
+    <nav
+      style={{
+        position: "fixed",
+        top: 0,
+        left: 0,
+        right: 0,
+        zIndex: 1000,
+        height: "var(--nav-h)",
+        background:
+          scrolled || view !== "main" ? "rgba(5,14,26,0.95)" : "transparent",
+        backdropFilter: scrolled || view !== "main" ? "blur(20px)" : "none",
+        borderBottom:
+          scrolled || view !== "main" ? "1px solid var(--border)" : "none",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "space-between",
+        padding: "0 32px",
+        transition: "all 0.3s",
+        gap: 20,
+      }}
+    >
+      <div
+        onClick={() => handleNav("home")}
+        style={{
+          display: "flex",
+          alignItems: "center",
+          gap: 10,
+          cursor: "pointer",
+          flexShrink: 0,
+        }}
+      >
+        <Logo size={30} />
         <div>
-          <div style={{fontFamily:'var(--font-display)',fontWeight:700,fontSize:18,color:'var(--text-bright)',letterSpacing:'0.06em',lineHeight:1}}>CELLULAR<span style={{color:'var(--accent)'}}> EXPERT</span></div>
-          <div style={{fontFamily:'var(--font-mono)',fontSize:8,color:'var(--text-dim)',letterSpacing:'0.12em'}}>NETWORK PLANNING IN ARCGIS</div>
+          <div
+            style={{
+              fontFamily: "var(--font-display)",
+              fontWeight: 700,
+              fontSize: 18,
+              color: "var(--text-bright)",
+              letterSpacing: "0.06em",
+              lineHeight: 1,
+            }}
+          >
+            CELLULAR<span style={{ color: "var(--accent)" }}> EXPERT</span>
+          </div>
+          <div
+            style={{
+              fontFamily: "var(--font-mono)",
+              fontSize: 8,
+              color: "var(--text-dim)",
+              letterSpacing: "0.12em",
+            }}
+          >
+            NETWORK PLANNING IN ARCGIS
+          </div>
         </div>
       </div>
 
-      {view==='docs' && (
-        <div style={{flex:1,maxWidth:420}}>
-          <SearchBar onSelectDoc={onDocsSelect}/>
+      {view === "docs" && (
+        <div style={{ flex: 1, maxWidth: 420 }}>
+          <SearchBar onSelectDoc={onDocsSelect} />
         </div>
       )}
 
-      <ul style={{display:'flex',alignItems:'center',gap:6,listStyle:'none',margin:0,marginLeft:'auto',flexShrink:0}}>
-        {navLinks.map(link => {
-          const isActive = (link.id==='docs' && view==='docs') || (link.id==='support' && view==='support');
+      <ul
+        style={{
+          display: "flex",
+          alignItems: "center",
+          gap: 6,
+          listStyle: "none",
+          margin: 0,
+          marginLeft: "auto",
+          flexShrink: 0,
+        }}
+      >
+        {navLinks.map((link) => {
+          const isActive =
+            (link.id === "docs" && view === "docs") ||
+            (link.id === "support" && view === "support");
           return (
             <li key={link.id}>
-              <button onClick={()=>handleNav(link.id)} style={{
-                padding:'6px 14px',border:'none',borderRadius:6,cursor:'pointer',
-                background: isActive ? 'var(--accent)' : 'transparent',
-                color: isActive ? (dark?'#050e1a':'#fff') : 'var(--text)',
-                fontFamily:'var(--font-mono)',fontSize:11,letterSpacing:'0.08em',
-                textTransform:'uppercase',transition:'all 0.2s',whiteSpace:'nowrap',
-              }}
-              onMouseEnter={e=>{ if(!isActive) e.currentTarget.style.color='var(--accent)'; }}
-              onMouseLeave={e=>{ if(!isActive) e.currentTarget.style.color='var(--text)'; }}>
+              <button
+                onClick={() => handleNav(link.id)}
+                style={{
+                  padding: "6px 14px",
+                  border: "none",
+                  borderRadius: 6,
+                  cursor: "pointer",
+                  background: isActive ? "var(--accent)" : "transparent",
+                  color: isActive ? (dark ? "#050e1a" : "#fff") : "var(--text)",
+                  fontFamily: "var(--font-mono)",
+                  fontSize: 11,
+                  letterSpacing: "0.08em",
+                  textTransform: "uppercase",
+                  transition: "all 0.2s",
+                  whiteSpace: "nowrap",
+                }}
+                onMouseEnter={(e) => {
+                  if (!isActive) e.currentTarget.style.color = "var(--accent)";
+                }}
+                onMouseLeave={(e) => {
+                  if (!isActive) e.currentTarget.style.color = "var(--text)";
+                }}
+              >
                 {link.label}
               </button>
             </li>
           );
         })}
         <li>
-          <button onClick={toggleDark} style={{width:34,height:34,borderRadius:8,border:'1px solid var(--border)',background:'transparent',color:'var(--text-dim)',cursor:'pointer',fontSize:15,display:'flex',alignItems:'center',justifyContent:'center',marginLeft:4}}>
-            {dark?'☀️':'🌙'}
+          <button
+            onClick={toggleDark}
+            style={{
+              width: 34,
+              height: 34,
+              borderRadius: 8,
+              border: "1px solid var(--border)",
+              background: "transparent",
+              color: "var(--text-dim)",
+              cursor: "pointer",
+              fontSize: 15,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              marginLeft: 4,
+            }}
+          >
+            {dark ? "☀️" : "🌙"}
           </button>
         </li>
       </ul>
@@ -184,93 +420,279 @@ const Navbar = React.memo(function Navbar({ view, setView, dark, toggleDark, onD
 const HeroSection = ({ onDocsClick, onSupportClick }) => {
   const canvasRef = useRef(null);
   useEffect(() => {
-    const canvas = canvasRef.current; if(!canvas) return;
-    const ctx = canvas.getContext('2d');
-    canvas.width = canvas.offsetWidth; canvas.height = canvas.offsetHeight;
-    const W = canvas.width, H = canvas.height;
-    const cx = W/2, cy = H/2, R = Math.min(W,H)*0.35;
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext("2d");
+    canvas.width = canvas.offsetWidth;
+    canvas.height = canvas.offsetHeight;
+    const W = canvas.width,
+      H = canvas.height;
+    const cx = W / 2,
+      cy = H / 2,
+      R = Math.min(W, H) * 0.35;
     let frame = 0;
     const animate = () => {
-      ctx.clearRect(0,0,W,H);
-      const t = frame*0.008;
+      ctx.clearRect(0, 0, W, H);
+      const t = frame * 0.008;
       // globe rings
-      for(let i=0;i<5;i++){
-        const a = (i/5)*Math.PI;
+      for (let i = 0; i < 5; i++) {
+        const a = (i / 5) * Math.PI;
         ctx.beginPath();
-        ctx.ellipse(cx, cy, R, R*Math.abs(Math.cos(a+t)), 0, 0, Math.PI*2);
-        ctx.strokeStyle=`rgba(0,180,255,${0.08+i*0.03})`;
-        ctx.lineWidth=1;
+        ctx.ellipse(
+          cx,
+          cy,
+          R,
+          R * Math.abs(Math.cos(a + t)),
+          0,
+          0,
+          Math.PI * 2,
+        );
+        ctx.strokeStyle = `rgba(0,180,255,${0.08 + i * 0.03})`;
+        ctx.lineWidth = 1;
         ctx.stroke();
       }
       // outer circle
-      ctx.beginPath(); ctx.arc(cx,cy,R,0,Math.PI*2);
-      ctx.strokeStyle='rgba(0,180,255,0.25)'; ctx.lineWidth=1.5; ctx.stroke();
+      ctx.beginPath();
+      ctx.arc(cx, cy, R, 0, Math.PI * 2);
+      ctx.strokeStyle = "rgba(0,180,255,0.25)";
+      ctx.lineWidth = 1.5;
+      ctx.stroke();
       // inner dot
-      ctx.beginPath(); ctx.arc(cx,cy,4,0,Math.PI*2);
-      ctx.fillStyle='var(--accent)'; ctx.fill();
+      ctx.beginPath();
+      ctx.arc(cx, cy, 4, 0, Math.PI * 2);
+      ctx.fillStyle = "var(--accent)";
+      ctx.fill();
       // radar sweep
-      const angle = t*2;
+      const angle = t * 2;
       const grad = ctx.createConicalGradient ? null : null;
-      ctx.beginPath(); ctx.moveTo(cx,cy);
-      ctx.arc(cx,cy,R,angle,angle+0.8);
+      ctx.beginPath();
+      ctx.moveTo(cx, cy);
+      ctx.arc(cx, cy, R, angle, angle + 0.8);
       ctx.closePath();
-      ctx.fillStyle='rgba(0,180,255,0.06)'; ctx.fill();
+      ctx.fillStyle = "rgba(0,180,255,0.06)";
+      ctx.fill();
       // dots on globe
-      for(let i=0;i<8;i++){
-        const da = (i/8)*Math.PI*2+t;
-        const x = cx+Math.cos(da)*R*0.7;
-        const y = cy+Math.sin(da)*R*0.5;
-        ctx.beginPath(); ctx.arc(x,y,2,0,Math.PI*2);
-        ctx.fillStyle=`rgba(0,212,160,${0.4+Math.sin(da*3+t)*0.3})`; ctx.fill();
+      for (let i = 0; i < 8; i++) {
+        const da = (i / 8) * Math.PI * 2 + t;
+        const x = cx + Math.cos(da) * R * 0.7;
+        const y = cy + Math.sin(da) * R * 0.5;
+        ctx.beginPath();
+        ctx.arc(x, y, 2, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(0,212,160,${0.4 + Math.sin(da * 3 + t) * 0.3})`;
+        ctx.fill();
       }
-      frame++; requestAnimationFrame(animate);
+      frame++;
+      requestAnimationFrame(animate);
     };
     animate();
   }, []);
 
   return (
-    <section id="home" style={{minHeight:'100vh',display:'flex',alignItems:'center',position:'relative',overflow:'hidden',paddingTop:'var(--nav-h)'}}>
+    <section
+      id="home"
+      style={{
+        minHeight: "100vh",
+        display: "flex",
+        alignItems: "center",
+        position: "relative",
+        overflow: "hidden",
+        paddingTop: "var(--nav-h)",
+      }}
+    >
       {/* Background grid */}
-      <div style={{position:'absolute',inset:0,backgroundImage:`linear-gradient(rgba(0,180,255,0.04) 1px,transparent 1px),linear-gradient(90deg,rgba(0,180,255,0.04) 1px,transparent 1px)`,backgroundSize:'60px 60px',pointerEvents:'none'}}/>
+      <div
+        style={{
+          position: "absolute",
+          inset: 0,
+          backgroundImage: `linear-gradient(rgba(0,180,255,0.04) 1px,transparent 1px),linear-gradient(90deg,rgba(0,180,255,0.04) 1px,transparent 1px)`,
+          backgroundSize: "60px 60px",
+          pointerEvents: "none",
+        }}
+      />
       {/* Gradient orbs */}
-      <div style={{position:'absolute',top:'10%',right:'5%',width:500,height:500,borderRadius:'50%',background:'radial-gradient(circle,rgba(0,180,255,0.08) 0%,transparent 70%)',pointerEvents:'none'}}/>
-      <div style={{position:'absolute',bottom:'15%',left:'0%',width:400,height:400,borderRadius:'50%',background:'radial-gradient(circle,rgba(0,212,160,0.06) 0%,transparent 70%)',pointerEvents:'none'}}/>
+      <div
+        style={{
+          position: "absolute",
+          top: "10%",
+          right: "5%",
+          width: 500,
+          height: 500,
+          borderRadius: "50%",
+          background:
+            "radial-gradient(circle,rgba(0,180,255,0.08) 0%,transparent 70%)",
+          pointerEvents: "none",
+        }}
+      />
+      <div
+        style={{
+          position: "absolute",
+          bottom: "15%",
+          left: "0%",
+          width: 400,
+          height: 400,
+          borderRadius: "50%",
+          background:
+            "radial-gradient(circle,rgba(0,212,160,0.06) 0%,transparent 70%)",
+          pointerEvents: "none",
+        }}
+      />
 
-      <div style={{maxWidth:1200,margin:'0 auto',padding:'80px 48px',display:'flex',alignItems:'center',gap:60,width:'100%'}}>
+      <div
+        style={{
+          maxWidth: 1200,
+          margin: "0 auto",
+          padding: "80px 48px",
+          display: "flex",
+          alignItems: "center",
+          gap: 60,
+          width: "100%",
+        }}
+      >
         {/* Left */}
-        <div style={{flex:1,animation:'fadeUp 0.8s ease forwards'}}>
-          <div style={{display:'inline-flex',alignItems:'center',gap:8,padding:'4px 14px',border:'1px solid rgba(0,180,255,0.3)',borderRadius:20,marginBottom:24,background:'rgba(0,180,255,0.06)'}}>
-            <span style={{width:6,height:6,borderRadius:'50%',background:'var(--accent2)',display:'inline-block',animation:'pulse 1.5s ease-in-out infinite'}}/>
-            <span style={{fontFamily:'var(--font-mono)',fontSize:10,color:'var(--accent)',letterSpacing:'0.1em'}}>ESRI GOLD PARTNER · SINCE 1995</span>
+        <div style={{ flex: 1, animation: "fadeUp 0.8s ease forwards" }}>
+          <div
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              gap: 8,
+              padding: "4px 14px",
+              border: "1px solid rgba(0,180,255,0.3)",
+              borderRadius: 20,
+              marginBottom: 24,
+              background: "rgba(0,180,255,0.06)",
+            }}
+          >
+            <span
+              style={{
+                width: 6,
+                height: 6,
+                borderRadius: "50%",
+                background: "var(--accent2)",
+                display: "inline-block",
+                animation: "pulse 1.5s ease-in-out infinite",
+              }}
+            />
+            <span
+              style={{
+                fontFamily: "var(--font-mono)",
+                fontSize: 10,
+                color: "var(--accent)",
+                letterSpacing: "0.1em",
+              }}
+            >
+              ESRI GOLD PARTNER · SINCE 1995
+            </span>
           </div>
-          <h1 style={{fontSize:'clamp(32px,4vw,52px)',fontWeight:700,color:'var(--text-bright)',lineHeight:1.15,marginBottom:20,letterSpacing:'-0.03em'}}>
-            Network Planning<br/>
-            <span style={{color:'var(--accent)'}}>in ArcGIS</span>
+          <h1
+            style={{
+              fontSize: "clamp(32px,4vw,52px)",
+              fontWeight: 700,
+              color: "var(--text-bright)",
+              lineHeight: 1.15,
+              marginBottom: 20,
+              letterSpacing: "-0.03em",
+            }}
+          >
+            Network Planning
+            <br />
+            <span style={{ color: "var(--accent)" }}>in ArcGIS</span>
           </h1>
-          <p style={{fontSize:16,color:'var(--text)',lineHeight:1.8,marginBottom:36,maxWidth:520}}>
-            Ultra-fast wave propagation modelling for telecommunication networks. Covering electromagnetic, light, and sound waves — from <strong style={{color:'var(--text-bright)'}}>10 kHz to 350 GHz</strong>.
+          <p
+            style={{
+              fontSize: 16,
+              color: "var(--text)",
+              lineHeight: 1.8,
+              marginBottom: 36,
+              maxWidth: 520,
+            }}
+          >
+            Ultra-fast wave propagation modelling for telecommunication
+            networks. Covering electromagnetic, light, and sound waves — from{" "}
+            <strong style={{ color: "var(--text-bright)" }}>
+              10 kHz to 350 GHz
+            </strong>
+            .
           </p>
-          <div style={{display:'flex',gap:12,flexWrap:'wrap'}}>
-            <button onClick={onDocsClick} style={{padding:'12px 28px',background:'var(--accent)',border:'none',color:'#050e1a',borderRadius:8,fontFamily:'var(--font-mono)',fontSize:11,letterSpacing:'0.1em',fontWeight:700,cursor:'pointer',textTransform:'uppercase',transition:'all 0.2s'}}>
+          <div style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>
+            <button
+              onClick={onDocsClick}
+              style={{
+                padding: "12px 28px",
+                background: "var(--accent)",
+                border: "none",
+                color: "#050e1a",
+                borderRadius: 8,
+                fontFamily: "var(--font-mono)",
+                fontSize: 11,
+                letterSpacing: "0.1em",
+                fontWeight: 700,
+                cursor: "pointer",
+                textTransform: "uppercase",
+                transition: "all 0.2s",
+              }}
+            >
               Documentation
             </button>
-            <button onClick={onSupportClick} style={{padding:'12px 28px',background:'transparent',border:'1px solid var(--border2)',color:'var(--accent)',borderRadius:8,fontFamily:'var(--font-mono)',fontSize:11,letterSpacing:'0.1em',cursor:'pointer',textTransform:'uppercase',transition:'all 0.2s'}}>
+            <button
+              onClick={onSupportClick}
+              style={{
+                padding: "12px 28px",
+                background: "transparent",
+                border: "1px solid var(--border2)",
+                color: "var(--accent)",
+                borderRadius: 8,
+                fontFamily: "var(--font-mono)",
+                fontSize: 11,
+                letterSpacing: "0.1em",
+                cursor: "pointer",
+                textTransform: "uppercase",
+                transition: "all 0.2s",
+              }}
+            >
               Get Support
             </button>
           </div>
           {/* Stats */}
-          <div style={{display:'flex',gap:32,marginTop:48}}>
-            {[['170+','Clients'],['50+','Countries'],['30+','Years']].map(([n,l])=>(
+          <div style={{ display: "flex", gap: 32, marginTop: 48 }}>
+            {[
+              ["170+", "Clients"],
+              ["50+", "Countries"],
+              ["30+", "Years"],
+            ].map(([n, l]) => (
               <div key={l}>
-                <div style={{fontFamily:'var(--font-display)',fontSize:28,fontWeight:700,color:'var(--accent)',lineHeight:1}}>{n}</div>
-                <div style={{fontFamily:'var(--font-mono)',fontSize:10,color:'var(--text-dim)',letterSpacing:'0.08em',textTransform:'uppercase',marginTop:2}}>{l}</div>
+                <div
+                  style={{
+                    fontFamily: "var(--font-display)",
+                    fontSize: 28,
+                    fontWeight: 700,
+                    color: "var(--accent)",
+                    lineHeight: 1,
+                  }}
+                >
+                  {n}
+                </div>
+                <div
+                  style={{
+                    fontFamily: "var(--font-mono)",
+                    fontSize: 10,
+                    color: "var(--text-dim)",
+                    letterSpacing: "0.08em",
+                    textTransform: "uppercase",
+                    marginTop: 2,
+                  }}
+                >
+                  {l}
+                </div>
               </div>
             ))}
           </div>
         </div>
         {/* Right — canvas globe */}
-        <div style={{flex:'0 0 400px',height:400,position:'relative'}}>
-          <canvas ref={canvasRef} style={{width:'100%',height:'100%',display:'block'}}/>
+        <div style={{ flex: "0 0 400px", height: 400, position: "relative" }}>
+          <canvas
+            ref={canvasRef}
+            style={{ width: "100%", height: "100%", display: "block" }}
+          />
         </div>
       </div>
     </section>
@@ -280,51 +702,212 @@ const HeroSection = ({ onDocsClick, onSupportClick }) => {
 // ── Products Section ──────────────────────────────────────────────────────────
 const ProductsSection = ({ onDocsClick }) => {
   const products = [
-    { name:'CE Desktop Pro', tag:'ArcGIS Pro', icon:'🖥', color:'#00b4ff',
-      desc:'Advanced radio planning extension for ArcGIS Pro. Supports RCP, RLP, Indoor, Sound, and EMF modules.',
-      features:['10 kHz – 350 GHz frequency range','Sub-meter resolution GIS data','Best server, SINR, throughput maps','Drive-test data validation'],
-      docId:'ce-pro-introduction' },
-    { name:'CE Express', tag:'Web Platform', icon:'🌐', color:'#00d4a0',
-      desc:'Multi-user web-based platform for radio planning, optimization and network inventory within ArcGIS Enterprise.',
-      features:['Browser-based, no local install','Cloud or on-premise deployment','CE Inventory3D integrated','Full RF prediction suite'],
-      docId:'ce-express-introduction' },
-    { name:'Inventory3D', tag:'Asset Management', icon:'🗄', color:'#a78bfa',
-      desc:'Database component for network asset management. Runs standalone or as part of CE Express system.',
-      features:['Telecom tower asset tracking','3D visualization support','OSS/BSS integration','SketchUp plug-in available'],
-      docId:'ce-express-introduction' },
+    {
+      name: "CE Desktop Pro",
+      tag: "ArcGIS Pro",
+      icon: "🖥",
+      color: "#00b4ff",
+      desc: "Advanced radio planning extension for ArcGIS Pro. Supports RCP, RLP, Indoor, Sound, and EMF modules.",
+      features: [
+        "10 kHz – 350 GHz frequency range",
+        "Sub-meter resolution GIS data",
+        "Best server, SINR, throughput maps",
+        "Drive-test data validation",
+      ],
+      docId: "ce-pro-introduction",
+    },
+    {
+      name: "CE Express",
+      tag: "Web Platform",
+      icon: "🌐",
+      color: "#00d4a0",
+      desc: "Multi-user web-based platform for radio planning, optimization and network inventory within ArcGIS Enterprise.",
+      features: [
+        "Browser-based, no local install",
+        "Cloud or on-premise deployment",
+        "CE Inventory3D integrated",
+        "Full RF prediction suite",
+      ],
+      docId: "ce-express-introduction",
+    },
+    {
+      name: "Inventory3D",
+      tag: "Asset Management",
+      icon: "🗄",
+      color: "#a78bfa",
+      desc: "Database component for network asset management. Runs standalone or as part of CE Express system.",
+      features: [
+        "Telecom tower asset tracking",
+        "3D visualization support",
+        "OSS/BSS integration",
+        "SketchUp plug-in available",
+      ],
+      docId: "ce-express-introduction",
+    },
   ];
   return (
-    <section id="products" style={{padding:'100px 48px',maxWidth:1200,margin:'0 auto'}}>
-      <div style={{textAlign:'center',marginBottom:60}}>
-        <div style={{fontFamily:'var(--font-mono)',fontSize:10,color:'var(--accent)',letterSpacing:'0.15em',textTransform:'uppercase',marginBottom:12}}>Products</div>
-        <h2 style={{fontSize:36,fontWeight:700,color:'var(--text-bright)',letterSpacing:'-0.02em',marginBottom:16}}>CE Software Suite</h2>
-        <p style={{fontSize:15,color:'var(--text-dim)',maxWidth:560,margin:'0 auto',lineHeight:1.7}}>A complete family of GIS-based tools for telecom planning, optimization, and network management.</p>
+    <section
+      id="products"
+      style={{ padding: "100px 48px", maxWidth: 1200, margin: "0 auto" }}
+    >
+      <div style={{ textAlign: "center", marginBottom: 60 }}>
+        <div
+          style={{
+            fontFamily: "var(--font-mono)",
+            fontSize: 10,
+            color: "var(--accent)",
+            letterSpacing: "0.15em",
+            textTransform: "uppercase",
+            marginBottom: 12,
+          }}
+        >
+          Products
+        </div>
+        <h2
+          style={{
+            fontSize: 36,
+            fontWeight: 700,
+            color: "var(--text-bright)",
+            letterSpacing: "-0.02em",
+            marginBottom: 16,
+          }}
+        >
+          CE Software Suite
+        </h2>
+        <p
+          style={{
+            fontSize: 15,
+            color: "var(--text-dim)",
+            maxWidth: 560,
+            margin: "0 auto",
+            lineHeight: 1.7,
+          }}
+        >
+          A complete family of GIS-based tools for telecom planning,
+          optimization, and network management.
+        </p>
       </div>
-      <div style={{display:'grid',gridTemplateColumns:'repeat(3,1fr)',gap:20}}>
-        {products.map(p => (
-          <div key={p.name} style={{background:'var(--bg2)',border:'1px solid var(--border)',borderRadius:14,overflow:'hidden',transition:'all 0.2s'}}
-            onMouseEnter={e=>{e.currentTarget.style.borderColor=p.color;e.currentTarget.style.boxShadow=`0 8px 32px ${p.color}20`;}}
-            onMouseLeave={e=>{e.currentTarget.style.borderColor='var(--border)';e.currentTarget.style.boxShadow='none';}}>
-            <div style={{padding:'24px 24px 0',borderBottom:`2px solid ${p.color}`,paddingBottom:20,marginBottom:0}}>
-              <div style={{display:'flex',alignItems:'center',gap:10,marginBottom:12}}>
-                <span style={{fontSize:28}}>{p.icon}</span>
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: "repeat(3,1fr)",
+          gap: 20,
+        }}
+      >
+        {products.map((p) => (
+          <div
+            key={p.name}
+            style={{
+              background: "var(--bg2)",
+              border: "1px solid var(--border)",
+              borderRadius: 14,
+              overflow: "hidden",
+              transition: "all 0.2s",
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.borderColor = p.color;
+              e.currentTarget.style.boxShadow = `0 8px 32px ${p.color}20`;
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.borderColor = "var(--border)";
+              e.currentTarget.style.boxShadow = "none";
+            }}
+          >
+            <div
+              style={{
+                padding: "24px 24px 0",
+                borderBottom: `2px solid ${p.color}`,
+                paddingBottom: 20,
+                marginBottom: 0,
+              }}
+            >
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 10,
+                  marginBottom: 12,
+                }}
+              >
+                <span style={{ fontSize: 28 }}>{p.icon}</span>
                 <div>
-                  <div style={{fontFamily:'var(--font-mono)',fontSize:9,color:p.color,letterSpacing:'0.1em',textTransform:'uppercase'}}>{p.tag}</div>
-                  <div style={{fontSize:16,fontWeight:700,color:'var(--text-bright)'}}>{p.name}</div>
+                  <div
+                    style={{
+                      fontFamily: "var(--font-mono)",
+                      fontSize: 9,
+                      color: p.color,
+                      letterSpacing: "0.1em",
+                      textTransform: "uppercase",
+                    }}
+                  >
+                    {p.tag}
+                  </div>
+                  <div
+                    style={{
+                      fontSize: 16,
+                      fontWeight: 700,
+                      color: "var(--text-bright)",
+                    }}
+                  >
+                    {p.name}
+                  </div>
                 </div>
               </div>
-              <p style={{fontSize:13,color:'var(--text-dim)',lineHeight:1.65}}>{p.desc}</p>
+              <p
+                style={{
+                  fontSize: 13,
+                  color: "var(--text-dim)",
+                  lineHeight: 1.65,
+                }}
+              >
+                {p.desc}
+              </p>
             </div>
-            <div style={{padding:24}}>
-              {p.features.map(f => (
-                <div key={f} style={{display:'flex',alignItems:'center',gap:8,marginBottom:8}}>
-                  <span style={{color:p.color,fontSize:12,flexShrink:0}}>▸</span>
-                  <span style={{fontSize:12,color:'var(--text)'}}>{f}</span>
+            <div style={{ padding: 24 }}>
+              {p.features.map((f) => (
+                <div
+                  key={f}
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 8,
+                    marginBottom: 8,
+                  }}
+                >
+                  <span style={{ color: p.color, fontSize: 12, flexShrink: 0 }}>
+                    ▸
+                  </span>
+                  <span style={{ fontSize: 12, color: "var(--text)" }}>
+                    {f}
+                  </span>
                 </div>
               ))}
-              <button onClick={()=>onDocsClick(p.docId)} style={{marginTop:16,width:'100%',padding:'9px',border:`1px solid ${p.color}`,borderRadius:8,background:'transparent',color:p.color,fontFamily:'var(--font-mono)',fontSize:10,letterSpacing:'0.1em',cursor:'pointer',textTransform:'uppercase',transition:'all 0.2s'}}
-                onMouseEnter={e=>{e.currentTarget.style.background=p.color;e.currentTarget.style.color='#050e1a';}}
-                onMouseLeave={e=>{e.currentTarget.style.background='transparent';e.currentTarget.style.color=p.color;}}>
+              <button
+                onClick={() => onDocsClick(p.docId)}
+                style={{
+                  marginTop: 16,
+                  width: "100%",
+                  padding: "9px",
+                  border: `1px solid ${p.color}`,
+                  borderRadius: 8,
+                  background: "transparent",
+                  color: p.color,
+                  fontFamily: "var(--font-mono)",
+                  fontSize: 10,
+                  letterSpacing: "0.1em",
+                  cursor: "pointer",
+                  textTransform: "uppercase",
+                  transition: "all 0.2s",
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.background = p.color;
+                  e.currentTarget.style.color = "#050e1a";
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.background = "transparent";
+                  e.currentTarget.style.color = p.color;
+                }}
+              >
                 View Documentation →
               </button>
             </div>
@@ -338,29 +921,135 @@ const ProductsSection = ({ onDocsClick }) => {
 // ── Solutions Section ─────────────────────────────────────────────────────────
 const SolutionsSection = () => {
   const solutions = [
-    { icon:'📡', title:'5G & Mobile Networks',   desc:'Coverage planning, interference analysis, capacity optimization for 4G/5G NR networks.' },
-    { icon:'🔗', title:'Microwave Backhaul',      desc:'Point-to-point and mesh link design, path profiles, rain fade, ITU-R availability.' },
-    { icon:'🛡', title:'Defense & Public Safety', desc:'Tactical radio coverage, electronic warfare, communication network planning for defense.' },
-    { icon:'🏢', title:'Indoor Planning',          desc:'In-building signal propagation, DAS design, floor-level coverage analysis.' },
-    { icon:'📻', title:'Broadcast & IoT',          desc:'Broadcasting coverage analysis, IoT network planning, spectrum management.' },
-    { icon:'🔊', title:'Sound & Light Modelling', desc:'Siren audibility (ISO 9613), lux calculations, EMF exposure zone analysis.' },
+    {
+      icon: "📡",
+      title: "5G & Mobile Networks",
+      desc: "Coverage planning, interference analysis, capacity optimization for 4G/5G NR networks.",
+    },
+    {
+      icon: "🔗",
+      title: "Microwave Backhaul",
+      desc: "Point-to-point and mesh link design, path profiles, rain fade, ITU-R availability.",
+    },
+    {
+      icon: "🛡",
+      title: "Defense & Public Safety",
+      desc: "Tactical radio coverage, electronic warfare, communication network planning for defense.",
+    },
+    {
+      icon: "🏢",
+      title: "Indoor Planning",
+      desc: "In-building signal propagation, DAS design, floor-level coverage analysis.",
+    },
+    {
+      icon: "📻",
+      title: "Broadcast & IoT",
+      desc: "Broadcasting coverage analysis, IoT network planning, spectrum management.",
+    },
+    {
+      icon: "🔊",
+      title: "Sound & Light Modelling",
+      desc: "Siren audibility (ISO 9613), lux calculations, EMF exposure zone analysis.",
+    },
   ];
   return (
-    <section id="solutions" style={{padding:'100px 48px',background:'var(--bg2)',borderTop:'1px solid var(--border)',borderBottom:'1px solid var(--border)'}}>
-      <div style={{maxWidth:1200,margin:'0 auto'}}>
-        <div style={{textAlign:'center',marginBottom:60}}>
-          <div style={{fontFamily:'var(--font-mono)',fontSize:10,color:'var(--accent)',letterSpacing:'0.15em',textTransform:'uppercase',marginBottom:12}}>Solutions</div>
-          <h2 style={{fontSize:36,fontWeight:700,color:'var(--text-bright)',letterSpacing:'-0.02em',marginBottom:16}}>Industry Verticals</h2>
-          <p style={{fontSize:15,color:'var(--text-dim)',maxWidth:500,margin:'0 auto',lineHeight:1.7}}>CE software serves telecom operators, defense organizations, regulators, and infrastructure companies worldwide.</p>
+    <section
+      id="solutions"
+      style={{
+        padding: "100px 48px",
+        background: "var(--bg2)",
+        borderTop: "1px solid var(--border)",
+        borderBottom: "1px solid var(--border)",
+      }}
+    >
+      <div style={{ maxWidth: 1200, margin: "0 auto" }}>
+        <div style={{ textAlign: "center", marginBottom: 60 }}>
+          <div
+            style={{
+              fontFamily: "var(--font-mono)",
+              fontSize: 10,
+              color: "var(--accent)",
+              letterSpacing: "0.15em",
+              textTransform: "uppercase",
+              marginBottom: 12,
+            }}
+          >
+            Solutions
+          </div>
+          <h2
+            style={{
+              fontSize: 36,
+              fontWeight: 700,
+              color: "var(--text-bright)",
+              letterSpacing: "-0.02em",
+              marginBottom: 16,
+            }}
+          >
+            Industry Verticals
+          </h2>
+          <p
+            style={{
+              fontSize: 15,
+              color: "var(--text-dim)",
+              maxWidth: 500,
+              margin: "0 auto",
+              lineHeight: 1.7,
+            }}
+          >
+            CE software serves telecom operators, defense organizations,
+            regulators, and infrastructure companies worldwide.
+          </p>
         </div>
-        <div style={{display:'grid',gridTemplateColumns:'repeat(3,1fr)',gap:14}}>
-          {solutions.map(s => (
-            <div key={s.title} style={{padding:'24px',background:'var(--bg)',border:'1px solid var(--border)',borderRadius:12,transition:'all 0.2s'}}
-              onMouseEnter={e=>{e.currentTarget.style.borderColor='var(--accent)';e.currentTarget.style.background='var(--accent-l)';}}
-              onMouseLeave={e=>{e.currentTarget.style.borderColor='var(--border)';e.currentTarget.style.background='var(--bg)';}}>
-              <span style={{fontSize:26,display:'block',marginBottom:12}}>{s.icon}</span>
-              <div style={{fontSize:14,fontWeight:600,color:'var(--text-bright)',marginBottom:8}}>{s.title}</div>
-              <div style={{fontSize:12,color:'var(--text-dim)',lineHeight:1.65}}>{s.desc}</div>
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(3,1fr)",
+            gap: 14,
+          }}
+        >
+          {solutions.map((s) => (
+            <div
+              key={s.title}
+              style={{
+                padding: "24px",
+                background: "var(--bg)",
+                border: "1px solid var(--border)",
+                borderRadius: 12,
+                transition: "all 0.2s",
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.borderColor = "var(--accent)";
+                e.currentTarget.style.background = "var(--accent-l)";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.borderColor = "var(--border)";
+                e.currentTarget.style.background = "var(--bg)";
+              }}
+            >
+              <span
+                style={{ fontSize: 26, display: "block", marginBottom: 12 }}
+              >
+                {s.icon}
+              </span>
+              <div
+                style={{
+                  fontSize: 14,
+                  fontWeight: 600,
+                  color: "var(--text-bright)",
+                  marginBottom: 8,
+                }}
+              >
+                {s.title}
+              </div>
+              <div
+                style={{
+                  fontSize: 12,
+                  color: "var(--text-dim)",
+                  lineHeight: 1.65,
+                }}
+              >
+                {s.desc}
+              </div>
             </div>
           ))}
         </div>
@@ -371,39 +1060,179 @@ const SolutionsSection = () => {
 
 // ── About Section ─────────────────────────────────────────────────────────────
 const AboutSection = () => (
-  <section id="about" style={{padding:'100px 48px',maxWidth:1200,margin:'0 auto'}}>
-    <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:60,alignItems:'center'}}>
+  <section
+    id="about"
+    style={{ padding: "100px 48px", maxWidth: 1200, margin: "0 auto" }}
+  >
+    <div
+      style={{
+        display: "grid",
+        gridTemplateColumns: "1fr 1fr",
+        gap: 60,
+        alignItems: "center",
+      }}
+    >
       <div>
-        <div style={{fontFamily:'var(--font-mono)',fontSize:10,color:'var(--accent)',letterSpacing:'0.15em',textTransform:'uppercase',marginBottom:12}}>About</div>
-        <h2 style={{fontSize:36,fontWeight:700,color:'var(--text-bright)',letterSpacing:'-0.02em',marginBottom:20}}>UAB Cellular Expert</h2>
-        <p style={{fontSize:14,color:'var(--text-dim)',lineHeight:1.8,marginBottom:16}}>
-          Founded in <strong style={{color:'var(--text-bright)'}}>1995</strong> in Vilnius, Lithuania, Cellular Expert specialises in the development of telecommunications planning and operations software based on Esri's ArcGIS platform.
+        <div
+          style={{
+            fontFamily: "var(--font-mono)",
+            fontSize: 10,
+            color: "var(--accent)",
+            letterSpacing: "0.15em",
+            textTransform: "uppercase",
+            marginBottom: 12,
+          }}
+        >
+          About
+        </div>
+        <h2
+          style={{
+            fontSize: 36,
+            fontWeight: 700,
+            color: "var(--text-bright)",
+            letterSpacing: "-0.02em",
+            marginBottom: 20,
+          }}
+        >
+          UAB Cellular Expert
+        </h2>
+        <p
+          style={{
+            fontSize: 14,
+            color: "var(--text-dim)",
+            lineHeight: 1.8,
+            marginBottom: 16,
+          }}
+        >
+          Founded in{" "}
+          <strong style={{ color: "var(--text-bright)" }}>1995</strong> in
+          Vilnius, Lithuania, Cellular Expert specialises in the development of
+          telecommunications planning and operations software based on Esri's
+          ArcGIS platform.
         </p>
-        <p style={{fontSize:14,color:'var(--text-dim)',lineHeight:1.8,marginBottom:24}}>
-          In 2000, the "Cellular Expert" brand was introduced as an ArcGIS-based wireless network planning tool. Today CE enhances the intelligence of more than <strong style={{color:'var(--text-bright)'}}>170 communication network companies, regulators, and defense organizations</strong> in over 50 countries.
+        <p
+          style={{
+            fontSize: 14,
+            color: "var(--text-dim)",
+            lineHeight: 1.8,
+            marginBottom: 24,
+          }}
+        >
+          In 2000, the "Cellular Expert" brand was introduced as an ArcGIS-based
+          wireless network planning tool. Today CE enhances the intelligence of
+          more than{" "}
+          <strong style={{ color: "var(--text-bright)" }}>
+            170 communication network companies, regulators, and defense
+            organizations
+          </strong>{" "}
+          in over 50 countries.
         </p>
-        <p style={{fontSize:14,color:'var(--text-dim)',lineHeight:1.8,marginBottom:32}}>
-          CE is an <strong style={{color:'var(--accent)'}}>Esri Gold Partner</strong> and part of the HNIT group — Esri distributors in Iceland, Lithuania, Latvia and Estonia.
+        <p
+          style={{
+            fontSize: 14,
+            color: "var(--text-dim)",
+            lineHeight: 1.8,
+            marginBottom: 32,
+          }}
+        >
+          CE is an{" "}
+          <strong style={{ color: "var(--accent)" }}>Esri Gold Partner</strong>{" "}
+          and part of the HNIT group — Esri distributors in Iceland, Lithuania,
+          Latvia and Estonia.
         </p>
-        <div style={{display:'flex',flexDirection:'column',gap:8}}>
-          {[['🏛','A. Vivulskio g. 7, LT-03162 Vilnius, Lithuania'],['📞','+370 5 206 3240'],['✉','info@cellular-expert.com'],['🌐','www.cellular-expert.com']].map(([icon,text])=>(
-            <div key={text} style={{display:'flex',alignItems:'center',gap:10,fontSize:13,color:'var(--text-dim)'}}>
-              <span>{icon}</span><span>{text}</span>
+        <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+          {[
+            ["🏛", "A. Vivulskio g. 7, LT-03162 Vilnius, Lithuania"],
+            ["📞", "+370 5 206 3240"],
+            ["✉", "info@cellular-expert.com"],
+            ["🌐", "www.cellular-expert.com"],
+          ].map(([icon, text]) => (
+            <div
+              key={text}
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: 10,
+                fontSize: 13,
+                color: "var(--text-dim)",
+              }}
+            >
+              <span>{icon}</span>
+              <span>{text}</span>
             </div>
           ))}
         </div>
       </div>
-      <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:14}}>
-        {[['30+','Years of Experience','var(--accent)'],['170+','Clients Worldwide','var(--accent2)'],['50+','Countries','#a78bfa'],['2000','CE Brand Founded','#f59e0b)']].map(([n,l,c])=>(
-          <div key={l} style={{padding:'28px 24px',background:'var(--bg2)',border:'1px solid var(--border)',borderRadius:14,textAlign:'center'}}>
-            <div style={{fontFamily:'var(--font-display)',fontSize:36,fontWeight:700,color:c,lineHeight:1,marginBottom:8}}>{n}</div>
-            <div style={{fontFamily:'var(--font-mono)',fontSize:10,color:'var(--text-dim)',letterSpacing:'0.08em',textTransform:'uppercase',lineHeight:1.4}}>{l}</div>
+      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14 }}>
+        {[
+          ["30+", "Years of Experience", "var(--accent)"],
+          ["170+", "Clients Worldwide", "var(--accent2)"],
+          ["50+", "Countries", "#a78bfa"],
+          ["2000", "CE Brand Founded", "#f59e0b)"],
+        ].map(([n, l, c]) => (
+          <div
+            key={l}
+            style={{
+              padding: "28px 24px",
+              background: "var(--bg2)",
+              border: "1px solid var(--border)",
+              borderRadius: 14,
+              textAlign: "center",
+            }}
+          >
+            <div
+              style={{
+                fontFamily: "var(--font-display)",
+                fontSize: 36,
+                fontWeight: 700,
+                color: c,
+                lineHeight: 1,
+                marginBottom: 8,
+              }}
+            >
+              {n}
+            </div>
+            <div
+              style={{
+                fontFamily: "var(--font-mono)",
+                fontSize: 10,
+                color: "var(--text-dim)",
+                letterSpacing: "0.08em",
+                textTransform: "uppercase",
+                lineHeight: 1.4,
+              }}
+            >
+              {l}
+            </div>
           </div>
         ))}
-        <div style={{gridColumn:'1/-1',padding:'20px 24px',background:'var(--accent-l)',border:'1px solid var(--border2)',borderRadius:14}}>
-          <div style={{fontFamily:'var(--font-mono)',fontSize:10,color:'var(--accent)',letterSpacing:'0.1em',textTransform:'uppercase',marginBottom:6}}>EU Project</div>
-          <div style={{fontSize:13,color:'var(--text)',lineHeight:1.65}}>
-            EU co-funded project for spreading GIS in Telecoms. Value: <strong style={{color:'var(--text-bright)'}}>€205,301</strong> · EU financing: <strong style={{color:'var(--text-bright)'}}>€100,624</strong> · March 2024 – September 2026
+        <div
+          style={{
+            gridColumn: "1/-1",
+            padding: "20px 24px",
+            background: "var(--accent-l)",
+            border: "1px solid var(--border2)",
+            borderRadius: 14,
+          }}
+        >
+          <div
+            style={{
+              fontFamily: "var(--font-mono)",
+              fontSize: 10,
+              color: "var(--accent)",
+              letterSpacing: "0.1em",
+              textTransform: "uppercase",
+              marginBottom: 6,
+            }}
+          >
+            EU Project
+          </div>
+          <div style={{ fontSize: 13, color: "var(--text)", lineHeight: 1.65 }}>
+            EU co-funded project for spreading GIS in Telecoms. Value:{" "}
+            <strong style={{ color: "var(--text-bright)" }}>€205,301</strong> ·
+            EU financing:{" "}
+            <strong style={{ color: "var(--text-bright)" }}>€100,624</strong> ·
+            March 2024 – September 2026
           </div>
         </div>
       </div>
@@ -414,56 +1243,175 @@ const AboutSection = () => (
 // ── Docs Sidebar ──────────────────────────────────────────────────────────────
 const DocsSidebar = React.memo(function DocsSidebar({ activeDocId, onSelect }) {
   const [openSecs, setOpenSecs] = useState({});
-  const isOpen = key => openSecs[key] !== false;
-  const toggle = key => setOpenSecs(p => ({...p,[key]:!isOpen(key)}));
+  const isOpen = (key) => openSecs[key] !== false;
+  const toggle = (key) => setOpenSecs((p) => ({ ...p, [key]: !isOpen(key) }));
   return (
-    <nav style={{width:260,flexShrink:0,background:'var(--bg2)',borderRight:'1px solid var(--border)',overflowY:'auto',position:'fixed',top:'var(--nav-h)',bottom:0,left:0,zIndex:100}}>
-      <div style={{padding:'16px 12px 8px'}}>
-        <div onClick={()=>onSelect(null)} style={{display:'flex',alignItems:'center',gap:8,padding:'9px 12px',borderRadius:8,background:!activeDocId?'var(--accent-l)':'transparent',color:!activeDocId?'var(--accent)':'var(--text)',fontSize:13,fontWeight:600,cursor:'pointer',marginBottom:6,border:!activeDocId?'1px solid var(--border2)':'1px solid transparent'}}>
+    <nav
+      style={{
+        width: 260,
+        flexShrink: 0,
+        background: "var(--bg2)",
+        borderRight: "1px solid var(--border)",
+        overflowY: "auto",
+        position: "fixed",
+        top: "var(--nav-h)",
+        bottom: 0,
+        left: 0,
+        zIndex: 100,
+      }}
+    >
+      <div style={{ padding: "16px 12px 8px" }}>
+        <div
+          onClick={() => onSelect(null)}
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: 8,
+            padding: "9px 12px",
+            borderRadius: 8,
+            background: !activeDocId ? "var(--accent-l)" : "transparent",
+            color: !activeDocId ? "var(--accent)" : "var(--text)",
+            fontSize: 13,
+            fontWeight: 600,
+            cursor: "pointer",
+            marginBottom: 6,
+            border: !activeDocId
+              ? "1px solid var(--border2)"
+              : "1px solid transparent",
+          }}
+        >
           🏠 <span>Documentation Home</span>
         </div>
       </div>
-      {Object.entries(NAV).map(([section,cats])=>(
-        <div key={section} style={{padding:'4px 0 8px'}}>
-          <div style={{padding:'6px 16px 4px',fontSize:10,fontWeight:700,color:'var(--text-dim)',letterSpacing:'0.12em',textTransform:'uppercase',fontFamily:'var(--font-mono)'}}>{section}</div>
-          {Object.entries(cats).filter(([,items])=>items.length>0).map(([cat,items])=>{
-            const key=`${section}::${cat}`;
-            const open=isOpen(key);
-            const multi=Object.keys(cats).length>1;
-            return (
-              <div key={cat}>
-                {multi&&<div onClick={()=>toggle(key)} style={{display:'flex',alignItems:'center',justifyContent:'space-between',padding:'6px 16px',cursor:'pointer',fontSize:12,fontWeight:600,color:open?'var(--accent)':'var(--text)',userSelect:'none',transition:'color 0.1s'}}>
-                  <span>{cat}</span><span style={{fontSize:10,opacity:.5}}>{open?'▼':'▶'}</span>
-                </div>}
-                {open&&items.map(item=>(
-                  <div key={item.id} onClick={()=>onSelect(item.id)}
-                    style={{padding:`5px 14px 5px ${multi?26:14}px`,fontSize:12.5,lineHeight:1.4,cursor:'pointer',
-                      color:activeDocId===item.id?'var(--accent)':'var(--text)',
-                      background:activeDocId===item.id?'var(--accent-l)':'transparent',
-                      borderLeft:`2px solid ${activeDocId===item.id?'var(--accent)':'transparent'}`,
-                      transition:'all .1s',marginBottom:1}}>
-                    {item.title}
-                  </div>
-                ))}
-              </div>
-            );
-          })}
+      {Object.entries(NAV).map(([section, cats]) => (
+        <div key={section} style={{ padding: "4px 0 8px" }}>
+          <div
+            style={{
+              padding: "6px 16px 4px",
+              fontSize: 10,
+              fontWeight: 700,
+              color: "var(--text-dim)",
+              letterSpacing: "0.12em",
+              textTransform: "uppercase",
+              fontFamily: "var(--font-mono)",
+            }}
+          >
+            {section}
+          </div>
+          {Object.entries(cats)
+            .filter(([, items]) => items.length > 0)
+            .map(([cat, items]) => {
+              const key = `${section}::${cat}`;
+              const open = isOpen(key);
+              const multi = Object.keys(cats).length > 1;
+              return (
+                <div key={cat}>
+                  {multi && (
+                    <div
+                      onClick={() => toggle(key)}
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "space-between",
+                        padding: "6px 16px",
+                        cursor: "pointer",
+                        fontSize: 12,
+                        fontWeight: 600,
+                        color: open ? "var(--accent)" : "var(--text)",
+                        userSelect: "none",
+                        transition: "color 0.1s",
+                      }}
+                    >
+                      <span>{cat}</span>
+                      <span style={{ fontSize: 10, opacity: 0.5 }}>
+                        {open ? "▼" : "▶"}
+                      </span>
+                    </div>
+                  )}
+                  {open &&
+                    items.map((item) => (
+                      <div
+                        key={item.id}
+                        onClick={() => onSelect(item.id)}
+                        style={{
+                          padding: `5px 14px 5px ${multi ? 26 : 14}px`,
+                          fontSize: 12.5,
+                          lineHeight: 1.4,
+                          cursor: "pointer",
+                          color:
+                            activeDocId === item.id
+                              ? "var(--accent)"
+                              : "var(--text)",
+                          background:
+                            activeDocId === item.id
+                              ? "var(--accent-l)"
+                              : "transparent",
+                          borderLeft: `2px solid ${activeDocId === item.id ? "var(--accent)" : "transparent"}`,
+                          transition: "all .1s",
+                          marginBottom: 1,
+                        }}
+                      >
+                        {item.title}
+                      </div>
+                    ))}
+                </div>
+              );
+            })}
         </div>
       ))}
-      <div style={{height:32}}/>
+      <div style={{ height: 32 }} />
     </nav>
   );
 });
 
 const TOC = React.memo(function TOC({ toc }) {
-  const [active, setActive] = useState('');
+  const [active, setActive] = useState("");
   if (!toc.length) return null;
   return (
-    <aside style={{width:200,flexShrink:0,padding:'36px 16px 36px 0',position:'sticky',top:'var(--nav-h)',height:'calc(100vh - var(--nav-h))',overflowY:'auto'}}>
-      <div style={{fontSize:10,fontWeight:700,color:'var(--text-dim)',letterSpacing:'0.1em',textTransform:'uppercase',marginBottom:10,fontFamily:'var(--font-mono)'}}>On this page</div>
-      {toc.map(h=>(
-        <div key={h.id} onClick={()=>{document.getElementById(h.id)?.scrollIntoView({behavior:'smooth'});setActive(h.id);}}
-          style={{padding:`4px 0 4px ${10+(h.level-2)*10}px`,fontSize:12,lineHeight:1.4,cursor:'pointer',color:active===h.id?'var(--accent)':'var(--text-dim)',borderLeft:`1px solid ${active===h.id?'var(--accent)':'var(--border)'}`,transition:'all .1s',marginBottom:2}}>
+    <aside
+      style={{
+        width: 200,
+        flexShrink: 0,
+        padding: "36px 16px 36px 0",
+        position: "sticky",
+        top: "var(--nav-h)",
+        height: "calc(100vh - var(--nav-h))",
+        overflowY: "auto",
+      }}
+    >
+      <div
+        style={{
+          fontSize: 10,
+          fontWeight: 700,
+          color: "var(--text-dim)",
+          letterSpacing: "0.1em",
+          textTransform: "uppercase",
+          marginBottom: 10,
+          fontFamily: "var(--font-mono)",
+        }}
+      >
+        On this page
+      </div>
+      {toc.map((h) => (
+        <div
+          key={h.id}
+          onClick={() => {
+            document
+              .getElementById(h.id)
+              ?.scrollIntoView({ behavior: "smooth" });
+            setActive(h.id);
+          }}
+          style={{
+            padding: `4px 0 4px ${10 + (h.level - 2) * 10}px`,
+            fontSize: 12,
+            lineHeight: 1.4,
+            cursor: "pointer",
+            color: active === h.id ? "var(--accent)" : "var(--text-dim)",
+            borderLeft: `1px solid ${active === h.id ? "var(--accent)" : "var(--border)"}`,
+            transition: "all .1s",
+            marginBottom: 2,
+          }}
+        >
           {h.text}
         </div>
       ))}
@@ -473,65 +1421,211 @@ const TOC = React.memo(function TOC({ toc }) {
 
 // ── Docs Home ─────────────────────────────────────────────────────────────────
 const DocsHome = React.memo(function DocsHome({ onSelect }) {
-  const counts={};
-  DOC_INDEX.forEach(d=>{const s=d.product==='CE Express'?'CE Express':d.product==='CE Pro'?'CE Desktop Pro':d.product==='Both'?'Geodata & Data':'Training';counts[s]=(counts[s]||0)+1;});
+  const counts = {};
+  DOC_INDEX.forEach((d) => {
+    const s =
+      d.product === "CE Express"
+        ? "CE Express"
+        : d.product === "CE Pro"
+          ? "CE Desktop Pro"
+          : d.product === "Both"
+            ? "Geodata & Data"
+            : "Training";
+    counts[s] = (counts[s] || 0) + 1;
+  });
 
-  const cards=[
-    {key:'CE Express',icon:'🌐',color:'#00b4ff',desc:'Web-based RF planning — browser access, multi-user, CE Inventory3D integrated.',firstDoc:'ce-express-introduction'},
-    {key:'CE Desktop Pro',icon:'🖥',color:'#00d4a0',desc:'ArcGIS Pro extension — RCP, RLP, Indoor, Sound, EMF modules. 10 kHz–350 GHz.',firstDoc:'ce-pro-introduction'},
-    {key:'Geodata & Data',icon:'🗺',color:'#f59e0b',desc:'DEM, clutter, buildings, antenna patterns — formats, resolutions, requirements.',firstDoc:'geodata-requirements'},
-    {key:'Training',icon:'🎓',color:'#a78bfa',desc:'Step-by-step practical exercises for CE Express and CE Desktop Pro.',firstDoc:'training-ce-express-workspace'},
+  const cards = [
+    {
+      key: "CE Express",
+      icon: "🌐",
+      color: "#00b4ff",
+      desc: "Web-based RF planning — browser access, multi-user, CE Inventory3D integrated.",
+      firstDoc: "ce-express-introduction",
+    },
+    {
+      key: "CE Desktop Pro",
+      icon: "🖥",
+      color: "#00d4a0",
+      desc: "ArcGIS Pro extension — RCP, RLP, Indoor, Sound, EMF modules. 10 kHz–350 GHz.",
+      firstDoc: "ce-pro-introduction",
+    },
+    {
+      key: "Geodata & Data",
+      icon: "🗺",
+      color: "#f59e0b",
+      desc: "DEM, clutter, buildings, antenna patterns — formats, resolutions, requirements.",
+      firstDoc: "geodata-requirements",
+    },
+    {
+      key: "Training",
+      icon: "🎓",
+      color: "#a78bfa",
+      desc: "Step-by-step practical exercises for CE Express and CE Desktop Pro.",
+      firstDoc: "training-ce-express-workspace",
+    },
   ];
 
   return (
-    <div style={{padding:'48px',flex:1,maxWidth:960}}>
-      <div style={{marginBottom:10}}>
-        <div style={{fontFamily:'var(--font-mono)',fontSize:10,color:'var(--accent)',letterSpacing:'0.12em',textTransform:'uppercase',marginBottom:10}}>Documentation</div>
-        <h1 style={{fontSize:30,fontWeight:700,color:'var(--text-bright)',letterSpacing:'-0.03em',marginBottom:10}}>Cellular Expert Docs</h1>
-        <p style={{fontSize:14,color:'var(--text-dim)',lineHeight:1.75,maxWidth:600,marginBottom:32}}>
-          Technical reference for <strong style={{color:'var(--text-bright)'}}>CE Express 7.3</strong> and <strong style={{color:'var(--text-bright)'}}>CE Desktop Pro 4.9</strong>. Content is stored on <a href="https://github.com/elchinguliev/CellularExpertDocs" target="_blank" rel="noopener" style={{color:'var(--accent)'}}>GitHub</a> and loaded live — edit any <code style={{fontFamily:'var(--font-mono)',fontSize:11,color:'var(--accent2)',background:'var(--bg3)',padding:'1px 6px',borderRadius:4}}>.md</code> file and the page updates automatically.
-        </p>
+    <div style={{ padding: "48px", flex: 1, maxWidth: 960 }}>
+      <div style={{ marginBottom: 10 }}>
+        <div
+          style={{
+            fontFamily: "var(--font-mono)",
+            fontSize: 10,
+            color: "var(--accent)",
+            letterSpacing: "0.12em",
+            textTransform: "uppercase",
+            marginBottom: 10,
+          }}
+        >
+          Documentation
+        </div>
+        <h1
+          style={{
+            fontSize: 30,
+            fontWeight: 700,
+            color: "var(--text-bright)",
+            letterSpacing: "-0.03em",
+            marginBottom: 10,
+          }}
+        >
+          Cellular Expert Docs
+        </h1>
+        <p
+          style={{
+            fontSize: 14,
+            color: "var(--text-dim)",
+            lineHeight: 1.75,
+            maxWidth: 600,
+            marginBottom: 32,
+          }}
+        ></p>
       </div>
 
-      <div style={{display:'grid',gridTemplateColumns:'repeat(2,1fr)',gap:14,marginBottom:40}}>
-        {cards.map(c=>(
-          <div key={c.key} onClick={()=>onSelect(c.firstDoc)}
-            style={{padding:'22px',border:`1px solid var(--border)`,borderRadius:12,cursor:'pointer',background:'var(--bg2)',transition:'all .18s'}}
-            onMouseEnter={e=>{e.currentTarget.style.borderColor=c.color;e.currentTarget.style.boxShadow=`0 4px 24px ${c.color}18`;}}
-            onMouseLeave={e=>{e.currentTarget.style.borderColor='var(--border)';e.currentTarget.style.boxShadow='none';}}>
-            <div style={{display:'flex',alignItems:'center',gap:10,marginBottom:10}}>
-              <span style={{fontSize:24}}>{c.icon}</span>
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: "repeat(2,1fr)",
+          gap: 14,
+          marginBottom: 40,
+        }}
+      >
+        {cards.map((c) => (
+          <div
+            key={c.key}
+            onClick={() => onSelect(c.firstDoc)}
+            style={{
+              padding: "22px",
+              border: `1px solid var(--border)`,
+              borderRadius: 12,
+              cursor: "pointer",
+              background: "var(--bg2)",
+              transition: "all .18s",
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.borderColor = c.color;
+              e.currentTarget.style.boxShadow = `0 4px 24px ${c.color}18`;
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.borderColor = "var(--border)";
+              e.currentTarget.style.boxShadow = "none";
+            }}
+          >
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: 10,
+                marginBottom: 10,
+              }}
+            >
+              <span style={{ fontSize: 24 }}>{c.icon}</span>
               <div>
-                <div style={{fontSize:15,fontWeight:700,color:'var(--text-bright)'}}>{c.key}</div>
-                <div style={{fontFamily:'var(--font-mono)',fontSize:9,color:c.color,letterSpacing:'0.08em'}}>{counts[c.key]||0} articles</div>
+                <div
+                  style={{
+                    fontSize: 15,
+                    fontWeight: 700,
+                    color: "var(--text-bright)",
+                  }}
+                >
+                  {c.key}
+                </div>
+                <div
+                  style={{
+                    fontFamily: "var(--font-mono)",
+                    fontSize: 9,
+                    color: c.color,
+                    letterSpacing: "0.08em",
+                  }}
+                >
+                  {counts[c.key] || 0} articles
+                </div>
               </div>
             </div>
-            <div style={{fontSize:12.5,color:'var(--text-dim)',lineHeight:1.65}}>{c.desc}</div>
+            <div
+              style={{
+                fontSize: 12.5,
+                color: "var(--text-dim)",
+                lineHeight: 1.65,
+              }}
+            >
+              {c.desc}
+            </div>
           </div>
         ))}
       </div>
 
-      <div style={{marginBottom:36}}>
-        <div style={{fontSize:12,fontWeight:600,color:'var(--text-dim)',letterSpacing:'0.06em',textTransform:'uppercase',marginBottom:12,fontFamily:'var(--font-mono)'}}>Popular Topics</div>
-        <div style={{display:'flex',flexWrap:'wrap',gap:7}}>
-          {[['ce-express-workspace','Creating Workspaces'],['ce-express-rf-prediction','RF Prediction'],['ce-express-prediction-models','Propagation Models'],['ce-express-features','Network Objects'],['geodata-requirements','Geodata Requirements'],['geodata-dem','DEM / Terrain'],['network-object-requirements','Network Object Fields'],['ce-express-radio-link','Microwave Link Planning'],['ce-express-admin-installation','CE Express Installation'],['ce-pro-installation','CE Pro Installation']].map(([id,label])=>(
-            <div key={id} onClick={()=>onSelect(id)}
-              style={{padding:'5px 13px',border:'1px solid var(--border)',borderRadius:20,fontSize:12,color:'var(--accent)',cursor:'pointer',transition:'all .12s'}}
-              onMouseEnter={e=>{e.currentTarget.style.background='var(--accent-l)';e.currentTarget.style.borderColor='var(--accent)';}}
-              onMouseLeave={e=>{e.currentTarget.style.background='transparent';e.currentTarget.style.borderColor='var(--border)';}}>
+      <div style={{ marginBottom: 36 }}>
+        <div
+          style={{
+            fontSize: 12,
+            fontWeight: 600,
+            color: "var(--text-dim)",
+            letterSpacing: "0.06em",
+            textTransform: "uppercase",
+            marginBottom: 12,
+            fontFamily: "var(--font-mono)",
+          }}
+        >
+          Popular Topics
+        </div>
+        <div style={{ display: "flex", flexWrap: "wrap", gap: 7 }}>
+          {[
+            ["ce-express-workspace", "Creating Workspaces"],
+            ["ce-express-rf-prediction", "RF Prediction"],
+            ["ce-express-prediction-models", "Propagation Models"],
+            ["ce-express-features", "Network Objects"],
+            ["geodata-requirements", "Geodata Requirements"],
+            ["geodata-dem", "DEM / Terrain"],
+            ["network-object-requirements", "Network Object Fields"],
+            ["ce-express-radio-link", "Microwave Link Planning"],
+            ["ce-express-admin-installation", "CE Express Installation"],
+            ["ce-pro-installation", "CE Pro Installation"],
+          ].map(([id, label]) => (
+            <div
+              key={id}
+              onClick={() => onSelect(id)}
+              style={{
+                padding: "5px 13px",
+                border: "1px solid var(--border)",
+                borderRadius: 20,
+                fontSize: 12,
+                color: "var(--accent)",
+                cursor: "pointer",
+                transition: "all .12s",
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.background = "var(--accent-l)";
+                e.currentTarget.style.borderColor = "var(--accent)";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.background = "transparent";
+                e.currentTarget.style.borderColor = "var(--border)";
+              }}
+            >
               {label}
             </div>
           ))}
-        </div>
-      </div>
-
-      <div style={{padding:'16px 20px',background:'var(--bg2)',border:'1px solid var(--border)',borderRadius:10,display:'flex',gap:14,alignItems:'flex-start'}}>
-        <span style={{fontSize:18,flexShrink:0}}>📁</span>
-        <div>
-          <div style={{fontWeight:600,color:'var(--text-bright)',marginBottom:4,fontSize:13}}>GitHub-Powered — Live Updates</div>
-          <div style={{fontSize:12,color:'var(--text-dim)',lineHeight:1.65}}>
-            All documentation lives at <a href="https://github.com/elchinguliev/CellularExpertDocs" target="_blank" rel="noopener" style={{color:'var(--accent)',fontWeight:500}}>github.com/elchinguliev/CellularExpertDocs</a>. Edit a <code style={{fontFamily:'var(--font-mono)',fontSize:10,color:'var(--accent2)'}}>docs/*.md</code> file on GitHub — refresh this page to see changes instantly.
-          </div>
         </div>
       </div>
     </div>
@@ -541,56 +1635,213 @@ const DocsHome = React.memo(function DocsHome({ onSelect }) {
 // ── Doc Article ───────────────────────────────────────────────────────────────
 const DocArticle = React.memo(function DocArticle({ doc, onSelect }) {
   const toc = extractTOC(doc.content);
-  const [pc,bg] = PC[doc.product]||['#64748b','var(--bg3)'];
+  const [pc, bg] = PC[doc.product] || ["#64748b", "var(--bg3)"];
   return (
     <>
-      <article style={{flex:1,maxWidth:820,padding:'36px 44px',minWidth:0}}>
-        <div style={{display:'flex',alignItems:'center',gap:6,fontSize:11,color:'var(--text-dim)',marginBottom:16,fontFamily:'var(--font-mono)'}}>
-          <span style={{cursor:'pointer',color:'var(--accent)'}} onClick={()=>onSelect(null)}>Docs</span>
-          <span style={{color:'var(--border2)'}}>›</span><span>{doc.product}</span>
-          <span style={{color:'var(--border2)'}}>›</span><span>{doc.category}</span>
+      <article
+        style={{ flex: 1, maxWidth: 820, padding: "36px 44px", minWidth: 0 }}
+      >
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: 6,
+            fontSize: 11,
+            color: "var(--text-dim)",
+            marginBottom: 16,
+            fontFamily: "var(--font-mono)",
+          }}
+        >
+          <span
+            style={{ cursor: "pointer", color: "var(--accent)" }}
+            onClick={() => onSelect(null)}
+          >
+            Docs
+          </span>
+          <span style={{ color: "var(--border2)" }}>›</span>
+          <span>{doc.product}</span>
+          <span style={{ color: "var(--border2)" }}>›</span>
+          <span>{doc.category}</span>
         </div>
-        <div style={{display:'inline-flex',alignItems:'center',gap:5,padding:'3px 11px',borderRadius:20,fontSize:10,fontWeight:600,color:pc,background:bg,border:`1px solid ${pc}33`,marginBottom:12,fontFamily:'var(--font-mono)',letterSpacing:'0.06em'}}>
-          {PI[doc.product]}&nbsp;{doc.product}{doc.version&&<span style={{marginLeft:3,opacity:.6}}>v{doc.version}</span>}
+        <div
+          style={{
+            display: "inline-flex",
+            alignItems: "center",
+            gap: 5,
+            padding: "3px 11px",
+            borderRadius: 20,
+            fontSize: 10,
+            fontWeight: 600,
+            color: pc,
+            background: bg,
+            border: `1px solid ${pc}33`,
+            marginBottom: 12,
+            fontFamily: "var(--font-mono)",
+            letterSpacing: "0.06em",
+          }}
+        >
+          {PI[doc.product]}&nbsp;{doc.product}
+          {doc.version && (
+            <span style={{ marginLeft: 3, opacity: 0.6 }}>v{doc.version}</span>
+          )}
         </div>
-        <div className="art" dangerouslySetInnerHTML={{__html:renderMD(doc.content)}}/>
-        {doc.related?.filter(r=>r.trim()&&DOC_INDEX.find(d=>d.id===r.trim())).length>0&&(
-          <div style={{marginTop:32,paddingTop:20,borderTop:'1px solid var(--border)'}}>
-            <div style={{fontSize:10,fontWeight:700,color:'var(--text-dim)',letterSpacing:'0.1em',textTransform:'uppercase',marginBottom:12,fontFamily:'var(--font-mono)'}}>Related Articles</div>
-            <div style={{display:'flex',flexWrap:'wrap',gap:8}}>
-              {doc.related.filter(r=>r.trim()&&DOC_INDEX.find(d=>d.id===r.trim())).map(r=>{
-                const rel=DOC_INDEX.find(d=>d.id===r.trim());
-                return rel?<div key={r} onClick={()=>onSelect(r.trim())} style={{padding:'7px 14px',border:'1px solid var(--border)',borderRadius:8,fontSize:12.5,color:'var(--accent)',cursor:'pointer',background:'var(--bg2)',transition:'all .12s'}}
-                  onMouseEnter={e=>e.currentTarget.style.borderColor='var(--accent)'}
-                  onMouseLeave={e=>e.currentTarget.style.borderColor='var(--border)'}>{rel.title} →</div>:null;
-              })}
+        <div
+          className="art"
+          dangerouslySetInnerHTML={{ __html: renderMD(doc.content) }}
+        />
+{doc.images && doc.images.length > 0 && (
+  <div style={{marginTop:24}}>
+    {doc.images.map((img, i) => (
+      <figure key={i} style={{margin:'20px 0',padding:'14px 16px',background:'var(--bg2)',border:'1px solid var(--border)',borderRadius:10}}
+        ref={el => el && el.querySelector('img') && el.querySelector('img').addEventListener('error', () => el.style.display='none')}>
+        <img
+          src={img.image_url}
+          alt={img.caption || ''}
+          style={{maxWidth:'100%',height:'auto',borderRadius:8,display:'block'}}
+          onError={e => { e.target.closest('figure').style.display='none'; }}
+        />
+        {img.caption && (
+          <figcaption style={{marginTop:8,fontSize:12,color:'var(--text-dim)',fontStyle:'italic',textAlign:'center'}}>
+            {img.caption}
+          </figcaption>
+        )}
+      </figure>
+    ))}
+  </div>
+)}
+        {doc.related?.filter(
+          (r) => r.trim() && DOC_INDEX.find((d) => d.id === r.trim()),
+        ).length > 0 && (
+          <div
+            style={{
+              marginTop: 32,
+              paddingTop: 20,
+              borderTop: "1px solid var(--border)",
+            }}
+          >
+            <div
+              style={{
+                fontSize: 10,
+                fontWeight: 700,
+                color: "var(--text-dim)",
+                letterSpacing: "0.1em",
+                textTransform: "uppercase",
+                marginBottom: 12,
+                fontFamily: "var(--font-mono)",
+              }}
+            >
+              Related Articles
+            </div>
+            <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
+              {doc.related
+                .filter(
+                  (r) => r.trim() && DOC_INDEX.find((d) => d.id === r.trim()),
+                )
+                .map((r) => {
+                  const rel = DOC_INDEX.find((d) => d.id === r.trim());
+                  return rel ? (
+                    <div
+                      key={r}
+                      onClick={() => onSelect(r.trim())}
+                      style={{
+                        padding: "7px 14px",
+                        border: "1px solid var(--border)",
+                        borderRadius: 8,
+                        fontSize: 12.5,
+                        color: "var(--accent)",
+                        cursor: "pointer",
+                        background: "var(--bg2)",
+                        transition: "all .12s",
+                      }}
+                      onMouseEnter={(e) =>
+                        (e.currentTarget.style.borderColor = "var(--accent)")
+                      }
+                      onMouseLeave={(e) =>
+                        (e.currentTarget.style.borderColor = "var(--border)")
+                      }
+                    >
+                      {rel.title} →
+                    </div>
+                  ) : null;
+                })}
             </div>
           </div>
         )}
-        <div style={{marginTop:24,paddingTop:14,borderTop:'1px solid var(--border)',display:'flex',justifyContent:'space-between',fontSize:11,color:'var(--text-dim)',fontFamily:'var(--font-mono)'}}>
+        <div
+          style={{
+            marginTop: 24,
+            paddingTop: 14,
+            borderTop: "1px solid var(--border)",
+            display: "flex",
+            justifyContent: "space-between",
+            fontSize: 11,
+            color: "var(--text-dim)",
+            fontFamily: "var(--font-mono)",
+          }}
+        >
           <span>{doc.path}</span>
-          <a href={`https://github.com/elchinguliev/CellularExpertDocs/edit/main/${doc.path}`} target="_blank" rel="noopener" style={{color:'var(--accent)',fontSize:11}}>✏ Edit on GitHub</a>
         </div>
       </article>
-      <TOC toc={toc}/>
+      <TOC toc={toc} />
     </>
   );
 });
 
 // ── Footer ────────────────────────────────────────────────────────────────────
 const Footer = () => (
-  <footer style={{borderTop:'1px solid var(--border)',padding:'40px 48px',marginTop:'auto'}}>
-    <div style={{maxWidth:1200,margin:'0 auto',display:'flex',justifyContent:'space-between',alignItems:'center',flexWrap:'wrap',gap:16}}>
-      <div style={{display:'flex',alignItems:'center',gap:10}}>
-        <Logo size={24}/>
-        <span style={{fontFamily:'var(--font-display)',fontSize:14,fontWeight:700,color:'var(--text-bright)',letterSpacing:'0.04em'}}>CELLULAR EXPERT</span>
+  <footer
+    style={{
+      borderTop: "1px solid var(--border)",
+      padding: "40px 48px",
+      marginTop: "auto",
+    }}
+  >
+    <div
+      style={{
+        maxWidth: 1200,
+        margin: "0 auto",
+        display: "flex",
+        justifyContent: "space-between",
+        alignItems: "center",
+        flexWrap: "wrap",
+        gap: 16,
+      }}
+    >
+      <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+        <Logo size={24} />
+        <span
+          style={{
+            fontFamily: "var(--font-display)",
+            fontSize: 14,
+            fontWeight: 700,
+            color: "var(--text-bright)",
+            letterSpacing: "0.04em",
+          }}
+        >
+          CELLULAR EXPERT
+        </span>
       </div>
-      <div style={{fontSize:11,color:'var(--text-dim)',textAlign:'center'}}>
-        © 2026 UAB Cellular Expert · Reg. 303012352 · A. Vivulskio g. 7, Vilnius, Lithuania
+      <div
+        style={{ fontSize: 11, color: "var(--text-dim)", textAlign: "center" }}
+      >
+        © 2026 UAB Cellular Expert · Reg. 303012352 · A. Vivulskio g. 7,
+        Vilnius, Lithuania
       </div>
-      <div style={{display:'flex',gap:16,fontSize:11}}>
-        <a href="mailto:info@cellular-expert.com" style={{color:'var(--accent)'}}>info@cellular-expert.com</a>
-        <a href="https://www.cellular-expert.com" target="_blank" rel="noopener" style={{color:'var(--text-dim)'}}>cellular-expert.com</a>
+      <div style={{ display: "flex", gap: 16, fontSize: 11 }}>
+        <a
+          href="mailto:info@cellular-expert.com"
+          style={{ color: "var(--accent)" }}
+        >
+          info@cellular-expert.com
+        </a>
+        <a
+          href="https://www.cellular-expert.com"
+          target="_blank"
+          rel="noopener"
+          style={{ color: "var(--text-dim)" }}
+        >
+          cellular-expert.com
+        </a>
       </div>
     </div>
   </footer>
@@ -600,33 +1851,35 @@ const Footer = () => (
 // MAIN APP
 // ════════════════════════════════════════════════════════════════════════════
 export default function App() {
-  const [dark, toggleDark]     = useTheme();
+  const [dark, toggleDark] = useTheme();
   // view: 'main' | 'docs' | 'support'
-  const [view, setView]        = useState('main');
+  const [view, setView] = useState("main");
   const [activeDocId, setActiveDocId] = useState(null);
-  const [doc,    setDoc]       = useState(null);
-  const [loading,setLoading]   = useState(false);
+  const [doc, setDoc] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   // Preload all docs in background so search has full-text data to work with
-  useEffect(() => { preloadAllDocs(); }, []);
+  useEffect(() => {
+    preloadAllDocs();
+  }, []);
 
   // Handle doc-link clicks inside rendered markdown
   useEffect(() => {
     const h = (e) => {
-      const a = e.target.closest('a[data-doc]');
+      const a = e.target.closest("a[data-doc]");
       if (!a) return;
       e.preventDefault();
       const target = a.dataset.doc;
 
       // Smart keyword links use prefix "kw:slug:docId" — try in-page anchor first
-      if (target.startsWith('kw:')) {
-        const [, slug, fallbackDocId] = target.split(':');
+      if (target.startsWith("kw:")) {
+        const [, slug, fallbackDocId] = target.split(":");
         const localEl = document.getElementById(slug);
         if (localEl) {
-          localEl.scrollIntoView({ behavior:'smooth' });
+          localEl.scrollIntoView({ behavior: "smooth" });
           return;
         }
-        if (fallbackDocId && fallbackDocId !== 'none') {
+        if (fallbackDocId && fallbackDocId !== "none") {
           loadDoc(fallbackDocId);
         }
         return;
@@ -634,67 +1887,124 @@ export default function App() {
 
       // Plain in-page anchor (#some-heading)
       const localEl = document.getElementById(target);
-      if (localEl) { localEl.scrollIntoView({ behavior:'smooth' }); return; }
+      if (localEl) {
+        localEl.scrollIntoView({ behavior: "smooth" });
+        return;
+      }
 
       // Otherwise treat as a doc id navigation
       loadDoc(target);
     };
-    document.addEventListener('click', h);
-    return () => document.removeEventListener('click', h);
+    document.addEventListener("click", h);
+    return () => document.removeEventListener("click", h);
   }, []);
 
   const loadDoc = useCallback(async (id) => {
-    if (!id) { setDoc(null); setActiveDocId(null); return; }
-    setView('docs'); setActiveDocId(id); setLoading(true); setDoc(null);
-    window.scrollTo(0,0);
+    if (!id) {
+      setDoc(null);
+      setActiveDocId(null);
+      return;
+    }
+    setView("docs");
+    setActiveDocId(id);
+    setLoading(true);
+    setDoc(null);
+    window.scrollTo(0, 0);
     const result = await fetchDoc(id);
-    setDoc(result); setLoading(false);
+    setDoc(result);
+    setLoading(false);
   }, []);
 
   return (
-    <div style={{display:'flex',flexDirection:'column',minHeight:'100vh',background:'var(--bg)'}}>
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        minHeight: "100vh",
+        background: "var(--bg)",
+      }}
+    >
       <style>{ART_CSS}</style>
 
       <Navbar
-        view={view} setView={setView}
-        dark={dark} toggleDark={toggleDark}
+        view={view}
+        setView={setView}
+        dark={dark}
+        toggleDark={toggleDark}
         onDocsSelect={loadDoc}
-        docsActive={view==='docs'}
+        docsActive={view === "docs"}
       />
 
       {/* MAIN SITE */}
-      {view==='main' && (
+      {view === "main" && (
         <>
           <HeroSection
-            onDocsClick={() => { setView('docs'); setActiveDocId(null); window.scrollTo(0,0); }}
-            onSupportClick={() => setView('support')}
+            onDocsClick={() => {
+              setView("docs");
+              setActiveDocId(null);
+              window.scrollTo(0, 0);
+            }}
+            onSupportClick={() => setView("support")}
           />
-          <ProductsSection onDocsClick={loadDoc}/>
-          <SolutionsSection/>
-          <AboutSection/>
-          <Footer/>
+          <ProductsSection onDocsClick={loadDoc} />
+          <SolutionsSection />
+          <AboutSection />
+          <Footer />
         </>
       )}
 
       {/* DOCS VIEW */}
-      {view==='docs' && (
-        <div style={{display:'flex',marginTop:'var(--nav-h)',minHeight:'calc(100vh - var(--nav-h))'}}>
-          <DocsSidebar activeDocId={activeDocId} onSelect={loadDoc}/>
-          <div style={{marginLeft:260,flex:1,display:'flex'}}>
+      {view === "docs" && (
+        <div
+          style={{
+            display: "flex",
+            marginTop: "var(--nav-h)",
+            minHeight: "calc(100vh - var(--nav-h))",
+          }}
+        >
+          <DocsSidebar activeDocId={activeDocId} onSelect={loadDoc} />
+          <div style={{ marginLeft: 260, flex: 1, display: "flex" }}>
             {loading ? (
-              <div style={{padding:'80px',textAlign:'center',flex:1}}>
-                <div style={{width:36,height:36,border:'3px solid var(--border)',borderTopColor:'var(--accent)',borderRadius:'50%',animation:'spin .8s linear infinite',margin:'0 auto 16px'}}/>
-                <div style={{fontSize:13,color:'var(--text-dim)',fontFamily:'var(--font-mono)'}}>Loading from GitHub…</div>
+              <div style={{ padding: "80px", textAlign: "center", flex: 1 }}>
+                <div
+                  style={{
+                    width: 36,
+                    height: 36,
+                    border: "3px solid var(--border)",
+                    borderTopColor: "var(--accent)",
+                    borderRadius: "50%",
+                    animation: "spin .8s linear infinite",
+                    margin: "0 auto 16px",
+                  }}
+                />
+                <div
+                  style={{
+                    fontSize: 13,
+                    color: "var(--text-dim)",
+                    fontFamily: "var(--font-mono)",
+                  }}
+                >
+                  Loading from GitHub…
+                </div>
               </div>
-            ) : !activeDocId ? <DocsHome onSelect={loadDoc}/> : doc ? <DocArticle doc={doc} onSelect={loadDoc}/> : null}
+            ) : !activeDocId ? (
+              <DocsHome onSelect={loadDoc} />
+            ) : doc ? (
+              <DocArticle doc={doc} onSelect={loadDoc} />
+            ) : null}
           </div>
         </div>
       )}
 
       {/* SUPPORT VIEW */}
-      {view==='support' && (
-        <div style={{marginTop:'var(--nav-h)',flex:1,display:'flex'}}>
-          <SupportPortal onViewDocs={() => { setView('docs'); setActiveDocId(null); }}/>
+      {view === "support" && (
+        <div style={{ marginTop: "var(--nav-h)", flex: 1, display: "flex" }}>
+          <SupportPortal
+            onViewDocs={() => {
+              setView("docs");
+              setActiveDocId(null);
+            }}
+          />
         </div>
       )}
     </div>

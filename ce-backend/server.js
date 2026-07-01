@@ -49,9 +49,16 @@ app.get('/api/docs/:docId', async (req, res) => {
     const docRes = await pool.query(`SELECT * FROM documents WHERE doc_id = $1`, [docId]);
     if (docRes.rows.length === 0) return res.status(404).json({ error: 'Not found' });
 
+    // Exclude inline UI icons (gear/book/button glyphs scraped alongside real
+    // screenshots) — these were never meant to be shown as standalone figures.
+    // Real screenshots are captioned as "... page" / "... dialog" etc.;
+    // scraped inline icons are captioned "... icon".
     const imagesRes = await pool.query(
       `SELECT image_url, caption, section_anchor, display_order
-       FROM document_images WHERE doc_id = $1 ORDER BY display_order`,
+       FROM document_images
+       WHERE doc_id = $1
+         AND caption NOT ILIKE '%icon%'
+       ORDER BY display_order`,
       [docId]
     );
     const headingsRes = await pool.query(
