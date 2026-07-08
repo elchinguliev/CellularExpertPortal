@@ -13,6 +13,8 @@ related:
 
 # Logging In to CE Express
 
+> **Version:** CE Express v7.2
+
 ## Accessing the Application
 
 Open CE Express by typing its URL in your web browser:

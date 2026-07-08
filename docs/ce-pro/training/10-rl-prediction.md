@@ -1,5 +1,7 @@
 # 10. RL / Microwave Link Prediction
 
+> **Version:** CE Pro v4.9
+
 ## Overview
 
 CE Pro includes a full **Radio Link (RL) / Microwave planning** module for fixed point-to-point links. It covers power budget calculation, interference analysis, and geoclimatic availability.

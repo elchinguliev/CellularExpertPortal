@@ -1,5 +1,7 @@
 # CE Express Only Administrator Guide v7.2
 
+> **Version:** CE Express v7.2
+
 Cellular Expert Express Administrator Guide 7.2
 Table of Contents
 1. System requirements 4

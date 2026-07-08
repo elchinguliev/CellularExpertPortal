@@ -13,6 +13,8 @@ related:
 
 # Training Module 04 — RF Prediction and Scenario Analysis
 
+> **Version:** CE Express v7.2
+
 **Duration:** ~2 hours | **Level:** Intermediate
 
 ## Objectives

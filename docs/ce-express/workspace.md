@@ -1,5 +1,7 @@
 # Workspaces
 
+> **Version:** CE Express v7.2
+
 A **[workspace](#kw:what-a-workspace-contains:none)** is the top-level project container in CE Express. Each [workspace](#kw:what-a-workspace-contains:none) links your [network objects](#kw:object-types:ce-express-network-objects) to a geodata folder (terrain and [clutter](#kw:clutter-classification-values:ce-express-geodata) rasters) and a set of prediction model settings. You must have a [workspace](#kw:what-a-workspace-contains:none) selected before you can view objects on the map or run RF predictions.
 
 ## What a Workspace Contains

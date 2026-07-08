@@ -1,5 +1,7 @@
 # CE Express User Guide v7.3
 
+> **Version:** CE Express v7.2
+
 Cellular Expert Express User Guide 7.3
 Table of Contents
 1. Introduction 7

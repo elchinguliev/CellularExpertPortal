@@ -1,5 +1,7 @@
 # Logging In to CE Express
 
+> **Version:** CE Express v7.2
+
 CE Express uses **ArcGIS Enterprise** for authentication. You log in with your ArcGIS credentials — the same username and password you use for your organisation's ArcGIS portal.
 
 ## Steps

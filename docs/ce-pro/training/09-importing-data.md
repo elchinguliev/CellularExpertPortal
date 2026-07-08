@@ -1,5 +1,7 @@
 # 09. Importing Data
 
+> **Version:** CE Pro v4.9
+
 Network import for CE for ArcGIS Pro
 - From:
 - Excel

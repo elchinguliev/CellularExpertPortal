@@ -1,5 +1,7 @@
 # 06. Prediction Models
 
+> **Version:** CE Express v7.2
+
 1. Objective
 This module explains how prediction [models](#kw:31-models:none) are used in CE Express, how different [models](#kw:31-models:none)
 influence calculation results, and how model parameters can be adjusted to reflect different

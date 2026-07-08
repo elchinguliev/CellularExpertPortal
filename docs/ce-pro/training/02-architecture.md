@@ -1,5 +1,7 @@
 # 02. Architecture
 
+> **Version:** CE Pro v4.9
+
 CE Products and Solutions
 CE Desktop CE Express
 For ArcGIS Pro For ArcGIS Enterprise

@@ -1,5 +1,7 @@
 # 07. Cell Prediction
 
+> **Version:** CE Pro v4.9
+
 ## Cell Structure
 
 Each cell in CE Pro has two categories of parameters:

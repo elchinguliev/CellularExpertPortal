@@ -1,5 +1,7 @@
 # 08. Prediction Models
 
+> **Version:** CE Pro v4.9
+
 ## Overview — Path Loss
 
 The fundamental relationship used in CE Pro predictions:

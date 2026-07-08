@@ -1,5 +1,7 @@
 # Requirements for CE Network Objects
 
+> **Version:** CE Pro v4.9 / CE Express v7.2
+
 Cellular Expert Network Requirements
 Table of Contents
 1. Primary Data Structure 3

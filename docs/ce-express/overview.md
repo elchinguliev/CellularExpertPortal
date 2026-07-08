@@ -1,5 +1,7 @@
 # CE Express — Overview
 
+> **Version:** CE Express v7.2
+
 CE Express is a **web-based radio network planning and optimisation** application built on top of **ArcGIS Enterprise**. It runs entirely in a browser — no desktop software is required for end users.
 
 ## What CE Express Does

@@ -12,6 +12,8 @@ related:
 
 # Training Module 01 — Creating a Workspace in CE Express
 
+> **Version:** CE Express v7.2
+
 **Duration:** ~1 hour | **Level:** Beginner
 
 ## Objectives

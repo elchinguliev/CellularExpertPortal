@@ -13,6 +13,8 @@ related:
 
 # Radio Link (Microwave) Prediction
 
+> **Version:** CE Express v7.2
+
 CE Express includes a complete **microwave (MW) backhaul planning** module for point-to-point and point-to-multipoint radio links.
 
 ## Creating a Radio Link

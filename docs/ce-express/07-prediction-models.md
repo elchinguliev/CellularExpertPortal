@@ -13,6 +13,8 @@ related:
 
 # Prediction Models
 
+> **Version:** CE Express v7.2
+
 Prediction [models](#kw:31-models:ce-express-tr-models) define how **signal propagation losses** are calculated across the coverage area.
 
 ## How CE Evaluates Propagation

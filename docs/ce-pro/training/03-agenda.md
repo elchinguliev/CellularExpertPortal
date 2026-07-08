@@ -1,5 +1,7 @@
 # 03. Agenda
 
+> **Version:** CE Pro v4.9
+
 Time scheduler
 ACTION TIME
 7th Thursday

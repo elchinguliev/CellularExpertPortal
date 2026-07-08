@@ -12,6 +12,8 @@ related:
 
 # User Management
 
+> **Version:** CE Express v7.2
+
 Administrators manage users through the **CE Inventory3D web application admin interface**.
 
 ## User Roles

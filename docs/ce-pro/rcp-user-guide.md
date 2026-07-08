@@ -1,5 +1,7 @@
 # CE Desktop RCP User Guide v4.9
 
+> **Version:** CE Pro v4.9
+
 Cellular Expert Desktop RCP for ArcGIS Pro User Guide 4.9
 Table of Contents
 1. Software Purpose and Functionality 6

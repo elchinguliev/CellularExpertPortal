@@ -1,5 +1,7 @@
 # CE Desktop RLP User Guide v4.9
 
+> **Version:** CE Pro v4.9
+
 Cellular Expert Desktop RLP for ArcGIS Pro User Guide 4.9
 Table of Contents
 1. Software Purpose and Functionality 7

@@ -1,5 +1,7 @@
 # Network Objects
 
+> **Version:** CE Express v7.2
+
 [Network objects](#kw:object-types:none) are the radio infrastructure elements managed in CE Express: **sites**, **cells**, and **repeaters**. All objects are stored in the PostgreSQL database and are visible on the map when a workspace is selected.
 
 ## Object Types

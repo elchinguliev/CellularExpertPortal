@@ -1,5 +1,7 @@
 # 05. Import Data
 
+> **Version:** CE Express v7.2
+
 1. Objective
 This module explains how to import external data into CE Express and how imported data
 becomes part of the project environment. It covers the import of [network objects](#kw:object-types:ce-express-network-objects) from CSV

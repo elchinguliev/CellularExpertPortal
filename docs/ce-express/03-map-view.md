@@ -13,6 +13,8 @@ related:
 
 # Map View
 
+> **Version:** CE Express v7.2
+
 The CE Express [Map view](#kw:layout:none) is the primary workspace for network planning and analysis.
 
 ## Layout

@@ -15,6 +15,8 @@ related:
 
 # Geodata Requirements for CE Software
 
+> **Version:** CE Pro v4.9 / CE Express v7.2
+
 CE Express and CE Desktop Pro use GIS datasets for accurate RF propagation calculations. The quality and resolution of [geodata](#kw:geodata-types-summary:none) **directly determines prediction accuracy**.
 
 ## Geodata Types Summary

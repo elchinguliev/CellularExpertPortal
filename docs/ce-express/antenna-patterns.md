@@ -1,5 +1,7 @@
 # Antenna Patterns
 
+> **Version:** CE Express v7.2
+
 An [antenna pattern](#kw:managing-the-antenna-library:none) file describes how an antenna radiates power in different directions — both horizontally (azimuth) and vertically (elevation). CE Express uses these patterns to calculate accurate RF predictions rather than assuming an idealised omnidirectional antenna.
 
 ## Supported Formats

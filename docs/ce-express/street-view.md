@@ -1,5 +1,7 @@
 # Street View
 
+> **Version:** CE Express v7.2
+
 The **[Street View](#kw:navigating-street-view:none)** tool splits the CE Express map screen into two panels — the standard map on the left and a street-level view on the right. Use it to visually verify antenna positions, check surroundings, and confirm site conditions without visiting the location.
 
 ## Opening Street View

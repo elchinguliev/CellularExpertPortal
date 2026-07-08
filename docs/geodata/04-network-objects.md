@@ -11,6 +11,8 @@ related:
 
 # Requirements for CE Network Objects
 
+> **Version:** CE Pro v4.9 / CE Express v7.2
+
 CE [network objects](#kw:object-types:ce-express-network-objects) must meet minimum field [requirements](#kw:minimum-requirements:none) for successful import and use in calculations.
 
 ## Primary Data Structure

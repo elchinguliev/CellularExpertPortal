@@ -12,6 +12,8 @@ related:
 
 # Digital Terrain Model (DEM / DTM)
 
+> **Version:** CE Pro v4.9 / CE Express v7.2
+
 The Digital Terrain Model ([DEM](#kw:checking-your-dem:none) or [DTM](#kw:checking-your-dem:none)) provides **terrain elevation data** used in all RF propagation calculations. It is the **single most important geodata input** in CE Express.
 
 ## Requirements

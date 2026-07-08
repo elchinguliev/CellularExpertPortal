@@ -1,5 +1,7 @@
 # 09. Preparing Geodata
 
+> **Version:** CE Express v7.2
+
 1. Objective
 This module explains how to prepare topographical and land-use geodata in ArcGIS Pro so
 it can be correctly used for predictions in CE Express or CE Desktop for ArcGIS Pro. The

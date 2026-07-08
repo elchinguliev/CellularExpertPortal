@@ -12,6 +12,8 @@ related:
 
 # CE Express System Requirements
 
+> **Version:** CE Express v7.2
+
 ## Minimum Hardware Requirements
 
 ### Server (CE Express + ArcGIS Enterprise+Enterprise+server+deployment))

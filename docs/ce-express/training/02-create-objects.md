@@ -1,5 +1,7 @@
 # 02. Create Objects
 
+> **Version:** CE Express v7.2
+
 1. Objective
 This module explains and demonstrates how to create, edit, duplicate, and manage network
 objects in CE Express using object templates.

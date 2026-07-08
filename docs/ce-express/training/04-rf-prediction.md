@@ -1,5 +1,7 @@
 # 04. RF Prediction
 
+> **Version:** CE Express v7.2
+
 1. Objective
 This module explains how to run RF predictions in CE Express and how to interpret and
 manage results. It covers both rapid “what-if” checks and full project predictions, including

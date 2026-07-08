@@ -1,5 +1,7 @@
 # 03. Line of Sight (Profile)
 
+> **Version:** CE Express v7.2
+
 1. Objective
 This module introduces [Line of Sight](#kw:running-a-profile:ce-express-profile) (LOS) and visibility analysis in CE Express. It
 demonstrates how to use [profiling](#kw:42-step-2-profiling-pointtopoint-analysis:none) and visibility tools to evaluate spatial conditions between

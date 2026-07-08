@@ -13,6 +13,8 @@ related:
 
 # Introduction to Cellular Expert Express
 
+> **Version:** CE Express v7.2
+
 Cellular Expert Express (CE Express) is a **web-based** telecommunication network planning, optimization, and [data management](#kw:31-data-management-tools:inventory3d-user-guide) solution built on **Esri ArcGIS Enterprise**.
 
 CE Express is the merged **Inventory 3D** and **Cellular Expert Express** solution in one product:

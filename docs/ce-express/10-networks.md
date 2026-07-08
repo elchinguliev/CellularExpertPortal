@@ -12,6 +12,8 @@ related:
 
 # Networks Tool
 
+> **Version:** CE Express v7.2
+
 The **Networks** tool allows management of multiple objects grouped together — enabling batch predictions, attribute tracking, and calculation without manual selection each time.
 
 ## What a Network Shows

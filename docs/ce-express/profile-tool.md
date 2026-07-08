@@ -1,5 +1,7 @@
 # Path Profile & Line of Sight
 
+> **Version:** CE Express v7.2
+
 The **Profile** tool analyses the terrain between two points — typically between a transmitter (cell) and a receiver location. It shows whether a clear [line of sight](#kw:running-a-profile:none) exists, how much [Fresnel zone](#kw:fresnel-zone-clearance:none) clearance there is, the expected path loss, and the link power budget.
 
 ## When to Use the Profile Tool

@@ -12,6 +12,8 @@ related:
 
 # CE Express Installation Guide
 
+> **Version:** CE Express v7.2
+
 ## Prerequisites
 
 Before installing CE Express, ensure the following are installed and configured:

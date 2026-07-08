@@ -1,5 +1,7 @@
 # 07. MW Equipment
 
+> **Version:** CE Express v7.2
+
 1. Objective
 This tutorial will show you how to add new MW links, manage and do predictions.
 At the end of the exercise you will be able to:

@@ -1,5 +1,7 @@
 # RF Prediction
 
+> **Version:** CE Express v7.2
+
 [RF Prediction](#kw:running-a-full-rf-prediction:none) calculates radio coverage for a set of cells across a defined area. The output is a set of raster layers — [RSRP](#kw:typical-rsrp-thresholds:none), SINR, throughput, and best server — that can be displayed on the map and published to ArcGIS Portal.
 
 ## Prerequisites

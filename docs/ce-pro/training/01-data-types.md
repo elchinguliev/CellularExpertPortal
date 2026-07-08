@@ -1,5 +1,7 @@
 # 01. Data Types
 
+> **Version:** CE Pro v4.9
+
 Data Types
 Data can be:
 1. Vector

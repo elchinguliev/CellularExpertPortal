@@ -13,6 +13,8 @@ related:
 
 # Line of Sight and Profile Analysis
 
+> **Version:** CE Express v7.2
+
 The **Profile** tool computes terrain cross-sections and checks whether two points have a clear radio path.
 
 ## Opening the Profile Tool

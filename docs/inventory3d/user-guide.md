@@ -1,5 +1,7 @@
 # CE Inventory3D User Guide v4.6
 
+> **Version:** Inventory 3D
+
 1. Introduction
 CE Inventory3D is a versatile tool for inventory planning, design, space and assets management. It consists
 of several building blocks that together provide a customized and tailored solution for a specific need.

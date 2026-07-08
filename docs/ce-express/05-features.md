@@ -13,6 +13,8 @@ related:
 
 # Features Tool
 
+> **Version:** CE Express v7.2
+
 The **Features** tool is used to import, add, select, and edit all [network objects](#kw:network-object-types:none) on the map.
 
 Click the **Features** button in the left toolbar to open the tool.

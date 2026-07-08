@@ -14,6 +14,8 @@ related:
 
 # Workspaces
 
+> **Version:** CE Express v7.2
+
 A **[workspace](#kw:creating-a-workspace:none)** is a project container in CE Express that holds all [network objects](#kw:object-types:ce-express-network-objects), geodata references, and settings for a specific planning area.
 
 ## What a Workspace Contains

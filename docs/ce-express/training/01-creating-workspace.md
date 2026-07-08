@@ -1,5 +1,7 @@
 # 01. Creating Workspace
 
+> **Version:** CE Express v7.2
+
 1. Objective
 This module provides a step-by-step, best-practice-driven introduction to creating and
 managing workspaces in CE Server-Express. The material is designed from an RF planning

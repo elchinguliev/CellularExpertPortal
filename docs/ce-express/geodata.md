@@ -1,5 +1,7 @@
 # Geodata & Rasters
 
+> **Version:** CE Express v7.2
+
 CE Express uses raster files to model terrain and land use when calculating RF predictions. These files must be prepared and placed on the CE Express server before running any predictions.
 
 ## Required Files

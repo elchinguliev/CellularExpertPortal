@@ -15,6 +15,8 @@ related:
 
 # RF Prediction
 
+> **Version:** CE Express v7.2
+
 [RF Prediction](#kw:what-rf-prediction-uses:none) calculates **map-based raster outputs** representing expected signal or radio performance across a coverage area.
 
 ## What RF Prediction Uses

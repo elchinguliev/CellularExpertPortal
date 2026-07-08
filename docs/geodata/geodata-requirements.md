@@ -1,5 +1,7 @@
 # Geodata Requirements 2025
 
+> **Version:** CE Pro v4.9 / CE Express v7.2
+
 Cellular Expert Technical Documentation
 Table of Contents
 1. High-Precision Inputs and Next-Generation Propagation 3

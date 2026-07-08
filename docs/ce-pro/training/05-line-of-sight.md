@@ -1,5 +1,7 @@
 # 05. Line of Sight (Profile)
 
+> **Version:** CE Pro v4.9
+
 ## Geodata Layers Used
 
 CE Pro uses three GIS data layers for precise RF propagation modelling:

@@ -12,6 +12,8 @@ related:
 
 # Clutter Classes and Clutter Heights
 
+> **Version:** CE Pro v4.9 / CE Express v7.2
+
 ## Clutter Classes Grid
 
 The [clutter](#kw:clutter-classes-grid:none) (land-use) raster classifies each pixel by **land cover type**, allowing CE to apply appropriate diffraction and attenuation corrections per environment.
