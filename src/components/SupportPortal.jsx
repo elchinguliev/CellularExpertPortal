@@ -34,7 +34,7 @@ export default function SupportPortal({ onViewDocs }) {
   const [activeTkt,  setActiveTkt]  = useState(null);
   const [ticketDraft, setTicketDraft] = useState(null);
 
-  // Admin state
+    // Admin state
   const [admFilter, setAdmFilter] = useState('All');
   const [admTkt,    setAdmTkt]    = useState(null);
   const [openFaq,   setOpenFaq]   = useState(null);
@@ -54,36 +54,83 @@ export default function SupportPortal({ onViewDocs }) {
     }
   }, [currentUser]);
 
+  // ── Activity Tracking ─────────────────────────────────────────────────────
+  const logActivity = (activityType, page, details = '') => {
+    if (!currentUser) return;
+
+    fetch('http://localhost:8000/admin/log-activity', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        user_id: currentUser.id,
+        user_name: currentUser.name,
+        user_role: currentUser.role,
+        activity_type: activityType,
+        page: page,
+        details: details
+      })
+    }).catch(error => {
+      console.error('Failed to log activity:', error);
+    });
+  };
+
   // ── Auth ──────────────────────────────────────────────────────────────────
   const handleLogin = (u) => {
-  setCurrentUser(u);
-  setTab((u.role==='admin'||u.role==='agent') ? 'adm-dashboard' : 'chat');
+    setCurrentUser(u);
+    setTab((u.role==='admin'||u.role==='agent') ? 'adm-dashboard' : 'chat');
 
-  fetch('http://localhost:8000/admin/log-activity', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      user_id: u.id,
-      user_name: u.name,
-      user_role: u.role,
-      activity_type: 'login',
-      page: 'Support Portal',
-      details: 'User logged in'
-    })
-  }).catch(error => {
-    console.error('Failed to log login activity:', error);
-  });
+    fetch('http://localhost:8000/admin/log-activity', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        user_id: u.id,
+        user_name: u.name,
+        user_role: u.role,
+        activity_type: 'login',
+        page: 'Support Portal',
+        details: 'User logged in'
+      })
+    }).catch(error => {
+      console.error('Failed to log login activity:', error);
+    });
   };
+
   const handleRegister = (data) => {
-    const nu = { id:'u'+Date.now(), ...data, role:'user',
+    const nu = {
+      id:'u'+Date.now(),
+      ...data,
+      role:'user',
       joined:new Date().toISOString().split('T')[0],
-      avatar:data.name.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase() };
-    setUsers(p=>[...p,nu]); setCurrentUser(nu); setTab('chat');
-  };
-  const logout = () => {
-    setCurrentUser(null); setMessages([]); setShowSug(true); setTab('chat');
+      avatar:data.name.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase()
+    };
+
+    setUsers(p=>[...p,nu]);
+    setCurrentUser(nu);
+    setTab('chat');
+
+    fetch('http://localhost:8000/admin/log-activity', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        user_id: nu.id,
+        user_name: nu.name,
+        user_role: nu.role,
+        activity_type: 'register',
+        page: 'Support Portal',
+        details: 'New user registered'
+      })
+    }).catch(error => {
+      console.error('Failed to log registration activity:', error);
+    });
   };
 
+  const logout = () => {
+    logActivity('logout', 'Support Portal', 'User logged out');
+    setCurrentUser(null);
+    setMessages([]);
+    setShowSug(true);
+    setTab('chat');
+  };
   // ── Chat ──────────────────────────────────────────────────────────────────
   const sendMsg = async (text) => {
   const t = text.trim();
@@ -219,8 +266,17 @@ export default function SupportPortal({ onViewDocs }) {
           {id:'docs-link', icon:'▤',label:'Documentation'},
           {id:'profile',   icon:'◎',label:'Profile'},
         ]).map(item => (
-          <div key={item.id}
-            onClick={() => { if (item.id==='docs-link') { onViewDocs(); return; } setTab(item.id); }}
+                    <div key={item.id}
+            onClick={() => {
+              if (item.id === 'docs-link') {
+                logActivity('page_visit', 'Documentation', 'User opened documentation page');
+                onViewDocs();
+                return;
+              }
+
+              setTab(item.id);
+              logActivity('page_visit', item.label, `User opened ${item.label} tab`);
+            }}
             style={{display:'flex',alignItems:'center',gap:9,padding:'8px 10px',borderRadius:8,
               background:tab===item.id?'var(--accent-l)':'transparent',
               color:tab===item.id?'var(--accent)':'var(--text)',
