@@ -196,6 +196,7 @@ export default function SupportPortal({ onViewDocs }) {
           {id:'adm-dashboard',icon:'◈',label:'Dashboard'},
           {id:'adm-tickets',  icon:'◉',label:'All Tickets'},
           {id:'adm-agents',   icon:'◐',label:'Agent Stats'},
+	  {id:'adm-ai-insights', icon:'✦', label:'AI Insights'},
           {id:'adm-users',    icon:'◎',label:'Users'},
         ] : [
           {id:'chat',      icon:'◈',label:'Support Chat'},
@@ -640,6 +641,181 @@ export default function SupportPortal({ onViewDocs }) {
     </div>
   );
 
+    // ── Admin AI Insights ─────────────────────────────────────────────────────
+  const AdminAIInsights = () => {
+    const [insights, setInsights] = useState(null);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState('');
+
+    useEffect(() => {
+      fetch('http://localhost:8000/admin/ai-insights')
+        .then(response => {
+          if (!response.ok) {
+            throw new Error('Failed to load AI insights');
+          }
+          return response.json();
+        })
+        .then(data => {
+          setInsights(data);
+          setLoading(false);
+        })
+        .catch(() => {
+          setError('AI insights backend is not reachable. Please check FastAPI on port 8000.');
+          setLoading(false);
+        });
+    }, []);
+
+    if (loading) {
+      return (
+        <div style={{flex:1,overflowY:'auto',padding:14}}>
+          <div style={{fontWeight:700,color:'var(--text-bright)',fontSize:12,marginBottom:9}}>
+            AI Insights
+          </div>
+          <div style={{color:'var(--text-dim)',fontSize:12}}>Loading AI analytics...</div>
+        </div>
+      );
+    }
+
+    if (error) {
+      return (
+        <div style={{flex:1,overflowY:'auto',padding:14}}>
+          <div style={{fontWeight:700,color:'var(--text-bright)',fontSize:12,marginBottom:9}}>
+            AI Insights
+          </div>
+          <div style={{color:'#dc2626',fontSize:12}}>{error}</div>
+        </div>
+      );
+    }
+
+    const summary = insights?.summary || {};
+
+    return (
+      <div style={{flex:1,overflowY:'auto',padding:14}}>
+        <div style={{marginBottom:14}}>
+          <div style={{fontWeight:700,color:'var(--text-bright)',fontSize:12,marginBottom:4}}>
+            AI Insights
+          </div>
+          <div style={{fontSize:11,color:'var(--text-dim)'}}>
+            Admin analytics from chatbot questions, confidence scores, and ticket-needed cases.
+          </div>
+        </div>
+
+        <div style={{display:'grid',gridTemplateColumns:'repeat(3, minmax(0, 1fr))',gap:10,marginBottom:12}}>
+          <div style={{background:'var(--bg2)',border:'1px solid var(--border)',borderRadius:10,padding:12}}>
+            <div style={{fontFamily:'var(--font-mono)',fontSize:9,color:'var(--text-dim)',letterSpacing:'.08em',marginBottom:5}}>
+              TOTAL AI QUESTIONS
+            </div>
+            <div style={{fontSize:24,fontWeight:800,color:'var(--text-bright)'}}>
+              {summary.total_questions || 0}
+            </div>
+          </div>
+
+          <div style={{background:'var(--bg2)',border:'1px solid var(--border)',borderRadius:10,padding:12}}>
+            <div style={{fontFamily:'var(--font-mono)',fontSize:9,color:'var(--text-dim)',letterSpacing:'.08em',marginBottom:5}}>
+              TICKET NEEDED
+            </div>
+            <div style={{fontSize:24,fontWeight:800,color:'var(--text-bright)'}}>
+              {summary.ticket_needed_count || 0}
+            </div>
+          </div>
+
+          <div style={{background:'var(--bg2)',border:'1px solid var(--border)',borderRadius:10,padding:12}}>
+            <div style={{fontFamily:'var(--font-mono)',fontSize:9,color:'var(--text-dim)',letterSpacing:'.08em',marginBottom:5}}>
+              AVG CONFIDENCE
+            </div>
+            <div style={{fontSize:24,fontWeight:800,color:'var(--text-bright)'}}>
+              {Math.round((summary.average_confidence || 0) * 100)}%
+            </div>
+          </div>
+        </div>
+
+        <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:10,marginBottom:12}}>
+          <div style={{background:'var(--bg2)',border:'1px solid var(--border)',borderRadius:10,padding:12}}>
+            <div style={{fontWeight:700,color:'var(--text-bright)',fontSize:12,marginBottom:8}}>
+              Questions by Product
+            </div>
+
+            {(insights?.questions_by_product || []).length === 0 ? (
+              <div style={{fontSize:11,color:'var(--text-dim)'}}>No product data yet.</div>
+            ) : (
+              (insights?.questions_by_product || []).map(item => (
+                <div key={item.product} style={{display:'flex',justifyContent:'space-between',alignItems:'center',padding:'7px 0',borderBottom:'1px solid var(--border)'}}>
+                  <div style={{fontSize:12,color:'var(--text-bright)'}}>{item.product}</div>
+                  <div style={{fontFamily:'var(--font-mono)',fontSize:11,color:'var(--accent)'}}>
+                    {item.question_count}
+                  </div>
+                </div>
+              ))
+            )}
+          </div>
+
+          <div style={{background:'var(--bg2)',border:'1px solid var(--border)',borderRadius:10,padding:12}}>
+            <div style={{fontWeight:700,color:'var(--text-bright)',fontSize:12,marginBottom:8}}>
+              Ticket-Needed Questions
+            </div>
+
+            {(insights?.ticket_needed_questions || []).length === 0 ? (
+              <div style={{fontSize:11,color:'var(--text-dim)'}}>No ticket-needed questions yet.</div>
+            ) : (
+              (insights?.ticket_needed_questions || []).slice(0, 5).map(q => (
+                <div key={q.id} style={{padding:'7px 0',borderBottom:'1px solid var(--border)'}}>
+                  <div style={{fontSize:12,color:'var(--text-bright)',marginBottom:3}}>
+                    {q.question}
+                  </div>
+                  <div style={{fontFamily:'var(--font-mono)',fontSize:10,color:'var(--text-dim)'}}>
+                    {q.product || 'Unknown'} · {Math.round((q.confidence || 0) * 100)}%
+                  </div>
+                </div>
+              ))
+            )}
+          </div>
+        </div>
+
+        <div style={{background:'var(--bg2)',border:'1px solid var(--border)',borderRadius:10,padding:12,marginBottom:12}}>
+          <div style={{fontWeight:700,color:'var(--text-bright)',fontSize:12,marginBottom:8}}>
+            Low-Confidence Questions
+          </div>
+
+          {(insights?.low_confidence_questions || []).length === 0 ? (
+            <div style={{fontSize:11,color:'var(--text-dim)'}}>No low-confidence questions yet.</div>
+          ) : (
+            (insights?.low_confidence_questions || []).map(q => (
+              <div key={q.id} style={{padding:'8px 0',borderBottom:'1px solid var(--border)'}}>
+                <div style={{fontSize:12,color:'var(--text-bright)',marginBottom:3}}>
+                  {q.question}
+                </div>
+                <div style={{fontFamily:'var(--font-mono)',fontSize:10,color:'var(--text-dim)'}}>
+                  User: {q.user_name || 'Unknown'} · Product: {q.product || 'Unknown'} · Confidence: {Math.round((q.confidence || 0) * 100)}%
+                </div>
+              </div>
+            ))
+          )}
+        </div>
+
+        <div style={{background:'var(--bg2)',border:'1px solid var(--border)',borderRadius:10,padding:12}}>
+          <div style={{fontWeight:700,color:'var(--text-bright)',fontSize:12,marginBottom:8}}>
+            Recent AI Questions
+          </div>
+
+          {(insights?.recent_questions || []).length === 0 ? (
+            <div style={{fontSize:11,color:'var(--text-dim)'}}>No AI questions yet.</div>
+          ) : (
+            (insights?.recent_questions || []).map(q => (
+              <div key={q.id} style={{padding:'8px 0',borderBottom:'1px solid var(--border)'}}>
+                <div style={{fontSize:12,color:'var(--text-bright)',marginBottom:3}}>
+                  {q.question}
+                </div>
+                <div style={{fontFamily:'var(--font-mono)',fontSize:10,color:'var(--text-dim)'}}>
+                  User: {q.user_name || 'Unknown'} · Product: {q.product || 'Unknown'} · Ticket needed: {q.ticket_needed ? 'Yes' : 'No'}
+                </div>
+              </div>
+            ))
+          )}
+        </div>
+      </div>
+    );
+  };
+
   // ── Admin Users ───────────────────────────────────────────────────────────
   const AdminUsers = () => (
     <div style={{flex:1,overflowY:'auto',padding:14}}>
@@ -661,14 +837,15 @@ export default function SupportPortal({ onViewDocs }) {
   // ── Render ────────────────────────────────────────────────────────────────
   const renderTab = () => {
     switch(tab) {
-      case 'chat':          return <ChatTab/>;
-      case 'tickets':       return <TicketsTab/>;
-      case 'profile':       return <ProfileTab/>;
-      case 'adm-dashboard': return <AdminDashboard/>;
-      case 'adm-tickets':   return <AdminTickets/>;
-      case 'adm-agents':    return <AdminAgents/>;
-      case 'adm-users':     return <AdminUsers/>;
-      default:              return <ChatTab/>;
+      case 'chat':            return <ChatTab/>;
+      case 'tickets':         return <TicketsTab/>;
+      case 'profile':         return <ProfileTab/>;
+      case 'adm-dashboard':   return <AdminDashboard/>;
+      case 'adm-tickets':     return <AdminTickets/>;
+      case 'adm-agents':      return <AdminAgents/>;
+      case 'adm-ai-insights': return <AdminAIInsights/>;
+      case 'adm-users':       return <AdminUsers/>;
+      default:                return <ChatTab/>;
     }
   };
 
