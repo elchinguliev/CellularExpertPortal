@@ -65,8 +65,8 @@ async function syncDoc(entry) {
   const headings = extractHeadings(content);
 
   await pool.query(
-    `INSERT INTO documents (doc_id, title, product, category, tags, github_path, content, display_order, updated_at)
-     VALUES ($1,$2,$3,$4,$5,$6,$7,$8, NOW())
+    `INSERT INTO documents (doc_id, title, product, category, tags, github_path, content, display_order, pdf_path, updated_at)
+     VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9, NOW())
      ON CONFLICT (doc_id) DO UPDATE SET
        title = EXCLUDED.title,
        product = EXCLUDED.product,
@@ -74,8 +74,9 @@ async function syncDoc(entry) {
        tags = EXCLUDED.tags,
        content = EXCLUDED.content,
        display_order = EXCLUDED.display_order,
+       pdf_path = EXCLUDED.pdf_path,
        updated_at = NOW()`,
-    [entry.id, entry.title, entry.product, entry.category, tags, entry.path, content, entry.order || 99]
+    [entry.id, entry.title, entry.product, entry.category, tags, entry.path, content, entry.order || 99, entry.pdf || null]
   );
 
   await pool.query(`DELETE FROM document_headings WHERE doc_id = $1`, [entry.id]);

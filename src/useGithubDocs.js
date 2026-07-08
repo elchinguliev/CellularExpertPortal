@@ -1,4 +1,5 @@
 const API_BASE = 'http://localhost:4000/api';
+const SERVER_BASE = 'http://localhost:4000'; // used for /downloads/... static PDF files
 
 export const DOC_INDEX = [
   // ── CE Express — Getting Started ────────────────────────────────────────────
@@ -93,12 +94,13 @@ export async function fetchDoc(docId) {
     const res = await fetch(`${API_BASE}/docs/${docId}`);
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
     const data = await res.json();
-    const doc = {
+   const doc = {
       ...entry,
       content: data.content,
       images: data.images || [],
       headings: data.headings || [],
       tags: data.tags || [],
+      pdf_path: data.pdf_path,
     };
     cache[docId] = doc;
     return doc;
@@ -171,4 +173,4 @@ export function searchIndex(query) {
     .slice(0, 10);
 }
 
-export { API_BASE };
+export { API_BASE, SERVER_BASE };

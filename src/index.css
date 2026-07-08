@@ -1,47 +1,47 @@
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
-  --bg:#050e1a;
-  --bg2:#0a1628;
-  --bg3:#0f1e35;
-  --bg4:#162540;
-  --border:rgba(0,180,255,0.12);
-  --border2:rgba(0,180,255,0.22);
-  --accent:#00b4ff;
-  --accent-l:rgba(0,180,255,0.08);
-  --accent2:#00d4a0;
-  --accent2-l:rgba(0,212,160,0.08);
-  --text:#8ca8c4;
-  --text-dim:#4a6a8a;
-  --text-bright:#e0f0ff;
-  --shadow:0 4px 20px rgba(0,0,0,0.4);
-  --shadow-lg:0 12px 48px rgba(0,0,0,0.5);
+  --bg:#0a0a1a;
+  --bg2:#101028;
+  --bg3:#161638;
+  --bg4:#1e1e48;
+  --border:rgba(91,79,235,0.16);
+  --border2:rgba(91,79,235,0.28);
+  --accent:#5b4feb;
+  --accent-l:rgba(91,79,235,0.1);
+  --accent2:#e94fc9;
+  --accent2-l:rgba(233,79,201,0.1);
+  --text:#a4a0c8;
+  --text-dim:#615c8a;
+  --text-bright:#f0eeff;
+  --shadow:0 4px 20px rgba(10,5,40,0.4);
+  --shadow-lg:0 12px 48px rgba(10,5,40,0.5);
   --font:'Inter',sans-serif;
   --font-mono:'IBM Plex Mono',monospace;
   --font-display:'Rajdhani',sans-serif;
   --nav-h:64px;
 }
 body.light{
-  --bg:#f0f6ff;
+  --bg:#f5f4ff;
   --bg2:#ffffff;
-  --bg3:#e8f0fb;
-  --bg4:#dde8f5;
-  --border:rgba(0,100,200,0.12);
-  --border2:rgba(0,100,200,0.22);
-  --accent:#0077cc;
-  --accent-l:rgba(0,119,204,0.08);
-  --accent2:#059669;
-  --accent2-l:rgba(5,150,105,0.08);
-  --text:#334155;
-  --text-dim:#64748b;
-  --text-bright:#0f172a;
-  --shadow:0 4px 20px rgba(0,0,0,0.08);
-  --shadow-lg:0 12px 48px rgba(0,0,0,0.12);
+  --bg3:#eeecfd;
+  --bg4:#e2ddfa;
+  --border:rgba(49,49,207,0.14);
+  --border2:rgba(49,49,207,0.24);
+  --accent:#3131cf;
+  --accent-l:rgba(49,49,207,0.08);
+  --accent2:#c22e9e;
+  --accent2-l:rgba(194,46,158,0.08);
+  --text:#3a3660;
+  --text-dim:#6b6690;
+  --text-bright:#181530;
+  --shadow:0 4px 20px rgba(49,20,120,0.08);
+  --shadow-lg:0 12px 48px rgba(49,20,120,0.12);
 }
 html{scroll-behavior:smooth}
 body{background:var(--bg);color:var(--text);font-family:var(--font);font-size:14px;line-height:1.6;overflow-x:hidden;transition:background 0.3s,color 0.3s}
 ::-webkit-scrollbar{width:4px;height:4px}
 ::-webkit-scrollbar-track{background:var(--bg)}
 ::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px}
-::selection{background:rgba(0,180,255,0.2)}
+::selection{background:rgba(91,79,235,0.25)}
 button,input,textarea,select{font-family:var(--font)}
 a{color:var(--accent);text-decoration:none}

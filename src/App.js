@@ -1,7 +1,14 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
-import { DOC_INDEX, NAV, fetchDoc, preloadAllDocs } from "./useGithubDocs";
+import {
+  DOC_INDEX,
+  NAV,
+  fetchDoc,
+  preloadAllDocs,
+  SERVER_BASE,
+} from "./useGithubDocs";
 import SupportPortal from "./components/SupportPortal";
 import SearchBar from "./components/SearchBar";
+import ceLogoIcon from "./assets/ce-logo-icon.png";
 
 // ── Theme ─────────────────────────────────────────────────────────────────────
 function useTheme() {
@@ -21,6 +28,10 @@ function inline(t) {
     .replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>")
     .replace(/\*(.+?)\*/g, "<em>$1</em>")
     .replace(/`(.+?)`/g, "<code>$1</code>")
+    .replace(
+      /!\[(.*?)\]\((.+?)\)/g,
+      '<img src="$2" alt="$1" loading="lazy" style="max-width:100%;border-radius:8px;border:1px solid var(--border);margin:14px 0;display:block;" onerror="this.style.display=\'none\'" />',
+    )
     .replace(
       /\[(.+?)\]\(#(.+?)\)/g,
       '<a href="#" data-doc="$2" class="doc-lnk">$1 →</a>',
@@ -159,6 +170,54 @@ function renderMD(text) {
   if (inBq) html += "</blockquote>";
   return html;
 }
+// Builds the HTML for one image/icon figure (shared by inline placement and fallback).
+function buildFigureHtml(img) {
+  const isIcon =
+    /\.svg(\?.*)?$/i.test(img.image_url) ||
+    /icons?\//i.test(img.image_url) ||
+    /-?(16|24|32)\.(png|svg)(\?.*)?$/i.test(img.image_url);
+  const caption = (img.caption || "").replace(/</g, "&lt;");
+  const imgStyle = isIcon
+    ? "width:32px;height:32px;min-width:32px;flex-shrink:0;object-fit:contain;display:block;"
+    : "max-width:100%;height:auto;border-radius:8px;display:block;";
+  const figureStyle = isIcon
+    ? "margin:16px 0;padding:14px 16px;background:var(--bg2);border:1px solid var(--border);border-radius:10px;display:flex;align-items:center;gap:14px;"
+    : "margin:16px 0;padding:14px 16px;background:var(--bg2);border:1px solid var(--border);border-radius:10px;";
+  const capStyle = isIcon
+    ? "font-size:12px;color:var(--text-dim);font-style:italic;text-align:left;"
+    : "margin-top:8px;font-size:12px;color:var(--text-dim);font-style:italic;text-align:center;";
+  return `<figure style="${figureStyle}" data-img-fig="1"><img src="${img.image_url}" alt="${caption}" style="${imgStyle}" onerror="this.closest('figure').style.display='none'" />${
+    caption ? `<figcaption style="${capStyle}">${caption}</figcaption>` : ""
+  }</figure>`;
+}
+
+// Inserts each image right after the heading whose id matches its section_anchor.
+// Images with no matching heading (or no section_anchor) are appended at the end
+// as a fallback, so nothing silently disappears.
+function injectImages(contentHtml, images) {
+  if (!images || images.length === 0) return contentHtml;
+  let html = contentHtml;
+  const leftover = [];
+  for (const img of images) {
+    const anchor = (img.section_anchor || "").trim();
+    const figureHtml = buildFigureHtml(img);
+    if (!anchor) {
+      leftover.push(figureHtml);
+      continue;
+    }
+    const headingRe = new RegExp(`(<h[1-6] id="${anchor}"[^>]*>.*?</h[1-6]>)`, "i");
+    if (headingRe.test(html)) {
+      html = html.replace(headingRe, `$1${figureHtml}`);
+    } else {
+      leftover.push(figureHtml);
+    }
+  }
+  if (leftover.length > 0) {
+    html += `<div style="margin-top:24px">${leftover.join("")}</div>`;
+  }
+  return html;
+}
+
 function extractTOC(c) {
   return (c || "")
     .split("\n")
@@ -178,10 +237,10 @@ function extractTOC(c) {
 }
 
 const PC = {
-  "CE Express": ["#00b4ff", "rgba(0,180,255,0.1)"],
-  "CE Pro": ["#00d4a0", "rgba(0,212,160,0.1)"],
+  "CE Express": ["#5b4feb", "rgba(91,79,235,0.1)"],
+  "CE Pro": ["#e94fc9", "rgba(233,79,201,0.1)"],
   Both: ["#f59e0b", "rgba(245,158,11,0.1)"],
-  Training: ["#a78bfa", "rgba(167,139,250,0.1)"],
+  Training: ["#8b5cf6", "rgba(139,92,246,0.1)"],
 };
 const PI = { "CE Express": "🌐", "CE Pro": "🖥", Both: "🗺", Training: "🎓" };
 
@@ -312,7 +371,17 @@ const Navbar = React.memo(function Navbar({
           flexShrink: 0,
         }}
       >
-        <Logo size={30} />
+        <img
+          src={ceLogoIcon}
+          alt="Cellular Expert"
+          style={{
+            width: 30,
+            height: 30,
+            borderRadius: 7,
+            objectFit: "contain",
+            display: "block",
+          }}
+        />
         <div>
           <div
             style={{
@@ -1420,7 +1489,7 @@ const TOC = React.memo(function TOC({ toc }) {
 });
 
 // ── Docs Home ─────────────────────────────────────────────────────────────────
-const DocsHome = React.memo(function DocsHome({ onSelect }) {
+const DocsHome = React.memo(function DocsHome({ onSelect, onSupportClick }) {
   const counts = {};
   DOC_INDEX.forEach((d) => {
     const s =
@@ -1447,7 +1516,7 @@ const DocsHome = React.memo(function DocsHome({ onSelect }) {
       icon: "🖥",
       color: "#00d4a0",
       desc: "ArcGIS Pro extension — RCP, RLP, Indoor, Sound, EMF modules. 10 kHz–350 GHz.",
-      firstDoc: "ce-pro-introduction",
+      firstDoc: "ce-pro-rcp",
     },
     {
       key: "Geodata & Data",
@@ -1461,12 +1530,35 @@ const DocsHome = React.memo(function DocsHome({ onSelect }) {
       icon: "🎓",
       color: "#a78bfa",
       desc: "Step-by-step practical exercises for CE Express and CE Desktop Pro.",
-      firstDoc: "training-ce-express-workspace",
+      firstDoc: "ce-express-tr-workspace",
+    },
+  ];
+  const steps = [
+    {
+      n: "01",
+      title: "Pick a product",
+      desc: "Choose CE Express, CE Desktop Pro, Geodata, Inventory3D, or Training below.",
+    },
+    {
+      n: "02",
+      title: "Browse that product's docs only",
+      desc: "The sidebar shows guides, references, and training for that product — nothing else mixed in.",
+    },
+    {
+      n: "03",
+      title: "Download or search",
+      desc: "Grab the official PDF guide from any article, or use search to jump straight to a topic.",
+    },
+    {
+      n: "04",
+      title: "Still stuck? Contact Support",
+      desc: "Can't find the answer in the docs? Open a ticket or browse FAQs in the Support section.",
     },
   ];
 
   return (
     <div style={{ padding: "48px", flex: 1, maxWidth: 960 }}>
+      {/* ── Intro: what this platform is ──────────────────────────────────── */}
       <div style={{ marginBottom: 10 }}>
         <div
           style={{
@@ -1478,7 +1570,7 @@ const DocsHome = React.memo(function DocsHome({ onSelect }) {
             marginBottom: 10,
           }}
         >
-          Documentation
+          Documentation &amp; Support
         </div>
         <h1
           style={{
@@ -1486,22 +1578,154 @@ const DocsHome = React.memo(function DocsHome({ onSelect }) {
             fontWeight: 700,
             color: "var(--text-bright)",
             letterSpacing: "-0.03em",
-            marginBottom: 10,
+            marginBottom: 14,
           }}
         >
-          Cellular Expert Docs
+          Cellular Expert Docs &amp; Support Center
         </h1>
         <p
           style={{
             fontSize: 14,
             color: "var(--text-dim)",
             lineHeight: 1.75,
-            maxWidth: 600,
+            maxWidth: 640,
+            marginBottom: 14,
+          }}
+        >
+          This is the dedicated documentation and support platform for the
+          Cellular Expert product family — separate from the main marketing
+          site. It covers{" "}
+          <strong style={{ color: "var(--text-bright)" }}>CE Express</strong>{" "}
+          (web),{" "}
+          <strong style={{ color: "var(--text-bright)" }}>
+            CE Desktop Pro
+          </strong>{" "}
+          (ArcGIS Pro — RCP, RLP, Indoor, Sound, EMF),{" "}
+          <strong style={{ color: "var(--text-bright)" }}>Inventory3D</strong>,
+          and shared{" "}
+          <strong style={{ color: "var(--text-bright)" }}>Geodata</strong>{" "}
+          requirements.
+        </p>
+        <p
+          style={{
+            fontSize: 14,
+            color: "var(--text-dim)",
+            lineHeight: 1.75,
+            maxWidth: 640,
             marginBottom: 32,
           }}
-        ></p>
+        >
+          Here you'll find user guides, administrator guides, step-by-step
+          training material, downloadable PDF manuals, and full-text search —
+          each product's documentation kept in its own separate section rather
+          than mixed together. Need help beyond the docs? Head to the{" "}
+          <span
+            onClick={onSupportClick}
+            style={{
+              color: "var(--accent)",
+              cursor: "pointer",
+              textDecoration: "underline",
+            }}
+          >
+            Support
+          </span>{" "}
+          area to open a ticket or check FAQs.
+        </p>
       </div>
 
+      {/* ── How it works ──────────────────────────────────────────────────── */}
+      <div style={{ marginBottom: 40 }}>
+        <div
+          style={{
+            fontSize: 12,
+            fontWeight: 600,
+            color: "var(--text-dim)",
+            letterSpacing: "0.06em",
+            textTransform: "uppercase",
+            marginBottom: 14,
+            fontFamily: "var(--font-mono)",
+          }}
+        >
+          How it works
+        </div>
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(2,1fr)",
+            gap: 14,
+          }}
+        >
+          {steps.map((s) => (
+            <div
+              key={s.n}
+              style={{
+                display: "flex",
+                gap: 12,
+                padding: "16px 18px",
+                border: "1px solid var(--border)",
+                borderRadius: 10,
+                background: "var(--bg2)",
+              }}
+            >
+              <div
+                style={{
+                  fontFamily: "var(--font-mono)",
+                  fontSize: 13,
+                  fontWeight: 700,
+                  color: "var(--accent)",
+                  flexShrink: 0,
+                }}
+              >
+                {s.n}
+              </div>
+              <div>
+                <div
+                  style={{
+                    fontSize: 13,
+                    fontWeight: 600,
+                    color: "var(--text-bright)",
+                    marginBottom: 4,
+                  }}
+                >
+                  {s.title}
+                </div>
+                <div
+                  style={{
+                    fontSize: 12,
+                    color: "var(--text-dim)",
+                    lineHeight: 1.6,
+                  }}
+                >
+                  {s.desc}
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* ── Product picker (near the end, on purpose) ────────────────────── */}
+      <div style={{ marginBottom: 8 }}>
+        <div
+          style={{
+            fontSize: 12,
+            fontWeight: 600,
+            color: "var(--text-dim)",
+            letterSpacing: "0.06em",
+            textTransform: "uppercase",
+            marginBottom: 4,
+            fontFamily: "var(--font-mono)",
+          }}
+        >
+          Choose a product to get started
+        </div>
+        <div
+          style={{ fontSize: 12.5, color: "var(--text-dim)", marginBottom: 14 }}
+        >
+          Each product opens its own dedicated set of docs — nothing from other
+          products is mixed in.
+        </div>
+      </div>
       <div
         style={{
           display: "grid",
@@ -1685,30 +1909,34 @@ const DocArticle = React.memo(function DocArticle({ doc, onSelect }) {
             <span style={{ marginLeft: 3, opacity: 0.6 }}>v{doc.version}</span>
           )}
         </div>
+        {doc.pdf_path && (
+          <a
+            href={`${SERVER_BASE}/downloads/${doc.pdf_path.split("/").map(encodeURIComponent).join("/")}`}
+            download
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              gap: 8,
+              padding: "8px 14px",
+              borderRadius: 8,
+              fontSize: 12,
+              fontWeight: 600,
+              color: "var(--accent)",
+              background: "var(--bg2)",
+              border: "1px solid var(--border)",
+              marginBottom: 16,
+              marginLeft: 10,
+              textDecoration: "none",
+              fontFamily: "var(--font-mono)",
+            }}
+          >
+            ⬇ Download PDF
+          </a>
+        )}
         <div
           className="art"
-          dangerouslySetInnerHTML={{ __html: renderMD(doc.content) }}
+          dangerouslySetInnerHTML={{ __html: injectImages(renderMD(doc.content), doc.images) }}
         />
-{doc.images && doc.images.length > 0 && (
-  <div style={{marginTop:24}}>
-    {doc.images.map((img, i) => (
-      <figure key={i} style={{margin:'20px 0',padding:'14px 16px',background:'var(--bg2)',border:'1px solid var(--border)',borderRadius:10}}
-        ref={el => el && el.querySelector('img') && el.querySelector('img').addEventListener('error', () => el.style.display='none')}>
-        <img
-          src={img.image_url}
-          alt={img.caption || ''}
-          style={{maxWidth:'100%',height:'auto',borderRadius:8,display:'block'}}
-          onError={e => { e.target.closest('figure').style.display='none'; }}
-        />
-        {img.caption && (
-          <figcaption style={{marginTop:8,fontSize:12,color:'var(--text-dim)',fontStyle:'italic',textAlign:'center'}}>
-            {img.caption}
-          </figcaption>
-        )}
-      </figure>
-    ))}
-  </div>
-)}
         {doc.related?.filter(
           (r) => r.trim() && DOC_INDEX.find((d) => d.id === r.trim()),
         ).length > 0 && (
@@ -1808,7 +2036,17 @@ const Footer = () => (
       }}
     >
       <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-        <Logo size={24} />
+        <img
+          src={ceLogoIcon}
+          alt="Cellular Expert"
+          style={{
+            width: 24,
+            height: 24,
+            borderRadius: 6,
+            objectFit: "contain",
+            display: "block",
+          }}
+        />{" "}
         <span
           style={{
             fontFamily: "var(--font-display)",
@@ -1988,7 +2226,10 @@ export default function App() {
                 </div>
               </div>
             ) : !activeDocId ? (
-              <DocsHome onSelect={loadDoc} />
+              <DocsHome
+                onSelect={loadDoc}
+                onSupportClick={() => setView("support")}
+              />
             ) : doc ? (
               <DocArticle doc={doc} onSelect={loadDoc} />
             ) : null}

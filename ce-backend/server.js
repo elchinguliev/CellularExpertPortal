@@ -5,11 +5,21 @@
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
+const path = require('path');
 const { Pool } = require('pg');
 
 const app = express();
 app.use(cors());
 app.use(express.json());
+
+// Serves everything under ce-backend/public/downloads at:
+//   http://localhost:4000/downloads/<product>/<...>/<file>.pdf
+// Used by the frontend "Download PDF" button (doc.pdf_path).
+app.use('/downloads', express.static(path.join(__dirname, 'public', 'downloads')));
+
+// Serves extracted screenshots/diagrams used inline inside doc content at:
+//   http://localhost:4000/images/<doc-id>/<file>.png
+app.use('/images', express.static(path.join(__dirname, 'public', 'images')));
 
 const pool = new Pool({
   host: process.env.DB_HOST,
@@ -53,11 +63,11 @@ app.get('/api/docs/:docId', async (req, res) => {
     // screenshots) — these were never meant to be shown as standalone figures.
     // Real screenshots are captioned as "... page" / "... dialog" etc.;
     // scraped inline icons are captioned "... icon".
-    const imagesRes = await pool.query(
+   const imagesRes = await pool.query(
       `SELECT image_url, caption, section_anchor, display_order
        FROM document_images
        WHERE doc_id = $1
-         AND caption NOT ILIKE '%icon%'
+         AND caption NOT ILIKE '%inline use%'
        ORDER BY display_order`,
       [docId]
     );
