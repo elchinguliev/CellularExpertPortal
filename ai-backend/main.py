@@ -5,6 +5,7 @@ from pydantic import BaseModel
 from app.generator import generate_answer
 from app.ticket_service import build_ticket_prefill
 from app.admin_analytics import get_ai_insights
+from app.activity_logger import log_user_activity
 
 
 app = FastAPI(
@@ -40,6 +41,15 @@ class TicketRequest(BaseModel):
     user: str = "Demo User"
     confidence: float
     sources: list
+
+
+class ActivityLogRequest(BaseModel):
+    user_id: str | None = None
+    user_name: str | None = None
+    user_role: str | None = None
+    activity_type: str
+    page: str | None = None
+    details: str | None = None
 
 
 @app.get("/")
@@ -79,3 +89,21 @@ def admin_ai_insights():
     low-confidence questions, and recent AI activity.
     """
     return get_ai_insights()
+
+
+@app.post("/admin/log-activity")
+def admin_log_activity(request: ActivityLogRequest):
+    """
+    Admin tracking endpoint.
+    Logs user activities such as login, page visit, or admin action.
+    """
+    log_user_activity(
+        user_id=request.user_id,
+        user_name=request.user_name,
+        user_role=request.user_role,
+        activity_type=request.activity_type,
+        page=request.page,
+        details=request.details
+    )
+
+    return {"ok": True}

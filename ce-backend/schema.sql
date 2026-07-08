@@ -54,6 +54,17 @@ CREATE TABLE IF NOT EXISTS ai_question_logs (
   created_at     TIMESTAMP DEFAULT NOW()
 );
 
+CREATE TABLE IF NOT EXISTS user_activity_logs (
+  id             SERIAL PRIMARY KEY,
+  user_id        TEXT,
+  user_name      TEXT,
+  user_role      TEXT,
+  activity_type  TEXT NOT NULL,
+  page           TEXT,
+  details        TEXT,
+  created_at     TIMESTAMP DEFAULT NOW()
+);
+
 CREATE INDEX IF NOT EXISTS idx_documents_product  ON documents(product);
 CREATE INDEX IF NOT EXISTS idx_documents_category ON documents(category);
 CREATE INDEX IF NOT EXISTS idx_documents_tags     ON documents USING GIN(tags);
@@ -63,6 +74,10 @@ CREATE INDEX IF NOT EXISTS idx_headings_slug      ON document_headings(heading_s
 CREATE INDEX IF NOT EXISTS idx_ai_question_logs_created_at ON ai_question_logs(created_at);
 CREATE INDEX IF NOT EXISTS idx_ai_question_logs_ticket_needed ON ai_question_logs(ticket_needed);
 CREATE INDEX IF NOT EXISTS idx_ai_question_logs_product ON ai_question_logs(product);
+
+CREATE INDEX IF NOT EXISTS idx_user_activity_logs_created_at ON user_activity_logs(created_at);
+CREATE INDEX IF NOT EXISTS idx_user_activity_logs_user_id ON user_activity_logs(user_id);
+CREATE INDEX IF NOT EXISTS idx_user_activity_logs_activity_type ON user_activity_logs(activity_type);
 
 ALTER TABLE documents ADD COLUMN IF NOT EXISTS search_vector tsvector;
 

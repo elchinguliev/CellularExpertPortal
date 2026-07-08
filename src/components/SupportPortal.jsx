@@ -56,8 +56,23 @@ export default function SupportPortal({ onViewDocs }) {
 
   // ── Auth ──────────────────────────────────────────────────────────────────
   const handleLogin = (u) => {
-    setCurrentUser(u);
-    setTab((u.role==='admin'||u.role==='agent') ? 'adm-dashboard' : 'chat');
+  setCurrentUser(u);
+  setTab((u.role==='admin'||u.role==='agent') ? 'adm-dashboard' : 'chat');
+
+  fetch('http://localhost:8000/admin/log-activity', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      user_id: u.id,
+      user_name: u.name,
+      user_role: u.role,
+      activity_type: 'login',
+      page: 'Support Portal',
+      details: 'User logged in'
+    })
+  }).catch(error => {
+    console.error('Failed to log login activity:', error);
+  });
   };
   const handleRegister = (data) => {
     const nu = { id:'u'+Date.now(), ...data, role:'user',
