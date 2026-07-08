@@ -81,9 +81,7 @@ export default function SupportPortal({ onViewDocs }) {
   try {
     const response = await fetch('http://127.0.0.1:8000/ask', {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         question: t,
         user: currentUser?.name || 'Demo User',
@@ -95,61 +93,74 @@ export default function SupportPortal({ onViewDocs }) {
     });
 
     const data = await response.json();
-
     setTyping(false);
 
-    if (!data.ticket_needed) {
-      setMessages(p => [
-        ...p,
-        {
-          from: 'bot',
-          time: now(),
-          type: 'article',
-          title: 'AI Documentation Answer',
-          text:
-            `Answer:\n${data.answer}\n\n` +
-            `Confidence:\n${Math.round(data.confidence * 100)}%\n\n` +
-            `Sources used:\n` +
-            data.sources.map((s, index) =>
-              `${index + 1}. ${s.document}\n   Section: ${s.section}\n   Product: ${s.product} ${s.version}`
-            ).join('\n\n')
-        }
-      ]);
+    const shouldOpenTicket =
+      data.ticket_needed ||
+      data.confidence < 0.6 ||
+      !data.sources ||
+      data.sources.length === 0 ||
+      data.answer.toLowerCase().includes("could not find") ||
+      data.answer.toLowerCase().includes("couldn't find");
+
+    if (!shouldOpenTicket) {
+      setMessages(p => [...p, {
+        from: 'bot',
+        time: now(),
+        type: 'article',
+        title: 'AI Documentation Answer',
+        text:
+          `Answer:\n${cleanMarkdownLinks(data.answer)}\n\n` +
+          `Confidence:\n${Math.round(data.confidence * 100)}%\n\n` +
+          `Sources used:\n` +
+          data.sources.map((s, index) =>
+            `${index + 1}. ${s.document}\n   Section: ${s.section}\n   Product: ${s.product} ${s.version}`
+          ).join('\n\n')
+      }]);
     } else {
-      const ticket = data.ticket_prefill;
+      const ticket = data.ticket_prefill || {
+        product: data.sources?.[0]?.product || 'CE Express',
+        version: data.sources?.[0]?.version || '7.3',
+        ticket_title: `Question about: ${t}`,
+        issue_type: 'Documentation / User Question',
+        full_question: t,
+        retrieved_documents: data.sources || [],
+        user: currentUser?.name || 'Demo User',
+        time: new Date().toISOString(),
+        conversation_context: messages.map(m => ({
+          role: m.from === 'bot' ? 'assistant' : 'user',
+          message: m.text || ''
+        })),
+        priority_suggestion: 'Low'
+      };
+
       setTicketDraft(ticket);
 
-      setMessages(p => [
-        ...p,
-        {
-          from: 'bot',
-          time: now(),
-          type: 'no-answer',
-          text:
-            `${cleanMarkdownLinks(data.answer)}\n\n`
-            `I can prepare a support ticket for review.\n\n` +
-            `**Ticket draft:**\n` +
-            `Product: ${ticket.product}\n` +
-            `Version: ${ticket.version}\n` +
-            `Title: ${ticket.ticket_title}\n` +
-            `Issue type: ${ticket.issue_type}\n` +
-            `Priority suggestion: ${ticket.priority_suggestion}\n\n` +
-            `**Question:**\n${ticket.full_question}`
-        }
-      ]);
+      setMessages(p => [...p, {
+        from: 'bot',
+        time: now(),
+        type: 'no-answer',
+        text:
+          `${cleanMarkdownLinks(data.answer)}\n\n` +
+          `I can prepare a support ticket for review.\n\n` +
+          `**Ticket draft:**\n` +
+          `Product: ${ticket.product}\n` +
+          `Version: ${ticket.version}\n` +
+          `Title: ${ticket.ticket_title}\n` +
+          `Issue type: ${ticket.issue_type}\n` +
+          `Priority suggestion: ${ticket.priority_suggestion}\n\n` +
+          `**Question:**\n${ticket.full_question}`
+      }]);
     }
 
   } catch (error) {
     setTyping(false);
-    setMessages(p => [
-      ...p,
-      {
-        from: 'bot',
-        time: now(),
-        type: 'no-answer',
-        text: 'AI backend is not reachable. Please check if FastAPI is running on http://127.0.0.1:8000.'
-      }
-    ]);
+    setMessages(p => [...p, {
+      from: 'bot',
+      time: now(),
+      type: 'no-answer',
+      text: 'AI backend is not reachable. Please check if FastAPI is running on http://127.0.0.1:8000.'
+    }]);
   }
 };
 

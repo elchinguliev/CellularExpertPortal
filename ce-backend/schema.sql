@@ -41,11 +41,28 @@ CREATE TABLE IF NOT EXISTS document_headings (
   level        INTEGER NOT NULL
 );
 
+CREATE TABLE IF NOT EXISTS ai_question_logs (
+  id             SERIAL PRIMARY KEY,
+  user_name      TEXT,
+  question       TEXT NOT NULL,
+  answer         TEXT,
+  confidence     NUMERIC,
+  ticket_needed  BOOLEAN DEFAULT FALSE,
+  top_document   TEXT,
+  top_section    TEXT,
+  product        TEXT,
+  created_at     TIMESTAMP DEFAULT NOW()
+);
+
 CREATE INDEX IF NOT EXISTS idx_documents_product  ON documents(product);
 CREATE INDEX IF NOT EXISTS idx_documents_category ON documents(category);
 CREATE INDEX IF NOT EXISTS idx_documents_tags     ON documents USING GIN(tags);
 CREATE INDEX IF NOT EXISTS idx_headings_doc       ON document_headings(doc_id);
 CREATE INDEX IF NOT EXISTS idx_headings_slug      ON document_headings(heading_slug);
+
+CREATE INDEX IF NOT EXISTS idx_ai_question_logs_created_at ON ai_question_logs(created_at);
+CREATE INDEX IF NOT EXISTS idx_ai_question_logs_ticket_needed ON ai_question_logs(ticket_needed);
+CREATE INDEX IF NOT EXISTS idx_ai_question_logs_product ON ai_question_logs(product);
 
 ALTER TABLE documents ADD COLUMN IF NOT EXISTS search_vector tsvector;
 
@@ -63,6 +80,5 @@ DROP TRIGGER IF EXISTS documents_search_vector_trigger ON documents;
 CREATE TRIGGER documents_search_vector_trigger
   BEFORE INSERT OR UPDATE ON documents
   FOR EACH ROW EXECUTE FUNCTION documents_search_vector_update();
-
 
 CREATE INDEX IF NOT EXISTS idx_documents_search ON documents USING GIN(search_vector);
