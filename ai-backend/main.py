@@ -4,6 +4,7 @@ from pydantic import BaseModel
 
 from app.generator import generate_answer
 from app.ticket_service import build_ticket_prefill
+from app.admin_analytics import get_ai_insights
 
 
 app = FastAPI(
@@ -68,3 +69,13 @@ def prepare_ticket(request: TicketRequest):
         confidence=request.confidence,
         user=request.user
     )
+
+
+@app.get("/admin/ai-insights")
+def admin_ai_insights():
+    """
+    Admin endpoint for AI chatbot analytics.
+    Shows total AI questions, ticket-needed questions,
+    low-confidence questions, and recent AI activity.
+    """
+    return get_ai_insights()
