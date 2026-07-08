@@ -1,667 +1,167 @@
-# CE Pro — Prediction Models
+# 08. Prediction Models
 
+## Overview — Path Loss
 
-5. Prediction models
+The fundamental relationship used in CE Pro predictions:
 
-Path Loss
+```
+Field Strength (dBm) = EIRP – Antenna Attenuation – Path Loss
+```
 
-𝐹𝑖𝑒𝑙𝑑 𝑆𝑡𝑟𝑒𝑛𝑔ℎ𝑡 = 𝐸𝐼𝑅𝑃 − 𝐴𝑛𝑡𝑒𝑛𝑛𝑎𝐴𝑡𝑡𝑒𝑛𝑢𝑎𝑡𝑖𝑜𝑛 -
-PathLoss
+CE Pro supports five path loss models covering 10 kHz – 100 GHz. Choose the model based on frequency band and environment.
 
-2
+---
 
-Prediction Models
+## CE Path Loss Models
 
-•
-ITU-R P.452 (6GHz to 50GHz)
-• UniMacro (400MHz to 3GHz)
-• CEC ITU-R (100MHz to 6GHz)
-• LOS ITU-R P.525 (6GHz to 100 GHz)
-•
-ITU-R P.368 (10kHz to 30MHz)
+| Model | Frequency Range | Best For |
+|-------|----------------|----------|
+| CEC ITU-R | 100 MHz – 6 GHz | Cellular (2G/3G/4G/5G) |
+| ITU-R P.452 | 6 GHz – 50 GHz | Microwave, mmWave |
+| LOS ITU-R P.525 | 6 GHz – 100 GHz | Fixed point-to-point links |
+| UniMacro | 400 MHz – 3 GHz | CE proprietary cellular model |
+| ITU-R P.368 | 10 kHz – 30 MHz | HF/VHF ground wave |
 
-3
+---
 
-CE Path Loss models (10kHz - 100 GHz)
+## 1. CEC ITU-R Model (100 MHz – 6 GHz)
 
-1. CEC ITU-R Model (100MHz – 6GHz) is a combination model intended for use in a variety of different radiocommunication systems which is derived explicitly
+Combination model for cellular networks. Distinguishes three radio visibility conditions:
 
-from ITU-R path loss modelling methods as follows:
+- **LOS** — Free Space Loss (ITU-R P.525)
+- **OLOS** (Obstructed LOS) — FSL + Clutter Loss (ITU-R P.2108)
+- **NLOS** — FSL + Diffraction Loss (ITU-R P.526) + Clutter Loss (ITU-R P.2108)
 
-a. Receive antenna in LOS condition – path loss calculated as FSL based on Recommendation ITU-R P.525 (ref URL);
-b. Receive antenna in OLOS condition – total path loss modelled as a combination of basic FSL calculated based on Recommendation ITU-R P.525 (ref
+### Path Loss Equation (LOS / OLOS)
 
-URL) and clutter loss calculated based on Recommendation ITU-R P.2108 (ref URL);
+```
+L = K_off + K_LogD × log(d) + K_LogF × log(f)
+```
 
-c. Receive antenna in NLOS condition – path loss as a combination of basic FSL calculated based on Recommendation ITU-R P.525 (ref URL), additional
-losses due to diffraction calculated based on Recommendation ITU-R P.526 (ref URL) and the clutter losses calculated based on Rec. ITU-R P.2108
-(ref URL).
+| Parameter | Description | Default |
+|-----------|-------------|---------|
+| K_off | Constant offset (dB) | 32 |
+| K_LogD | Distance influence coefficient | 20 |
+| K_LogF | Frequency influence coefficient | 20 |
+| d | Distance (km) | — |
+| f | Frequency (MHz) | — |
 
-2.
+### Path Loss Equation (NLOS)
 
-ITU-R P.452 Model (6GHz – 50GHz) is provided as a universally applicable model with very wide frequency range from 0.1-50 GHz. Its implementation is
-based on the methodology described in the Recommendation ITU-R P.452 (ref URL). This model does not provide for definition of OLOS visibility condition;
-instead it considers clutter as part of general obstacles category and accordingly distinguishes only two radio visibility cases:
+```
+L = K_off + K_LogD_obs × log(d) + K_LogF × log(f)
+```
 
-a. Receive antenna in LOS condition – path loss modelled based on FSL principle;
-b. Receive antenna in NLOS condition – total path loss modelled using a combination of basic transmission losses and losses due to diffraction.
+K_LogD_obs (obstructed distance coefficient) default = **30**
 
-3.
+### Clutter Loss
 
-LOS ITU-R P.525 Model (6GHz – 100GHz) is the FSL path loss calculated based on method in Recommendation ITU-R P.525 (ref URL). As such it could be
-used for modelling of radio links where LOS is considered a necessary condition, e.g., for Fixed (Point-to-Point) Links or Mobile Systems in mmWave bands.
+Estimated per **ITU-R P.2108** — Method 1: clutter shadowing loss with diffraction as dominant effect.
 
-4. UniMacro Model (400MHz – 3GHz) is the CE’s proprietary combination model developed over the years of practical experience with the operational planning
-of cellular mobile networks in the frequency ranges from 400-2600 MHz. It had been fine tuned to produce coverage predictions that are most closely aligned
-with what could be expected to be experienced by the actual mobile network users in the field. The model will model different path losses depending on radio
-visibility conditions as follows:
+Solid obstacle (building) diffraction uses **Single Knife Edge (SKE)** per ITU-R P.526:
 
-a. Receive antenna in LOS condition – path loss modelled based on FSL principle;
-b. Receive antenna in OLOS condition – path loss modelled using Extended Hata (Open Area) model with additional clutter loss calculated based on
+```
+Tx ---d1--- [obstacle h > 0] ---d2--- Rx
+```
 
-Recommendation ITU-R P.2108 (ref URL);
+### Penetration Loss (Outdoor → Indoor) — 3GPP TR 38.901
 
-c. Receive antenna in NLOS condition – path loss modelled using Extended Hata model with additional losses due to diffraction calculated based on
+**Low-loss BEL Model** (traditional buildings):
+```
+L_glass     = 2.0 + 0.2f
+L_concrete  = 5.0 + 4.0f
+L_IIR_glass = 23.0 + 0.3f        (f = frequency in GHz)
+```
 
-Recommendation ITU-R P.526 (ref URL) as well as clutter losses based on Rec. ITU-R P.2108 (ref URL).
+**High-loss BEL Model** (modern thermally insulated buildings) uses higher wall penetration coefficients for the same materials.
 
-5.
+---
 
-ITU-R P.368 (10kHz – 30MHz)
+## 2. ITU-R P.452 Model (6 GHz – 50 GHz)
 
-4
+Universal model (0.1–50 GHz) per **Recommendation ITU-R P.452**. Treats clutter as part of general obstacles — only LOS and NLOS are distinguished (no separate OLOS).
 
-Prediction Models. Default
+- **LOS** — Free Space Loss
+- **NLOS** — Basic transmission loss + diffraction losses
 
-5
+---
 
-CEC ITU-R (30MHz – 6GHz)
+## 3. LOS ITU-R P.525 Model (6 GHz – 100 GHz)
 
-• For frequencies from about 30 MHz 
+Pure Free Space Loss per **ITU-R P.525**. Use when LOS is guaranteed:
 
-to about 6 GHz.
+```
+L = K_off + K_LogD × log(d) + K_LogF × log(f)
+```
+(Defaults: K_off = 32, K_LogD = 20, K_LogF = 20)
 
-• Modelling:
-•
-LOS
-• OLOS
-• NLOS
+Use for fixed microwave links and 5G NR mmWave (FR2).
 
-Clutter losses
+---
 
-UE
+## 4. UniMacro Model (400 MHz – 3 GHz)
 
-Diffraction
+CE proprietary model, calibrated from real-world drive tests for cellular networks (400 MHz – 2600 MHz).
 
-Free Space Loss
+- **LOS** — Free Space Loss
+- **OLOS** — Extended Hata (Open Area) + Clutter Loss (P.2108)
+- **NLOS** — Extended Hata + Diffraction (P.526) + Clutter Loss (P.2108)
 
-Hclutter
+### 9999 Ericsson Path Loss Equation
 
-Diffraction
+```
+L_H = a0 + a1×log(d) + a2×log(hB) + a3×log(hB)×log(d)
+        + 3.2×[log(11.75×hM)]² + g(f)
 
-Hobstacles
+g(f) = 44.49×log(f) – 4.78×[log(f)]²
+```
 
-DSM
+| Parameter | Description | Default |
+|-----------|-------------|---------|
+| a0 | Constant offset — adjusts absolute level of loss curve | 36.8 |
+| a1 | Distance coefficient — controls slope of curve | 30.2 |
+| a2 | Transmitter height coefficient | -12.0 |
+| a3 | Okumura-Hata multiplier for log(hB)×log(d) | 0.1 |
+| hB | Base station antenna height (m) | — |
+| hM | Mobile (UE) antenna height (m) | — |
+| d | Distance (km) | — |
+| f | Frequency (MHz) | — |
 
-DTM
+**Calibration (drive-test):**
+- **a0** — shifts entire curve vertically (mean error correction)
+- **a1** — changes slope of curve vs distance
+- **a2** — adjusts loss relative to base station height
+- **a3** — fine-tunes height-distance interaction
 
-6
+---
 
-Input Data
+## 5. ITU-R P.368 (10 kHz – 30 MHz)
 
-• Elevation
+Ground wave propagation for HF/VHF broadcast and land mobile systems.
 
-• Clutter classes*
+---
 
-• Clutter height grid*
+## Prediction Model Manager
 
-• Receiver settings
+Navigate to: **Cellular Expert tab → Prediction Model Manager**
 
-• Prediction model settings
+- The **Default** model cannot be deleted
+- New models copy parameters from Default as a starting point
+- Each model can be independently calibrated per environment
 
-Geographic data
+---
 
-Network data
+## Required Input Data
 
-Algorithm
+| Data | Required | Notes |
+|------|----------|-------|
+| DTM / DEM | ✅ Yes | Terrain elevation grid |
+| Clutter classes | Optional | Improves OLOS/NLOS |
+| Clutter height grid | Optional | Required for P.2108 |
+| Receiver height | ✅ Yes | UE height above ground |
+| Model coefficients | ✅ Yes | K_off, K_LogD, K_LogF |
 
-* Optional
+---
 
-7
-
-Path loss equation
-
-Path loss in dB:
-
-Offset coefficient (KOff ) - Constant offset (dBm). Default value 32
-Distance coefficient (KLogD ) - Distance influence coefficient. Default value 20
-Frequency coefficient (KLogF ) - Frequency influence coefficient. Default value 20
-
-8
-
-)log()log(loglogfkdkkLFDoff++=Path loss equation
-
-Path loss in dB:
-
-Offset coefficient (KOff ) - Constant offset (dBm). Default value 32
-Distance coefficient obstructed (KLogD ) - Distance influence coefficient. Default value 30
-Frequency coefficient (KLogF ) - Frequency influence coefficient. Default value 20
-
-9
-
-)log()log(loglogfkdkkLFDoff++=Clutter
-
-• Diffraction loss for solid obstacle:
-
-• Building clutter class
-•
-
-Elevation
-
-• Clutter loss
-
-• Based on diffraction calculation
-• P.2108 Clutter Loss
-
-• Penetration loss (Outdoor – Indoor)
-
-• Receiver loss
-
-10
-
-SKE Diffraction
-
-Rec. ITU-R P.526
-Idealized model of diffraction over a single obstruction.
-
-  
-
-d 1
-
-
-
-1
-
-h >  0
-
-d 2 
-
-
-
-2  
-
-11
-
-Clutter LOS
-
-P.2108 Clutter Loss Estimation 
-
-• Method 1: Additional clutter shadowing 
-loss with diffraction as dominant effect 
-(section 3.1)
-
-12
-
-Penetration loss (Outdoor – Indoor)
-
-CE Outdoor to Indoor Path Loss calculation is realised based on method 
-recommended in 3GPP TR 38.901 (ref URL). This method accounts for 
-indoor portion of the total radio signal propagation path as shown in picture:
-
-Definition of indoor propagation path in 3GPP TR 38.901
-
-For general purpose modelling of typical building entry losses, two types of loss profiles are assumed:
-• Low-loss BEL Model assumes a wall penetration losses characteristic of average traditional 
-
-buildings;
-
-• High-loss BEL Model assumes a wall penetration losses characteristic of modern thermally 
-
-insulated buildings.
-
-The corresponding BEL and building penetration losses are calculated as follows:
-
-Where:
-
-f – frequency in GHz.
-
-13
-
-fL2.02glass+=fL3.023IIRglass+=fL45concrete+=Prediction model manager
-
-• Cellular Expert tab > Prediction Model 
-
-Manager
-
-• Default can not be deleted and it takes 
-parameters from it for new models
-
-14
-
-LOS ITU-R P.542 (6GHz – 50GHz)
-
-• For frequencies from about 6 GHz to about 100 GHz
-
-Clutter losses
-
-UE
-
-Diffraction
-
-Free Space Loss
-
-Hclutter
-
-Diffraction
-
-Hobstacles
-
-DSM
-
-DTM
-
-15
-
-Input Data
-
-• Elevation
-
-• Clutter classes*
-
-• Clutter height grid*
-
-• Receiver settings
-
-• Prediction model settings
-
-Geographic data
-
-Network data
-
-Algorithm
-
-* Optional
-
-16
-
-Path loss equation
-
-Path loss in dB:
-
-Offset coefficient (KOff ) - Constant offset (dBm). Default value 32
-Distance coefficient (KLogD ) - Distance influence coefficient. Default value 20
-Frequency coefficient (KLogF ) - Frequency influence coefficient. Default value 20
-
-17
-
-)log()log(loglogfkdkkLFDoff++=Clutter
-
-• Diffraction loss 
-
-• Building clutter class
-• Elevation
-
-• Penetration loss (Outdoor – Indoor)
-
-18
-
-Single Knife Edge Diffraction
-
-Rec. ITU-R P.526
-Idealized model of diffraction over a single obstruction.
-
-  
-
-d 1
-
-
-
-1
-
-h >  0
-
-d 2 
-
-
-
-2  
-
-19
-
-Penetration loss (Outdoor – Indoor)
-
-CE Outdoor to Indoor Path Loss calculation is realised based on method 
-recommended in 3GPP TR 38.901 (ref URL). This method accounts for 
-indoor portion of the total radio signal propagation path as shown in picture:
-
-Definition of indoor propagation path in 3GPP TR 38.901
-
-For general purpose modelling of typical building entry losses, two types of loss profiles are assumed:
-• Low-loss BEL Model assumes a wall penetration losses characteristic of average traditional 
-
-buildings;
-
-• High-loss BEL Model assumes a wall penetration losses characteristic of modern thermally 
-
-insulated buildings.
-
-The corresponding BEL and building penetration losses are calculated as follows:
-
-Where:
-
-f – frequency in GHz.
-
-20
-
-fL2.02glass+=fL3.023IIRglass+=fL45concrete+=LOS ITU-R P.525 (6GHz – 100GHz)
-
-• For frequencies from about 6 GHz to about 100 GHz
-
-Clutter losses
-
-UE
-
-Diffraction
-
-Free Space Loss
-
-Hclutter
-
-Diffraction
-
-Hobstacles
-
-DSM
-
-DTM
-
-21
-
-Input Data
-
-• Elevation
-
-• Clutter classes*
-
-• Clutter height grid*
-
-• Receiver settings
-
-• Prediction model settings
-
-Geographic data
-
-Network data
-
-Algorithm
-
-* Optional
-
-22
-
-Path loss equation
-
-Path loss in dB:
-
-Offset coefficient (KOff ) - Constant offset (dBm). Default value 32
-Distance coefficient (KLogD ) - Distance influence coefficient. Default value 20
-Frequency coefficient (KLogF ) - Frequency influence coefficient. Default value 20
-
-23
-
-)log()log(loglogfkdkkLFDoff++=UniMacro
-
-• Frequency: ~ 100 MHz - 2 GHz (3 GHz)
-• Distance: up to 100 km
-• 9999 Model (Ericsson)
-
-Clutter losses
-
-UE
-
-Diffraction
-
-Free Space Loss
-
-Hclutter
-
-Diffraction
-
-Hobstacles
-
-DSM
-
-DTM
-
-24
-
-Input Data
-
-• Elevation
-
-• Clutter classes*
-
-• Clutter height grid*
-
-• Receiver settings
-
-• Prediction model settings
-
-Geographic data
-
-Network data
-
-Algorithm
-
-* Optional
-
-25
-
-Equation
-
-• Line-Of-Sight Model Loss
-
-• 9999 Ericsson
-
-• Single Knife Edge Diffraction
-
-26
-
-Path Loss Equation: 9999 Ericsson
-
-Path loss in dB:
-
-Parameter
-
-Description
-
-a0
-
-a1
-
-a2
-
-a3
-
-Constant offset in dB. This value is simply added to loss grid. By adjusting 
-this value, the mean error can be minimized. It regulates the absolute level of 
-the loss curve.
-
-Distance influence coefficient. Physically it represents loss dependant on 
-distance such as atmospheric (dust, hydrometeors, etc...) losses. It regulates 
-slope of the curve.
-
-Transmitter height influence coefficient. It is related to errors in DTM, real 
-Earth curvature, etc. It regulates loss curve vertical position like the a0, but 
-with respect to antenna height
-
-Okumura-Hata type of multiplying factor for log(hB)log(d)
-
-Default 
-Value
-
-36.8
-
-30.2
-
--12.0
-
-0.1
-
-27
-
-()())(75.11log2.3)log()log()log()log(23210fghdhahadaaLMBBH+++++=2))(log(78.4)log(49.44)(fffg+=9999 Ericsson: A0
-
-•
-•
-
-•
-
-9999 Model is very convenient for calibration
-
-Empirical parameters a0-a3 can be deduced from the measured path 
-loss dependence on distance – drive-tests
-
-a0 is a constant offset of path loss curve
-
-28
-
-90110130150170190110100Distance, kmPath Loss, dBmA0 = 26.2A0 = 36.2A0 = 46.29999 Ericsson: A1
-
-•
-•
-
-9999 Model is very convenient for calibration
-
-a1 regulates slope of the path loss curve
-
-29
-
-90110130150170190210110100Distance, kmPath Loss, dBmA1 = 20.7A1 = 30.7A1 = 40.79999 Ericsson: A2
-
-•
-•
-
-9999 Model is very convenient for calibration
-
-a2 regulates loss curve vertical position like a0, but with respect to 
-antenna height
-
-30
-
-90100110120130140150160170180110100Distance, kmPath Loss, dBmA2 = -12 h=20mA2 = -14 h=20mA2 = -12 h=50mA2 = -12 h=80mA2 = -14 h=80m9999 Ericsson: A3
-
-•
-•
-
-9999 Model is very convenient for calibration
-
-a3 defines slope of the path loss curve for different base station 
-antenna heights
-
-31
-
-100110120130140150160170180110100Distance, kmPath Loss, dBmA3 = -0.5A3 = 0.1A3 = 0.6Path loss equation
-
-Path loss in dB:
-
-KOff - Constant offset (dBm). Default value 32  (!)
-KLogD - Distance influence coefficient. Default value 20
-KLogF - Frequency influence coefficient. Default value 20
-
-32
-
-)log()log(loglogfkdkkLFDoff++=Clutter
-
-• Diffraction loss for solid obstacle:
-
-• Building clutter class
-•
-
-Elevation
-
-• Clutter loss
-
-• Based on diffraction calculation
-• P.2108 Clutter Loss
-
-• Penetration loss (Outdoor – Indoor)
-
-• Receiver loss
-
-33
-
-SKE Diffraction
-
-Rec. ITU-R P.526
-Idealized model of diffraction over a single obstruction.
-
-  
-
-d 1
-
-
-
-1
-
-h >  0
-
-d 2 
-
-
-
-2  
-
-34
-
-Clutter LOS
-
-P.2108 Clutter Loss Estimation 
-
-• Method 1: Additional clutter shadowing 
-loss with diffraction as dominant effect 
-(section 3.1)
-
-35
-
-Penetration loss (Outdoor – Indoor)
-
-CE Outdoor to Indoor Path Loss calculation is realised based on method 
-recommended in 3GPP TR 38.901 (ref URL). This method accounts for 
-indoor portion of the total radio signal propagation path as shown in picture:
-
-Definition of indoor propagation path in 3GPP TR 38.901
-
-For general purpose modelling of typical building entry losses, two types of loss profiles are assumed:
-• Low-loss BEL Model assumes a wall penetration losses characteristic of average traditional 
-
-buildings;
-
-• High-loss BEL Model assumes a wall penetration losses characteristic of modern thermally 
-
-insulated buildings.
-
-The corresponding BEL and building penetration losses are calculated as follows:
-
-Where:
-
-f – frequency in GHz.
-
-36
-
-fL2.02glass+=fL3.023IIRglass+=fL45concrete+=Exercise
-
-Description: C:\CE_Course\0. Descriptions
-
-Name: 5. Prediction models.pdf
-
-37
-
-Thank you! 
-
-Tel.: +370 5 2150575
-
-Email: info@cellular-expert.com
-
-S.Konarskio g. 28A LT-03127 Vilnius 
-Lithuania
+*Reference: CE Desktop Training — 5. Prediction Models*
+*Contact: info@cellular-expert.com | +370 5 2150575*

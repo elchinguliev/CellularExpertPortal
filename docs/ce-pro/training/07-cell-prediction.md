@@ -1,246 +1,103 @@
-# CE Pro — Cell Prediction
+# 07. Cell Prediction
 
+## Cell Structure
 
-4. Cell prediction
+Each cell in CE Pro has two categories of parameters:
 
-Cell structure
+**Physical parameters:**
+- Coordinates (X/Y or Latitude/Longitude)
+- Height (above ground)
+- Azimuth (direction)
 
-• Physical parameters
+**Logical parameters:**
+- Power (dBm or EIRP)
+- Bandwidth (MHz)
+- Frequency (MHz)
+- Technology (2G/3G/4G/5G)
 
-• Coordinates
-• Height
-• Azimuth
-• …
+---
 
-• Logical parameters
+## Cell Coordinates
 
-• Power
-• Bandwidth
-• Frequency
-• …
+CE Pro supports two coordinate systems:
 
-2
+| System | Fields | Notes |
+|--------|--------|-------|
+| Projected (CRS) | X, Y | Meters in project CRS |
+| Geographic (WGS 1984) | Longitude, Latitude | Decimal degrees |
+| Z — total height above sea level | | Calculated from site height + cell height |
 
-Cell: Coordinates
+> **Note:** Cell name is a unique parameter per project. Best Server prediction also uses the cell name as identifier.
 
-• Projected coordinate system:
+---
 
-• X
-• Y
+## Cell Parameters Reference
 
-• Geographic coordinate system in meters:
+| CE Field | Units | Example | Description |
+|----------|-------|---------|-------------|
+| `cell_name` | text | `5G cell XXYY` | Unique cell identifier |
+| `site_name` | text | `Site 55 ID` | Parent site identifier |
+| `latitude` | decimal degrees | `49.9993` | Y coordinate in WGS 1984 |
+| `longitude` | decimal degrees | `33.6573` | X coordinate in WGS 1984 |
+| `height` | meters | `40` | Cell height above ground |
+| `azimuth` | degrees (0–360) | `50` | Cell direction from north |
+| `tilt` | degrees | `1` | Mechanical tilt angle |
+| `frequency` | MHz | `3500` | Carrier frequency |
+| `power` | dBm | `40` | Cell transmit power (or EIRP) |
+| `antenna_gain` | dBi | `18.2` | Gain of assigned antenna |
+| `misc_loss` | dB | `1` | Total cell miscellaneous loss |
+| `bandwidth` | MHz | `0.015` | Cell bandwidth (required for 3G/4G/5G) |
+| `subcarrier_spacing` | kHz | `15` | Subcarrier spacing (required for 5G) |
+| `tx_mimo` | number | `4` | Transmitter MIMO config (1/2/4/8/16/32/64) |
+| `rx_mimo` | number | `4` | Receiver MIMO config (1/2/4/8/16/32/64) |
+| `cell_load` | % (0–100) | `30` | Real-time cell load for broadband calculations |
+| `technology` | text | `2G` | Cell technology: 2G, 3G, 4G, or 5G |
+| `antenna_id` | number | `1` | ID of assigned antenna pattern |
 
-•
-•
+### Power vs EIRP
 
-Longitude
-Latitude
+- If workspace parameter **Calculate EIRP = Yes**: enter cell transmit power — EIRP is calculated from power + antenna gain − misc loss
+- If workspace parameter **Calculate EIRP = No**: `power` field represents EIRP directly
 
-• Z – total cell height above sea level.
+---
 
-3
+## RF Prediction Output Structure
 
-Cell Name
+CE Pro stores prediction results in a defined folder structure within the project:
 
-• Unique parameter in the project.
-• Best server – the same.
+```
+Project/
+├── Predictions/      — prediction configuration files
+├── Results/          — output raster layers (coverage maps)
+├── Temp/             — temporary calculation files
+```
 
-4
+---
 
-General cells parameter
+## Running a Cell Prediction
 
-Value
+1. Open the **CE Desktop** tab in the ArcGIS Pro ribbon
+2. Select one or more cells on the map
+3. Click **RF Prediction** and choose prediction type:
+   - **Signal Level** (dBm) — received signal power at UE
+   - **Best Server** — which cell provides strongest signal per pixel
+   - **SINR** — Signal to Interference + Noise Ratio
+   - **Throughput** (Mbps) — estimated data rate
+4. Set radius (km), resolution (m), and prediction model
+5. Click **Run** — results appear as raster layers in the Contents pane
 
-CE Field
+---
 
-Units
+## Prediction Types Explained
 
-Example
+| Type | Unit | Use Case |
+|------|------|----------|
+| Signal Level | dBm | Coverage threshold mapping |
+| Best Server | cell name | Frequency planning, handover zones |
+| SINR | dB | Interference analysis |
+| Throughput | Mbps | Capacity and QoS planning |
 
-Description
+---
 
-latitude
-
-Meters
-
-49.9993
-
-Y point coordinate in Decimal degrees and in WGS 1984 geographical coordinate system.
-
-longitude
-
-Meters
-
-33.6573
-
-X point coordinate in Decimal degrees and in WGS 1984 geographical coordinate system.
-
-Latitude
-
-Longitude
-
-Cell identification
-
-Site identification
-
-Cell height
-Cell azimuth
-
-Mechanical tilt
-Frequency
-Power
-
-cell_name
-
-site_name
-
-height
-azimuth
-
-tilt
-frequency
-power
-
-Antenna Gain
-
-Antenna_gain
-
-Misc. Loss
-
-Bandwidth
-
-Misc_loss
-
-bandwidth
-
-[text]
-
-[text]
-
-meters
-degree
-
-degree
-MHz
-dBm
-
-dBi
-
-dB
-
-5G cell XXYY
-
-Represents cell identification, usually name.
-
-Site 55 ID
-
-Represents site identification, usually name.
-
-40
-50
-
-1
-3500
-40
-
-18.2
-
-1
-
-Cell height above the ground.
-Cell direction from the north, value ranges from 0 to 360.
-
-Cell mechanical tilt value.
-Frequency value in MHz.
-Based on Workspace parameter, it can be only Cell power, and EIRP will be calculated from
-antenna gain and misc loss. It can represent EIRP value too, if Workspace parameter Calculate
-EIRP is defined to No.
-Gain of antenna which is assigned for Cell.
-
-Total Cell loss.
-
-MHz
-
-0.015
-
-Cell bandwidth value in MHz. Especially required for 3G, 4G, and 5G technologies.
-
-Subcarrier spacing
-
-Subcarrier_spacing
-
-kHz
-
-15
-
-Especially required for 5G, as 4G uses constant value 15.
-
-MIMO configuration
-
-MIMO configuration
-
-Cell load
-
-tx_mimo
-
-rx_mimo
-
-cell_load
-
-Number 4
-
-Number 4
-
-Percent 30
-
-Transmitter MIMO configuration, possible values 1, 2, 4, 8, 16, 32, 64.
-
-Receiver MIMO configuration, possible values 1, 2, 4, 8, 16, 32, 64.
-
-Parameter ranges are from 0 to 100 percent. Describes how the cell is loaded in real-time. Load is
-taken for broadband calculations.
-
-Technology
-
-technology
-
-Text
-
-2G
-
-Possible values: 2G, 3G, 4G, 5G. Describes cell technology.
-
-Antenna name
-
-antenna_id
-
-Number 1
-
-Represents Antenna ID value.
-
-5
-
-RF Predictions structure
-
-• Predictions
-• Results
-• Temp
-
-6
-
-Exercise
-
-Description: C:\CE_Course\0. Descriptions
-
-Name: 4. Cell Prediction.pdf
-
-7
-
-Thank you! 
-
-Tel.: +370 5 2150575
-
-Email: info@cellular-expert.com
-
-S.Konarskio g. 28A LT-03127 Vilnius 
-Lithuania
+*Reference: CE Desktop Training — 4. Cell Prediction*
+*Contact: info@cellular-expert.com | +370 5 2150575*

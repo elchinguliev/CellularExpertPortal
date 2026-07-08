@@ -1,63 +1,39 @@
-# CE Pro — Software Installation & Upgrades
-
-
-CE Desktop for ArcGIS Pro 
-Software installation and 
-upgrades
+# 00. Software Installation
 
 The sequency of events
-
-•
-
-Installation
-1. ArcGIS Pro
-2. Cellular Expert
-
-• CE upgrade
-
-1. Delete Cellular Expert
-2.
-Install Cellular Expert
-
-• Uninstallation
-1. Cellular Expert
+- Installation • CE upgrade
+1. ArcGIS Pro 1. Delete Cellular Expert
+2. Cellular Expert 2. Install Cellular Expert
+- ArcGIS upgrade
+- Uninstallation
+1. Cellular Expert 1. Run ArcGIS Pro upgrade
+(Cellular Expert
 2. ArcGIS Pro
-
-• ArcGIS upgrade
-
-1. Run ArcGIS Pro upgrade 
-
-(Cellular Expert 
-uninstallation is not 
+uninstallation is not
 required)
 
-2
+---
 
-Installation (requires administration rights)
+Installation (requires administration rights)
 
-3
+---
 
-Activation
+Activation
+- Open empty [ArcGIS Pro project](#kw:31-step-1-opening-the-arcgis-pro-project:ce-express-tr-geodata)
+- Open Settings > Licensing
+- Enable Cellular Expert extension
+- Send User key
 
-• Open empty ArcGIS Pro project
-• Open Settings > Licensing
-•
-•
-
-Enable Cellular Expert extension
-
-Send User key
-
-4
-
-License information
-
-• Open ArcGIS Pro
-• Add New Map to enable CE tabs
-•
+---
 
 License information
+- Open ArcGIS Pro
+- Add New Map to enable CE tabs
+- License information
 
-5
+---
 
-Questions?
+Questions?
+www.cellular-expert.com
+
+---

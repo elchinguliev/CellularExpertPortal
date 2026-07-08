@@ -1,98 +1,133 @@
-# CE Pro — RL / Microwave Prediction
+# 10. RL / Microwave Link Prediction
 
+## Overview
 
-7. RL Introduction
+CE Pro includes a full **Radio Link (RL) / Microwave planning** module for fixed point-to-point links. It covers power budget calculation, interference analysis, and geoclimatic availability.
 
-Equipment
+---
 
-• Antennas > Parabolic
-• Radio Models
-• Frequency Plans
-• Spectrum Mask
+## Equipment Library
 
-2
+Before planning links, set up the equipment library:
 
-Antennas
+| Library Item | Description |
+|---|---|
+| **Antennas → Parabolic** | Parabolic dish antenna patterns |
+| **Radio Models** | Tx/Rx equipment specs (power, sensitivity, modulations) |
+| **Frequency Plans** | Channel plans and duplex spacing |
+| **Spectrum Mask** | Out-of-band emission masks for interference checks |
 
-3
+---
 
-Radio Models
+## Transmission Network
 
-4
+A transmission network in CE Pro is a collection of microwave links connecting sites. Links are drawn on the map between two site objects.
 
-Frequency Plans
+---
 
-5
+## Microwave Link Planning
 
-Spectrum Mask
+Each link provides the following analysis:
 
-6
+### Power Budget
 
-Transmission Network
+The received signal level (RSL) at each end of the link:
 
-7
+```
+RSL = Tx Power + Tx Antenna Gain – Feeder Loss(Tx)
+      – Free Space Path Loss
+      – Atmospheric Absorption
+      – Feeder Loss(Rx) + Rx Antenna Gain
+```
 
-Transmission Network
+Key indicators shown in the power budget panel:
 
-8
+| Indicator | Description |
+|-----------|-------------|
+| RSL (dBm) | Received Signal Level at each end |
+| Threshold (dBm) | Minimum RSL for given modulation / BER |
+| Fade Margin (dB) | RSL – Threshold (higher = better reliability) |
+| EIRP (dBm) | Effective Isotropic Radiated Power |
 
-Microwave link planning
+### Free Space Path Loss
 
-❑ Power budget
+```
+FSL (dB) = 20×log(d) + 20×log(f) + 92.45
 
-❑ Path loss
+where:
+  d = distance in km
+  f = frequency in GHz
+```
 
-❑ Profile graphical view
+### Path Loss Profile
 
-❑ Interference From
+Graphical view showing:
+- Terrain cross-section between two link ends
+- LOS line and Fresnel zone clearance
+- Obstacle heights and clearance margins
 
-❑ Interference To
+---
 
-9
+## Geoclimatic Data
 
-Microwave link planning. Power Budget
+CE Pro uses geoclimatic data per **ITU-R P.530** to calculate:
 
-10
+| Parameter | Description |
+|-----------|-------------|
+| Rain attenuation | Rain fade probability (ITU-R P.838) |
+| Multipath fading | Flat/dispersive fade probability |
+| Availability | % annual availability based on fade margin |
+| Outage seconds | Expected downtime per year |
 
-Microwave link planning. Power Budget
+---
 
-11
+## Interference Analysis
 
-Microwave link planning. Power Budget
+For each link, CE Pro calculates:
 
-12
+| Analysis | Description |
+|----------|-------------|
+| **Interference From** | Signals from other links interfering into this receiver |
+| **Interference To** | This link's signal interfering into other receivers |
 
-Microwave link planning. Geoclimatic data
+The interfering link view shows:
+- Interfering link drawn on the map
+- Carrier-to-Interference ratio (C/I)
+- Power budget at the interfered receiver
+- Path loss and profile of the interference path
+- Spectrum mask overlap check
 
-13
+---
 
-Microwave link planning: Interfering Links
+## Modulation Adaptive Thresholds
 
-❑ Interfering link on the map
+Modern microwave radios support adaptive modulation (AM). The radio model defines RSL thresholds for each modulation:
 
-❑ Power budget
+| Modulation | Typical RSL Threshold |
+|-----------|----------------------|
+| QPSK | −90 dBm |
+| 16QAM | −84 dBm |
+| 64QAM | −78 dBm |
+| 256QAM | −72 dBm |
+| 1024QAM | −65 dBm |
 
-❑ Path loss
+*(Exact values depend on radio model and bandwidth)*
 
-❑ Profile graphical view
+---
 
-❑ Spectrum Mask
+## Antenna Selection
 
-14
+Parabolic dish antennas are characterised by:
 
-Exercise
+| Parameter | Description |
+|-----------|-------------|
+| Diameter (m) | Dish size — affects gain and beamwidth |
+| Gain (dBi) | Antenna gain at centre frequency |
+| Beamwidth (°) | 3 dB beamwidth in azimuth and elevation |
+| Front-to-Back ratio (dB) | Rejection of rear interference |
+| Cross-polarisation (dB) | Isolation between polarisations |
 
-Description: C:\CE_Course\0. Descriptions
+---
 
-Name: 7. RL Introduction.pdf
-
-15
-
-Thank you! 
-
-Tel.: +370 5 2150575
-
-Email: info@cellular-expert.com
-
-S.Konarskio g. 28A LT-03127 Vilnius 
-Lithuania
+*Reference: CE Desktop Training — 7. RL Introduction*
+*Contact: info@cellular-expert.com | +370 5 2150575*

@@ -1,215 +1,152 @@
-# CE Pro — Line of Sight (Profile)
+# 05. Line of Sight (Profile)
 
+## Geodata Layers Used
 
-2. Line of Sight (Profile)
+CE Pro uses three GIS data layers for precise RF propagation modelling:
 
-Modelling Outdoor coverage
+| Layer | Description |
+|-------|-------------|
+| **DTM / DEM** | Digital Terrain Model — ground elevation above sea level |
+| **Obstacles** | Buildings and structures above ground (principal impediments) |
+| **Clutter** | Vegetation, crops, gardens — partially penetrable by radio waves |
 
-The CE tools make use of three distinct GIS data layers to obtain high 
-precision modelling of radio wave propagation losses:
-1. Digital Terrain Model (DTM), also known as Digital Elevation 
+Together these layers form the **DSM (Digital Surface Model)**:
+```
+DSM = DTM + Obstacles (buildings/vegetation)
+```
 
-Model (DEM), which describes Earth surface, i.e., path terrain 
-profile in terms of ground elevation above uniform sea level.
-2. Obstacles layer, delineating buildings and other such objects 
-above Earth surface that may be considered to be principal 
-impediments for radio wave propagation.
+---
 
-3. Clutter layer, delineating natural occurring or human cultivated 
+## Point-to-Point Profile
 
-ground cover that may be partially penetrable by radio waves, 
-such as natural vegetation (e.g., forests, trees, bushes) or various 
-crops, gardens, parks, etc.
+### Input Parameters
 
-Diffraction
+| Category | Parameter |
+|----------|-----------|
+| Geodata | Elevation, Buildings, Clutter |
+| RF | Frequency (MHz), Fresnel Zone (%), Earth radius factor |
+| Transmitter | Height (m), Power (dBm) |
+| Receiver | Height (m), Power (dBm) |
 
-Free Space Loss
+### Profile Calculation Results
 
-Clutter losses
+**General Clearance:**
 
-UE
+| Output | Description |
+|--------|-------------|
+| Clearance | Distance (m) between LOS line and highest obstacle |
+| Clearance Percentage | Clearance as % of 1st Fresnel zone radius |
+| Clearance Distance | Horizontal distance to first obstruction |
+| Distance to NLOS | Distance at which path becomes NLOS |
+| Distance to OLOS | Distance at which path becomes OLOS |
 
-Hclutter
+**Power Budget:**
 
-Diffraction
+| Output | Description |
+|--------|-------------|
+| Downlink FS | Downlink received signal (Free Space) |
+| Uplink FS | Uplink received signal (Free Space) |
+| FWA Downlink RSL | Fixed Wireless Access downlink received signal level |
+| FWA Uplink RSL | Fixed Wireless Access uplink received signal level |
 
-Hobstacles
+**Path Loss Breakdown:**
 
-DSM
+| Output | Description |
+|--------|-------------|
+| Total Path Loss | Sum of all loss components (dB) |
+| Model Loss | Loss from selected propagation model |
+| Diffraction Loss | Loss from obstacles per ITU-R P.526 |
+| Penetration Loss | Outdoor-to-indoor loss (3GPP TR 38.901) |
+| Receiver Clutter Loss | Loss due to clutter at receiver location |
+| Clutter Loss | General clutter loss from ITU-R P.2108 |
 
-DTM
+**Angles:**
+- Elevation angle of the LOS path (degrees)
 
-2
+---
 
-Point to point (Profile) input
+## Fresnel Zone Clearance
 
-• Geodata
+The Fresnel zone radius at distance d from transmitter:
 
-•
-Elevation
-• Buildings
-•
-Clutter
-Frequency
-Fresnel zone (%)
+```
+r = sqrt(λ × d1 × d2 / (d1 + d2))
 
-•
-•
-• Earth radius
-• Transmitter
-• Height
-•
-Power
-• Receiver
-• Height
-•
-Power
+where:
+  λ  = wavelength (m)
+  d1 = distance from Tx to obstacle (m)
+  d2 = distance from obstacle to Rx (m)
+```
 
-3
+Recommended minimum clearance: **60% of 1st Fresnel zone radius** to avoid significant diffraction loss.
 
-Profile calculations
+---
 
-Clearance
-Clearance Percentage
-Clearance Distance
-Distance to NLOS
-Distance to OLOS
+## Visibility (Point-to-Area) Prediction
 
-• General
-•
-•
-•
-•
-•
-Power Budget
-•
-Downlink FS
-• Uplink FS
-•
-•
-Path Loss
-•
+### Input Parameters
 
-•
+| Parameter | Description |
+|-----------|-------------|
+| Geodata | Elevation + Obstacles |
+| Frequency (MHz) | Used for Fresnel zone calculation |
+| Calculation radius (km) | Area around transmitter to analyse |
+| Earth radius factor | Accounts for atmospheric refraction (typically k = 4/3) |
+| Transmitter height (m) | Fixed antenna height |
+| Receiver height (m) | Height of mobile UE |
 
-•
+### Visibility Result Layers
 
-FWA downlink RSL
-FWA uplink RSL
+| Layer | Values | Description |
+|-------|--------|-------------|
+| Line of Sight | 0 / 1 | 0 = NLOS, 1 = LOS |
+| Required Height for LoS | meters | Minimum receiver height to achieve LOS |
+| Clearance | meters | Clearance distance at receiver point |
 
-Total Path Loss
-• Model Loss
-•
-•
-•
-•
-• Angles
+**Example:** If Clearance = 6.5 m, the LOS line passes 6.5 m above the highest obstacle at that location.
 
-Diffraction Loss
-Penetration Loss
-Receiver Clutter Loss
-Clutter Loss
+---
 
-4
+## Surface Models Compared
 
-Dynamic profile
+```
+Surface grid     = DTM + Obstacles + Clutter (full DSM)
+Elevation grid   = DTM only (bare earth)
+Obstacles grid   = Buildings and structures only
+```
 
-• Fix transmitter
-• Dynamic option
+Visual LOS check:
+```
+Tx ─────────────── Rx    (LOS — no obstruction)
+Tx ──── [building] ─ Rx  (NLOS — building blocks path)
+Tx ──── [trees] ─── Rx   (OLOS — partially penetrable)
+```
 
-5
+---
 
-Profile symbology
+## Dynamic Profile Mode
 
-• Define colors for each object in profile
+- **Fix transmitter** — anchor one end of the profile at a fixed cell/antenna location
+- **Dynamic option** — move the receiver endpoint interactively on the map; profile updates in real time
 
-6
+---
 
-Profile 3D
+## Profile Symbology
 
-7
+Define custom colours for each element displayed in the profile view:
+- Ground (DTM)
+- Buildings / Obstacles
+- Clutter / Vegetation
+- LOS line
+- Fresnel zone ellipse
 
-Profile 3D
+---
 
-8
+## 3D Profile View
 
-Visibility prediction input
+CE Pro can display the terrain profile in 3D, showing the transmitter, receiver, terrain, obstacles, and the LOS path in a three-dimensional view.
 
-• Geodata
+---
 
-• Elevation
-• Obstacle
-• Frequency
-• Calculation radius
-• Earth radius
-• Transmitter
-• Receiver (height)
-
-9
-
-Visibility Results
-
-• Line of Sight
-• Required height for LoS
-• Clearance
-
-10
-
-Visibility: Line of Sight
-
-Possible values:
-• 0
-• 1
-
-11
-
-Visibility: Clearance
-
-• Clearance – clearance of visibility line between Tx to Rx as a distance in 
-
-meters
-
-12
-
-Clearance = 6.5 m55010020030040060657075Height, mDistance, mVisibility: Minimum Receiver Height
-
-• Receiver height – calculate required receiver heights to have a visibility
-
-13
-
-Visibility: Line of Sight sum meter topo data 
-
-14
-
-Surface vs Eelevation+Obstacles
-
-15
-
-TxRxTxRxRxRxVisibleVisibleVisibleNot visibleSurface gridElevation gridObstacles gridSurface
-
-16
-
-DTM + Obstacles (Buildings/Vegetation)
-
-17
-
-DTM + Buildings + Vegetation
-
-18
-
-Exercise
-
-Description: C:\CE_Course\0. Descriptions
-
-Name: 2. Line of Sight (Profile).pdf
-
-19
-
-Thank you! 
-
-Tel.: +370 5 2150575
-
-Email: info@cellular-expert.com
-
-S.Konarskio g. 28A LT-03127 Vilnius 
-Lithuania
+*Reference: CE Desktop Training — 2. Line of Sight (Profile)*
+*Contact: info@cellular-expert.com | +370 5 2150575*
