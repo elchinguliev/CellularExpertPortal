@@ -26,10 +26,24 @@ export const DOC_INDEX = [
   { id:'ce-express-admin-requirements', path:'docs/ce-express/admin-01-requirements.md',  title:'System Requirements',                         product:'CE Express', category:'Administration',    order:20 },
   { id:'ce-express-admin-installation', path:'docs/ce-express/admin-02-installation.md',  title:'Installation Guide',                          product:'CE Express', category:'Administration',    order:21 },
   { id:'ce-express-admin-user-management', path:'docs/ce-express/admin-03-user-management.md', title:'User Management',                        product:'CE Express', category:'Administration',    order:22 },
-  // CE Pro
-  { id:'ce-pro-introduction',           path:'docs/ce-pro/01-introduction.md',            title:'Introduction to CE Desktop Pro',              product:'CE Pro',     category:'Getting Started',   order:1  },
-  { id:'ce-pro-installation',           path:'docs/ce-pro/02-installation.md',            title:'Installation & Activation',                   product:'CE Pro',     category:'Getting Started',   order:2  },
-  { id:'ce-pro-workspace',              path:'docs/ce-pro/03-workspace.md',               title:'Creating Workspaces',                         product:'CE Pro',     category:'Getting Started',   order:3  },
+  // CE Pro — Getting Started
+  { id:'ce-pro-installation',           path:'docs/ce-pro/training/00-installation.md',   title:'Installation & Activation',                   product:'CE Pro',     category:'Getting Started',   order:0  },
+  { id:'ce-pro-data-types',             path:'docs/ce-pro/training/01-data-types.md',     title:'Data Types & Geodata Layers',                 product:'CE Pro',     category:'Getting Started',   order:1  },
+  { id:'ce-pro-architecture',           path:'docs/ce-pro/training/02-architecture.md',   title:'CE Pro Architecture',                         product:'CE Pro',     category:'Getting Started',   order:2  },
+  { id:'ce-pro-workspace',              path:'docs/ce-pro/training/04-workspace.md',       title:'Creating Workspace',                          product:'CE Pro',     category:'Getting Started',   order:4  },
+  { id:'ce-pro-objects',                path:'docs/ce-pro/training/06-objects.md',         title:'Creating Objects',                            product:'CE Pro',     category:'Getting Started',   order:6  },
+  { id:'ce-pro-importing-data',         path:'docs/ce-pro/training/09-importing-data.md',  title:'Importing Data',                              product:'CE Pro',     category:'Getting Started',   order:9  },
+  // CE Pro — Calculations
+  { id:'ce-pro-line-of-sight',          path:'docs/ce-pro/training/05-line-of-sight.md',   title:'Line of Sight & Profile',                     product:'CE Pro',     category:'Calculations',      order:5  },
+  { id:'ce-pro-cell-prediction',        path:'docs/ce-pro/training/07-cell-prediction.md', title:'Cell Prediction',                             product:'CE Pro',     category:'Calculations',      order:7  },
+  { id:'ce-pro-prediction-models',      path:'docs/ce-pro/training/08-prediction-models.md',title:'Prediction Models',                          product:'CE Pro',     category:'Calculations',      order:8  },
+  { id:'ce-pro-rl-prediction',          path:'docs/ce-pro/training/10-rl-prediction.md',   title:'RL / Microwave Link Prediction',              product:'CE Pro',     category:'Calculations',      order:10 },
+  // CE Pro — User Guides
+  { id:'ce-pro-rcp-guide',              path:'docs/ce-pro/rcp-user-guide.md',              title:'RCP User Guide',                              product:'CE Pro',     category:'User Guides',        order:20 },
+  { id:'ce-pro-rlp-guide',              path:'docs/ce-pro/rlp-user-guide.md',              title:'RLP User Guide',                              product:'CE Pro',     category:'User Guides',        order:21 },
+  { id:'ce-pro-emf-guide',              path:'docs/ce-pro/emf-user-guide.md',              title:'EMF User Guide',                              product:'CE Pro',     category:'User Guides',        order:22 },
+  { id:'ce-pro-indoor-guide',           path:'docs/ce-pro/indoor-user-guide.md',           title:'Indoor User Guide',                           product:'CE Pro',     category:'User Guides',        order:23 },
+  { id:'ce-pro-sound-guide',            path:'docs/ce-pro/sound-user-guide.md',            title:'Sound User Guide',                            product:'CE Pro',     category:'User Guides',        order:24 },
   // Geodata
   { id:'geodata-requirements',          path:'docs/geodata/01-overview.md',               title:'Geodata Requirements Overview',               product:'Both',       category:'Geodata',           order:1  },
   { id:'geodata-dem',                   path:'docs/geodata/02-dem.md',                    title:'Digital Terrain Model (DEM/DTM)',             product:'Both',       category:'Geodata',           order:2  },
@@ -51,7 +65,9 @@ export const NAV = {
     'Administration':     DOC_INDEX.filter(d => d.product==='CE Express' && d.category==='Administration'),
   },
   'CE Desktop Pro': {
-    'Getting Started': DOC_INDEX.filter(d => d.product==='CE Pro'),
+    'Getting Started': DOC_INDEX.filter(d => d.product==='CE Pro' && d.category==='Getting Started'),
+    'Calculations':    DOC_INDEX.filter(d => d.product==='CE Pro' && d.category==='Calculations'),
+    'User Guides':     DOC_INDEX.filter(d => d.product==='CE Pro' && d.category==='User Guides'),
   },
   'Geodata & Data': {
     'Geodata': DOC_INDEX.filter(d => d.product==='Both'),
