@@ -2,7 +2,7 @@
 // Fetches documentation markdown files directly from GitHub repository
 // When a .md file is edited on GitHub, the site automatically reflects the changes
 
-const GITHUB_RAW = 'https://raw.githubusercontent.com/elchinguliev/CellularExpertDocs/main';
+const GITHUB_RAW = 'https://raw.githubusercontent.com/elchinguliev/CellularExpertDocs/pooja';
 const GITHUB_API = 'https://api.github.com/repos/elchinguliev/CellularExpertDocs';
 
 // All known docs — structure matches the docs/ folder in GitHub
@@ -34,10 +34,18 @@ export const DOC_INDEX = [
   { id:'ce-pro-objects',                path:'docs/ce-pro/training/06-objects.md',         title:'Creating Objects',                            product:'CE Pro',     category:'Getting Started',   order:6  },
   { id:'ce-pro-importing-data',         path:'docs/ce-pro/training/09-importing-data.md',  title:'Importing Data',                              product:'CE Pro',     category:'Getting Started',   order:9  },
   // CE Pro — Calculations
-  { id:'ce-pro-line-of-sight',          path:'docs/ce-pro/training/05-line-of-sight.md',   title:'Line of Sight & Profile',                     product:'CE Pro',     category:'Calculations',      order:5  },
-  { id:'ce-pro-cell-prediction',        path:'docs/ce-pro/training/07-cell-prediction.md', title:'Cell Prediction',                             product:'CE Pro',     category:'Calculations',      order:7  },
-  { id:'ce-pro-prediction-models',      path:'docs/ce-pro/training/08-prediction-models.md',title:'Prediction Models',                          product:'CE Pro',     category:'Calculations',      order:8  },
-  { id:'ce-pro-rl-prediction',          path:'docs/ce-pro/training/10-rl-prediction.md',   title:'RL / Microwave Link Prediction',              product:'CE Pro',     category:'Calculations',      order:10 },
+  { id:'ce-pro-line-of-sight',          path:'docs/ce-pro/training/05-line-of-sight.md',        title:'Line of Sight & Profile',        product:'CE Pro', category:'Calculations', order:5  },
+  { id:'ce-pro-cell-prediction',        path:'docs/ce-pro/training/07-cell-prediction.md',       title:'Cell Prediction',                product:'CE Pro', category:'Calculations', order:7  },
+  { id:'ce-pro-prediction-models',      path:'docs/ce-pro/training/08-prediction-models.md',     title:'Prediction Models',              product:'CE Pro', category:'Calculations', order:8  },
+  { id:'ce-pro-rl-prediction',          path:'docs/ce-pro/training/10-rl-prediction.md',         title:'RL / Microwave Link Prediction',  product:'CE Pro', category:'Calculations', order:10 },
+  { id:'ce-pro-fwa-prediction',         path:'docs/ce-pro/training/12-fwa-prediction.md',        title:'FWA RF Prediction',              product:'CE Pro', category:'Calculations', order:12 },
+  { id:'ce-pro-quick-prediction',       path:'docs/ce-pro/training/13-quick-prediction.md',      title:'Quick Prediction',               product:'CE Pro', category:'Calculations', order:13 },
+  { id:'ce-pro-radar-prediction',       path:'docs/ce-pro/training/14-radar-prediction.md',      title:'Radar Prediction',               product:'CE Pro', category:'Calculations', order:14 },
+  { id:'ce-pro-visibility-prediction',  path:'docs/ce-pro/training/15-visibility-prediction.md', title:'Visibility Prediction',          product:'CE Pro', category:'Calculations', order:15 },
+  { id:'ce-pro-compare-predictions',    path:'docs/ce-pro/training/16-compare-predictions.md',   title:'Compare Predictions',            product:'CE Pro', category:'Calculations', order:16 },
+  { id:'ce-pro-emf-calculation',        path:'docs/ce-pro/training/17-emf-calculation.md',       title:'EMF Calculation',                product:'CE Pro', category:'Calculations', order:17 },
+  { id:'ce-pro-indoor-coverage',        path:'docs/ce-pro/training/18-indoor-coverage.md',       title:'Indoor Coverage Prediction',     product:'CE Pro', category:'Calculations', order:18 },
+  { id:'ce-pro-sound-prediction',       path:'docs/ce-pro/training/19-sound-prediction.md',      title:'Sound Level Prediction',         product:'CE Pro', category:'Calculations', order:19 },
   // CE Pro — User Guides
   { id:'ce-pro-rcp-guide',              path:'docs/ce-pro/rcp-user-guide.md',              title:'RCP User Guide',                              product:'CE Pro',     category:'User Guides',        order:20 },
   { id:'ce-pro-rlp-guide',              path:'docs/ce-pro/rlp-user-guide.md',              title:'RLP User Guide',                              product:'CE Pro',     category:'User Guides',        order:21 },
