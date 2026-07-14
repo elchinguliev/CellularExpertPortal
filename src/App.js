@@ -277,7 +277,7 @@ const ProductsSection = ({ onDocsClick }) => {
     { name:'CE Desktop Pro', tag:'ArcGIS Pro', icon:'🖥', color:'#00b4ff',
       desc:'Advanced radio planning extension for ArcGIS Pro. Supports RCP, RLP, Indoor, Sound, and EMF modules.',
       features:['10 kHz – 350 GHz frequency range','Sub-meter resolution GIS data','Best server, SINR, throughput maps','Drive-test data validation'],
-      docId:'ce-pro-introduction' },
+      docId:'ce-pro-installation' },
     { name:'CE Express', tag:'Web Platform', icon:'🌐', color:'#00d4a0',
       desc:'Multi-user web-based platform for radio planning, optimization and network inventory within ArcGIS Enterprise.',
       features:['Browser-based, no local install','Cloud or on-premise deployment','CE Inventory3D integrated','Full RF prediction suite'],
@@ -472,7 +472,7 @@ const DocsHome = React.memo(function DocsHome({ onSelect }) {
 
   const cards=[
     {key:'CE Express',icon:'🌐',color:'#00b4ff',desc:'Web-based RF planning — browser access, multi-user, CE Inventory3D integrated.',firstDoc:'ce-express-introduction'},
-    {key:'CE Desktop Pro',icon:'🖥',color:'#00d4a0',desc:'ArcGIS Pro extension — RCP, RLP, Indoor, Sound, EMF modules. 10 kHz–350 GHz.',firstDoc:'ce-pro-introduction'},
+    {key:'CE Desktop Pro',icon:'🖥',color:'#00d4a0',desc:'ArcGIS Pro extension — RCP, RLP, Indoor, Sound, EMF modules. 10 kHz–350 GHz.',firstDoc:'ce-pro-installation'},
     {key:'Geodata & Data',icon:'🗺',color:'#f59e0b',desc:'DEM, clutter, buildings, antenna patterns — formats, resolutions, requirements.',firstDoc:'geodata-requirements'},
     {key:'Training',icon:'🎓',color:'#a78bfa',desc:'Step-by-step practical exercises for CE Express and CE Desktop Pro.',firstDoc:'training-ce-express-workspace'},
   ];
