@@ -781,7 +781,21 @@ export default function SupportPortal({ onViewDocs }) {
       );
     }
 
-    const summary = insights?.summary || {};
+        const summary = insights?.summary || {};
+
+    const totalQuestions = summary.total_questions || 0;
+    const ticketNeededCount = summary.ticket_needed_count || 0;
+    const answeredWithoutTicket = Math.max(
+      totalQuestions - ticketNeededCount,
+      0
+    );
+
+    const ticketRate = totalQuestions > 0
+      ? Math.round((ticketNeededCount / totalQuestions) * 100)
+      : 0;
+
+    const lowConfidenceCount =
+      insights?.low_confidence_questions?.length || 0;
 
     return (
       <div style={{flex:1,overflowY:'auto',padding:14}}>
@@ -790,35 +804,218 @@ export default function SupportPortal({ onViewDocs }) {
             AI Insights
           </div>
           <div style={{fontSize:11,color:'var(--text-dim)'}}>
-            Admin analytics from chatbot questions, confidence scores, and ticket-needed cases.
+            Clear overview of chatbot usage, confidence, ticket demand, and unclear topics.
           </div>
         </div>
 
-        <div style={{display:'grid',gridTemplateColumns:'repeat(3, minmax(0, 1fr))',gap:10,marginBottom:12}}>
-          <div style={{background:'var(--bg2)',border:'1px solid var(--border)',borderRadius:10,padding:12}}>
-            <div style={{fontFamily:'var(--font-mono)',fontSize:9,color:'var(--text-dim)',letterSpacing:'.08em',marginBottom:5}}>
+        <div style={{
+          display:'grid',
+          gridTemplateColumns:'repeat(3, minmax(0, 1fr))',
+          gap:10,
+          marginBottom:10
+        }}>
+          <div style={{
+            background:'var(--bg2)',
+            border:'1px solid var(--border)',
+            borderRadius:10,
+            padding:12
+          }}>
+            <div style={{
+              fontFamily:'var(--font-mono)',
+              fontSize:9,
+              color:'var(--text-dim)',
+              letterSpacing:'.08em',
+              marginBottom:5
+            }}>
               TOTAL AI QUESTIONS
             </div>
-            <div style={{fontSize:24,fontWeight:800,color:'var(--text-bright)'}}>
-              {summary.total_questions || 0}
+
+            <div style={{
+              fontSize:24,
+              fontWeight:800,
+              color:'var(--text-bright)'
+            }}>
+              {totalQuestions}
+            </div>
+
+            <div style={{
+              fontSize:10,
+              color:'var(--text-dim)',
+              marginTop:4
+            }}>
+              All chatbot questions recorded
             </div>
           </div>
 
-          <div style={{background:'var(--bg2)',border:'1px solid var(--border)',borderRadius:10,padding:12}}>
-            <div style={{fontFamily:'var(--font-mono)',fontSize:9,color:'var(--text-dim)',letterSpacing:'.08em',marginBottom:5}}>
+          <div style={{
+            background:'var(--bg2)',
+            border:'1px solid var(--border)',
+            borderRadius:10,
+            padding:12
+          }}>
+            <div style={{
+              fontFamily:'var(--font-mono)',
+              fontSize:9,
+              color:'var(--text-dim)',
+              letterSpacing:'.08em',
+              marginBottom:5
+            }}>
               TICKET NEEDED
             </div>
-            <div style={{fontSize:24,fontWeight:800,color:'var(--text-bright)'}}>
-              {summary.ticket_needed_count || 0}
+
+            <div style={{
+              fontSize:24,
+              fontWeight:800,
+              color:'#d97706'
+            }}>
+              {ticketNeededCount}
+            </div>
+
+            <div style={{
+              fontSize:10,
+              color:'var(--text-dim)',
+              marginTop:4
+            }}>
+              {ticketRate}% of all AI questions
             </div>
           </div>
 
-          <div style={{background:'var(--bg2)',border:'1px solid var(--border)',borderRadius:10,padding:12}}>
-            <div style={{fontFamily:'var(--font-mono)',fontSize:9,color:'var(--text-dim)',letterSpacing:'.08em',marginBottom:5}}>
+          <div style={{
+            background:'var(--bg2)',
+            border:'1px solid var(--border)',
+            borderRadius:10,
+            padding:12
+          }}>
+            <div style={{
+              fontFamily:'var(--font-mono)',
+              fontSize:9,
+              color:'var(--text-dim)',
+              letterSpacing:'.08em',
+              marginBottom:5
+            }}>
               AVG CONFIDENCE
             </div>
-            <div style={{fontSize:24,fontWeight:800,color:'var(--text-bright)'}}>
+
+            <div style={{
+              fontSize:24,
+              fontWeight:800,
+              color:'var(--accent)'
+            }}>
               {Math.round((summary.average_confidence || 0) * 100)}%
+            </div>
+
+            <div style={{
+              fontSize:10,
+              color:'var(--text-dim)',
+              marginTop:4
+            }}>
+              Average confidence across responses
+            </div>
+          </div>
+        </div>
+
+        <div style={{
+          display:'grid',
+          gridTemplateColumns:'repeat(3, minmax(0, 1fr))',
+          gap:10,
+          marginBottom:12
+        }}>
+          <div style={{
+            background:'var(--bg2)',
+            border:'1px solid var(--border)',
+            borderRadius:10,
+            padding:12
+          }}>
+            <div style={{
+              fontFamily:'var(--font-mono)',
+              fontSize:9,
+              color:'var(--text-dim)',
+              letterSpacing:'.08em',
+              marginBottom:5
+            }}>
+              ANSWERED WITHOUT TICKET
+            </div>
+
+            <div style={{
+              fontSize:22,
+              fontWeight:800,
+              color:'var(--accent2)'
+            }}>
+              {answeredWithoutTicket}
+            </div>
+
+            <div style={{
+              fontSize:10,
+              color:'var(--text-dim)',
+              marginTop:4
+            }}>
+              Questions handled directly by AI
+            </div>
+          </div>
+
+          <div style={{
+            background:'var(--bg2)',
+            border:'1px solid var(--border)',
+            borderRadius:10,
+            padding:12
+          }}>
+            <div style={{
+              fontFamily:'var(--font-mono)',
+              fontSize:9,
+              color:'var(--text-dim)',
+              letterSpacing:'.08em',
+              marginBottom:5
+            }}>
+              TICKET RATE
+            </div>
+
+            <div style={{
+              fontSize:22,
+              fontWeight:800,
+              color:'#d97706'
+            }}>
+              {ticketRate}%
+            </div>
+
+            <div style={{
+              fontSize:10,
+              color:'var(--text-dim)',
+              marginTop:4
+            }}>
+              Share of questions needing support
+            </div>
+          </div>
+
+          <div style={{
+            background:'var(--bg2)',
+            border:'1px solid var(--border)',
+            borderRadius:10,
+            padding:12
+          }}>
+            <div style={{
+              fontFamily:'var(--font-mono)',
+              fontSize:9,
+              color:'var(--text-dim)',
+              letterSpacing:'.08em',
+              marginBottom:5
+            }}>
+              LOW-CONFIDENCE QUESTIONS
+            </div>
+
+            <div style={{
+              fontSize:22,
+              fontWeight:800,
+              color:'#dc2626'
+            }}>
+              {lowConfidenceCount}
+            </div>
+
+            <div style={{
+              fontSize:10,
+              color:'var(--text-dim)',
+              marginTop:4
+            }}>
+              Possible unclear or missing documentation
             </div>
           </div>
         </div>
