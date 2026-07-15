@@ -22,7 +22,7 @@ export default function SupportPortal({ onViewDocs }) {
   const [users,       setUsers]       = useState(SEED_USERS);
   const [tickets,     setTickets]     = useState(SEED_TICKETS);
   const [tab,         setTab]         = useState('chat');
-
+  const [pageLoadStart, setPageLoadStart] = useState(null);
   // Chat state
   const [messages,  setMessages]  = useState([]);
   const [typing,    setTyping]    = useState(false);
@@ -44,7 +44,19 @@ export default function SupportPortal({ onViewDocs }) {
   const openTktCount = myTickets.filter(t => t.status==='Open' || t.status==='In Progress').length;
 
   useEffect(() => { msgEnd.current?.scrollIntoView({behavior:'smooth'}); }, [messages, typing]);
+  useEffect(() => {
+  if (!pageLoadStart || !currentUser) return;
 
+  const duration = Math.round(performance.now() - pageLoadStart);
+
+  logActivity(
+    'performance',
+    tab,
+    `Page opened in ${duration} ms`
+  );
+
+  setPageLoadStart(null);
+}, [tab, pageLoadStart, currentUser]);
   useEffect(() => {
     if (currentUser?.role==='user' && messages.length===0) {
       setMessages([{ from:'bot', time:now(), type:'welcome',
@@ -269,13 +281,24 @@ export default function SupportPortal({ onViewDocs }) {
                     <div key={item.id}
             onClick={() => {
               if (item.id === 'docs-link') {
-                logActivity('page_visit', 'Documentation', 'User opened documentation page');
+                logActivity(
+                  'page_visit',
+                  'Documentation',
+                  'User opened documentation page'
+                );
+
                 onViewDocs();
                 return;
               }
 
+              setPageLoadStart(performance.now());
               setTab(item.id);
-              logActivity('page_visit', item.label, `User opened ${item.label} tab`);
+
+              logActivity(
+                'page_visit',
+                item.label,
+                `User opened ${item.label} tab`
+              );
             }}
             style={{display:'flex',alignItems:'center',gap:9,padding:'8px 10px',borderRadius:8,
               background:tab===item.id?'var(--accent-l)':'transparent',
