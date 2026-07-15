@@ -16,16 +16,21 @@ def log_ai_question(
     answer: str,
     confidence: float,
     ticket_needed: bool,
-    sources: list
+    sources: list,
+    response_time_ms: int | None = None,
+    answer_status: str | None = None,
 ) -> None:
     """
     Store one AI chatbot interaction in PostgreSQL.
 
-    This is used later for admin insights:
+    This data is used for admin insights:
     - most asked questions
     - low-confidence topics
     - documentation gaps
     - ticket-triggering questions
+    - AI response time
+    - number of retrieved sources
+    - answer status
     """
 
     top_source = sources[0] if sources else {}
@@ -33,6 +38,15 @@ def log_ai_question(
     top_document = top_source.get("document")
     top_section = top_source.get("section")
     product = top_source.get("product")
+
+    source_count = len(sources)
+
+    if answer_status is None:
+        answer_status = (
+            "ticket_needed"
+            if ticket_needed
+            else "answered"
+        )
 
     try:
         connection = psycopg2.connect(**DB_CONFIG)
@@ -48,9 +62,15 @@ def log_ai_question(
                 ticket_needed,
                 top_document,
                 top_section,
-                product
+                product,
+                response_time_ms,
+                source_count,
+                answer_status
             )
-            VALUES (%s, %s, %s, %s, %s, %s, %s, %s);
+            VALUES (
+                %s, %s, %s, %s, %s,
+                %s, %s, %s, %s, %s, %s
+            );
             """,
             (
                 user_name,
@@ -60,7 +80,10 @@ def log_ai_question(
                 ticket_needed,
                 top_document,
                 top_section,
-                product
+                product,
+                response_time_ms,
+                source_count,
+                answer_status,
             )
         )
 

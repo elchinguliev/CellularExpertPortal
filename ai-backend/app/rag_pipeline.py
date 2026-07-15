@@ -1,3 +1,4 @@
+import time
 from app.retriever import search
 from app.prompt_builder import build_rag_prompt
 from app.services.llm_service import generate as generate_llm
@@ -166,7 +167,9 @@ def safe_log_ai_question(
     answer: str,
     confidence: float,
     ticket_needed: bool,
-    sources: list
+    sources: list,
+    response_time_ms: int | None = None,
+    answer_status: str | None = None,
 ) -> None:
     """
     Log AI interaction for admin analytics.
@@ -182,7 +185,9 @@ def safe_log_ai_question(
             answer=answer,
             confidence=confidence,
             ticket_needed=ticket_needed,
-            sources=sources
+            sources=sources,
+            response_time_ms=response_time_ms,
+            answer_status=answer_status,
         )
     except Exception as error:
         print(f"[rag_pipeline] Analytics logging failed: {error}")
@@ -194,7 +199,8 @@ def prepare_ticket_response(
     sources: list,
     confidence: float,
     user: str,
-    conversation: list
+    conversation: list,
+    response_time_ms: int | None = None,
 ) -> dict:
     """
     Create a clean ticket response.
@@ -221,7 +227,9 @@ def prepare_ticket_response(
         answer=answer,
         confidence=confidence,
         ticket_needed=True,
-        sources=sources
+        sources=sources,
+        response_time_ms=response_time_ms,
+        answer_status="ticket_needed"
     )
 
     return {
@@ -238,6 +246,8 @@ def run_rag_pipeline(
     user: str = "Unknown User",
     conversation: list | None = None
 ) -> dict:
+    start_time = time.perf_counter()
+
     conversation = conversation or []
 
     search_question = build_search_question(question, conversation)
@@ -251,13 +261,18 @@ def run_rag_pipeline(
     if confidence < CONFIDENCE_THRESHOLD:
         answer = "I could not find a reliable answer in the available documentation."
 
+        response_time_ms = round(
+            (time.perf_counter() - start_time) * 1000
+        )
+
         return prepare_ticket_response(
             question=question,
             answer=answer,
             sources=sources,
             confidence=confidence,
             user=user,
-            conversation=conversation
+            conversation=conversation,
+            response_time_ms=response_time_ms
         )
 
     prompt = build_rag_prompt(question, results)
@@ -289,14 +304,23 @@ Important: Answer the current user question. Use previous conversation only to r
     )
 
     if llm_says_no_answer:
+        response_time_ms = round(
+            (time.perf_counter() - start_time) * 1000
+        )
+
         return prepare_ticket_response(
             question=question,
             answer=answer,
             sources=sources,
             confidence=confidence,
             user=user,
-            conversation=conversation
+            conversation=conversation,
+            response_time_ms=response_time_ms
         )
+
+    response_time_ms = round(
+        (time.perf_counter() - start_time) * 1000
+    )
 
     safe_log_ai_question(
         user=user,
@@ -304,7 +328,9 @@ Important: Answer the current user question. Use previous conversation only to r
         answer=answer,
         confidence=confidence,
         ticket_needed=False,
-        sources=sources
+        sources=sources,
+        response_time_ms=response_time_ms,
+        answer_status="answered"
     )
 
     return {

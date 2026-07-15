@@ -42,18 +42,30 @@ CREATE TABLE IF NOT EXISTS document_headings (
 );
 
 CREATE TABLE IF NOT EXISTS ai_question_logs (
-  id             SERIAL PRIMARY KEY,
-  user_name      TEXT,
-  question       TEXT NOT NULL,
-  answer         TEXT,
-  confidence     NUMERIC,
-  ticket_needed  BOOLEAN DEFAULT FALSE,
-  top_document   TEXT,
-  top_section    TEXT,
-  product        TEXT,
-  created_at     TIMESTAMP DEFAULT NOW()
+  id                SERIAL PRIMARY KEY,
+  user_name         TEXT,
+  question          TEXT NOT NULL,
+  answer            TEXT,
+  confidence        NUMERIC,
+  ticket_needed     BOOLEAN DEFAULT FALSE,
+  top_document      TEXT,
+  top_section       TEXT,
+  product           TEXT,
+  response_time_ms  INTEGER,
+  source_count      INTEGER DEFAULT 0,
+  answer_status     TEXT,
+  created_at        TIMESTAMP DEFAULT NOW()
 );
 
+ALTER TABLE ai_question_logs
+  ADD COLUMN IF NOT EXISTS response_time_ms INTEGER;
+
+ALTER TABLE ai_question_logs
+  ADD COLUMN IF NOT EXISTS source_count INTEGER DEFAULT 0;
+
+ALTER TABLE ai_question_logs
+  ADD COLUMN IF NOT EXISTS answer_status TEXT;
+  
 CREATE TABLE IF NOT EXISTS user_activity_logs (
   id             SERIAL PRIMARY KEY,
   user_id        TEXT,
