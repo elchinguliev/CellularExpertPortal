@@ -1,1 +1,3 @@
-CellularExpertPortal/
+node_modules/
+ce-backend/node_modules/
+ce-backend/.env

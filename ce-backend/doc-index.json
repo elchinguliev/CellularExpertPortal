@@ -324,6 +324,86 @@
     "pdf": "ce-pro/training/7. RL Prediction.pdf"
   },
   {
+    "id": "ce-pro-tr-fwa",
+    "path": "docs/ce-pro/training/12-fwa-prediction.md",
+    "title": "FWA RF Prediction",
+    "product": "CE Pro",
+    "category": "Training",
+    "order": 21,
+    "pdf": "ce-pro/user-guide/CE Desktop RCP for ArcGIS Pro User Guide v4.9.pdf"
+
+  },
+  {
+    "id": "ce-pro-tr-quick",
+    "path": "docs/ce-pro/training/13-quick-prediction.md",
+    "title": "Quick Prediction",
+    "product": "CE Pro",
+    "category": "Training",
+    "order": 22,
+    "pdf": "ce-pro/user-guide/CE Desktop RCP for ArcGIS Pro User Guide v4.9.pdf"
+
+  },
+  {
+    "id": "ce-pro-tr-radar",
+    "path": "docs/ce-pro/training/14-radar-prediction.md",
+    "title": "Radar Prediction",
+    "product": "CE Pro",
+    "category": "Training",
+    "order": 23,
+    "pdf": "ce-pro/user-guide/CE Desktop RCP for ArcGIS Pro User Guide v4.9.pdf"
+
+  },
+  {
+    "id": "ce-pro-tr-visibility",
+    "path": "docs/ce-pro/training/15-visibility-prediction.md",
+    "title": "Visibility Prediction",
+    "product": "CE Pro",
+    "category": "Training",
+    "order": 24,
+    "pdf": "ce-pro/user-guide/CE Desktop RCP for ArcGIS Pro User Guide v4.9.pdf"
+
+  },
+  {
+    "id": "ce-pro-tr-compare",
+    "path": "docs/ce-pro/training/16-compare-predictions.md",
+    "title": "Compare Predictions",
+    "product": "CE Pro",
+    "category": "Training",
+    "order": 25,
+    "pdf": "ce-pro/user-guide/CE Desktop RCP for ArcGIS Pro User Guide v4.9.pdf"
+
+  },
+  {
+    "id": "ce-pro-tr-emf-calc",
+    "path": "docs/ce-pro/training/17-emf-calculation.md",
+    "title": "EMF Calculation",
+    "product": "CE Pro",
+    "category": "Training",
+    "order": 26,
+        "pdf": "ce-pro/user-guide/CE Desktop EMF for ArcGIS Pro User Guide v4.9.pdf"
+
+  },
+  {
+    "id": "ce-pro-tr-indoor-cov",
+    "path": "docs/ce-pro/training/18-indoor-coverage.md",
+    "title": "Indoor Coverage Prediction",
+    "product": "CE Pro",
+    "category": "Training",
+    "order": 27,
+    "pdf": "ce-pro/user-guide/CE Desktop Indoor for ArcGIS Pro User Guide v4.9.pdf"
+
+  },
+  {
+    "id": "ce-pro-tr-sound-pred",
+    "path": "docs/ce-pro/training/19-sound-prediction.md",
+    "title": "Sound Level Prediction",
+    "product": "CE Pro",
+    "category": "Training",
+    "order": 28,
+    "pdf": "ce-pro/user-guide/CE Desktop Sound for ArcGIS Pro User Guide v4.9.pdf"
+
+  },
+  {
     "id": "geodata-requirements",
     "path": "docs/geodata/geodata-requirements.md",
     "title": "Geodata Requirements",

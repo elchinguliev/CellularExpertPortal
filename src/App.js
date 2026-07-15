@@ -170,6 +170,7 @@ function renderMD(text) {
   if (inBq) html += "</blockquote>";
   return html;
 }
+
 // Builds the HTML for one image/icon figure (shared by inline placement and fallback).
 function buildFigureHtml(img) {
   const isIcon =
@@ -205,7 +206,10 @@ function injectImages(contentHtml, images) {
       leftover.push(figureHtml);
       continue;
     }
-    const headingRe = new RegExp(`(<h[1-6] id="${anchor}"[^>]*>.*?</h[1-6]>)`, "i");
+    const headingRe = new RegExp(
+      `(<h[1-6] id="${anchor}"[^>]*>.*?</h[1-6]>)`,
+      "i",
+    );
     if (headingRe.test(html)) {
       html = html.replace(headingRe, `$1${figureHtml}`);
     } else {
@@ -217,7 +221,6 @@ function injectImages(contentHtml, images) {
   }
   return html;
 }
-
 function extractTOC(c) {
   return (c || "")
     .split("\n")
@@ -348,8 +351,8 @@ const Navbar = React.memo(function Navbar({
         right: 0,
         zIndex: 1000,
         height: "var(--nav-h)",
-        background:
-          scrolled || view !== "main" ? "rgba(5,14,26,0.95)" : "transparent",
+background:
+          scrolled || view !== "main" ? "var(--bg2)" : "transparent",
         backdropFilter: scrolled || view !== "main" ? "blur(20px)" : "none",
         borderBottom:
           scrolled || view !== "main" ? "1px solid var(--border)" : "none",
@@ -393,14 +396,15 @@ const Navbar = React.memo(function Navbar({
               lineHeight: 1,
             }}
           >
-            CELLULAR<span style={{ color: "var(--accent)" }}> EXPERT</span>
+            <span style={{ color: "var(--accent)" }}>CELLULAR EXPERT</span>
           </div>
-          <div
+<div
             style={{
               fontFamily: "var(--font-mono)",
-              fontSize: 8,
+              fontSize: 10.5,
+              fontWeight: 600,
               color: "var(--text-dim)",
-              letterSpacing: "0.12em",
+              letterSpacing: "0.1em",
             }}
           >
             NETWORK PLANNING IN ARCGIS
@@ -783,7 +787,7 @@ const ProductsSection = ({ onDocsClick }) => {
         "Best server, SINR, throughput maps",
         "Drive-test data validation",
       ],
-      docId: "ce-pro-introduction",
+      docId: "ce-pro-rcp",
     },
     {
       name: "CE Express",
@@ -811,7 +815,7 @@ const ProductsSection = ({ onDocsClick }) => {
         "OSS/BSS integration",
         "SketchUp plug-in available",
       ],
-      docId: "ce-express-introduction",
+      docId: "inventory3d-user-guide",
     },
   ];
   return (
@@ -1533,6 +1537,7 @@ const DocsHome = React.memo(function DocsHome({ onSelect, onSupportClick }) {
       firstDoc: "ce-express-tr-workspace",
     },
   ];
+
   const steps = [
     {
       n: "01",
@@ -1906,9 +1911,36 @@ const DocArticle = React.memo(function DocArticle({ doc, onSelect }) {
         >
           {PI[doc.product]}&nbsp;{doc.product}
           {doc.version && (
-            <span style={{ marginLeft: 3, opacity: 0.6 }}>v{doc.version}</span>
+            <span
+              style={{
+                marginLeft: 6,
+                paddingLeft: 6,
+                borderLeft: `1px solid ${pc}55`,
+                opacity: 0.95,
+              }}
+            >
+              v{doc.version}
+            </span>
           )}
         </div>
+        {doc.version && (
+          <div
+            style={{
+              fontSize: 11,
+              color: "var(--text-dim)",
+              fontFamily: "var(--font-mono)",
+              marginBottom: 14,
+              marginTop: -6,
+            }}
+          >
+            📌 You're reading documentation for{" "}
+            <strong style={{ color: "var(--text-bright)" }}>
+              {doc.product} v{doc.version}
+            </strong>
+            . Using a different version? Check with your admin which release
+            your organization has deployed.
+          </div>
+        )}
         {doc.pdf_path && (
           <a
             href={`${SERVER_BASE}/downloads/${doc.pdf_path.split("/").map(encodeURIComponent).join("/")}`}
@@ -1935,8 +1967,11 @@ const DocArticle = React.memo(function DocArticle({ doc, onSelect }) {
         )}
         <div
           className="art"
-          dangerouslySetInnerHTML={{ __html: injectImages(renderMD(doc.content), doc.images) }}
+          dangerouslySetInnerHTML={{
+            __html: injectImages(renderMD(doc.content), doc.images),
+          }}
         />
+
         {doc.related?.filter(
           (r) => r.trim() && DOC_INDEX.find((d) => d.id === r.trim()),
         ).length > 0 && (
@@ -2015,6 +2050,244 @@ const DocArticle = React.memo(function DocArticle({ doc, onSelect }) {
   );
 });
 
+// ── Support (marketing) ──────────────────────────────────────────────────────
+const SupportSection = ({ onSupportClick }) => {
+  const items = [
+    {
+      icon: "✦",
+      color: "#5b4feb",
+      title: "AI Chat Assistant",
+      desc: "A documentation-aware chatbot that instantly answers questions about CE Express, CE Desktop Pro, Geodata, and Inventory3D — pulling the exact article you need straight into the conversation, no digging through pages required.",
+    },
+    {
+      icon: "◉",
+      color: "#e94fc9",
+      title: "Ticket System",
+      desc: "For account-specific or technical issues — licensing, installation problems, data errors — open a ticket and a real support engineer picks it up, with full status tracking from Open to Resolved.",
+    },
+    {
+      icon: "✉",
+      color: "#f59e0b",
+      title: "Direct Email",
+      desc: "Need a human straight away? Email support@cellular-expert.com any time — every request is tracked and answered by our team.",
+    },
+  ];
+
+  return (
+    <section
+      id="support-info"
+      style={{ padding: "100px 48px", maxWidth: 1200, margin: "0 auto" }}
+    >
+      <div style={{ textAlign: "center", marginBottom: 60 }}>
+        <div
+          style={{
+            fontFamily: "var(--font-mono)",
+            fontSize: 10,
+            color: "var(--accent)",
+            letterSpacing: "0.15em",
+            textTransform: "uppercase",
+            marginBottom: 12,
+          }}
+        >
+          Support
+        </div>
+        <h2
+          style={{
+            fontSize: 36,
+            fontWeight: 700,
+            color: "var(--text-bright)",
+            letterSpacing: "-0.02em",
+            marginBottom: 16,
+          }}
+        >
+          Get help whenever you need it
+        </h2>
+        <p
+          style={{
+            fontSize: 14,
+            color: "var(--text-dim)",
+            lineHeight: 1.8,
+            maxWidth: 640,
+            margin: "0 auto",
+          }}
+        >
+          The Support Portal gives every Cellular Expert user three ways to get
+          unstuck — an instant AI assistant for documentation questions, a
+          ticket system for account-specific issues, and direct email for
+          anything urgent.
+        </p>
+      </div>
+
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: "repeat(3,1fr)",
+          gap: 24,
+          marginBottom: 48,
+        }}
+      >
+        {items.map((it) => (
+          <div
+            key={it.title}
+            style={{
+              padding: 28,
+              border: "1px solid var(--border)",
+              borderRadius: 14,
+              background: "var(--bg2)",
+            }}
+          >
+            <div
+              style={{
+                width: 40,
+                height: 40,
+                borderRadius: 10,
+                background: `${it.color}18`,
+                border: `1px solid ${it.color}40`,
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                fontSize: 17,
+                color: it.color,
+                marginBottom: 16,
+              }}
+            >
+              {it.icon}
+            </div>
+            <div
+              style={{
+                fontSize: 16,
+                fontWeight: 700,
+                color: "var(--text-bright)",
+                marginBottom: 10,
+              }}
+            >
+              {it.title}
+            </div>
+            <div
+              style={{
+                fontSize: 13,
+                color: "var(--text-dim)",
+                lineHeight: 1.75,
+              }}
+            >
+              {it.desc}
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* Deep dive on the AI Assistant specifically */}
+      <div
+        style={{
+          padding: "32px 36px",
+          border: "1px solid var(--border)",
+          borderRadius: 16,
+          background:
+            "linear-gradient(135deg, var(--accent-l), var(--accent2-l))",
+          marginBottom: 40,
+        }}
+      >
+        <div
+          style={{
+            fontSize: 18,
+            fontWeight: 700,
+            color: "var(--text-bright)",
+            marginBottom: 14,
+          }}
+        >
+          What can the AI Assistant actually do?
+        </div>
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "1fr 1fr",
+            gap: 24,
+          }}
+        >
+          <div>
+            <div
+              style={{
+                fontSize: 12,
+                fontWeight: 600,
+                color: "var(--accent)",
+                marginBottom: 8,
+                fontFamily: "var(--font-mono)",
+                textTransform: "uppercase",
+                letterSpacing: "0.05em",
+              }}
+            >
+              How it works
+            </div>
+            <p
+              style={{
+                fontSize: 13.5,
+                color: "var(--text-dim)",
+                lineHeight: 1.8,
+              }}
+            >
+              Ask it in plain English — "how do I create a workspace" or "which
+              prediction model works above 6 GHz." It searches the full
+              documentation knowledge base across every CE product and training
+              guide, then either surfaces the matching article directly in the
+              chat, or — if it genuinely doesn't know — says so honestly and
+              offers to open a ticket or email the team. It never guesses.
+            </p>
+          </div>
+          <div>
+            <div
+              style={{
+                fontSize: 12,
+                fontWeight: 600,
+                color: "var(--accent2)",
+                marginBottom: 8,
+                fontFamily: "var(--font-mono)",
+                textTransform: "uppercase",
+                letterSpacing: "0.05em",
+              }}
+            >
+              Best used for
+            </div>
+            <p
+              style={{
+                fontSize: 13.5,
+                color: "var(--text-dim)",
+                lineHeight: 1.8,
+              }}
+            >
+              Fast answers to "how do I…" and "what is…" questions about product
+              features, prediction models, workspace setup, and training steps.
+              For anything tied to your specific account — licensing,
+              installation errors on your machine, or data issues — open a
+              ticket instead so a real engineer can investigate.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div style={{ textAlign: "center" }}>
+        <button
+          onClick={onSupportClick}
+          style={{
+            padding: "13px 30px",
+            background: "var(--accent)",
+            color: "#fff",
+            border: "none",
+            borderRadius: 9,
+            fontSize: 13,
+            fontWeight: 700,
+            fontFamily: "var(--font-mono)",
+            letterSpacing: "0.04em",
+            cursor: "pointer",
+            textTransform: "uppercase",
+          }}
+        >
+          Open Support Portal →
+        </button>
+      </div>
+    </section>
+  );
+};
+
 // ── Footer ────────────────────────────────────────────────────────────────────
 const Footer = () => (
   <footer
@@ -2046,7 +2319,7 @@ const Footer = () => (
             objectFit: "contain",
             display: "block",
           }}
-        />{" "}
+        />
         <span
           style={{
             fontFamily: "var(--font-display)",
@@ -2184,8 +2457,9 @@ export default function App() {
             }}
             onSupportClick={() => setView("support")}
           />
-          <ProductsSection onDocsClick={loadDoc} />
+<ProductsSection onDocsClick={loadDoc} />
           <SolutionsSection />
+          <SupportSection onSupportClick={() => setView("support")} />
           <AboutSection />
           <Footer />
         </>
