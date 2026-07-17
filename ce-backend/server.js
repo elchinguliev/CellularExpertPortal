@@ -7,6 +7,7 @@ const express = require('express');
 const cors = require('cors');
 const path = require('path');
 const { Pool } = require('pg');
+const bcrypt = require('bcryptjs');
 
 const app = express();
 app.use(cors());
@@ -126,6 +127,127 @@ app.post('/api/docs/:docId/images', async (req, res) => {
   }
 });
 
+// ── Register a new account ───────────────────────────────────────────────────
+app.post('/api/auth/register', async (req, res) => {
+  try {
+    const { name, email, password, company, product } = req.body;
+    if (!name || !email || !password) {
+      return res.status(400).json({ error: 'Name, email, and password are required' });
+    }
+    const hash = await bcrypt.hash(password, 10);
+    const avatar = name.trim().split(/\s+/).map(w => w[0]).join('').slice(0, 2).toUpperCase();
+
+    const { rows } = await pool.query(
+      `INSERT INTO users (name, email, password_hash, company, product, role, avatar)
+       VALUES ($1, $2, $3, $4, $5, 'user', $6)
+       RETURNING id, name, email, company, product, role, avatar, created_at`,
+      [name, email.toLowerCase(), hash, company || null, product || 'CE Express', avatar]
+    );
+    res.status(201).json(rows[0]);
+  } catch (err) {
+    if (err.code === '23505') {
+      return res.status(409).json({ error: 'An account with this email already exists' });
+    }
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// ── Log in ────────────────────────────────────────────────────────────────────
+app.post('/api/auth/login', async (req, res) => {
+  try {
+    const { email, password } = req.body;
+    if (!email || !password) {
+      return res.status(400).json({ error: 'Email and password are required' });
+    }
+    const { rows } = await pool.query(
+      `SELECT id, name, email, password_hash, company, product, role, avatar, created_at
+       FROM users WHERE email = $1`,
+      [email.toLowerCase()]
+    );
+    if (rows.length === 0) {
+      return res.status(401).json({ error: 'Account not found' });
+    }
+    const user = rows[0];
+    const match = await bcrypt.compare(password, user.password_hash);
+    if (!match) {
+      return res.status(401).json({ error: 'Incorrect password' });
+    }
+    delete user.password_hash;
+    res.json(user);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// ── List all users (admin "Users" tab) ───────────────────────────────────────
+app.get('/api/auth/users', async (req, res) => {
+  try {
+    const { rows } = await pool.query(
+      `SELECT id, name, email, company, product, role, avatar, created_at
+       FROM users ORDER BY created_at DESC`
+    );
+    res.json(rows);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// ── Update a document (admin CRUD) ───────────────────────────────────────────
+app.put('/api/docs/:docId', async (req, res) => {
+  try {
+    const { docId } = req.params;
+    const { title, product, category, content } = req.body;
+    const { rows } = await pool.query(
+      `UPDATE documents
+       SET title    = COALESCE($2, title),
+           product  = COALESCE($3, product),
+           category = COALESCE($4, category),
+           content  = COALESCE($5, content),
+           updated_at = NOW()
+       WHERE doc_id = $1
+       RETURNING *`,
+      [docId, title, product, category, content]
+    );
+    if (rows.length === 0) return res.status(404).json({ error: 'Not found' });
+    res.json(rows[0]);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// ── Delete a document (admin CRUD) ───────────────────────────────────────────
+app.delete('/api/docs/:docId', async (req, res) => {
+  try {
+    const { docId } = req.params;
+    const { rowCount } = await pool.query(`DELETE FROM documents WHERE doc_id = $1`, [docId]);
+    if (rowCount === 0) return res.status(404).json({ error: 'Not found' });
+    res.json({ ok: true, deleted: docId });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// ── Create a new document (admin CRUD) ───────────────────────────────────────
+app.post('/api/docs', async (req, res) => {
+  try {
+    const { doc_id, title, product, category, content, github_path } = req.body;
+    if (!doc_id || !title || !product || !category) {
+      return res.status(400).json({ error: 'doc_id, title, product, and category are required' });
+    }
+    const { rows } = await pool.query(
+      `INSERT INTO documents (doc_id, title, product, category, content, github_path, display_order)
+       VALUES ($1,$2,$3,$4,$5,$6,99)
+       RETURNING *`,
+      [doc_id, title, product, category, content || '', github_path || `admin/${doc_id}.md`]
+    );
+    res.status(201).json(rows[0]);
+  } catch (err) {
+    if (err.code === '23505') {
+      return res.status(409).json({ error: 'A document with this ID already exists' });
+    }
+    res.status(500).json({ error: err.message });
+  }
+});
 const PORT = process.env.PORT || 4000;
 app.listen(PORT, () => {
   console.log(`✅ CE Docs API running at http://localhost:${PORT}`);

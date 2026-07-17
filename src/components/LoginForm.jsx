@@ -16,26 +16,39 @@ function FocusInput(props) {
   );
 }
 
-export default function LoginForm({ users, onLogin, onRegister }) {
+// onLogin(email, password) and onRegister(data) must return a Promise that
+// resolves to { ok: true } on success or { ok: false, error: 'message' } on failure.
+export default function LoginForm({ onLogin, onRegister }) {
   const [regMode,    setRegMode]    = useState(false);
+  const [busy,       setBusy]       = useState(false);
   const [loginEmail, setLoginEmail] = useState('');
   const [loginPass,  setLoginPass]  = useState('');
   const [loginErr,   setLoginErr]   = useState('');
   const [regName,    setRegName]    = useState('');
   const [regEmail,   setRegEmail]   = useState('');
+  const [regPass,    setRegPass]    = useState('');
   const [regCompany, setRegCompany] = useState('');
   const [regProduct, setRegProduct] = useState('CE Pro');
 
-  const doLogin = () => {
-    const u = users.find(x => x.email.toLowerCase()===loginEmail.toLowerCase());
-    if (!u) { setLoginErr('Account not found. Try john@telecom.com or admin@cellular-expert.com'); return; }
+  const doLogin = async () => {
+    if (busy) return;
+    if (!loginEmail || !loginPass) { setLoginErr('Please enter your email and password.'); return; }
     setLoginErr('');
-    onLogin(u);
+    setBusy(true);
+    const result = await onLogin(loginEmail.trim(), loginPass);
+    setBusy(false);
+    if (!result.ok) setLoginErr(result.error || 'Sign in failed.');
   };
 
-  const doRegister = () => {
-    if (!regName||!regEmail||!regCompany) { setLoginErr('Please fill in all fields.'); return; }
-    onRegister({ name:regName, email:regEmail, company:regCompany, product:regProduct });
+  const doRegister = async () => {
+    if (busy) return;
+    if (!regName || !regEmail || !regPass || !regCompany) { setLoginErr('Please fill in all fields.'); return; }
+    if (regPass.length < 6) { setLoginErr('Password must be at least 6 characters.'); return; }
+    setLoginErr('');
+    setBusy(true);
+    const result = await onRegister({ name:regName, email:regEmail.trim(), password:regPass, company:regCompany, product:regProduct });
+    setBusy(false);
+    if (!result.ok) setLoginErr(result.error || 'Registration failed.');
   };
 
   return (
@@ -80,16 +93,12 @@ export default function LoginForm({ users, onLogin, onRegister }) {
             </div>
             <div style={{marginBottom:16}}>
               <label style={labelSt}>Password</label>
-              <FocusInput type="password" value={loginPass} onChange={e=>setLoginPass(e.target.value)} onKeyDown={e=>e.key==='Enter'&&doLogin()} placeholder="any password in demo"/>
+              <FocusInput type="password" value={loginPass} onChange={e=>setLoginPass(e.target.value)} onKeyDown={e=>e.key==='Enter'&&doLogin()} placeholder="Your password"/>
             </div>
-            <button onClick={doLogin}
-              style={{width:'100%',padding:'11px',background:'linear-gradient(135deg, var(--accent), var(--accent2))',border:'none',borderRadius:9,color:'#fff',fontSize:12,fontWeight:700,cursor:'pointer',fontFamily:'var(--font-mono)',letterSpacing:'.1em',marginBottom:14,boxShadow:'0 6px 16px -6px var(--accent)'}}>
-              SIGN IN
+            <button onClick={doLogin} disabled={busy}
+              style={{width:'100%',padding:'11px',background:'linear-gradient(135deg, var(--accent), var(--accent2))',border:'none',borderRadius:9,color:'#fff',fontSize:12,fontWeight:700,cursor:busy?'default':'pointer',opacity:busy?0.7:1,fontFamily:'var(--font-mono)',letterSpacing:'.1em',marginBottom:14,boxShadow:'0 6px 16px -6px var(--accent)'}}>
+              {busy ? 'SIGNING IN…' : 'SIGN IN'}
             </button>
-            <div style={{padding:'11px 13px',background:'var(--bg2)',border:'1px solid var(--border)',borderRadius:10,fontSize:10,color:'var(--text-dim)',fontFamily:'var(--font-mono)',lineHeight:1.9}}>
-              👤&nbsp; john@telecom.com — Customer<br/>
-              🛡&nbsp; admin@cellular-expert.com — Admin
-            </div>
           </>
         ) : (
           <>
@@ -102,6 +111,10 @@ export default function LoginForm({ users, onLogin, onRegister }) {
               <FocusInput type="email" value={regEmail} onChange={e=>setRegEmail(e.target.value)} placeholder="you@company.com"/>
             </div>
             <div style={{marginBottom:10}}>
+              <label style={labelSt}>Password</label>
+              <FocusInput type="password" value={regPass} onChange={e=>setRegPass(e.target.value)} placeholder="At least 6 characters"/>
+            </div>
+            <div style={{marginBottom:10}}>
               <label style={labelSt}>Company</label>
               <FocusInput type="text" value={regCompany} onChange={e=>setRegCompany(e.target.value)} placeholder="Your organisation"/>
             </div>
@@ -111,9 +124,9 @@ export default function LoginForm({ users, onLogin, onRegister }) {
                 {['CE Pro','CE Express','Both','Inventory3D'].map(o=><option key={o}>{o}</option>)}
               </select>
             </div>
-            <button onClick={doRegister}
-              style={{width:'100%',padding:'11px',background:'linear-gradient(135deg, var(--accent), var(--accent2))',border:'none',borderRadius:9,color:'#fff',fontSize:12,fontWeight:700,cursor:'pointer',fontFamily:'var(--font-mono)',letterSpacing:'.1em',boxShadow:'0 6px 16px -6px var(--accent)'}}>
-              CREATE ACCOUNT
+            <button onClick={doRegister} disabled={busy}
+              style={{width:'100%',padding:'11px',background:'linear-gradient(135deg, var(--accent), var(--accent2))',border:'none',borderRadius:9,color:'#fff',fontSize:12,fontWeight:700,cursor:busy?'default':'pointer',opacity:busy?0.7:1,fontFamily:'var(--font-mono)',letterSpacing:'.1em',boxShadow:'0 6px 16px -6px var(--accent)'}}>
+              {busy ? 'CREATING ACCOUNT…' : 'CREATE ACCOUNT'}
             </button>
           </>
         )}

@@ -66,3 +66,20 @@ CREATE TRIGGER documents_search_vector_trigger
 
 
 CREATE INDEX IF NOT EXISTS idx_documents_search ON documents USING GIN(search_vector);
+
+-- ════════════════════════════════════════════════════════════════════════════
+-- Real, persistent user accounts (replaces the in-memory demo SEED_USERS)
+-- ════════════════════════════════════════════════════════════════════════════
+CREATE TABLE IF NOT EXISTS users (
+  id            SERIAL PRIMARY KEY,
+  name          TEXT NOT NULL,
+  email         TEXT UNIQUE NOT NULL,
+  password_hash TEXT NOT NULL,
+  company       TEXT,
+  product       TEXT DEFAULT 'CE Express',
+  role          TEXT NOT NULL DEFAULT 'user',   -- 'user' | 'agent' | 'admin'
+  avatar        TEXT,
+  created_at    TIMESTAMP DEFAULT NOW()
+);
+
+CREATE INDEX IF NOT EXISTS idx_users_email ON users(email);

@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { KB, findAnswer, SUGGESTED, SEED_USERS, SEED_TICKETS, AGENTS, SUPPORT_EMAIL } from '../supportData';
-import LoginForm from './LoginForm';
+import { KB, findAnswer, SUGGESTED, SEED_TICKETS, AGENTS, SUPPORT_EMAIL } from '../supportData';
+import { API_BASE } from '../useGithubDocs';import LoginForm from './LoginForm';
 import NewTicketForm from './NewTicketForm';
 import ReplyBox from './ReplyBox';
 import ChatComposer from './ChatComposer';
@@ -17,7 +17,7 @@ const boldify = (text) => text.split('**').map((p,i) => i%2===1 ? <strong key={i
 
 export default function SupportPortal({ onViewDocs }) {
   const [currentUser, setCurrentUser] = useState(null);
-  const [users,       setUsers]       = useState(SEED_USERS);
+const [users,       setUsers]       = useState([]);
   const [tickets,     setTickets]     = useState(SEED_TICKETS);
   const [tab,         setTab]         = useState('chat');
 
@@ -32,11 +32,102 @@ export default function SupportPortal({ onViewDocs }) {
   const [activeTkt,  setActiveTkt]  = useState(null);
 
   // Admin state
+// Admin state
   const [admFilter, setAdmFilter] = useState('All');
   const [admTkt,    setAdmTkt]    = useState(null);
   const [openFaq,   setOpenFaq]   = useState(null);
 
+  // Admin — Documentation CRUD state
+  const [docsList,    setDocsList]    = useState([]);
+  const [docsLoading, setDocsLoading] = useState(false);
+  const [docsError,   setDocsError]   = useState('');
+  const [docMode,     setDocMode]     = useState('list'); // 'list' | 'edit' | 'new'
+  const [docDraft,    setDocDraft]    = useState(null);
+  const [docSaving,   setDocSaving]   = useState(false);
+
   const isAdmin   = currentUser?.role==='admin' || currentUser?.role==='agent';
+  // Restore a saved session on page load/refresh
+  useEffect(() => {
+    const saved = localStorage.getItem('ce_support_user');
+    if (saved) {
+      try {
+        const u = JSON.parse(saved);
+        setCurrentUser(u);
+        setTab((u.role==='admin'||u.role==='agent') ? 'adm-dashboard' : 'chat');
+      } catch {}
+    }
+  }, []);
+
+  // Load the real user list for the admin "Users" tab
+  useEffect(() => {
+    if (isAdmin) {
+      fetch(`${API_BASE}/auth/users`)
+        .then(r => r.json())
+        .then(setUsers)
+        .catch(() => {});
+    }
+  }, [isAdmin]);
+  // Load the documents list whenever the admin opens the Documentation tab
+  const loadDocsList = () => {
+    setDocsLoading(true);
+    setDocsError('');
+    fetch(`${API_BASE}/docs`)
+      .then(r => r.json())
+      .then(rows => { setDocsList(rows); setDocsLoading(false); })
+      .catch(() => { setDocsError('Could not load documents.'); setDocsLoading(false); });
+  };
+  useEffect(() => {
+    if (tab === 'adm-docs' && docMode === 'list') loadDocsList();
+  }, [tab, docMode]);
+
+  const openEditDoc = async (docId) => {
+    setDocsError('');
+    const res = await fetch(`${API_BASE}/docs/${docId}`);
+    if (!res.ok) { setDocsError('Could not load this document.'); return; }
+    const data = await res.json();
+    setDocDraft({ doc_id: data.doc_id, title: data.title, product: data.product, category: data.category, content: data.content });
+    setDocMode('edit');
+  };
+
+  const openNewDoc = () => {
+    setDocDraft({ doc_id: '', title: '', product: 'CE Express', category: '', content: '' });
+    setDocMode('new');
+  };
+
+  const saveDoc = async () => {
+    if (!docDraft.title || !docDraft.category || (docMode === 'new' && !docDraft.doc_id)) {
+      setDocsError('Please fill in all required fields.');
+      return;
+    }
+    setDocSaving(true);
+    setDocsError('');
+    try {
+      const url = docMode === 'new' ? `${API_BASE}/docs` : `${API_BASE}/docs/${docDraft.doc_id}`;
+      const method = docMode === 'new' ? 'POST' : 'PUT';
+      const res = await fetch(url, {
+        method,
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(docDraft),
+      });
+      const data = await res.json();
+      if (!res.ok) { setDocsError(data.error || 'Save failed.'); setDocSaving(false); return; }
+      setDocSaving(false);
+      setDocMode('list');
+    } catch {
+      setDocsError('Could not reach the server.');
+      setDocSaving(false);
+    }
+  };
+
+  const deleteDoc = async (docId) => {
+    if (!window.confirm(`Delete "${docId}"? This cannot be undone.`)) return;
+    const res = await fetch(`${API_BASE}/docs/${docId}`, { method: 'DELETE' });
+    if (res.ok) {
+      setDocsList(p => p.filter(d => d.doc_id !== docId));
+    } else {
+      setDocsError('Could not delete this document.');
+    }
+  };
   const myTickets = currentUser ? tickets.filter(t => t.userId===currentUser.id) : [];
   const openTktCount = myTickets.filter(t => t.status==='Open' || t.status==='In Progress').length;
 
@@ -52,19 +143,48 @@ export default function SupportPortal({ onViewDocs }) {
   }, [currentUser]);
 
   // ── Auth ──────────────────────────────────────────────────────────────────
-  const handleLogin = (u) => {
-    setCurrentUser(u);
-    setTab((u.role==='admin'||u.role==='agent') ? 'adm-dashboard' : 'chat');
+// ── Auth (real backend calls) ────────────────────────────────────────────────
+  const handleLogin = async (email, password) => {
+    try {
+      const res = await fetch(`${API_BASE}/auth/login`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password }),
+      });
+      const data = await res.json();
+      if (!res.ok) return { ok: false, error: data.error || 'Sign in failed.' };
+      setCurrentUser(data);
+      localStorage.setItem('ce_support_user', JSON.stringify(data));
+      setTab((data.role==='admin'||data.role==='agent') ? 'adm-dashboard' : 'chat');
+      return { ok: true };
+    } catch {
+      return { ok: false, error: 'Could not reach the server. Is the backend running?' };
+    }
   };
-  const handleRegister = (data) => {
-    const nu = { id:'u'+Date.now(), ...data, role:'user',
-      joined:new Date().toISOString().split('T')[0],
-      avatar:data.name.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase() };
-    setUsers(p=>[...p,nu]); setCurrentUser(nu); setTab('chat');
+
+  const handleRegister = async (regData) => {
+    try {
+      const res = await fetch(`${API_BASE}/auth/register`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(regData),
+      });
+      const data = await res.json();
+      if (!res.ok) return { ok: false, error: data.error || 'Registration failed.' };
+      setCurrentUser(data);
+      localStorage.setItem('ce_support_user', JSON.stringify(data));
+      setTab('chat');
+      return { ok: true };
+    } catch {
+      return { ok: false, error: 'Could not reach the server. Is the backend running?' };
+    }
   };
+
   const logout = () => {
     setCurrentUser(null); setMessages([]); setShowSug(true); setTab('chat');
+    localStorage.removeItem('ce_support_user');
   };
+
 
   // ── Chat ──────────────────────────────────────────────────────────────────
   const sendMsg = (text) => {
@@ -110,11 +230,12 @@ export default function SupportPortal({ onViewDocs }) {
         <div style={{fontFamily:'var(--font-mono)',fontSize:9,color:'var(--text-dim)',letterSpacing:'.1em',marginLeft:29}}>Help Portal</div>
       </div>
       <nav style={{flex:1,padding:8,display:'flex',flexDirection:'column',gap:2,overflowY:'auto'}}>
-        {(isAdmin ? [
+{(isAdmin ? [
           {id:'adm-dashboard',icon:'◈',label:'Dashboard'},
           {id:'adm-tickets',  icon:'◉',label:'All Tickets'},
           {id:'adm-agents',   icon:'◐',label:'Agent Stats'},
           {id:'adm-users',    icon:'◎',label:'Users'},
+          {id:'adm-docs',     icon:'▤',label:'Documentation'},
         ] : [
           {id:'chat',      icon:'◈',label:'Support Chat'},
           {id:'tickets',   icon:'◉',label:'My Tickets', badge:openTktCount||null},
@@ -420,6 +541,117 @@ export default function SupportPortal({ onViewDocs }) {
       ))}
     </div>
   );
+  // ── Admin Documentation (CRUD) ───────────────────────────────────────────────
+  const AdminDocs = () => {
+    if (docMode === 'edit' || docMode === 'new') {
+      return (
+        <div style={{flex:1,overflowY:'auto',padding:14}}>
+          <div style={{display:'flex',alignItems:'center',gap:8,marginBottom:14}}>
+            <button onClick={() => setDocMode('list')} style={{background:'none',border:'none',color:'var(--accent)',cursor:'pointer',fontSize:12,fontFamily:'var(--font-mono)'}}>← Back</button>
+            <div style={{fontWeight:700,color:'var(--text-bright)',fontSize:13}}>
+              {docMode === 'new' ? 'New Document' : `Editing: ${docDraft.doc_id}`}
+            </div>
+          </div>
+
+          {docsError && (
+            <div style={{background:'rgba(220,38,38,.08)',border:'1px solid rgba(220,38,38,.25)',borderRadius:8,padding:'8px 12px',fontSize:11,color:'#ef4444',marginBottom:12}}>
+              {docsError}
+            </div>
+          )}
+
+          {docMode === 'new' && (
+            <div style={{marginBottom:11}}>
+              <label style={{display:'block',fontSize:10,color:'var(--text-dim)',fontFamily:'var(--font-mono)',letterSpacing:'.1em',textTransform:'uppercase',marginBottom:5}}>Doc ID (unique, no spaces)</label>
+              <input value={docDraft.doc_id} onChange={e=>setDocDraft(p=>({...p, doc_id:e.target.value.trim()}))}
+                placeholder="e.g. ce-express-new-feature"
+                style={{width:'100%',padding:'9px 12px',border:'1px solid var(--border)',borderRadius:8,fontSize:13,color:'var(--text-bright)',background:'var(--bg)',outline:'none',boxSizing:'border-box',fontFamily:'var(--font-mono)'}}/>
+            </div>
+          )}
+
+          <div style={{marginBottom:11}}>
+            <label style={{display:'block',fontSize:10,color:'var(--text-dim)',fontFamily:'var(--font-mono)',letterSpacing:'.1em',textTransform:'uppercase',marginBottom:5}}>Title</label>
+            <input value={docDraft.title} onChange={e=>setDocDraft(p=>({...p, title:e.target.value}))}
+              style={{width:'100%',padding:'9px 12px',border:'1px solid var(--border)',borderRadius:8,fontSize:13,color:'var(--text-bright)',background:'var(--bg)',outline:'none',boxSizing:'border-box'}}/>
+          </div>
+
+          <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:10,marginBottom:11}}>
+            <div>
+              <label style={{display:'block',fontSize:10,color:'var(--text-dim)',fontFamily:'var(--font-mono)',letterSpacing:'.1em',textTransform:'uppercase',marginBottom:5}}>Product</label>
+              <select value={docDraft.product} onChange={e=>setDocDraft(p=>({...p, product:e.target.value}))}
+                style={{width:'100%',padding:'9px 12px',border:'1px solid var(--border)',borderRadius:8,fontSize:13,color:'var(--text-bright)',background:'var(--bg)',outline:'none',cursor:'pointer'}}>
+                {['CE Express','CE Pro','Both','Inventory3D'].map(o=><option key={o}>{o}</option>)}
+              </select>
+            </div>
+            <div>
+              <label style={{display:'block',fontSize:10,color:'var(--text-dim)',fontFamily:'var(--font-mono)',letterSpacing:'.1em',textTransform:'uppercase',marginBottom:5}}>Category</label>
+              <input value={docDraft.category} onChange={e=>setDocDraft(p=>({...p, category:e.target.value}))}
+                placeholder="e.g. Reference, Training, User Guides"
+                style={{width:'100%',padding:'9px 12px',border:'1px solid var(--border)',borderRadius:8,fontSize:13,color:'var(--text-bright)',background:'var(--bg)',outline:'none',boxSizing:'border-box'}}/>
+            </div>
+          </div>
+
+          <div style={{marginBottom:14}}>
+            <label style={{display:'block',fontSize:10,color:'var(--text-dim)',fontFamily:'var(--font-mono)',letterSpacing:'.1em',textTransform:'uppercase',marginBottom:5}}>Content (Markdown)</label>
+            <textarea value={docDraft.content} onChange={e=>setDocDraft(p=>({...p, content:e.target.value}))}
+              rows={16}
+              style={{width:'100%',padding:'11px 12px',border:'1px solid var(--border)',borderRadius:8,fontSize:12.5,color:'var(--text-bright)',background:'var(--bg)',outline:'none',boxSizing:'border-box',fontFamily:'var(--font-mono)',lineHeight:1.6,resize:'vertical'}}/>
+          </div>
+
+          <div style={{display:'flex',gap:8}}>
+            <button onClick={saveDoc} disabled={docSaving}
+              style={{padding:'10px 22px',background:'linear-gradient(135deg, var(--accent), var(--accent2))',border:'none',borderRadius:9,color:'#fff',fontSize:12,fontWeight:700,cursor:docSaving?'default':'pointer',opacity:docSaving?0.7:1,fontFamily:'var(--font-mono)',letterSpacing:'.06em'}}>
+              {docSaving ? 'SAVING…' : 'SAVE'}
+            </button>
+            <button onClick={() => setDocMode('list')}
+              style={{padding:'10px 22px',background:'transparent',border:'1px solid var(--border)',borderRadius:9,color:'var(--text-dim)',fontSize:12,fontWeight:600,cursor:'pointer',fontFamily:'var(--font-mono)',letterSpacing:'.06em'}}>
+              CANCEL
+            </button>
+          </div>
+        </div>
+      );
+    }
+
+    return (
+      <div style={{flex:1,overflowY:'auto',padding:14}}>
+        <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:12}}>
+          <div style={{fontWeight:700,color:'var(--text-bright)',fontSize:12}}>All Documents ({docsList.length})</div>
+          <button onClick={openNewDoc}
+            style={{padding:'7px 14px',background:'var(--accent)',border:'none',borderRadius:8,color:'#fff',fontSize:11,fontWeight:700,cursor:'pointer',fontFamily:'var(--font-mono)',letterSpacing:'.04em'}}>
+            + NEW
+          </button>
+        </div>
+
+        {docsError && (
+          <div style={{background:'rgba(220,38,38,.08)',border:'1px solid rgba(220,38,38,.25)',borderRadius:8,padding:'8px 12px',fontSize:11,color:'#ef4444',marginBottom:12}}>
+            {docsError}
+          </div>
+        )}
+
+        {docsLoading ? (
+          <div style={{fontSize:12,color:'var(--text-dim)',textAlign:'center',padding:30}}>Loading…</div>
+        ) : (
+          docsList.map(d => (
+            <div key={d.doc_id} style={{background:'var(--bg2)',border:'1px solid var(--border)',borderRadius:10,padding:'9px 12px',marginBottom:6,display:'flex',alignItems:'center',gap:10}}>
+              <div style={{flex:1,minWidth:0}}>
+                <div style={{fontSize:12,fontWeight:500,color:'var(--text-bright)',overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap'}}>{d.title}</div>
+                <div style={{fontFamily:'var(--font-mono)',fontSize:9,color:'var(--text-dim)'}}>{d.doc_id} · {d.product} · {d.category}</div>
+              </div>
+              <button onClick={() => openEditDoc(d.doc_id)}
+                style={{padding:'6px 12px',background:'transparent',border:'1px solid var(--accent)',borderRadius:7,color:'var(--accent)',fontSize:10,fontWeight:600,cursor:'pointer',fontFamily:'var(--font-mono)'}}>
+                EDIT
+              </button>
+              <button onClick={() => deleteDoc(d.doc_id)}
+                style={{padding:'6px 12px',background:'transparent',border:'1px solid #dc2626',borderRadius:7,color:'#ef4444',fontSize:10,fontWeight:600,cursor:'pointer',fontFamily:'var(--font-mono)'}}>
+                DELETE
+              </button>
+            </div>
+          ))
+        )}
+      </div>
+    );
+  };
+
+
 
   // ── Render ────────────────────────────────────────────────────────────────
   const renderTab = () => {
@@ -431,6 +663,7 @@ export default function SupportPortal({ onViewDocs }) {
       case 'adm-tickets':   return <AdminTickets/>;
       case 'adm-agents':    return <AdminAgents/>;
       case 'adm-users':     return <AdminUsers/>;
+      case 'adm-docs':      return <AdminDocs/>;
       default:              return <ChatTab/>;
     }
   };
@@ -439,8 +672,7 @@ export default function SupportPortal({ onViewDocs }) {
     <div style={{flex:1,display:'flex',background:'var(--bg)'}}>
       <style>{`@keyframes tdot{0%,80%,100%{transform:translateY(0);opacity:.4}40%{transform:translateY(-5px);opacity:1}}`}</style>
       {!currentUser ? (
-        <LoginForm users={users} onLogin={handleLogin} onRegister={handleRegister}/>
-      ) : (
+<LoginForm onLogin={handleLogin} onRegister={handleRegister}/>      ) : (
         <>
           <Sidebar/>
           <div style={{flex:1,display:'flex',flexDirection:'column',overflow:'hidden',minHeight:0}}>
