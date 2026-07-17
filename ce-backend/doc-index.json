@@ -509,6 +509,70 @@
     "pdf": "ce-express/user-guide/CE Express User Guide v7.3.pdf"
   },
   {
+    "id": "ce-express-layers",
+    "path": "docs/ce-express/11-layers.md",
+    "title": "Layers",
+    "product": "CE Express",
+    "category": "Reference",
+    "order": 16
+  },
+  {
+    "id": "ce-express-prediction-history",
+    "path": "docs/ce-express/12-prediction-history.md",
+    "title": "Prediction History",
+    "product": "CE Express",
+    "category": "Reference",
+    "order": 17
+  },
+  {
+    "id": "ce-express-antennas",
+    "path": "docs/ce-express/13-antennas.md",
+    "title": "Antennas",
+    "product": "CE Express",
+    "category": "Reference",
+    "order": 18
+  },
+  {
+    "id": "ce-express-feature-templates",
+    "path": "docs/ce-express/14-feature-templates.md",
+    "title": "Feature Templates",
+    "product": "CE Express",
+    "category": "Reference",
+    "order": 19
+  },
+  {
+    "id": "ce-express-visibility-prediction",
+    "path": "docs/ce-express/15-visibility-prediction.md",
+    "title": "Visibility Prediction",
+    "product": "CE Express",
+    "category": "Reference",
+    "order": 20
+  },
+  {
+    "id": "ce-express-radar-prediction",
+    "path": "docs/ce-express/16-radar-prediction.md",
+    "title": "Radar Prediction",
+    "product": "CE Express",
+    "category": "Reference",
+    "order": 21
+  },
+  {
+    "id": "ce-express-model-tuning",
+    "path": "docs/ce-express/17-model-tuning.md",
+    "title": "Model Tuning",
+    "product": "CE Express",
+    "category": "Reference",
+    "order": 22
+  },
+  {
+    "id": "ce-express-radios",
+    "path": "docs/ce-express/18-radios.md",
+    "title": "Radios",
+    "product": "CE Express",
+    "category": "Reference",
+    "order": 23
+  },
+  {
     "id": "ce-express-admin-requirements",
     "path": "docs/ce-express/admin-01-requirements.md",
     "title": "System Requirements",
