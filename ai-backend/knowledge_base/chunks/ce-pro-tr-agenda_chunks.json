@@ -1,0 +1,13 @@
+[
+  {
+    "chunk_id": "ce-pro-tr-agenda_chunk_1",
+    "document_id": "ce-pro-tr-agenda",
+    "document_title": "03 — Agenda",
+    "section_title": "03. Agenda",
+    "product": "CE Pro",
+    "version": "Unknown",
+    "category": "Training",
+    "source_file": "docs/ce-pro/training/03-agenda.md",
+    "text": "> **Version:** CE Pro v4.9\nTime scheduler\nACTION TIME\n7th Thursday\n❑\nTrainings 10.00 -11.30\n8th Friday\n❑\nBreak 11.30-11.40\nTrainings 11.40-12.50\nBreak 12.50-13.00\nTrainings 13.00-14.00\n---\nExercises for CE Desktop\nDAY 1 DAY 2\n1 0. Introduction slides 4. Cell Prediction\n2 1. Creating Workspace 5. Prediction [Models](#kw:31-models:ce-express-tr-models)\n3 2. [Line of Sight](#kw:running-a-profile:ce-express-profile) 6. Importing Network\n4 3. Create Objects 7. Site Positioning\n---\nCourse Materials\n❑\nExercise projects:\nC:\\CE_COURSE\n❑\nExercise descriptions\nC:\\CE_COURSE\\0.Descriptions\n---\nToday\n1. Introduction:\n➢ Architecture\n➢ Data requirements\n2. Exercises\n➢ Creating Workspace\n➢ [Line of Sight](#kw:running-a-profile:ce-express-profile)\n➢ Creating Objects\n---"
+  }
+]

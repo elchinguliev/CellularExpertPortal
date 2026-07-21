@@ -1,0 +1,134 @@
+[
+  {
+    "chunk_id": "ce-express-prediction-models_chunk_1",
+    "document_id": "ce-express-prediction-models",
+    "document_title": "Prediction Models",
+    "section_title": "Prediction Models",
+    "product": "CE Express",
+    "version": "Unknown",
+    "category": "Reference",
+    "source_file": "docs/ce-express/07-prediction-models.md",
+    "text": "> **Version:** CE Express v7.2\nPrediction [models](#kw:31-models:ce-express-tr-models) define how **signal propagation losses** are calculated across the coverage area."
+  },
+  {
+    "chunk_id": "ce-express-prediction-models_chunk_2",
+    "document_id": "ce-express-prediction-models",
+    "document_title": "Prediction Models",
+    "section_title": "How CE Evaluates Propagation",
+    "product": "CE Express",
+    "version": "Unknown",
+    "category": "Reference",
+    "source_file": "docs/ce-express/07-prediction-models.md",
+    "text": "Instead of applying a single formula everywhere, CE Express evaluates the **radio visibility condition** between each transmitter and each receiver pixel, then applies the most appropriate loss model:\n| Visibility Condition | Abbreviation | Description |\n|---------------------|--------------|-------------|\n| [Line-of-Sight](#kw:running-a-profile:ce-express-profile) | LOS | Clear unobstructed path |\n| Near [Line-of-Sight](#kw:running-a-profile:ce-express-profile) | NLOS1 | Marginally obstructed ([Fresnel zone](#kw:fresnel-zone-clearance:ce-express-profile) partially blocked) |\n| Non-[Line-of-Sight](#kw:running-a-profile:ce-express-profile) | NLOS | Fully obstructed path |\nRadio visibility is evaluated using: DTM (terrain), Obstacles, and [Clutter](#kw:clutter-classification-values:ce-express-geodata) path profiles.\nThis approach enables **near-deterministic modeling** — terrain, obstacles, and [clutter](#kw:clutter-classification-values:ce-express-geodata) are explicitly considered for every calculation pixel."
+  },
+  {
+    "chunk_id": "ce-express-prediction-models_chunk_3",
+    "document_id": "ce-express-prediction-models",
+    "document_title": "Prediction Models",
+    "section_title": "Okumura-Hata",
+    "product": "CE Express",
+    "version": "Unknown",
+    "category": "Reference",
+    "source_file": "docs/ce-express/07-prediction-models.md",
+    "text": "- **Type:** Empirical\n- **Frequency range:** 150 – 1500 MHz\n- **Environments:** Urban, Suburban, Rural, Open\n- **Use case:** Macro cells, large coverage areas, legacy 2G/3G networks\n- **Data needed:** DEM + [Clutter](#kw:clutter-classification-values:ce-express-geodata) (optional)"
+  },
+  {
+    "chunk_id": "ce-express-prediction-models_chunk_4",
+    "document_id": "ce-express-prediction-models",
+    "document_title": "Prediction Models",
+    "section_title": "COST-231 Hata",
+    "product": "CE Express",
+    "version": "Unknown",
+    "category": "Reference",
+    "source_file": "docs/ce-express/07-prediction-models.md",
+    "text": "- **Type:** Empirical (extension of [Okumura-Hata](#kw:okumurahata:none))\n- **Frequency range:** Up to 2 GHz\n- **Environments:** Urban, Suburban\n- **Use case:** 3G/UMTS macro planning\n- **Data needed:** DEM + Clutter"
+  },
+  {
+    "chunk_id": "ce-express-prediction-models_chunk_5",
+    "document_id": "ce-express-prediction-models",
+    "document_title": "Prediction Models",
+    "section_title": "COST-231 Walfisch-Ikegami",
+    "product": "CE Express",
+    "version": "Unknown",
+    "category": "Reference",
+    "source_file": "docs/ce-express/07-prediction-models.md",
+    "text": "- **Type:** Semi-empirical (considers building geometry)\n- **Frequency range:** 800 MHz – 2 GHz\n- **Environments:** Urban micro cells\n- **Use case:** Dense urban environments, small cells\n- **Data needed:** DEM + Clutter + Building data (heights)"
+  },
+  {
+    "chunk_id": "ce-express-prediction-models_chunk_6",
+    "document_id": "ce-express-prediction-models",
+    "document_title": "Prediction Models",
+    "section_title": "SPM (Standard Propagation Model)",
+    "product": "CE Express",
+    "version": "Unknown",
+    "category": "Reference",
+    "source_file": "docs/ce-express/07-prediction-models.md",
+    "text": "- **Type:** Configurable empirical\n- **Frequency range:** Wide (depends on configuration)\n- **Use case:** General-purpose; can be calibrated to local conditions\n- **Data needed:** DEM + Clutter\n- **Key feature:** Adjustable coefficients (K1–K6) for local tuning"
+  },
+  {
+    "chunk_id": "ce-express-prediction-models_chunk_7",
+    "document_id": "ce-express-prediction-models",
+    "document_title": "Prediction Models",
+    "section_title": "Ray Tracing (3D)",
+    "product": "CE Express",
+    "version": "Unknown",
+    "category": "Reference",
+    "source_file": "docs/ce-express/07-prediction-models.md",
+    "text": "- **Type:** Physics-based (deterministic)\n- **Accuracy:** Highest\n- **Use case:** Urban micro planning, indoor-to-outdoor, small cells\n- **Data needed:** DEM + Clutter + **Full 3D building [models](#kw:31-models:ce-express-tr-models) required**\n- **Speed:** Slowest — recommended for small areas only"
+  },
+  {
+    "chunk_id": "ce-express-prediction-models_chunk_8",
+    "document_id": "ce-express-prediction-models",
+    "document_title": "Prediction Models",
+    "section_title": "CE Custom Models",
+    "product": "CE Express",
+    "version": "Unknown",
+    "category": "Reference",
+    "source_file": "docs/ce-express/07-prediction-models.md",
+    "text": "- Site-specific models tuned for particular deployment environments\n- Created using [Model Tuning](#kw:model-tuning-calibration:none) against drive-test measurements"
+  },
+  {
+    "chunk_id": "ce-express-prediction-models_chunk_9",
+    "document_id": "ce-express-prediction-models",
+    "document_title": "Prediction Models",
+    "section_title": "Selecting a Model",
+    "product": "CE Express",
+    "version": "Unknown",
+    "category": "Reference",
+    "source_file": "docs/ce-express/07-prediction-models.md",
+    "text": "In the Prediction Models tool, configure the model:\n1. Choose the **model type**\n2. Set the **environment** (Dense Urban / Urban / Suburban / Rural / Open)\n3. Configure **LOS, NLOS1, NLOS** model assignments (can use different models per visibility condition)\n4. Adjust **[model coefficients](#kw:model-tuning-calibration:none)** if required (advanced)\nModels can be set:\n- **Per workspace** — applies to all cells unless overridden\n- **Per cell** — override workspace default for specific cells"
+  },
+  {
+    "chunk_id": "ce-express-prediction-models_chunk_10",
+    "document_id": "ce-express-prediction-models",
+    "document_title": "Prediction Models",
+    "section_title": "Model Tuning / Calibration",
+    "product": "CE Express",
+    "version": "Unknown",
+    "category": "Reference",
+    "source_file": "docs/ce-express/07-prediction-models.md",
+    "text": "Improve prediction accuracy by calibrating against real measurements:\n1. Import drive-test data (CSV with Lat/Lon/Signal level/Cell ID)\n2. CE Express **[Model Tuning](#kw:model-tuning-calibration:none)** tool\n3. The wizard compares predicted vs. measured values\n4. Adjusts [model coefficients](#kw:model-tuning-calibration:none) to minimize mean error\n5. Save the tuned model for future predictions See [Model Tuning](#kw:model-tuning-calibration:none)"
+  },
+  {
+    "chunk_id": "ce-express-prediction-models_chunk_11",
+    "document_id": "ce-express-prediction-models",
+    "document_title": "Prediction Models",
+    "section_title": "Choosing the Right Model",
+    "product": "CE Express",
+    "version": "Unknown",
+    "category": "Reference",
+    "source_file": "docs/ce-express/07-prediction-models.md",
+    "text": "| Environment | Recommended Model |\n|-------------|------------------|\n| Rural / Open terrain | [Okumura-Hata](#kw:okumurahata:none) (Rural/Open) |\n| Suburban | [COST-231 Hata](#kw:cost231-hata:none) or [Okumura-Hata](#kw:okumurahata:none) (Suburban) |\n| Urban macro | [COST-231 Hata](#kw:cost231-hata:none) (Urban) |\n| Dense urban, small cells | [COST-231 Walfisch-Ikegami](#kw:cost231-walfischikegami:none) or [Ray Tracing](#kw:ray-tracing-3d:none) |\n| 5G (sub-6 GHz) | [SPM](#kw:spm-standard-propagation-model:none) or tuned [COST-231](#kw:cost231-hata:none) |\n| Backhaul / Point-to-point | See Radio Link Prediction |"
+  },
+  {
+    "chunk_id": "ce-express-prediction-models_chunk_12",
+    "document_id": "ce-express-prediction-models",
+    "document_title": "Prediction Models",
+    "section_title": "Related Topics",
+    "product": "CE Express",
+    "version": "Unknown",
+    "category": "Reference",
+    "source_file": "docs/ce-express/07-prediction-models.md",
+    "text": "- RF Prediction\n- Model Tuning\n- Geodata Requirements"
+  }
+]

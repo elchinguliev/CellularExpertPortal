@@ -1,0 +1,90 @@
+[
+  {
+    "chunk_id": "ce-express-profile_chunk_1",
+    "document_id": "ce-express-profile",
+    "document_title": "Path Profile & LoS",
+    "section_title": "Path Profile & Line of Sight",
+    "product": "CE Express",
+    "version": "Unknown",
+    "category": "Calculations",
+    "source_file": "docs/ce-express/profile-tool.md",
+    "text": "> **Version:** CE Express v7.2\nThe **Profile** tool analyses the terrain between two points — typically between a transmitter (cell) and a receiver location. It shows whether a clear [line of sight](#kw:running-a-profile:none) exists, how much [Fresnel zone](#kw:fresnel-zone-clearance:none) clearance there is, the expected path loss, and the link power budget."
+  },
+  {
+    "chunk_id": "ce-express-profile_chunk_2",
+    "document_id": "ce-express-profile",
+    "document_title": "Path Profile & LoS",
+    "section_title": "When to Use the Profile Tool",
+    "product": "CE Express",
+    "version": "Unknown",
+    "category": "Calculations",
+    "source_file": "docs/ce-express/profile-tool.md",
+    "text": "- Checking whether a microwave link has sufficient clearance\n- Verifying that a cell has [line-of-sight](#kw:running-a-profile:none) to a target location\n- Estimating path loss for a specific point-to-point link\n- Planning repeater placement (finding obstructions)"
+  },
+  {
+    "chunk_id": "ce-express-profile_chunk_3",
+    "document_id": "ce-express-profile",
+    "document_title": "Path Profile & LoS",
+    "section_title": "Running a Profile",
+    "product": "CE Express",
+    "version": "Unknown",
+    "category": "Calculations",
+    "source_file": "docs/ce-express/profile-tool.md",
+    "text": "1. Open the **Profile** tool from the left toolbar.\n2. **Set the transmitter** — hold **CTRL** and click on a cell on the map. The tool snaps to the cell and reads its position and height.\n3. **Set the receiver** — left-click a point on the map. The profile calculates automatically.\n4. The **Profile panel** appears showing:\n   - A terrain cross-section graph between the two points\n   - First [Fresnel zone](#kw:fresnel-zone-clearance:none) ellipse overlay\n   - Summary results table"
+  },
+  {
+    "chunk_id": "ce-express-profile_chunk_4",
+    "document_id": "ce-express-profile",
+    "document_title": "Path Profile & LoS",
+    "section_title": "Understanding the Results",
+    "product": "CE Express",
+    "version": "Unknown",
+    "category": "Calculations",
+    "source_file": "docs/ce-express/profile-tool.md",
+    "text": "| Result | Description |\n|---|---|\n| **Clearance** | How much of the first [Fresnel zone](#kw:fresnel-zone-clearance:none) is clear of obstacles (%). ≥ 60% is acceptable; ≥ 100% is ideal. |\n| **Power Budget** | Received signal power at the receiver (dBm), accounting for path loss, antenna gain, and cable loss |\n| **Path Loss** | Total signal attenuation between transmitter and receiver (dB) |\n| **Angle** | Elevation angle from transmitter to receiver (degrees) |\n| **Distance** | Straight-line distance between the two points |"
+  },
+  {
+    "chunk_id": "ce-express-profile_chunk_5",
+    "document_id": "ce-express-profile",
+    "document_title": "Path Profile & LoS",
+    "section_title": "Fresnel Zone Clearance",
+    "product": "CE Express",
+    "version": "Unknown",
+    "category": "Calculations",
+    "source_file": "docs/ce-express/profile-tool.md",
+    "text": "The Fresnel zone is an elliptical region around the direct path between two antennas. Signal energy travels not just along the direct line but also through this zone. Obstructions inside the Fresnel zone cause diffraction losses:\n| Clearance | Effect |\n|---|---|\n| > 100% | Full clearance, minimal diffraction loss |\n| 60–100% | Minor diffraction loss (< 1 dB typical) |\n| < 60% | Significant diffraction loss — consider adjusting antenna heights or finding an alternative path |\n| 0% (obstructed) | Non-[line-of-sight](#kw:running-a-profile:none) (NLOS) — may still work but with higher loss |"
+  },
+  {
+    "chunk_id": "ce-express-profile_chunk_6",
+    "document_id": "ce-express-profile",
+    "document_title": "Path Profile & LoS",
+    "section_title": "Reading the Profile Graph",
+    "product": "CE Express",
+    "version": "Unknown",
+    "category": "Calculations",
+    "source_file": "docs/ce-express/profile-tool.md",
+    "text": "The graph shows:\n- **Brown/grey area** — terrain elevation along the path\n- **Dashed ellipse** — first Fresnel zone boundary\n- **Red line** — direct path between transmitter and receiver\n- **Obstructions** — terrain or [clutter](#kw:clutter-classification-values:ce-express-geodata) features that intersect the Fresnel zone are highlighted"
+  },
+  {
+    "chunk_id": "ce-express-profile_chunk_7",
+    "document_id": "ce-express-profile",
+    "document_title": "Path Profile & LoS",
+    "section_title": "Tips",
+    "product": "CE Express",
+    "version": "Unknown",
+    "category": "Calculations",
+    "source_file": "docs/ce-express/profile-tool.md",
+    "text": "- Hold **CTRL** when clicking on any [network object](#kw:object-types:ce-express-network-objects) to snap precisely to its position (useful for both ends of a microwave link).\n- For **microwave link planning**, use the [Profile tool](#kw:when-to-use-the-profile-tool:none) before ordering equipment to confirm clearance at different frequencies (the Fresnel zone radius changes with frequency).\n- The profile uses the `elevation.tif` terrain model, and `clutterHeight.tif` if available, to account for buildings and trees.\n- To [compare](#kw:98-compare-predictions:ce-pro-rcp) multiple paths, run the [profile tool](#kw:when-to-use-the-profile-tool:none) multiple times — each result is shown in the panel as a separate tab."
+  },
+  {
+    "chunk_id": "ce-express-profile_chunk_8",
+    "document_id": "ce-express-profile",
+    "document_title": "Path Profile & LoS",
+    "section_title": "Related Pages",
+    "product": "CE Express",
+    "version": "Unknown",
+    "category": "Calculations",
+    "source_file": "docs/ce-express/profile-tool.md",
+    "text": "- Geodata & Rasters — the terrain data used by the [profile tool](#kw:when-to-use-the-profile-tool:none)\n- CE Desktop RLP — detailed microwave link budget planning\n- [Network Objects](#kw:object-types:ce-express-network-objects) — setting correct antenna heights for accurate profiles"
+  }
+]

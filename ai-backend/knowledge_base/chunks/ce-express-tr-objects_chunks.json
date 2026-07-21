@@ -1,0 +1,90 @@
+[
+  {
+    "chunk_id": "ce-express-tr-objects_chunk_1",
+    "document_id": "ce-express-tr-objects",
+    "document_title": "02 — Create Objects",
+    "section_title": "02. Create Objects",
+    "product": "CE Express",
+    "version": "Unknown",
+    "category": "Training",
+    "source_file": "docs/ce-express/training/02-create-objects.md",
+    "text": "> **Version:** CE Express v7.2\n1. Objective\nThis module explains and demonstrates how to create, edit, duplicate, and manage network\nobjects in CE Express using object templates.\nBy the end of this exercise, participants will be able to:\n- Create and use object templates effectively\n- Create sites and cells with correct RF parameters\n- Duplicate and reposition [network objects](#kw:object-types:ce-express-network-objects) efficiently\n- Modify object parameters using both forms and tables\n- Apply meaningful [network symbology](#kw:37-step-7-managing-network-symbology:none) for RF analysis\n2. Initial Data and Prerequisites\nThe following prerequisites are assumed:\n- A prepared workspace created in: 01. CE Express – Creating Workspace\n- Available geodata (terrain, obstacles and [clutter](#kw:clutter-classification-values:ce-express-geodata))\n- User permissions to create and edit [network objects](#kw:object-types:ce-express-network-objects)\n3. Understanding the [Network Objects](#kw:object-types:ce-express-network-objects) Concept\nIn CE Express, network objects represent the physical and logical elements of a radio\nnetwork. They form the foundation for all RF planning, simulation, and optimization activities\nperformed in the workspace.\nNetwork objects typically include:\n- Sites – physical locations where radio equipment is installed\n- Cells / Sectors – logical radio entities defining coverage and capacity\n- Antennas – radiation characteristics, patterns, and beamforming behavior\n- Links and relations – logical associations between network elements\nThese objects are tightly coupled with:\n- Geodata (terrain, [clutter](#kw:clutter-classification-values:ce-express-geodata), obstacles), which influences propagation behavior\n---\n- Technology definitions (LTE, 5G NR, TDD/FDD)\n- Templates, which standardize configuration and reduce engineering errors\nWhy Templates Matter\nObject templates encapsulate best-practice RF configurations, such as:\n- Standard power levels and bandwidths\n- Technology-specific parameters (e.g. NR numerology, MIMO layers)\n- Approved antennas and prediction [models](#kw:31-models:ce-express-tr-models)\nUsing templates ensures:\n- Consistency across large networks\n- Faster rollout and scenario creation\n- Reduced risk of misconfiguration during planning and optimization"
+  },
+  {
+    "chunk_id": "ce-express-tr-objects_chunk_2",
+    "document_id": "ce-express-tr-objects",
+    "document_title": "02 — Create Objects",
+    "section_title": "3.1 Step 1 – Open the Workspace",
+    "product": "CE Express",
+    "version": "Unknown",
+    "category": "Training",
+    "source_file": "docs/ce-express/training/02-create-objects.md",
+    "text": "1. Open the CE Express application:\nhttps://cecom2.cellular-expert.com/ce_express/\n2. From the workspace list, select the workspace created in the previous exercise.\n---\nBest practice: Always confirm the active workspace before object creation to avoid placing\nobjects in the wrong project."
+  },
+  {
+    "chunk_id": "ce-express-tr-objects_chunk_3",
+    "document_id": "ce-express-tr-objects",
+    "document_title": "02 — Create Objects",
+    "section_title": "3.2 Step 2 – Creating Network Objects",
+    "product": "CE Express",
+    "version": "Unknown",
+    "category": "Training",
+    "source_file": "docs/ce-express/training/02-create-objects.md",
+    "text": "3.2.1 Creating a Site Object\n1. Open the Features tool.\n2. Click Add Feature and select Sites.\nDefine the following parameters:\n- Site Name: ST01\n- X (Longitude): 25.2129439\n- Y (Latitude): 54.7398379\n- Height (m): 30\n---\n3. Click Accept to create the site.\nRF note: Site height represents the average antenna mounting height above ground and\ndirectly impacts coverage and LOS conditions.\n3.2.2 Creating Cell Objects Using Templates\n1. In the Features tool, click Add Feature again.\n2. Select Cells.\n3. In the template selection window, choose:\n5G 3500 – Band n78\n---\nTemplates pre-fill technology-specific parameters, ensuring consistency and reducing\nconfiguration errors.\n3.2.3 Creating a 3-Sector 5G Site\nThen create three new cells based on table below (once you enter all parameters for one\ncell object press Accept button, then change parameters for second cell and press Accept\nbutton, and do it for third cell).\nParameter Value\nCell name Cx01 Cx02 Cx03\nX 25.2129439 25.2129439 25.2129439\nY 54.7398379 54.7398379 54.7398379\nAzimuth, deg 0 120 240\nHeight, m 30 30 30\nDowntilt, deg 1 1 1\nEl. Downtilt, deg 0 0 0\nFrequency, MHz 3500 3500 3500\nPower, dBm 40 40 40\nMisc Loss, dB 0 0 0\nBandwidth, MHz 100 100 100\nNoise Figure, dB 6 6 6\nDownlink duplex factor 0,6 0,6 0,6\nSubcarrier spacing, kHz 60 60 60\nTX MIMO 32 32 32\nRX MIMO 32 32 32\nActive Antenna Effect 6 6 6\nCell Load, % 30 30 30\nColor index\nTechnology 5G 5G 5G\nPrediction model CEC ITU-R: 3km CEC ITU-R: 3km CEC ITU-R: 3km\nradius radius radius\nFrequency group 3500 3500 3500\n---\nAntenna S4-90M-R1- S4-90M-R1- S4-90M-R1-\nV2_BC-3300- V2_BC-3300-3600- V2_BC-3300-\n3600- P0_02DT_3500 3600-\nP0_02DT_3500 P0_02DT_3500\nCarriers [] [] []\nSiteID\nDuplex Mode TDD TDD TDD\n4. After creating all three cells, click Cancel to close the Add Feature tool."
+  },
+  {
+    "chunk_id": "ce-express-tr-objects_chunk_4",
+    "document_id": "ce-express-tr-objects",
+    "document_title": "02 — Create Objects",
+    "section_title": "3.3 Step 3 – Selecting and Reviewing Objects",
+    "product": "CE Express",
+    "version": "Unknown",
+    "category": "Training",
+    "source_file": "docs/ce-express/training/02-create-objects.md",
+    "text": "1. Select the newly created site and cells on the map.\n2. Verify their placement and orientation.\n---"
+  },
+  {
+    "chunk_id": "ce-express-tr-objects_chunk_5",
+    "document_id": "ce-express-tr-objects",
+    "document_title": "02 — Create Objects",
+    "section_title": "3.4 Step 4 – Duplicating Network Objects",
+    "product": "CE Express",
+    "version": "Unknown",
+    "category": "Training",
+    "source_file": "docs/ce-express/training/02-create-objects.md",
+    "text": "[Duplicating objects](#kw:duplicating-objects:ce-express-network-objects) is commonly used for:\n- Multi-site rollout scenarios\n- Rapid what-if analysis\n- Dense urban planning\nDuplicate Procedure\n1. Keep all created objects selected.\n2. In the Features tool, click Duplicate.\n3. In the Duplicate dialog, define:\n- Workspace: current workspace\n- X: 25.2221667\n- Y: 54.7357602\n4. Click Accept.\nAll selected objects are duplicated at the new location.\n---"
+  },
+  {
+    "chunk_id": "ce-express-tr-objects_chunk_6",
+    "document_id": "ce-express-tr-objects",
+    "document_title": "02 — Create Objects",
+    "section_title": "3.5 Step 5 – Moving Individual Objects",
+    "product": "CE Express",
+    "version": "Unknown",
+    "category": "Training",
+    "source_file": "docs/ce-express/training/02-create-objects.md",
+    "text": "Objects can be repositioned individually or as a group.\nIn this exercise, cells will be placed at different corners of a building.\n3.5.1 Moving a Single Cell\n1. Select duplicated objects.\n2. Remove all but Cx01 from the selection.\n3. Click the Move tool.\n---\nDefine new coordinates:\n- X: 25.2222847\n- Y: 54.7358624\n4. Click Accept.\nRepeat the process for:\n- Cx02 → X: 25.2222847, Y: 54.7353823\n- Cx03 → X: 25.2218663, Y: 54.7357199"
+  },
+  {
+    "chunk_id": "ce-express-tr-objects_chunk_7",
+    "document_id": "ce-express-tr-objects",
+    "document_title": "02 — Create Objects",
+    "section_title": "3.6 Step 6 – Modifying Object Parameters",
+    "product": "CE Express",
+    "version": "Unknown",
+    "category": "Training",
+    "source_file": "docs/ce-express/training/02-create-objects.md",
+    "text": "After objects are created and positioned, the next important task is updating and refining their\nparameters. Correct parameters ensure that objects are clearly identified, consistently\nconfigured, and ready for further analysis, visualization, or reporting across different user\nroles.\n---\nCE Express provides two complementary ways to modify object parameters:\n- Object-level editing – detailed changes for individual objects\n- Table-based editing – fast and efficient updates for multiple objects\nBoth methods are commonly used together in real projects.\n3.6.1 Editing via Object Properties\n1. Select newly duplicated/moved objects on the map.\n2. Click on the duplicated ST01 site in Features tool.\n3. In the Features tool, change the site name to: ST02\n4. Click Accept.\n---\nClear and unique object names help all users quickly understand the network structure and\navoid confusion.\n4. Click on the Cx01 cell in Features tool and modify the following parameters:\n- Name: Cv001\n- Azimuth: 20\n- Frequency: 1800\n5. Click Accept.\nChanging these parameters updates how the object is represented and interpreted in the\nproject.\n3.6.2 Editing via Table View\nTable view is especially useful when working with multiple objects or large projects.\n1. In the Features tool, click Show in Table.\n2. Select Cells.\n---\nThe table and the map are synchronized:\n- Selecting an object in the table highlights it on the map\n- Selecting an object on the map highlights it in the table\nUpdate parameters as follows:\n- Cx02:\no Cell Name → Cv002\no Azimuth → 160\n- Cx03:\no Cell Name → Cv003\no Azimuth → 250\nThis approach makes it easy to review and adjust values while maintaining full spatial\nawareness.\n3.6.3 Bulk Editing Multiple Objects\n1. Select [multiple cells](#kw:47-step-7-rf-prediction-for-multiple-cells:ce-express-tr-rf) in the table (left click on them).\n---\n2. Left click on the Frequency field.\n3. From the context menu, choose Set selected.\n4. Enter the new value: 1800 MHz.\n5. Click Change.\n6. Select Cells again and do the same for frequency_group field. Define value 1800.\n---"
+  },
+  {
+    "chunk_id": "ce-express-tr-objects_chunk_8",
+    "document_id": "ce-express-tr-objects",
+    "document_title": "02 — Create Objects",
+    "section_title": "3.7 Step 7 – Managing Network Symbology",
+    "product": "CE Express",
+    "version": "Unknown",
+    "category": "Training",
+    "source_file": "docs/ce-express/training/02-create-objects.md",
+    "text": "[Network symbology](#kw:37-step-7-managing-network-symbology:none) defines how objects are visually displayed on the map. While symbology\ndoes not change object data, it plays a key role in making complex projects easier to\nunderstand for different audiences, including technical teams, decision-makers, and non-\ntechnical users.\nWell-designed symbology helps to:\n- Distinguish between technologies and frequency layers\n- Improve map readability in dense areas\n- Support presentations, reviews, and decision-making\n3.7.1 Configuring Cell Symbology\n1. Open the Layers tool.\n2. Click on the Cells icon to open the Cell Symbolization panel.\nIt will open a Cells Symbolization tool that customers can define on how network objects\nshould be visualized.\nDefine:\n- Draw order\n- Order by: frequency\n- Order: descending\n- Visual variables: Color\n---\n- Technology\n- Stops: define as in the picture below\n- In Visual variables add a new parameter: Size\n- Field: frequency\n- Stops: define as in the picture below\n---\nPress Accept button.\nCells symbology will be updated\n---"
+  }
+]

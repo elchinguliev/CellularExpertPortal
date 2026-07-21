@@ -1,0 +1,101 @@
+[
+  {
+    "chunk_id": "ce-express-workspace_chunk_1",
+    "document_id": "ce-express-workspace",
+    "document_title": "Workspaces",
+    "section_title": "Workspaces",
+    "product": "CE Express",
+    "version": "Unknown",
+    "category": "Getting Started",
+    "source_file": "docs/ce-express/workspace.md",
+    "text": "> **Version:** CE Express v7.2\nA **[workspace](#kw:what-a-workspace-contains:none)** is the top-level project container in CE Express. Each [workspace](#kw:what-a-workspace-contains:none) links your [network objects](#kw:object-types:ce-express-network-objects) to a geodata folder (terrain and [clutter](#kw:clutter-classification-values:ce-express-geodata) rasters) and a set of prediction model settings. You must have a [workspace](#kw:what-a-workspace-contains:none) selected before you can view objects on the map or run RF predictions."
+  },
+  {
+    "chunk_id": "ce-express-workspace_chunk_2",
+    "document_id": "ce-express-workspace",
+    "document_title": "Workspaces",
+    "section_title": "What a Workspace Contains",
+    "product": "CE Express",
+    "version": "Unknown",
+    "category": "Getting Started",
+    "source_file": "docs/ce-express/workspace.md",
+    "text": "- [Network objects](#kw:object-types:ce-express-network-objects) (sites, cells, repeaters) stored in the PostgreSQL database\n- A reference to the **geodata folder** on the server (elevation.tif, [clutter](#kw:clutter-classification-values:ce-express-geodata) files)\n- The **coordinate reference system ([CRS](#kw:check-crs:ce-express-geodata))** for that project area\n- Assigned **prediction model** configurations"
+  },
+  {
+    "chunk_id": "ce-express-workspace_chunk_3",
+    "document_id": "ce-express-workspace",
+    "document_title": "Workspaces",
+    "section_title": "Opening the Workspace Tool",
+    "product": "CE Express",
+    "version": "Unknown",
+    "category": "Getting Started",
+    "source_file": "docs/ce-express/workspace.md",
+    "text": "Click the **Workspace** icon in the left toolbar of [Map View](#kw:switching-between-views:ce-express-login)."
+  },
+  {
+    "chunk_id": "ce-express-workspace_chunk_4",
+    "document_id": "ce-express-workspace",
+    "document_title": "Workspaces",
+    "section_title": "Selecting a Workspace",
+    "product": "CE Express",
+    "version": "Unknown",
+    "category": "Getting Started",
+    "source_file": "docs/ce-express/workspace.md",
+    "text": "1. Open the [Workspace tool](#kw:opening-the-workspace-tool:none).\n2. Click on a workspace name to select it.\n3. The map loads all [network objects](#kw:object-types:ce-express-network-objects) from that workspace.\n> If no workspaces appear, contact your administrator — workspaces must be created and shared with your ArcGIS user account."
+  },
+  {
+    "chunk_id": "ce-express-workspace_chunk_5",
+    "document_id": "ce-express-workspace",
+    "document_title": "Workspaces",
+    "section_title": "Creating a New Workspace",
+    "product": "CE Express",
+    "version": "Unknown",
+    "category": "Getting Started",
+    "source_file": "docs/ce-express/workspace.md",
+    "text": "1. Open the [Workspace tool](#kw:opening-the-workspace-tool:none).\n2. Click **Create New Workspace**.\n3. Fill in the fields:\n| Field | Description |\n|---|---|\n| **Name** | A descriptive name for the project (e.g. \"Vilnius 4G Q1 2025\") |\n| **Geodata folder** | Server path to the folder containing `elevation.tif` and optional [clutter](#kw:clutter-classification-values:ce-express-geodata) rasters |\n| **Coordinate system** | Must match the [CRS](#kw:check-crs:ce-express-geodata) of your GeoTIFF rasters ([Projected CRS](#kw:what-is-a-projected-[crs](#kw:check-crs:ce-express-geodata):ce-express-geodata), not geographic/[WGS84](#kw:what-is-a-projected-crs:ce-express-geodata)) |\n4. Click **Save**."
+  },
+  {
+    "chunk_id": "ce-express-workspace_chunk_6",
+    "document_id": "ce-express-workspace",
+    "document_title": "Workspaces",
+    "section_title": "Duplicating a Workspace",
+    "product": "CE Express",
+    "version": "Unknown",
+    "category": "Getting Started",
+    "source_file": "docs/ce-express/workspace.md",
+    "text": "Duplicating is useful when you want to test changes without affecting an existing project.\n1. Open the [Workspace tool](#kw:opening-the-workspace-tool:none).\n2. Hover over the workspace you want to copy — three icons appear on the right.\n3. Click the **Duplicate** icon (two overlapping pages).\n4. Enter a name for the new workspace.\n5. Click **OK**.\n> If the new workspace does not appear immediately, refresh the page.\nThe duplicate inherits all settings from the original. Network objects are **not** copied — both workspaces read from the same database table. To work on a separate copy of the objects, use the Import/Export tools."
+  },
+  {
+    "chunk_id": "ce-express-workspace_chunk_7",
+    "document_id": "ce-express-workspace",
+    "document_title": "Workspaces",
+    "section_title": "Editing Workspace Settings",
+    "product": "CE Express",
+    "version": "Unknown",
+    "category": "Getting Started",
+    "source_file": "docs/ce-express/workspace.md",
+    "text": "1. Hover over the workspace click the **Settings** icon (gear).\n2. Update the geodata folder path or coordinate system as needed.\n3. Click **Save**."
+  },
+  {
+    "chunk_id": "ce-express-workspace_chunk_8",
+    "document_id": "ce-express-workspace",
+    "document_title": "Workspaces",
+    "section_title": "Deleting a Workspace",
+    "product": "CE Express",
+    "version": "Unknown",
+    "category": "Getting Started",
+    "source_file": "docs/ce-express/workspace.md",
+    "text": "1. Hover over the workspace click the **Delete** icon (bin).\n2. Confirm deletion.\n> [Deleting a workspace](#kw:deleting-a-workspace:none) does **not** delete the network objects in the database — only the workspace container and its settings are removed."
+  },
+  {
+    "chunk_id": "ce-express-workspace_chunk_9",
+    "document_id": "ce-express-workspace",
+    "document_title": "Workspaces",
+    "section_title": "Related Pages",
+    "product": "CE Express",
+    "version": "Unknown",
+    "category": "Getting Started",
+    "source_file": "docs/ce-express/workspace.md",
+    "text": "- Geodata & Rasters — preparing elevation.tif and clutter files\n- RF Prediction — prediction model settings\n- Network Objects — managing sites and cells within a workspace"
+  }
+]

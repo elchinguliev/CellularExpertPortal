@@ -8,6 +8,8 @@ const cors = require('cors');
 const path = require('path');
 const { Pool } = require('pg');
 const bcrypt = require('bcryptjs');
+const multer = require('multer');
+const fs = require('fs');
 
 const app = express();
 app.use(cors());
@@ -64,11 +66,11 @@ app.get('/api/docs/:docId', async (req, res) => {
     // screenshots) — these were never meant to be shown as standalone figures.
     // Real screenshots are captioned as "... page" / "... dialog" etc.;
     // scraped inline icons are captioned "... icon".
-   const imagesRes = await pool.query(
-      `SELECT image_url, caption, section_anchor, display_order
+const imagesRes = await pool.query(
+      `SELECT id, image_url, caption, section_anchor, display_order
        FROM document_images
        WHERE doc_id = $1
-         AND caption NOT ILIKE '%inline use%'
+         AND caption NOT ILIKE '%icon%'
        ORDER BY display_order`,
       [docId]
     );
@@ -245,6 +247,53 @@ app.post('/api/docs', async (req, res) => {
     if (err.code === '23505') {
       return res.status(409).json({ error: 'A document with this ID already exists' });
     }
+    res.status(500).json({ error: err.message });
+  }
+});
+
+const upload = multer({
+  storage: multer.diskStorage({
+    destination: (req, file, cb) => {
+      const dir = path.join(__dirname, 'public', 'images', req.params.docId);
+      fs.mkdirSync(dir, { recursive: true });
+      cb(null, dir);
+    },
+    filename: (req, file, cb) => {
+      const safe = Date.now() + '-' + file.originalname.replace(/[^a-zA-Z0-9.\-_]/g, '_');
+      cb(null, safe);
+    },
+  }),
+  limits: { fileSize: 8 * 1024 * 1024 }, // 8MB max
+});
+
+// ── Upload a new image/icon for a document (admin CRUD) ──────────────────────
+app.post('/api/docs/:docId/images/upload', upload.single('image'), async (req, res) => {
+  try {
+    const { docId } = req.params;
+    const { caption, section_anchor, display_order } = req.body;
+    if (!req.file) return res.status(400).json({ error: 'No file uploaded' });
+
+    const image_url = `http://localhost:${process.env.PORT || 4000}/images/${docId}/${req.file.filename}`;
+
+    const { rows } = await pool.query(
+      `INSERT INTO document_images (doc_id, image_url, caption, section_anchor, display_order)
+       VALUES ($1,$2,$3,$4,$5) RETURNING *`,
+      [docId, image_url, caption || null, section_anchor || null, display_order || 0]
+    );
+    res.status(201).json(rows[0]);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// ── Delete an image (admin CRUD) ──────────────────────────────────────────────
+app.delete('/api/docs/:docId/images/:imageId', async (req, res) => {
+  try {
+    const { imageId } = req.params;
+    const { rowCount } = await pool.query(`DELETE FROM document_images WHERE id = $1`, [imageId]);
+    if (rowCount === 0) return res.status(404).json({ error: 'Not found' });
+    res.json({ ok: true });
+  } catch (err) {
     res.status(500).json({ error: err.message });
   }
 });

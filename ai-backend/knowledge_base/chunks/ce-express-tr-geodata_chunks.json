@@ -1,0 +1,57 @@
+[
+  {
+    "chunk_id": "ce-express-tr-geodata_chunk_1",
+    "document_id": "ce-express-tr-geodata",
+    "document_title": "09 — Preparing Geodata",
+    "section_title": "09. Preparing Geodata",
+    "product": "CE Express",
+    "version": "Unknown",
+    "category": "Training",
+    "source_file": "docs/ce-express/training/09-preparing-geodata.md",
+    "text": "> **Version:** CE Express v7.2\n1. Objective\nThis module explains how to prepare topographical and land-use geodata in ArcGIS Pro so\nit can be correctly used for predictions in CE Express or CE Desktop for ArcGIS Pro. The\nfocus is on producing rasters that are geometrically correct, consistently referenced, and\ncompliant with CE input requirements.\nBy the end of this exercise, participants will be able to:\n- Understand which geodata layers are mandatory and optional for CE Express\n- Prepare a Digital Terrain Model (DTM) raster suitable for predictions\n- Mosaic, project, and standardize raster datasets in ArcGIS Pro\n- Prepare [clutter](#kw:clutter-classification-values:ce-express-geodata) class and [clutter](#kw:clutter-classification-values:ce-express-geodata) height rasters aligned with the DTM\n- Export final rasters with correct naming, resolution, extent, and data type\n2. Required and Optional Geodata Layers\nMandatory. Digital terrain model (DTM) grid\nThe Digital Terrain Model (DTM) represents the Earth’s ground level above sea level. Each\nraster pixel has its height value. Freely available data can be download from:\nhttps://search.earthdata.nasa.gov/search/granules?p=C1711961296-LPCLOUD&pg[0][v]=f&pg[0][gsk]=-start_date&g=G1726517680-\nLPCLOUD&q=aster&lat=54.10244930917067&long=26.561757102638634&zoom=6.73700\n5077561119\nThe raster name must be elevation.tif\n---\nOptional. [Clutter](#kw:clutter-classification-values:ce-express-geodata) height grid\nThe Obstacle height (building, vegetation, etc) grid represents the objects on the ground\nwith their height above the DTM grid. The raster name must be clutterHeight.tif\nOptional. Clutter class grid\nA Clutter class grid represents land use types. The data can be downloaded from here:\nLivingatlas ArcGIS Sentinel-2 Land Use\n---\nPossible land use types:\n- Water\n- Tress\n- Flooded vegetation\n- Crops\n- Built area\n- Snow/Ice\n- Rangeland\nThe clutter must be named clutterClasses.tif.\n3. Exercise"
+  },
+  {
+    "chunk_id": "ce-express-tr-geodata_chunk_2",
+    "document_id": "ce-express-tr-geodata",
+    "document_title": "09 — Preparing Geodata",
+    "section_title": "3.1 Step 1 – Opening the ArcGIS Pro Project",
+    "product": "CE Express",
+    "version": "Unknown",
+    "category": "Training",
+    "source_file": "docs/ce-express/training/09-preparing-geodata.md",
+    "text": "1. Navigate to:\nC:\\CE_Course\\PreparingGeodata\\Project\n2. Open the [ArcGIS Pro project](#kw:31-step-1-opening-the-arcgis-pro-project:none) file:\nProject.aprx\nThis project contains predefined folder structures and basemaps used throughout the\nexercise."
+  },
+  {
+    "chunk_id": "ce-express-tr-geodata_chunk_3",
+    "document_id": "ce-express-tr-geodata",
+    "document_title": "09 — Preparing Geodata",
+    "section_title": "3.2 Step 2 – Preparing the Digital Terrain Model (DTM)",
+    "product": "CE Express",
+    "version": "Unknown",
+    "category": "Training",
+    "source_file": "docs/ce-express/training/09-preparing-geodata.md",
+    "text": "3.2.1 Adding Source DTM Tiles\n1. Click Add Data.\n2. Navigate to:\nC:\\CE_Course\\PreparingGeodata\\Initial\\DTM\n3. Select the following files:\n---\n- ASTGTMV003_N54E024_dem.tif\n- ASTGTMV003_N54E025_dem.tif\n4. Click OK.\nThese files represent adjacent DTM tiles and must be merged into a single raster.\n3.2.2 Mosaic to New Raster\n1. Open Geoprocessing from the View tab.\n2. In Find Tools, search for Mosaic to New Raster.\n3. Configure the tool as shown in the training reference:\n- Input Rasters: both ASTER tiles\n- Output location: calculation directory\n- Output raster name: temporary DTM\n---\n4. Click Run.\nThis creates a single continuous elevation raster."
+  },
+  {
+    "chunk_id": "ce-express-tr-geodata_chunk_4",
+    "document_id": "ce-express-tr-geodata",
+    "document_title": "09 — Preparing Geodata",
+    "section_title": "3.3 Project raster",
+    "product": "CE Express",
+    "version": "Unknown",
+    "category": "Training",
+    "source_file": "docs/ce-express/training/09-preparing-geodata.md",
+    "text": "Projecting the Digital Terrain Model (DTM) is a critical GIS step that ensures the elevation\ndata can be correctly interpreted and used by CE. Prediction engines require all geodata to\n---\nbe in a [projected coordinate](#kw:what-is-a-projected-[crs](#kw:check-crs:ce-express-geodata):ce-express-geodata) system so that distances, angles, and areas are calculated\naccurately.\nRaster datasets provided in geographic coordinate systems (latitude/longitude) are not\nsuitable for prediction calculations without reprojection, because their units are angular rather\nthan linear.\n3.3.1 Selecting the Correct Coordinate System\nBefore projecting, determine the most appropriate [projected coordinate](#kw:what-is-a-projected-[crs](#kw:check-crs:ce-express-geodata):ce-express-geodata) system:\n- Local / National grid systems are preferred when available (e.g. LKS 1994\nLithuania TM)\n- WGS 1984 [UTM](#kw:what-is-a-projected-[crs](#kw:check-crs:ce-express-geodata):ce-express-geodata) zones are suitable when national systems are not available\nWhen using [UTM](#kw:what-is-a-projected-crs:ce-express-geodata):\n- Select the zone covering the majority of the study area\n- Avoid splitting datasets across multiple [UTM](#kw:what-is-a-projected-crs:ce-express-geodata) zones\nWhich zone should be used can be checked https://hub.arcgis.com/datasets/esri::world-utm-grid/explore\nConsistency across all geodata layers is mandatory.\n---\n3.3.2 Running the [Project Raster](#kw:33-project-raster:none) Tool\n1. Open Geoprocessing from the View tab.\n2. Search for [Project Raster](#kw:33-project-raster:none).\nConfigure the tool as follows:\n- Input raster: DTM_WGS.tif\n- Output Raster Dataset:\nC:\\CE_Course\\PreparingGeodata\\Initial\\Calculations\\DTM_UTM.tif\n- LKS_1994_Lithuania_TM\n- Cell size:\no X: 25\no Y: 25\n---\nRun calculations.\n3.3.3 Finalizing the Elevation Raster\n1. Open Copy Raster.\nDefine:\n- Input raster: projected DTM\n- Output raster: elevation.tif\n- Pixel Type: 16-bit signed, 32-bit signed, or 32-bit float\n- [NoData](#kw:check-and-set-nodata-value:ce-express-geodata) value: -9999\n3. Click Run.\n4. Remove all other layers except:\n- elevation.tif\n---\n- Topographic [basemap](#kw:37-step-7-basemap-configuration:ce-express-tr-workspace)\nThe DTM is now ready for CE Express."
+  },
+  {
+    "chunk_id": "ce-express-tr-geodata_chunk_5",
+    "document_id": "ce-express-tr-geodata",
+    "document_title": "09 — Preparing Geodata",
+    "section_title": "3.4 Step 3 – Preparing Clutter Class Raster",
+    "product": "CE Express",
+    "version": "Unknown",
+    "category": "Training",
+    "source_file": "docs/ce-express/training/09-preparing-geodata.md",
+    "text": "The clutter class raster is downloaded from here:\nhttps://livingatlas.arcgis.com/landcoverexplorer/?hsamp_network=linkedin&hsamp=bMJ1Ld\nVdwXGW&adumkts=social&utm_source=social&aduc=social&adum=external&adusf=linke\ndin&sf_id=7015x000000aYlKAAU&aduca=mi_employee_advocacy_hootsuite_amplify_soc\n_ex&adut=e621d967-b85a-4721-aa1e-d37a8f477f1b#mapCenter=-\n3.96366%2C55.51588%2C4.00&mode=step&timeExtent=2017%2C2022&year=2024&dow\nnloadMode=true\n3.4.1 Adding Clutter Class Data\n1. Click Add Data.\n2. Navigate to:\nC:\\CE_Course\\PreparingGeodata\\Initial\\Clutter\n3. Select:\n35U_20240101-20241231.tif\n---\n4. Click OK.\nThis raster covers a much larger area than the DTM.\n3.4.2 Projecting and Clipping [Clutter Classes](#kw:clutter-classification-values:ce-express-geodata)\nClutter class rasters must match the DTM in all spatial aspects. Any mismatch can lead to\nincorrect obstruction modeling and unstable [prediction results](#kw:viewing-results:ce-express-rf-prediction).\nProper projection and clipping ensures:\n- Correct spatial alignment between terrain and clutter\n- One-to-one pixel correspondence across rasters\n- Consistent distance and area calculations\n- Reliable application of clutter loss [models](#kw:31-models:ce-express-tr-models)\n3.4.3 Reprojecting the Clutter Class Raster\n1. Open Geoprocessing in ArcGIS Pro.\n2. Search for Project Raster.\nConfigure the tool as follows:\n- Input Raster: Original clutter class dataset\n- Output Raster: C:\\CE_Course\\PreparingGeodata\\Initial\\Calculations\\clutter_UTM.tif\n- Output Coordinate System: Same projected system used for elevation.tif\n---\n3.4.4 Enforcing Spatial Alignment (Environment Settings)\nTo ensure perfect alignment with the DTM, configure the Environment settings before\nrunning the tool:\n- Processing Extent: Same as elevation.tif\n- Snap Raster: elevation.tif\nThese settings force ArcGIS Pro to:\n- Clip the raster to the exact DTM extent\n- Align pixel boundaries exactly with the DTM grid\n---\nPress Run.\n3.4.5 Finalizing the Clutter Class Raster\n1. Open Copy Raster.\n2. Configure:\n- Output name: clutterClasses.tif\n- Pixel Type: 32-bit signed integer\n- [NoData](#kw:check-and-set-nodata-value:ce-express-geodata) value: -9999\n3. Click Run.\n4. Remove all intermediate clutter rasters from the map.\nThe clutter class raster is now fully prepared and compliant with CE requirements.\n---"
+  }
+]

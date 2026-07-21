@@ -1,0 +1,101 @@
+[
+  {
+    "chunk_id": "ce-express-antenna_chunk_1",
+    "document_id": "ce-express-antenna",
+    "document_title": "Antenna Patterns",
+    "section_title": "Antenna Patterns",
+    "product": "CE Express",
+    "version": "Unknown",
+    "category": "Network Objects",
+    "source_file": "docs/ce-express/antenna-patterns.md",
+    "text": "> **Version:** CE Express v7.2\nAn [antenna pattern](#kw:managing-the-antenna-library:none) file describes how an antenna radiates power in different directions — both horizontally (azimuth) and vertically (elevation). CE Express uses these patterns to calculate accurate RF predictions rather than assuming an idealised omnidirectional antenna."
+  },
+  {
+    "chunk_id": "ce-express-antenna_chunk_2",
+    "document_id": "ce-express-antenna",
+    "document_title": "Antenna Patterns",
+    "section_title": "Supported Formats",
+    "product": "CE Express",
+    "version": "Unknown",
+    "category": "Network Objects",
+    "source_file": "docs/ce-express/antenna-patterns.md",
+    "text": "| Format | Extension | Notes |\n|---|---|---|\n| [MSI Planet](#kw:pattern-file-structure-msi:none) | `.msi` | Most common format from antenna vendors |\n| Kathrein | `.txt` | Text-based pattern format |\nMost antenna manufacturers (Kathrein, Commscope, Ericsson, Nokia, Huawei) provide patterns in .msi format on their websites or on Antenna DL."
+  },
+  {
+    "chunk_id": "ce-express-antenna_chunk_3",
+    "document_id": "ce-express-antenna",
+    "document_title": "Antenna Patterns",
+    "section_title": "Importing Antenna Patterns",
+    "product": "CE Express",
+    "version": "Unknown",
+    "category": "Network Objects",
+    "source_file": "docs/ce-express/antenna-patterns.md",
+    "text": "1. Open the **Antennas** tool from the left toolbar.\n2. Click **Import**.\n3. Select one or more `.msi` or `.txt` files.\n4. Click **Open** — the patterns are imported into the [antenna library](#kw:managing-the-antenna-library:none).\nYou can import multiple files at once. Imported patterns are available to all workspaces."
+  },
+  {
+    "chunk_id": "ce-express-antenna_chunk_4",
+    "document_id": "ce-express-antenna",
+    "document_title": "Antenna Patterns",
+    "section_title": "Assigning a Pattern to a Cell",
+    "product": "CE Express",
+    "version": "Unknown",
+    "category": "Network Objects",
+    "source_file": "docs/ce-express/antenna-patterns.md",
+    "text": "1. Open **Network [Data Management](#kw:31-data-management-tools:inventory3d-user-guide)**.\n2. Find the cell row.\n3. Click the `antenna_pattern` field.\n4. Type or select the pattern name from the dropdown.\n5. Click **Synchronize Changes**.\n> If no pattern is assigned, CE Express uses an **isotropic (omnidirectional)** model for that cell. This gives less accurate predictions but allows you to run a quick test without patterns."
+  },
+  {
+    "chunk_id": "ce-express-antenna_chunk_5",
+    "document_id": "ce-express-antenna",
+    "document_title": "Antenna Patterns",
+    "section_title": "Pattern File Structure (MSI)",
+    "product": "CE Express",
+    "version": "Unknown",
+    "category": "Network Objects",
+    "source_file": "docs/ce-express/antenna-patterns.md",
+    "text": "An .msi file contains:\n- **Header** — frequency, gain, half-power beamwidths (H and V), front-to-back ratio\n- **Horizontal pattern** — attenuation in dB at each azimuth angle (0–360°)\n- **Vertical pattern** — attenuation in dB at each elevation angle\nExample header:\n```\nNAME    Kathrein 742212\nMAKE    Kathrein\nFREQUENCY   1710-1880\nGAIN    17.5dBd\nTILT    0\nBEAMWIDTH H 65\nBEAMWIDTH V 7.5\n```"
+  },
+  {
+    "chunk_id": "ce-express-antenna_chunk_6",
+    "document_id": "ce-express-antenna",
+    "document_title": "Antenna Patterns",
+    "section_title": "Viewing Patterns",
+    "product": "CE Express",
+    "version": "Unknown",
+    "category": "Network Objects",
+    "source_file": "docs/ce-express/antenna-patterns.md",
+    "text": "In the Antennas tool, click a pattern name to view its horizontal and vertical radiation plots."
+  },
+  {
+    "chunk_id": "ce-express-antenna_chunk_7",
+    "document_id": "ce-express-antenna",
+    "document_title": "Antenna Patterns",
+    "section_title": "Managing the Antenna Library",
+    "product": "CE Express",
+    "version": "Unknown",
+    "category": "Network Objects",
+    "source_file": "docs/ce-express/antenna-patterns.md",
+    "text": "| Action | How |\n|---|---|\n| View all imported patterns | Open Antennas tool Library tab |\n| Delete a pattern | Select the pattern click Delete |\n| Export a pattern | Select the pattern click Export |\n| Rename a pattern | Not supported — re-import under a new name |"
+  },
+  {
+    "chunk_id": "ce-express-antenna_chunk_8",
+    "document_id": "ce-express-antenna",
+    "document_title": "Antenna Patterns",
+    "section_title": "Tips",
+    "product": "CE Express",
+    "version": "Unknown",
+    "category": "Network Objects",
+    "source_file": "docs/ce-express/antenna-patterns.md",
+    "text": "- Use the **actual vendor pattern** for your installed antennas whenever possible — it significantly improves prediction accuracy.\n- Pattern file names often contain the model number (e.g. `K742212_1800MHz_0deg.msi`). Keep names consistent so they are easy to assign in bulk via CSV import.\n- For multi-band antennas (e.g. 900/1800 MHz combined), import separate pattern files per band."
+  },
+  {
+    "chunk_id": "ce-express-antenna_chunk_9",
+    "document_id": "ce-express-antenna",
+    "document_title": "Antenna Patterns",
+    "section_title": "Related Pages",
+    "product": "CE Express",
+    "version": "Unknown",
+    "category": "Network Objects",
+    "source_file": "docs/ce-express/antenna-patterns.md",
+    "text": "- [Network Objects](#kw:object-types:ce-express-network-objects) — assigning patterns to cells\n- RF Prediction — how patterns affect [prediction results](#kw:viewing-results:ce-express-rf-prediction)"
+  }
+]

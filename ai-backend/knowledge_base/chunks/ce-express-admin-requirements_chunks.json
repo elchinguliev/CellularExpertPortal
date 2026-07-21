@@ -1,0 +1,79 @@
+[
+  {
+    "chunk_id": "ce-express-admin-requirements_chunk_1",
+    "document_id": "ce-express-admin-requirements",
+    "document_title": "System Requirements",
+    "section_title": "CE Express System Requirements",
+    "product": "CE Express",
+    "version": "Unknown",
+    "category": "Administration",
+    "source_file": "docs/ce-express/admin-01-requirements.md",
+    "text": "> **Version:** CE Express v7.2"
+  },
+  {
+    "chunk_id": "ce-express-admin-requirements_chunk_2",
+    "document_id": "ce-express-admin-requirements",
+    "document_title": "System Requirements",
+    "section_title": "Server (CE Express + ArcGIS Enterprise+Enterprise+server+deployment))",
+    "product": "CE Express",
+    "version": "Unknown",
+    "category": "Administration",
+    "source_file": "docs/ce-express/admin-01-requirements.md",
+    "text": "| Component | Minimum | Recommended | Optimal |\n|-----------|---------|-------------|---------|\n| **CPU** | 8 cores, hyperthreaded | 16 cores | 32 cores |\n| **RAM** | 16 GB | 32 GB | 64 GB or more |\n| **Storage** | 500 GB – 1 TB free | 2 TB+ SSD | NVMe SSD RAID |"
+  },
+  {
+    "chunk_id": "ce-express-admin-requirements_chunk_3",
+    "document_id": "ce-express-admin-requirements",
+    "document_title": "System Requirements",
+    "section_title": "Optional: GPU-Accelerated Calculations",
+    "product": "CE Express",
+    "version": "Unknown",
+    "category": "Administration",
+    "source_file": "docs/ce-express/admin-01-requirements.md",
+    "text": "| Component | Requirement |\n|-----------|------------|\n| GPU | Any NVIDIA GPU with CUDA capabilities |\n| Driver | Version 456.38 or later |\n| CUDA Toolkit | 11.0 – 12.4 (recommended) |\nSee: https://developer.nvidia.com/cuda-gpus\n> Requirements vary significantly depending on acceptable calculation time, task complexity, and database size."
+  },
+  {
+    "chunk_id": "ce-express-admin-requirements_chunk_4",
+    "document_id": "ce-express-admin-requirements",
+    "document_title": "System Requirements",
+    "section_title": "Minimum Software Requirements",
+    "product": "CE Express",
+    "version": "Unknown",
+    "category": "Administration",
+    "source_file": "docs/ce-express/admin-01-requirements.md",
+    "text": "| Software | Version | Notes |\n|----------|---------|-------|\n| **Operating System** | Windows Server 2016/2019/2022 | Also supported: Ubuntu 20.04+ |\n| **ArcGIS Server** | 10.9.1 or later | Required for map services |\n| **ArcGIS Portal** | 10.9.1 or later | Required for user authentication |\n| **PostgreSQL** | 13 or later | With PostGIS extension |\n| **PHP Server** | 7.4 or later | For CE Express web application |\n| **Web Server** | IIS (Windows) or Nginx (Linux) | Front-end proxy |"
+  },
+  {
+    "chunk_id": "ce-express-admin-requirements_chunk_5",
+    "document_id": "ce-express-admin-requirements",
+    "document_title": "System Requirements",
+    "section_title": "Simplified On-Premises Deployment",
+    "product": "CE Express",
+    "version": "Unknown",
+    "category": "Administration",
+    "source_file": "docs/ce-express/admin-01-requirements.md",
+    "text": "```\n[User Browser]\n      ↓ HTTPS\n[IIS / Nginx Web Server]\n      ↓\n[CE Express Application + PHP]\n      ↓\n[ArcGIS Enterprise (Portal + Server)]\n      ↓\n[PostgreSQL + PostGIS Database]\n      ↓\n[CE Calculation Engine]\n```"
+  },
+  {
+    "chunk_id": "ce-express-admin-requirements_chunk_6",
+    "document_id": "ce-express-admin-requirements",
+    "document_title": "System Requirements",
+    "section_title": "Cloud / Hybrid Deployment",
+    "product": "CE Express",
+    "version": "Unknown",
+    "category": "Administration",
+    "source_file": "docs/ce-express/admin-01-requirements.md",
+    "text": "CE Express supports [cloud deployment](#kw:cloud-hybrid-deployment:none) on:\n- **Microsoft Azure** (recommended)\n- **AWS**\n- **Google Cloud Platform**\nArcGIS Enterprise and the CE Express server can be on separate machines/VMs."
+  },
+  {
+    "chunk_id": "ce-express-admin-requirements_chunk_7",
+    "document_id": "ce-express-admin-requirements",
+    "document_title": "System Requirements",
+    "section_title": "Related Topics",
+    "product": "CE Express",
+    "version": "Unknown",
+    "category": "Administration",
+    "source_file": "docs/ce-express/admin-01-requirements.md",
+    "text": "- Installation Guide\n- Geodata Preparation (Admin)\n- User Management"
+  }
+]

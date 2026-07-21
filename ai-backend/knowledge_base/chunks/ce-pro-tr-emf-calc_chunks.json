@@ -1,0 +1,101 @@
+[
+  {
+    "chunk_id": "ce-pro-tr-emf-calc_chunk_1",
+    "document_id": "ce-pro-tr-emf-calc",
+    "document_title": "EMF Calculation",
+    "section_title": "EMF Calculation",
+    "product": "CE Pro",
+    "version": "Unknown",
+    "category": "Training",
+    "source_file": "docs/ce-pro/training/17-emf-calculation.md",
+    "text": "> **Version:** CE Pro v4.9"
+  },
+  {
+    "chunk_id": "ce-pro-tr-emf-calc_chunk_2",
+    "document_id": "ce-pro-tr-emf-calc",
+    "document_title": "EMF Calculation",
+    "section_title": "8.1 EMF",
+    "product": "CE Pro",
+    "version": "Unknown",
+    "category": "Training",
+    "source_file": "docs/ce-pro/training/17-emf-calculation.md",
+    "text": "The EMF Calculation Tool analyzes and visualizes electromagnetic field (EMF) exposure based on various\nenvironmental and technical parameters, such as resolution, cell template, reflection factor, and receiver\nheight. This tool allows users to perform EMF calculations for selected cells by specifying these parameters.\nThese are then processed to provide results for EMF limit usage (%), EMF in mV/m, and EMF in mW/m².\nThe results are displayed on the map, highlighting areas with varying levels of EMF exposure, and the\nvalues are explained in the legend under the newly created calculation layer.\nCalculation Name\nName of the calculation that will be displayed in the CE Calculation Task List.\nResolution\nResolution for raster calculations. The output rasters will be produced with the indicated cell size.\nCell template\nCell template that will be used in the prediction calculations.\nReflection factor\nReflection factor, used for the electromagnetic field exposure prediction calculations. Available selections:\nno reflection, realistic reflection, or full reflection.\nReflection factor\nReceiver height in meters.\nThe results are displayed in newly added rasters of the calculation – electromagnetic field exposure results\nin mV/m and mW/m2. For example, the green indicates where mV/m exposure values are less than 50, and\nred indicates where they are higher than 100."
+  },
+  {
+    "chunk_id": "ce-pro-tr-emf-calc_chunk_3",
+    "document_id": "ce-pro-tr-emf-calc",
+    "document_title": "EMF Calculation",
+    "section_title": "9.1 Profile Tool",
+    "product": "CE Pro",
+    "version": "Unknown",
+    "category": "Training",
+    "source_file": "docs/ce-pro/training/17-emf-calculation.md",
+    "text": "A Profile in wireless communication represents the geographical and environmental characteristics of\nthe path between a transmitter and a receiver. It includes detailed information such as elevation\ndata, terrain heights, and any obstacles (e.g., buildings, trees, or mountains) that might impact\nsignal propagation.\nAll relevant calculations are already performed within the system. These include the power budget,\nwhich factors in the total power available for transmission and reception while accounting for\nsystem gains and losses, and the path loss, which measures the reduction in signal strength due\nto distance, frequency, and environmental obstructions. The profile also provides the calculated\nangles, including the elevation angle (vertical angle between the transmitter and receiver) and the\nazimuth angle (horizontal direction). Additionally, it determines whether a direct line-of-sight exists\nbetween the two points.\nThis comprehensive information is ready for use, enabling users to assess the feasibility and\nperformance of a communication link for network planning, optimization, and troubleshooting.\nClick the button to open the Profile dialogue.\nProfile tool enables you to determine the obstructions, elevation, and Fresnel zones between two points\non a map."
+  },
+  {
+    "chunk_id": "ce-pro-tr-emf-calc_chunk_4",
+    "document_id": "ce-pro-tr-emf-calc",
+    "document_title": "EMF Calculation",
+    "section_title": "9.1.1 Properties",
+    "product": "CE Pro",
+    "version": "Unknown",
+    "category": "Training",
+    "source_file": "docs/ce-pro/training/17-emf-calculation.md",
+    "text": "Profile: General\nFresnel Minimal Clearance, %\nPercentage by which the primary Fresnel zones will be scaled up or down thus creating a secondary\nFresnel zone. The percentage must be in the range of 1 to 200. The value can be changed either\nby inputting it manually or by using the slider.\nTransmitter Template\nThe template that is used for transmitter’s default values.\nReceiver Template\nThe template that is used for receiver’s default values.\nProfile: Transmitter\nToggling the switch to the left of Transmitter will enable the Fixed Transmitter functionality, which will\nmodify only the receiver’s positioning when drawing the profile on the map.\nCell\nA cell from which the profile will be drawn. The parameters of the cell will be taken into calculation if\nthe cell is snapped to by the profile tool.\nLatitude\nDecimal degrees Y type coordinate.\nLongitude\nDecimal degrees X type coordinate.\nHeight, m\nHeight above the ground in meters. The minimum value must be 1m.\nAzimuth towards receiver\nEnabled by default. When enabled, the transmitter’s azimuth is towards the receiver. Disabling this\noption it would take azimuth value from the Cell object, and use it for FWA Power Budget\ncalculations, it also allows the user to enter a custom azimuth value for the transmitter.\nDowntilt towards receiver\nEnabled by default. When enabled, the transmitter’s tilt is towards the receiver. Disabling this option it\nwould take tilt value from the Cell object, and use it for FWA Power Budget calculations, it allows\nthe user to enter a custom tilt value for the transmitter.\nEl. Downtilt, deg.\nElectrical downtilt value for the transmitter, in degrees.\nThe antenna for the transmitter can be selected from the table below the El. Downtilt, deg input. Its\npattern can be viewed by clicking the View Antenna button on the right side.\nFrequency, MHz\nFrequency of the transmitter.\nBandwidth, MHz\nBandwidth of the transmitter.\nPower, dBm\nA power that the transmitter possesses.\nMisc Loss, dB\nMiscellaneous loss value in dB. Value is not required.\nTx mimo\nTransmitter antenna count. Available values: 1, 2, 4, 8, 16, 32 and 64.\nRx mimo\nReceiver antenna count. Available values: 1, 2, 4, 8, 16, 32 and 64.\nSubcarrier spacing\nValue in kHz.\nProfile: Receiver\nLatitude\nDecimal degrees Y type coordinate.\nLongitude\nDecimal degrees X type coordinate.\nHeight, m\nHeight above the ground in meters. The minimum value must be 1m.\nAzimuth towards transmitter\nEnabled by default. When enabled, the receiver’s azimuth is towards the transmitter. Disabling this\noption it would take azimuth value from the receiver (Cell) object, and use it for FWA Power Budget\ncalculations, it also allows the user to enter a custom azimuth value for the receiver.\nDowntilt towards transmitter\nEnabled by default. When enabled, the receiver’s tilt is towards the transmitter. Disabling this option it\nwould take tilt value from the receiver (Cell) object, and use it for FWA Power Budget calculations,\nit allows the user to enter a custom tilt value for the receiver.\nPower, dBm\nA power that the receiver possesses.\nMisc Loss, dB\nMiscellaneous loss value in dB. Value is not required.\nProfile: Prediction Model\nDouble-click the prediction model from the list to select it for the profile."
+  },
+  {
+    "chunk_id": "ce-pro-tr-emf-calc_chunk_5",
+    "document_id": "ce-pro-tr-emf-calc",
+    "document_title": "EMF Calculation",
+    "section_title": "9.1.2 Draw Profile",
+    "product": "CE Pro",
+    "version": "Unknown",
+    "category": "Training",
+    "source_file": "docs/ce-pro/training/17-emf-calculation.md",
+    "text": "When the Profile tool is selected and enabled, you will be able to select two points on the map in turn\ncreating a Profile line.\nThe profile also lets you snap to different Cellular Expert network objects. If the object to which the\nuser snaps is a cell, all parameters of that cell that are necessary to draw a profile will be read and\nincluded in the calculations. If the object is not a cell, then only the name and the object’s\ncoordinates will be taken.\nMost of these values will be displayed in the Profile pane shown above. If you change the values in the\npane, these changes will be reflected in the Profile plot by redrawing it.\nUpon the selection of a second point, these geometries will be created between the points:\n• LOS (green) - the distance until the first obstruction in the profile’s way\n• OLOS (orange) – the distance until the first clutter LOS obstruction\n• NLOS (red) – the obstructed path between the sender and receiver\n• Lowest Clearance (yellow) – the point at which NLOS has the lowest clearance to the obstacle\n• Rx (purple) – the receiver point\n• Tx (green) – the transmitter point\n• Fresnel (blue) – the Fresnel lines\nThe Profile plot illustrating these geometries, obstacles (buildings), and the Fresnel zone will appear in\na dockpane below. You can inspect the values at particular points by moving the cursor around the\nplot. The cursor movement on the plot will be projected as a moving point on the map. If a cell is\nselected for the transmitter, the cell’s tilt (the sum of mechanical and electrical tilts) and vertical\nbeamwidth are displayed as additional symbols: a light blue line and a darker blue cone\nrespectively. The length of the cell tilt and antenna vertical beamwidth symbols is the radius of the\nprediction model selected for the cell.\nThe button allows you to see the Prediction Calculation results.\nYou can change the colors of the profile by clicking the colored squares near the names of the parameters.\nThe colors will be updated automatically. You can toggle the visibility of each separate parameter of\nthe profile by clicking on the name of the element. Enabled elements are indicated by bold text,\nand disabled elements are indicated by regular text.\nYou can change the height of the transmitter/receiver points by dragging their ends on the plot.\nHovering the cursor over the plot displays a tooltip with the meter values for profile, building, clutter,\nelevation, distance, etc., as well as their representations in colors.\n9.1.2.1 Adjust Data\nAdjust data is found on the Profile Plot dockpane near the Results. The tool lets you change the\nelevation, building, and clutter data of the area visible in the profile plot.\nWhen the Adjust tab is opened, select a desirable range for the data adjustment on the plot.\nYou can make slight changes to the range of the selection area by hovering over the area's edges and\ndragging them. To adjust the values, click on one of the text boxes and insert the value.\nTo change multiple values simultaneously, drag across the adjustment table and select multiple rows.\nChanging the value of a single text box will also change all the other chosen rows’ values in that\ntext box. The selected area will be highlighted on the profile plot.\nTo update the values, either select an unselected row or press the button.\nTo reset the adjusted values to defaults, click the Refresh button .\nManual Profile\nIf you want to insert specific coordinates and draw a profile that way, you can insert these values in the\nProfile pane and click the Manual Profile button.\nDynamic Profile\nThe button toggles the Dynamic Profile.\nDynamic Profile lets you see Profile calculations and the plot be drawn in real-time as the cursor\nmoves. Whenever the cursor stops momentarily – the profile gets drawn. The transmitter point\nneeds to be entered for the dynamic profile to be activated. The previous transmitter point will be\nchosen if the point is not currently entered.\nIf a second point is selected while the profile is being drawn, the dynamic profile will be disabled, and\nthe LOS lines will appear on the map."
+  },
+  {
+    "chunk_id": "ce-pro-tr-emf-calc_chunk_6",
+    "document_id": "ce-pro-tr-emf-calc",
+    "document_title": "EMF Calculation",
+    "section_title": "9.1.3 Tools",
+    "product": "CE Pro",
+    "version": "Unknown",
+    "category": "Training",
+    "source_file": "docs/ce-pro/training/17-emf-calculation.md",
+    "text": "Reflections are considered in profile and RF calculations to assess how radio waves bounce off\nsurfaces, affecting signal path and strength.\nTo enable reflections select either Single or Multipath Reflection. Be aware that if reflections are not\nvisible you may need to adjust the height of the receiver/transmitter accordingly.\nIt is recommended to disable the Step Plot of the profile before using Reflections (see Settings).\nUse Single Reflection\nEnable a reflection that will reflect straight from the transmitter to the receiver point with the smallest\nangle.\nUse Multipath Reflections\nEnable all reflections that happen along the profile line.\nUse Divergence Factor\nQuantifies the extent to which a reflected signal spreads out, affecting its strength and coverage.\nStep Size\nThe length period by which the reflection will be calculated. The step size is determined by taking the\naverage cell size of the elevation raster.\nPolarizations\nThe polarization of reflections (vertical or horizontal).\nUse Clutter Classes\nEnables the use of default clutter classes for the reflection calculations (see Clutter Classes). If\ndisabled, custom values may be used for conductivity and permittivity.\nSelect Reflection Range\nLets you set a range in which the reflection calculations should happen. This will affect both Single and\nMultipath reflections and help highlight specific important areas along the profile as well as speed\nup the calculation process.\nThe range will be enabled as soon as a profile is drawn.\nYou can select this range on the plot, by holding down the left mouse button and dragging across the\nscreen.\nReflection results will appear in the Profile Results table.\n9.1.3.1 Reflection Analysis\nThe Reflection Analysis tool for Profile is designed to help analyze and visualize signal reflections based\non the changes in various profile parameters like frequency, transmitter height, receiver height, and K-\nfactor. Reflections must be enabled to perform analysis, and the Single Reflection option is automatically\nenabled when the tool is selected.\nDependency on Frequency\nCalculate reflection analysis based on frequency range (from GHz to GHz)\nDependency on Receiver height\nCalculate reflection analysis based on receiver height range (from m to m)\nDependency on Transmitter height\nCalculate reflection analysis based on transmitter height range (from m to m)\nDependency on K-Factor\nCalculate reflection analysis based on K-factor range (from radius, km to radius, km)\nThe reflection analysis results for each type of dependency are displayed in the Reflection Analysis\ntab of the Calculated Profile window."
+  },
+  {
+    "chunk_id": "ce-pro-tr-emf-calc_chunk_7",
+    "document_id": "ce-pro-tr-emf-calc",
+    "document_title": "EMF Calculation",
+    "section_title": "9.1.4 Import",
+    "product": "CE Pro",
+    "version": "Unknown",
+    "category": "Training",
+    "source_file": "docs/ce-pro/training/17-emf-calculation.md",
+    "text": "Import a profile by selecting a profile file in the Import section. Supported formats: .pl2 (path loss file).\nOnce imported successfully, the profile data may then be customized.\nLoad Profile\nCreates the profile with the provided data."
+  },
+  {
+    "chunk_id": "ce-pro-tr-emf-calc_chunk_8",
+    "document_id": "ce-pro-tr-emf-calc",
+    "document_title": "EMF Calculation",
+    "section_title": "9.1.5 Export (Profile Report)",
+    "product": "CE Pro",
+    "version": "Unknown",
+    "category": "Training",
+    "source_file": "docs/ce-pro/training/17-emf-calculation.md",
+    "text": "The input data and calculation results can be automatically transferred into a Profile Report. This report\nwill show transmitter/receiver input data, calculation results as well as the Profile plot and map view in which\nthe profile was drawn. The report can be exported in PDF and PL2 formats. The Profile Report can also be\nsaved to Docs Manager by selecting Save result to Docs Manager.\nThe resulting Profile report will look similar to this example:"
+  },
+  {
+    "chunk_id": "ce-pro-tr-emf-calc_chunk_9",
+    "document_id": "ce-pro-tr-emf-calc",
+    "document_title": "EMF Calculation",
+    "section_title": "9.1.6 Settings",
+    "product": "CE Pro",
+    "version": "Unknown",
+    "category": "Training",
+    "source_file": "docs/ce-pro/training/17-emf-calculation.md",
+    "text": "Currently, you can configure the profile’s visual properties and controls in profile settings. The settings can\nbe changed once a profile is drawn.\nShow Step Plot\nDisplay data points as a series of steps rather than a smooth line or individual points.\nTransmitter height change stepnter\nThe step (in meters) for changing the transmitter height when dragging it in the Profile graph. The default\nvalue is 0.5 meters.\nReceiver height change step\nThe step (in meters) for changing the receiver height when dragging it in the Profile graph. The default\nvalue is 0.5 meters."
+  }
+]

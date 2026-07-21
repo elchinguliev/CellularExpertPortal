@@ -1,0 +1,24 @@
+[
+  {
+    "chunk_id": "ce-pro-tr-quick_chunk_1",
+    "document_id": "ce-pro-tr-quick",
+    "document_title": "Quick Prediction",
+    "section_title": "Quick Prediction",
+    "product": "CE Pro",
+    "version": "Unknown",
+    "category": "Training",
+    "source_file": "docs/ce-pro/training/13-quick-prediction.md",
+    "text": "> **Version:** CE Pro v4.9"
+  },
+  {
+    "chunk_id": "ce-pro-tr-quick_chunk_2",
+    "document_id": "ce-pro-tr-quick",
+    "document_title": "Quick Prediction",
+    "section_title": "9.5 Quick Prediction",
+    "product": "CE Pro",
+    "version": "Unknown",
+    "category": "Training",
+    "source_file": "docs/ce-pro/training/13-quick-prediction.md",
+    "text": "Click the button to open the Quick Prediction dialogue.\nQuick Prediction is a tool that lets you select a point on the map and make a prediction without the need to\ncreate a cell. The selected point is represented as a brown dot on the map. Quick prediction also lets you\nselect a cell as the point, meaning that you can also make quick predictions with the created cells.\nWhen the Quick Prediction button is pressed, a map tool will be activated which will let you select a point\non the map. Upon selecting this point and pressing the Calculate button, a visual representation of the\ncalculation will be rendered on the map and the relevant data presented in the CE Calculation Task List.\nD\nQuick Prediction Parameters\nCalculation Name\nName of the calculation that will be displayed in the CE Calculation Task List\nResolution\nResolution for raster calculations. The output rasters will be produced with the indicated cell size.\nCell Template\nCell Template will be used in the prediction calculations.\nPrediction Model\nPrediction models that will be used in the prediction calculations.\nAntenna\nAntenna that will be used in the prediction calculations.\nSelected Cell (Optional)\nA cell from which the calculation will be done.\nX\nCoordinate in the projected coordinate system.\nY\nCoordinate in the projected coordinate system.\nZ\nCoordinate in the projected coordinate system.\nLatitude\nDecimal degrees Y type coordinate in the WGS 1984 geographical coordinate system.\nLongitude\nDecimal degrees X type coordinate in the WGS 1984 geographical coordinate system.\nHeight above ground\nCell height above the ground in meters.\nAzimuth\nCell direction from the North in degrees.\nDowntilt\nCells vertical angle offset.\nFrequency\nThe frequency value in MHz\nBandwidth\nValue in MHz. Required for 4G and 5G technologies. For other technologies define the value as 0.015.\nSubcarrier spacing\nValue in kHz. Required for 4G and 5G technologies. For other technologies define value 15.\nTx MIMO\nTransmitter antenna count. Available values: 1, 2, 4, 8, 16, 32 and 64.\nRx MIMO\nReceiver antenna count. Available values: 1, 2, 4, 8, 16, 32 and 64.\nResults:\n• Field Strength raster in dBm"
+  }
+]

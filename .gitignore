@@ -1,3 +1,11 @@
 node_modules/
 ce-backend/node_modules/
 ce-backend/.env
+ai-backend/.env
+ai-backend/venv/
+ai-backend/vector_db/
+ai-backend/__pycache__/
+ai-backend/app/__pycache__/
+ai-backend/app/services/__pycache__/
+**/__pycache__/
+*.pyc

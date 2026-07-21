@@ -1,0 +1,57 @@
+[
+  {
+    "chunk_id": "ce-express-overview_chunk_1",
+    "document_id": "ce-express-overview",
+    "document_title": "Overview",
+    "section_title": "CE Express — Overview",
+    "product": "CE Express",
+    "version": "Unknown",
+    "category": "Getting Started",
+    "source_file": "docs/ce-express/overview.md",
+    "text": "> **Version:** CE Express v7.2\nCE Express is a **web-based radio network planning and optimisation** application built on top of **ArcGIS Enterprise**. It runs entirely in a browser — no desktop software is required for end users."
+  },
+  {
+    "chunk_id": "ce-express-overview_chunk_2",
+    "document_id": "ce-express-overview",
+    "document_title": "Overview",
+    "section_title": "What CE Express Does",
+    "product": "CE Express",
+    "version": "Unknown",
+    "category": "Getting Started",
+    "source_file": "docs/ce-express/overview.md",
+    "text": "CE Express brings together all of the tools a radio network engineer needs into a single map-based interface:\n- **[Network object](#kw:object-types:ce-express-network-objects) management** — create, edit, import, and organise sites, cells, and repeaters\n- **RF prediction** — calculate [RSRP](#kw:typical-rsrp-thresholds:ce-express-rf-prediction), SINR, throughput, and best-server coverage for 4G and 5G networks\n- **Path profile analysis** — check [line-of-sight](#kw:running-a-profile:ce-express-profile) clearance and link budgets between two points\n- **[Street View](#kw:navigating-street-view:ce-express-street-view)** — verify antenna positions and surroundings at ground level\n- **[Antenna pattern](#kw:managing-the-antenna-library:ce-express-antenna) management** — import and assign vendor [antenna patterns](#kw:importing-antenna-patterns:ce-express-antenna) (.msi / .txt) to cells\n- **Workspace management** — organise projects by workspace, each with its own geodata and prediction settings\n- **ArcGIS Portal publishing** — share [prediction results](#kw:viewing-results:ce-express-rf-prediction) as hosted feature layers with your organisation"
+  },
+  {
+    "chunk_id": "ce-express-overview_chunk_3",
+    "document_id": "ce-express-overview",
+    "document_title": "Overview",
+    "section_title": "Architecture",
+    "product": "CE Express",
+    "version": "Unknown",
+    "category": "Getting Started",
+    "source_file": "docs/ce-express/overview.md",
+    "text": "CE Express is deployed on a Windows Server running **ArcGIS Enterprise**. The backend handles all heavy computation (RF predictions, database queries). Users access CE Express through the ArcGIS Enterprise portal using their ArcGIS credentials.\n```\nBrowser (user)\n    │\n    ▼\nArcGIS Enterprise Portal\n    │\n    ▼\nCE Express Web Application\n    │\n    ├── PostgreSQL Database  (network objects, prediction results)\n    ├── Geodata Folder       (elevation.tif, clutter rasters)\n    └── Antenna Library      (.msi pattern files)\n```"
+  },
+  {
+    "chunk_id": "ce-express-overview_chunk_4",
+    "document_id": "ce-express-overview",
+    "document_title": "Overview",
+    "section_title": "Key Concepts",
+    "product": "CE Express",
+    "version": "Unknown",
+    "category": "Getting Started",
+    "source_file": "docs/ce-express/overview.md",
+    "text": "| Concept | Description |\n|---|---|\n| **Workspace** | A project container — links your [network objects](#kw:object-types:ce-express-network-objects) to a geodata folder and prediction model settings |\n| **Cell** | A single radio sector: one antenna with defined position, azimuth, tilt, frequency, and power |\n| **Site** | A physical location (tower, rooftop) that hosts one or more cells |\n| **Geodata** | GeoTIFF raster files (elevation, [clutter](#kw:clutter-classification-values:ce-express-geodata)) used as terrain input for predictions |\n| **Prediction** | A calculated coverage output: [RSRP](#kw:typical-rsrp-thresholds:ce-express-rf-prediction), SINR, throughput rasters for a selected set of cells |"
+  },
+  {
+    "chunk_id": "ce-express-overview_chunk_5",
+    "document_id": "ce-express-overview",
+    "document_title": "Overview",
+    "section_title": "Related Pages",
+    "product": "CE Express",
+    "version": "Unknown",
+    "category": "Getting Started",
+    "source_file": "docs/ce-express/overview.md",
+    "text": "- Logging In — how to access CE Express\n- Workspaces — creating and configuring workspaces\n- RF Prediction — running coverage predictions\n- System Requirements — server and hardware requirements"
+  }
+]

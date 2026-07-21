@@ -1,0 +1,134 @@
+[
+  {
+    "chunk_id": "ce-pro-tr-rl_chunk_1",
+    "document_id": "ce-pro-tr-rl",
+    "document_title": "10 — RL Prediction",
+    "section_title": "10. RL / Microwave Link Prediction",
+    "product": "CE Pro",
+    "version": "Unknown",
+    "category": "Training",
+    "source_file": "docs/ce-pro/training/10-rl-prediction.md",
+    "text": "> **Version:** CE Pro v4.9"
+  },
+  {
+    "chunk_id": "ce-pro-tr-rl_chunk_2",
+    "document_id": "ce-pro-tr-rl",
+    "document_title": "10 — RL Prediction",
+    "section_title": "Overview",
+    "product": "CE Pro",
+    "version": "Unknown",
+    "category": "Training",
+    "source_file": "docs/ce-pro/training/10-rl-prediction.md",
+    "text": "RL and MW link paths and prediction results are displayed on the active map view:\nFor RL planning, arrange your ArcGIS Pro panes to keep the map, Contents, and CE Pro pane all visible at once:\n---\nCE Pro includes a full **Radio Link (RL) / Microwave planning** module for fixed point-to-point links. It covers power budget calculation, interference analysis, and geoclimatic availability.\n---"
+  },
+  {
+    "chunk_id": "ce-pro-tr-rl_chunk_3",
+    "document_id": "ce-pro-tr-rl",
+    "document_title": "10 — RL Prediction",
+    "section_title": "Equipment Library",
+    "product": "CE Pro",
+    "version": "Unknown",
+    "category": "Training",
+    "source_file": "docs/ce-pro/training/10-rl-prediction.md",
+    "text": "Before planning links, set up the equipment library:\n| Library Item | Description |\n|---|---|\n| **Antennas → Parabolic** | Parabolic dish antenna patterns |\n| **Radio Models** | Tx/Rx equipment specs (power, sensitivity, modulations) |\n| **Frequency Plans** | Channel plans and duplex spacing |\n| **Spectrum Mask** | Out-of-band emission masks for interference checks |\n---"
+  },
+  {
+    "chunk_id": "ce-pro-tr-rl_chunk_4",
+    "document_id": "ce-pro-tr-rl",
+    "document_title": "10 — RL Prediction",
+    "section_title": "Transmission Network",
+    "product": "CE Pro",
+    "version": "Unknown",
+    "category": "Training",
+    "source_file": "docs/ce-pro/training/10-rl-prediction.md",
+    "text": "A transmission network in CE Pro is a collection of microwave links connecting sites. Links are drawn on the map between two site objects.\n---"
+  },
+  {
+    "chunk_id": "ce-pro-tr-rl_chunk_5",
+    "document_id": "ce-pro-tr-rl",
+    "document_title": "10 — RL Prediction",
+    "section_title": "Microwave Link Planning",
+    "product": "CE Pro",
+    "version": "Unknown",
+    "category": "Training",
+    "source_file": "docs/ce-pro/training/10-rl-prediction.md",
+    "text": "Each link provides the following analysis:"
+  },
+  {
+    "chunk_id": "ce-pro-tr-rl_chunk_6",
+    "document_id": "ce-pro-tr-rl",
+    "document_title": "10 — RL Prediction",
+    "section_title": "Power Budget",
+    "product": "CE Pro",
+    "version": "Unknown",
+    "category": "Training",
+    "source_file": "docs/ce-pro/training/10-rl-prediction.md",
+    "text": "The received signal level (RSL) at each end of the link:\n```\nRSL = Tx Power + Tx Antenna Gain – Feeder Loss(Tx)\n      – Free Space Path Loss\n      – Atmospheric Absorption\n      – Feeder Loss(Rx) + Rx Antenna Gain\n```\nKey indicators shown in the power budget panel:\n| Indicator | Description |\n|-----------|-------------|\n| RSL (dBm) | Received Signal Level at each end |\n| Threshold (dBm) | Minimum RSL for given modulation / BER |\n| Fade Margin (dB) | RSL – Threshold (higher = better reliability) |\n| EIRP (dBm) | Effective Isotropic Radiated Power |"
+  },
+  {
+    "chunk_id": "ce-pro-tr-rl_chunk_7",
+    "document_id": "ce-pro-tr-rl",
+    "document_title": "10 — RL Prediction",
+    "section_title": "Free Space Path Loss",
+    "product": "CE Pro",
+    "version": "Unknown",
+    "category": "Training",
+    "source_file": "docs/ce-pro/training/10-rl-prediction.md",
+    "text": "```\nFSL (dB) = 20×log(d) + 20×log(f) + 92.45\nwhere:\n  d = distance in km\n  f = frequency in GHz\n```"
+  },
+  {
+    "chunk_id": "ce-pro-tr-rl_chunk_8",
+    "document_id": "ce-pro-tr-rl",
+    "document_title": "10 — RL Prediction",
+    "section_title": "Path Loss Profile",
+    "product": "CE Pro",
+    "version": "Unknown",
+    "category": "Training",
+    "source_file": "docs/ce-pro/training/10-rl-prediction.md",
+    "text": "Graphical view showing:\n- Terrain cross-section between two link ends\n- LOS line and Fresnel zone clearance\n- Obstacle heights and clearance margins\n---"
+  },
+  {
+    "chunk_id": "ce-pro-tr-rl_chunk_9",
+    "document_id": "ce-pro-tr-rl",
+    "document_title": "10 — RL Prediction",
+    "section_title": "Geoclimatic Data",
+    "product": "CE Pro",
+    "version": "Unknown",
+    "category": "Training",
+    "source_file": "docs/ce-pro/training/10-rl-prediction.md",
+    "text": "CE Pro uses geoclimatic data per **ITU-R P.530** to calculate:\n| Parameter | Description |\n|-----------|-------------|\n| Rain attenuation | Rain fade probability (ITU-R P.838) |\n| Multipath fading | Flat/dispersive fade probability |\n| Availability | % annual availability based on fade margin |\n| Outage seconds | Expected downtime per year |\n---"
+  },
+  {
+    "chunk_id": "ce-pro-tr-rl_chunk_10",
+    "document_id": "ce-pro-tr-rl",
+    "document_title": "10 — RL Prediction",
+    "section_title": "Interference Analysis",
+    "product": "CE Pro",
+    "version": "Unknown",
+    "category": "Training",
+    "source_file": "docs/ce-pro/training/10-rl-prediction.md",
+    "text": "For each link, CE Pro calculates:\n| Analysis | Description |\n|----------|-------------|\n| **Interference From** | Signals from other links interfering into this receiver |\n| **Interference To** | This link's signal interfering into other receivers |\nThe interfering link view shows:\n- Interfering link drawn on the map\n- Carrier-to-Interference ratio (C/I)\n- Power budget at the interfered receiver\n- Path loss and profile of the interference path\n- Spectrum mask overlap check\n---"
+  },
+  {
+    "chunk_id": "ce-pro-tr-rl_chunk_11",
+    "document_id": "ce-pro-tr-rl",
+    "document_title": "10 — RL Prediction",
+    "section_title": "Modulation Adaptive Thresholds",
+    "product": "CE Pro",
+    "version": "Unknown",
+    "category": "Training",
+    "source_file": "docs/ce-pro/training/10-rl-prediction.md",
+    "text": "Modern microwave radios support adaptive modulation (AM). The radio model defines RSL thresholds for each modulation:\n| Modulation | Typical RSL Threshold |\n|-----------|----------------------|\n| QPSK | −90 dBm |\n| 16QAM | −84 dBm |\n| 64QAM | −78 dBm |\n| 256QAM | −72 dBm |\n| 1024QAM | −65 dBm |\n*(Exact values depend on radio model and bandwidth)*\n---"
+  },
+  {
+    "chunk_id": "ce-pro-tr-rl_chunk_12",
+    "document_id": "ce-pro-tr-rl",
+    "document_title": "10 — RL Prediction",
+    "section_title": "Antenna Selection",
+    "product": "CE Pro",
+    "version": "Unknown",
+    "category": "Training",
+    "source_file": "docs/ce-pro/training/10-rl-prediction.md",
+    "text": "Parabolic dish antennas are characterised by:\n| Parameter | Description |\n|-----------|-------------|\n| Diameter (m) | Dish size — affects gain and beamwidth |\n| Gain (dBi) | Antenna gain at centre frequency |\n| Beamwidth (°) | 3 dB beamwidth in azimuth and elevation |\n| Front-to-Back ratio (dB) | Rejection of rear interference |\n| Cross-polarisation (dB) | Isolation between polarisations |\n---\n*Reference: CE Desktop Training — 7. RL Introduction*\n*Contact: info@cellular-expert.com | +370 5 2150575*"
+  }
+]

@@ -1,0 +1,90 @@
+[
+  {
+    "chunk_id": "ce-pro-tr-cell-pred_chunk_1",
+    "document_id": "ce-pro-tr-cell-pred",
+    "document_title": "07 — Cell Prediction",
+    "section_title": "07. Cell Prediction",
+    "product": "CE Pro",
+    "version": "Unknown",
+    "category": "Training",
+    "source_file": "docs/ce-pro/training/07-cell-prediction.md",
+    "text": "> **Version:** CE Pro v4.9\nCell prediction results are displayed as coverage rasters in the ArcGIS Pro map view:\nConfigure prediction parameters in the CE Pro pane before running:\n---"
+  },
+  {
+    "chunk_id": "ce-pro-tr-cell-pred_chunk_2",
+    "document_id": "ce-pro-tr-cell-pred",
+    "document_title": "07 — Cell Prediction",
+    "section_title": "Cell Structure",
+    "product": "CE Pro",
+    "version": "Unknown",
+    "category": "Training",
+    "source_file": "docs/ce-pro/training/07-cell-prediction.md",
+    "text": "Each cell in CE Pro has two categories of parameters:\n**Physical parameters:**\n- Coordinates (X/Y or Latitude/Longitude)\n- Height (above ground)\n- Azimuth (direction)\n**Logical parameters:**\n- Power (dBm or EIRP)\n- Bandwidth (MHz)\n- Frequency (MHz)\n- Technology (2G/3G/4G/5G)\n---"
+  },
+  {
+    "chunk_id": "ce-pro-tr-cell-pred_chunk_3",
+    "document_id": "ce-pro-tr-cell-pred",
+    "document_title": "07 — Cell Prediction",
+    "section_title": "Cell Coordinates",
+    "product": "CE Pro",
+    "version": "Unknown",
+    "category": "Training",
+    "source_file": "docs/ce-pro/training/07-cell-prediction.md",
+    "text": "CE Pro supports two coordinate systems:\n| System | Fields | Notes |\n|--------|--------|-------|\n| Projected (CRS) | X, Y | Meters in project CRS |\n| Geographic (WGS 1984) | Longitude, Latitude | Decimal degrees |\n| Z — total height above sea level | | Calculated from site height + cell height |\n> **Note:** Cell name is a unique parameter per project. Best Server prediction also uses the cell name as identifier.\n---"
+  },
+  {
+    "chunk_id": "ce-pro-tr-cell-pred_chunk_4",
+    "document_id": "ce-pro-tr-cell-pred",
+    "document_title": "07 — Cell Prediction",
+    "section_title": "Cell Parameters Reference",
+    "product": "CE Pro",
+    "version": "Unknown",
+    "category": "Training",
+    "source_file": "docs/ce-pro/training/07-cell-prediction.md",
+    "text": "| CE Field | Units | Example | Description |\n|----------|-------|---------|-------------|\n| `cell_name` | text | `5G cell XXYY` | Unique cell identifier |\n| `site_name` | text | `Site 55 ID` | Parent site identifier |\n| `latitude` | decimal degrees | `49.9993` | Y coordinate in WGS 1984 |\n| `longitude` | decimal degrees | `33.6573` | X coordinate in WGS 1984 |\n| `height` | meters | `40` | Cell height above ground |\n| `azimuth` | degrees (0–360) | `50` | Cell direction from north |\n| `tilt` | degrees | `1` | Mechanical tilt angle |\n| `frequency` | MHz | `3500` | Carrier frequency |\n| `power` | dBm | `40` | Cell transmit power (or EIRP) |\n| `antenna_gain` | dBi | `18.2` | Gain of assigned antenna |\n| `misc_loss` | dB | `1` | Total cell miscellaneous loss |\n| `bandwidth` | MHz | `0.015` | Cell bandwidth (required for 3G/4G/5G) |\n| `subcarrier_spacing` | kHz | `15` | Subcarrier spacing (required for 5G) |\n| `tx_mimo` | number | `4` | Transmitter MIMO config (1/2/4/8/16/32/64) |\n| `rx_mimo` | number | `4` | Receiver MIMO config (1/2/4/8/16/32/64) |\n| `cell_load` | % (0–100) | `30` | Real-time cell load for broadband calculations |\n| `technology` | text | `2G` | Cell technology: 2G, 3G, 4G, or 5G |\n| `antenna_id` | number | `1` | ID of assigned antenna pattern |"
+  },
+  {
+    "chunk_id": "ce-pro-tr-cell-pred_chunk_5",
+    "document_id": "ce-pro-tr-cell-pred",
+    "document_title": "07 — Cell Prediction",
+    "section_title": "Power vs EIRP",
+    "product": "CE Pro",
+    "version": "Unknown",
+    "category": "Training",
+    "source_file": "docs/ce-pro/training/07-cell-prediction.md",
+    "text": "- If workspace parameter **Calculate EIRP = Yes**: enter cell transmit power — EIRP is calculated from power + antenna gain − misc loss\n- If workspace parameter **Calculate EIRP = No**: `power` field represents EIRP directly\n---"
+  },
+  {
+    "chunk_id": "ce-pro-tr-cell-pred_chunk_6",
+    "document_id": "ce-pro-tr-cell-pred",
+    "document_title": "07 — Cell Prediction",
+    "section_title": "RF Prediction Output Structure",
+    "product": "CE Pro",
+    "version": "Unknown",
+    "category": "Training",
+    "source_file": "docs/ce-pro/training/07-cell-prediction.md",
+    "text": "CE Pro stores prediction results in a defined folder structure within the project:\n```\nProject/\n├── Predictions/      — prediction configuration files\n├── Results/          — output raster layers (coverage maps)\n├── Temp/             — temporary calculation files\n```\n---"
+  },
+  {
+    "chunk_id": "ce-pro-tr-cell-pred_chunk_7",
+    "document_id": "ce-pro-tr-cell-pred",
+    "document_title": "07 — Cell Prediction",
+    "section_title": "Running a Cell Prediction",
+    "product": "CE Pro",
+    "version": "Unknown",
+    "category": "Training",
+    "source_file": "docs/ce-pro/training/07-cell-prediction.md",
+    "text": "1. Open the **CE Desktop** tab in the ArcGIS Pro ribbon\n2. Select one or more cells on the map\n3. Click **RF Prediction** and choose prediction type:\n   - **Signal Level** (dBm) — received signal power at UE\n   - **Best Server** — which cell provides strongest signal per pixel\n   - **SINR** — Signal to Interference + Noise Ratio\n   - **Throughput** (Mbps) — estimated data rate\n4. Set radius (km), resolution (m), and prediction model\n5. Click **Run** — results appear as raster layers in the Contents pane\n---"
+  },
+  {
+    "chunk_id": "ce-pro-tr-cell-pred_chunk_8",
+    "document_id": "ce-pro-tr-cell-pred",
+    "document_title": "07 — Cell Prediction",
+    "section_title": "Prediction Types Explained",
+    "product": "CE Pro",
+    "version": "Unknown",
+    "category": "Training",
+    "source_file": "docs/ce-pro/training/07-cell-prediction.md",
+    "text": "| Type | Unit | Use Case |\n|------|------|----------|\n| Signal Level | dBm | Coverage threshold mapping |\n| Best Server | cell name | Frequency planning, handover zones |\n| SINR | dB | Interference analysis |\n| Throughput | Mbps | Capacity and QoS planning |\n---\n*Reference: CE Desktop Training — 4. Cell Prediction*\n*Contact: info@cellular-expert.com | +370 5 2150575*"
+  }
+]

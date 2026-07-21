@@ -1,0 +1,211 @@
+[
+  {
+    "chunk_id": "inventory3d-user-guide_chunk_1",
+    "document_id": "inventory3d-user-guide",
+    "document_title": "Inventory3D User Guide v4.6",
+    "section_title": "CE Inventory3D User Guide v4.6",
+    "product": "Inventory3D",
+    "version": "Unknown",
+    "category": "User Guides",
+    "source_file": "docs/inventory3d/user-guide.md",
+    "text": "> **Version:** Inventory 3D\n1. Introduction\nCE Inventory3D is a versatile tool for inventory planning, design, space and assets management. It consists\nof several building blocks that together provide a customized and tailored solution for a specific need.\nTake inventory management: Error-prone databases which contain faulty inventory lists can be deleterious,\nespecially in large industry environments. Thus, it is essential that upon inventory changing databases are\nregularly updated.\nIn this User Guide we introduce the CE Inventory3D. From a desktop, laptop or tablet computer with internet\naccess, the Webapp connects to a database located on a server and enables the user to edit database\nrecords, sites and objects, to draw diagrams and to locate the assets on an integrated map. CE Inventory3D\nintegrates data derived from various sources, such as sensors, Google Sheets, maps, and changes in\ndatabase entries are synchronized with the server database content, keeping the database constantly up\nto date.\nThis User Guide explains the individual CE Inventory3D functions step by step and in detail\n2. Quickstart guide\nTo access the CE Inventory3D web application, type its URL in the address field of a web browser. You\ncan use any web browser, however, we recommend the up-to-date Google Chrome web browser.\nThe URL depends on the installation and initial configuration:\n1. Web address, as an example: https://<yourdomain>/ce_inv3d\n2. An address can be configured by the administrator.\nPlease note that for security reasons the application uses only HTTPS.\nLogin with User and password combination\nSelect one or more database records\nClick on a record using the left mouse button. Selected records are blue:\n---\nOpen dataset\nSelect a site, click on the Record`s Details Tool and the list of objects opens:\n[Sieve](#kw:74-sieve:ce-express-user-guide)\nShow only selected data of the currently opened table. Click and enter a filter term:\nData Editing & Synchronizing\nSelect a respective entry while holding the CTRL key on the keyboard or right mouse click and edit the\n---\ninformation. After editing changes will be saved automatically.\n3. [Data Management](#kw:31-data-management-tools:none)\nThe Network [Data Management](#kw:31-data-management-tools:none) view is divided into four sections:\n Tools for data management.\n User administration tasks.\n Table for data editing.\n [View options](#kw:32-view-options-and-user-administration:none).\n2. [View options](#kw:32-view-options-and-user-administration:none) and\n1. Data management User adminstration\n3. Table\nTo navigate through the tables, click on the table name at the top right corner.\n---\nTo select a record, click on a record with the left mouse button. Selected records are colored in blue:"
+  },
+  {
+    "chunk_id": "inventory3d-user-guide_chunk_2",
+    "document_id": "inventory3d-user-guide",
+    "document_title": "Inventory3D User Guide v4.6",
+    "section_title": "3.1 Data management tools",
+    "product": "Inventory3D",
+    "version": "Unknown",
+    "category": "User Guides",
+    "source_file": "docs/inventory3d/user-guide.md",
+    "text": "The Data management tools are found at the top of the screen:\n3.1.1 Table view\nLoad data from the previously configured server location and open the Table view. Here, several functions\ncan be performed, eg sorting or filtering data.\n3.1.2 Back\nGo one step back and show previous data.\n3.1.3 Search ([sieve](#kw:74-sieve:ce-express-user-guide))\nSieve the data in the currently opened table for one or more filter terms.\n3.1.4 Multiple table view\nView and edit all tables from one site simultaneously in one window.\n---\n3.1.5 View attachments\nView the list of attachments associated with a given record. To do so, select a record of choice, then click\non the View attachments button and a dialog will open with the respective attachments listed. To view an\nattachment in a separate browser tab simply click on the attachment of choice\n3.1.6 Synchronize changes\nThe button Syncronize changes was removed in version 4. All the changes are commited automatically\nafter user leave the edited field.\n3.1.7 Select/unselect all\nSelect/unselect all currently shown database records.\n3.1.8 Show selected/Show all\nShows all currently selected database records or all the records.\n3.1.9 Move record\nMove an object from one site to another. To do so, select an object and click on the Move Record button.\nThen select the site you want to move the object to and click the move button again. Note that attachments\nare not moved.\n3.1.10 Copy record\nDuplicate a database record from the Table view. Select the record to be duplicated. Then click the Copy\nRecord button and the duplicated record appears in pink color in the Table view as a new record. Note that\nif the selected record to be duplicated has child objects, Copy Record will duplicate the entire record incl.\nchild objects. Attachments are not duplicated.\n---\n3.1.11 Add new record\nAdd a new record to the Table view. Note that the newly added record will appear in orange writing.\n3.1.12 CE API\nCall CE API tool. Note: The administrator has to configure the tool.\n3.1.13 Export selected\nExport selected items.\n3.1.14 Delete record\nRemove a selected record from the current view. Note that removed records will be hidden from the user.\nOnly administrators can delete a removed record from the database permanently (or restore it).\n3.1.15 Remove selected\nRemoves selected objects."
+  },
+  {
+    "chunk_id": "inventory3d-user-guide_chunk_3",
+    "document_id": "inventory3d-user-guide",
+    "document_title": "Inventory3D User Guide v4.6",
+    "section_title": "3.2 View options and User administration",
+    "product": "Inventory3D",
+    "version": "Unknown",
+    "category": "User Guides",
+    "source_file": "docs/inventory3d/user-guide.md",
+    "text": "---\n3.2.1 Map overlay\nOpens [map view](#kw:switching-between-views:ce-express-login)\nOpens table view\n3.2.2 Additional tools\nOpens the menu :\nSee section 5 for details.\n3.2.3 Settings\nOpens the menu for administrator functions:\nPlease view Administration Guide for details.\n3.2.4 User name/ Help/ Logout\nHelp - Displays the User Guide for quick help.\nLogout – Logoff the user from CE Inventory3D\n---"
+  },
+  {
+    "chunk_id": "inventory3d-user-guide_chunk_4",
+    "document_id": "inventory3d-user-guide",
+    "document_title": "Inventory3D User Guide v4.6",
+    "section_title": "3.3 Table",
+    "product": "Inventory3D",
+    "version": "Unknown",
+    "category": "User Guides",
+    "source_file": "docs/inventory3d/user-guide.md",
+    "text": "The table comprises all network data. The data can be managed with the Data Management tools (see\nabove).\n4. Database organization"
+  },
+  {
+    "chunk_id": "inventory3d-user-guide_chunk_5",
+    "document_id": "inventory3d-user-guide",
+    "document_title": "Inventory3D User Guide v4.6",
+    "section_title": "4.1 Page setup and navigation",
+    "product": "Inventory3D",
+    "version": "Unknown",
+    "category": "User Guides",
+    "source_file": "docs/inventory3d/user-guide.md",
+    "text": "4.1.1 Organization of single and multiple tables\nThe number of records displayed per page can be set on the bottom left corner. Furthermore, you may\nscroll through the pages using the commands in the bottom middle and bottom right corner. The table name\n(here: cells), the total quantity of entries (here: 20607), and the quantity of currently selected entries (here:\n0) are shown on the top right corner. Note that the number of filtered records will be shown, if the user\napplies a filter:\n---\n4.1.2 Organization of columns\nThe column order can be adjusted by clicking on in the top right corner.\nA menu opens in which the position of the columns can be sorted by clicking the arrow symbols. Individual\ncolumns are switched visible/invisible by clicking on the eye symbols.\nThe columns can be sorted alphabetically from A>Z or from Z>A using the up and down arrow symbols\nwithin the column headers:\n4.1.3 Navigation across tables\nThere are 2 ways to change from one table to another. Either click on the table name in the top right (here:\ncells) and a menu opens with all available tables.\n---"
+  },
+  {
+    "chunk_id": "inventory3d-user-guide_chunk_6",
+    "document_id": "inventory3d-user-guide",
+    "document_title": "Inventory3D User Guide v4.6",
+    "section_title": "4.2 Filtering, sorting, editing, and linking database records",
+    "product": "Inventory3D",
+    "version": "Unknown",
+    "category": "User Guides",
+    "source_file": "docs/inventory3d/user-guide.md",
+    "text": "The database entries can be sorted according to their individual values. To do so, click on the column\nheader and a dropdown menu opens with the following functions: “Set selected”, “Add link”,”Clear this filter”,\n“Clear all filters”, “Set defaults” and “Set as default sort field”:\nAlternatively, and more convenient for simple searches, columns can be filtered using the “quick filter” fields\nbelow the column names:\n---\nUsers can use star symbol “*” as wildcard. Possible filtering options:\n*- any non-null value\n!* - null value\n[text] - anything that contains the [text] value at the beginning. The same as [text]*\n[text]*\n*[text]\n[text]*[text]\n![text] - anything but the defined [text] value\n”[text]” - for exact match of value\nFiltering options for numeric values:\n=n - exact match of n\n<>n - anything else but n\n<n - less than n\n>n - greater than n\n<=n - less than or equal to n\n>=n - greater than or equal to n\nThe Filter function can be used on several columns simultaneously. The headers of columns with active\nFilter function are marked in pink color:\n---\nFilters can be cleared by clicking on Clear all filters.\n4.2.1 Set selected\nThis feature allows bulk editing of several records at once: Select the respective records, click on the column\nheader and choose “Set selected” from the dropdown menu. A dialog opens with a text field. Fill in the term\nyou want the selected database records to be changed to. Then click on “Change”.\n1. Select the records\n2. Click on the required column header (here:tilt)\nand choose Set selected\n3. Define the new value and click Change\n---\n4.2.2 Add link\nEach database record may comprise reference links to other database records. This means that a link can\nbe added to reach another database record.\nSelect the respective record, click on the column header and choose “Add link” from the dropdown menu.\nIn the pop up window, click on Add new reference. A list of component types opens. Select the one you\nwant to link to. Choose the component and confirm the selection. A new link has been created.\n1. Select the record\n2. Click on the required column header (here:miscloss)\nand choose Add link\n3. Click on Add new reference ...\n4. Select the type of component you want to link to (here: calculation tasks)\n---\n5. Choose the repeaters(s) you want to link to and confirm the selection with in\nthe top left corner\n6. The link has been created"
+  },
+  {
+    "chunk_id": "inventory3d-user-guide_chunk_7",
+    "document_id": "inventory3d-user-guide",
+    "document_title": "Inventory3D User Guide v4.6",
+    "section_title": "4.3 Adding, viewing, downloading and deleting attachments",
+    "product": "Inventory3D",
+    "version": "Unknown",
+    "category": "User Guides",
+    "source_file": "docs/inventory3d/user-guide.md",
+    "text": "Each database entry can be connected with any type of attachment, for example, a picture or a text file.\nEntries with connected attachments have a blue check symbol next to the paper clip symbol in the column\n“Inc.”, while entries without attachment have only the paper clip.\n---\nAdding attachments\nTo connect a database entry with an attachment, click on the paper clip symbol in the column “Inc.”. A\ndialog opens that allows you to browse your computer for the attachment of your choice or to take a photo.\nViewing, downloading and deleting attachments:\nTo view the list of attachments connected to an entry, select the respective entry and click on in the\n---\ntoolbar:\nIn the attachments the listed images are shown as thumbs. Select an attachment from the list and it opens\nin a separate browser tab.\nAnother way to view an attachment list is to move the pointer over the check symbol in the column “Inc.”\nand to click the right mouse button.\nThe selected attachments can also be downloaded.\nTo delete an attachment, click on the red cross symbol."
+  },
+  {
+    "chunk_id": "inventory3d-user-guide_chunk_8",
+    "document_id": "inventory3d-user-guide",
+    "document_title": "Inventory3D User Guide v4.6",
+    "section_title": "4.4 Search (sieve)",
+    "product": "Inventory3D",
+    "version": "Unknown",
+    "category": "User Guides",
+    "source_file": "docs/inventory3d/user-guide.md",
+    "text": "It is possible to display only selected data from an open table. Click on the button in the toolbar.\n---\nAnd a dialog will open:\nNote that by clicking “Add rule” you may search (sieve) with two or more filter terms that are connected via\nthe operation “OR”, not “AND”. Thus, the result of two filters will show all items that comprise either the first\nor the second search term in their attributes.\nFor example, do you want to search the table cells for records starting with defined characters? Then the\nSearch tool will help.\nClick Add rule in order to add another search term, or click Clear all to remove all active searches.\nTo start the sieve process, click OK.\nResults\n---"
+  },
+  {
+    "chunk_id": "inventory3d-user-guide_chunk_9",
+    "document_id": "inventory3d-user-guide",
+    "document_title": "Inventory3D User Guide v4.6",
+    "section_title": "4.5 CE API",
+    "product": "Inventory3D",
+    "version": "Unknown",
+    "category": "User Guides",
+    "source_file": "docs/inventory3d/user-guide.md",
+    "text": "It is possible to call other tools configured by the administrator. For every table a different tool can be\nconfigured. To start tool selection, click on the button in the toolbar."
+  },
+  {
+    "chunk_id": "inventory3d-user-guide_chunk_10",
+    "document_id": "inventory3d-user-guide",
+    "document_title": "Inventory3D User Guide v4.6",
+    "section_title": "4.6 Import CSV",
+    "product": "Inventory3D",
+    "version": "Unknown",
+    "category": "User Guides",
+    "source_file": "docs/inventory3d/user-guide.md",
+    "text": "This tool is integrated into the “CE API” tool. It is possible to import data from .csv files. Note(!): Consult\nwith the administrator before import.\n“Import CSV” opens a new window:\n1.\nData can be imported either as a new table (level 0), or added as a child table to a parent table (level 1).\nWhen adding a new table, it is required to define the table name. When adding a child table to a parent\ntable, it is required to enter the parent table name.\nRequirements:\n1. The data in the CSV file should be separated by the symbol “;”\n2. Avoid space and special characters in the table name\n3. Level 0 table – CSV file must comprise a column object_id\n4. Level 1 table – CSV file must comprise a column object_id and a column parent_id, with the\nparent_id value equal to the object_id of the parent table\nWhen adding a child table to a parent table, choose the parent table from the dropdown menu:\n---\n2.\n3.\nPartial Import\nThe Partial Import feature allows to add records to an already existing table. If the box \"Partial import” is\nchecked, the new records will be added to the defined table:\n4.\n5. Exploring data"
+  },
+  {
+    "chunk_id": "inventory3d-user-guide_chunk_11",
+    "document_id": "inventory3d-user-guide",
+    "document_title": "Inventory3D User Guide v4.6",
+    "section_title": "5.1 Export selected",
+    "product": "Inventory3D",
+    "version": "Unknown",
+    "category": "User Guides",
+    "source_file": "docs/inventory3d/user-guide.md",
+    "text": "Data subsets can be exported as .xls or .csv files. Select the database records of choice, then click Export\nSelected button:\nA pop up window opens.\n---\nClick on the links to choose between .xls or .csv file formats.\nNote that hidden columns are not exported."
+  },
+  {
+    "chunk_id": "inventory3d-user-guide_chunk_12",
+    "document_id": "inventory3d-user-guide",
+    "document_title": "Inventory3D User Guide v4.6",
+    "section_title": "5.2 PDF report",
+    "product": "Inventory3D",
+    "version": "Unknown",
+    "category": "User Guides",
+    "source_file": "docs/inventory3d/user-guide.md",
+    "text": "A PDF report summarizes information associated with one or more objects. For generating a report, first\nselect the objects of choice. Then open the Import Export menu with and choose “Generate report as\nPDF”:\nA new dialog appears. Open the PDF report by clicking to the file name:\nNote that the administrator has to prepare the template for the PDF report. Please inform the administrator\nin case of problems with generating PDF reports."
+  },
+  {
+    "chunk_id": "inventory3d-user-guide_chunk_13",
+    "document_id": "inventory3d-user-guide",
+    "document_title": "Inventory3D User Guide v4.6",
+    "section_title": "5.3 File browser",
+    "product": "Inventory3D",
+    "version": "Unknown",
+    "category": "User Guides",
+    "source_file": "docs/inventory3d/user-guide.md",
+    "text": "Open the Data Export menu with and choose “File Browser”:\n---\nView attached files, download or delete files:\nImages are shown as thumbs. Note that it is possible to rotate the images.\nFile Browser Toolbar:\nOpen the Data View Panel\n---\nGo one step back\nSelect / unselect all files and folders\nDownload selected files\nDelete selected files\nRestore selected files\nWhen an image is deleted, said image is marked as strikethrough on the File Server:\nYou can restore the image by selecting the strikethrough object and clicking :\n---"
+  },
+  {
+    "chunk_id": "inventory3d-user-guide_chunk_14",
+    "document_id": "inventory3d-user-guide",
+    "document_title": "Inventory3D User Guide v4.6",
+    "section_title": "5.4 Quick references",
+    "product": "Inventory3D",
+    "version": "Unknown",
+    "category": "User Guides",
+    "source_file": "docs/inventory3d/user-guide.md",
+    "text": "Quick references are defined by the administrator and allow users to open a reference object in a separate\nbrowser tab. If Quick references are enabled, the respective column is marked with “*”, for example “site”:\nTo open a reference link, select it in edit mode (right click on it) and click “here” in the opened dialog.\n---\nThe referenced object is opened in a separate browser tab."
+  },
+  {
+    "chunk_id": "inventory3d-user-guide_chunk_15",
+    "document_id": "inventory3d-user-guide",
+    "document_title": "Inventory3D User Guide v4.6",
+    "section_title": "5.5 Default editing and manual editing",
+    "product": "Inventory3D",
+    "version": "Unknown",
+    "category": "User Guides",
+    "source_file": "docs/inventory3d/user-guide.md",
+    "text": "If the administrator has defined default values (Administrator Guide: \"Set Defaults\"), editing column\ninformation may include selecting values from a drop-down menu. If the menu does not comprise the\ndesired value, users may manually edit the information or clear the value:"
+  },
+  {
+    "chunk_id": "inventory3d-user-guide_chunk_16",
+    "document_id": "inventory3d-user-guide",
+    "document_title": "Inventory3D User Guide v4.6",
+    "section_title": "5.6 External Links",
+    "product": "Inventory3D",
+    "version": "Unknown",
+    "category": "User Guides",
+    "source_file": "docs/inventory3d/user-guide.md",
+    "text": "It is possible to add links to external webpages to the webapp, for example:"
+  },
+  {
+    "chunk_id": "inventory3d-user-guide_chunk_17",
+    "document_id": "inventory3d-user-guide",
+    "document_title": "Inventory3D User Guide v4.6",
+    "section_title": "5.7 Displaying Rasters",
+    "product": "Inventory3D",
+    "version": "Unknown",
+    "category": "User Guides",
+    "source_file": "docs/inventory3d/user-guide.md",
+    "text": "It is possible to display raster type of data, similar to graphical layers, on the map. Rasters are created by\nthe administrator, but users may also access and configure the table map_rasters:\n---\nIf the raster is a PNG or JPG file, users can edit the coordinates of the top-left and bottom-right corners of\nthe picture in the columns West, East, North, and South, and define the opacity.\nExample raster:\nRaster legend\nFrom the table map_rasters users may access and configure the child table map_rasters_legend,in which\nthe raster legend is defined:\nThe legend color is defined in the field Color. The field must comprise the color code which is formatted as\nfollows: #RRGGBB, where RR is red color value in hexadecimal format, GG is green color value in\nhexadecimal format, and BB is blue color value in hexadecimal format. For example, code #00FF00 would\nmean green color. The color value can be acquired from the picture using any software with a color picking\ntool, e.g. Microsoft Paint or Free Color Picker.\nThe legend labels are defined in the field Label of the table ”map_raster_legend”.\n---\nRasters and Raster legends are shown in the list Layers.\n6. MAP functionality\nUsers can work with maps only after prior configuration by the administrator. Select a site and open the\nmap:\n---\nMap viewing options\nOn the right side of the screen, you find the commands\nFull screen - Google [Street View](#kw:navigating-street-view:ce-express-street-view) - Zoom in / out\n[Map view](#kw:switching-between-views:ce-express-login) - select the preferred map background, for example ESRI streets:\nHome\nmoves the [map view](#kw:switching-between-views:ce-express-login) to your current location.\nMeasure Distances\nSelect the Measure Tool , left-click on the starting point, then move the mouse over the map - distance\nand azimuth values will be displayed between the starting point and the mouse cursor.\nLink to database\nMap and database are functionally connected. Select the info tool . Then click on a site in the\nmap (here: Abava), and a popup window opens:\n---\nThe popup window comprises links to the site ( ) and to the attachments file browser ( ).\nBrowse the parameters of the selected site by using the buttons\nLocal Weather\nDisplay local weather conditions by clicking on and then on a custom position on the map. A\npopup window opens with the local weather information. Users may choose from daily, weekly,\nand monthly data:\n---\nAddress search\nUse the field “Search in Google Maps” to search an address and zoom to the defined address.\nPrint map\nCustom map views can be exported and printed. In the Map toolbar, click the button .\nA popup window opens with the possibility to enter a document header. Then send the selected\nmap view to the printer with or :\n---\nVectors, Rasters and Weather layers\n---\nThe map functionality allows to show or hide vectors (points, lines), rasters or weather layers.\nUse and to show or hide objects\nFurther, it is possible to select the child objects shown on the map:\nAdditional map functions are shown after clicking on\n---\n“Reload” allows to reload the layer.\nEdit an object and click “Reload” to show the map with the edited features.\n“Add Object” allows to add an object to the map.\n1. Select the layer on which You would like to add an object, for example \"site\". Then click \"Add Object\".\n2. Click to the position on the map where you would like to add a new object. If the layer consists of lines,\nyou need to click on the map two times for each end of the line.\n3. An object will be created without a label (if label was not described in inv3d_map_settings).\n4. Use the info tool to open the Inventory3D page for the new object, edit the attributes and save the\ninformation to the database.\n5. Click \"Reload\" and the map will be reloaded with the newly added attributes, for example a label.\n“Move Object” allows to move an object of point type on the map\n1. Select the layer on which You would like to move an object, for example \"site\". Then click \"Select Object\".\n2. Select the object on the map (it should be marked with a square).\n3. Move the pointer to the desired position on the map. Click and the selected object will be moved to the\nnew position. The function will not work if two or more objects are selected.\n“Set Filter” allows to filter the objects shown on the map.\nFor example, only sites with the address equal to Riga are shown:\nIf the condition like is selected, as in the example below, only objects with the address containing Riga will\nbe displayed.\n“Clear Filter” allows to clear a preset filter.\n“Select Object” allows to select one object from the map.\nTo select an object, first click “Select Object” and then on the object on the map.\n---\n“Select Circular Area” and “Select Rectangular Area” allow to select multiple objects on the map.\n1. Click “Select Circular Area” or “Select Rectangular Area”.\n2. Click the mouse button on the map and release.\n3. Move the mouse to select several objects and click the mouse button again to release.\n4. Selected objects are marked with a yellow square:\n“Open Selection” Allows to open the CE Inventory3D attribute information of the selected objects. Click\n“Open Selection” and a new browser tab opens with the grouped data for the selected objects.\n“Draw Circles & Vectors” Allows to draw circles with a defined radius and lines with a defined azimuth for\nselected objects. This feature must be configured by the administrator. It draws vectors based on data\ndefined in the tables [table]_circles and [table]_vectors, where table is the name of layer table.\n“Clear Selection & Vectors” Allows to clear all selections, drawn circles and vectors.\nJust as the Vectors, Raster (see 4.13) and Weather layers, for example the current weather, are shown\nor hidden using the buttons and\n7. Optional CE Inventory3D features"
+  },
+  {
+    "chunk_id": "inventory3d-user-guide_chunk_18",
+    "document_id": "inventory3d-user-guide",
+    "document_title": "Inventory3D User Guide v4.6",
+    "section_title": "7.1 Diagram tool",
+    "product": "Inventory3D",
+    "version": "Unknown",
+    "category": "User Guides",
+    "source_file": "docs/inventory3d/user-guide.md",
+    "text": "Users can work with diagrams only after prior configuration by the administrator. Once configured the button\nappears in the toolbar.\n Diagrams can be created and modified in two ways:\n using the graphical diagrams interface, or\n creating and editing records in the tables “Diagram_items“ and “Diagram_links“\n To make a diagram, add a new record in the table “Diagrams“:\n---\nthen\n select the record, press the button and create the diagram using the graphical drawing\ninterface (method A)\nor\n select the record, press the button and create the diagram records in the tables\n“Diagram_items“ and “Diagram_links“ (method B)\n Method AUsing the graphical drawing interface, the diagram can be created by dragging and dropping\npredefined [models](#kw:31-models:ce-express-tr-models) from the [models](#kw:31-models:ce-express-tr-models) templates toolbar and making connections between them. After\nsynchronizing (see section 3.10) all information is saved in the diagrams data tables “Diagram_items“ and\n“Diagram_links“. For this reason, diagram modifications can also be performed by making changes directly\nin those tables.\n Graphical drawing interface:\n\n By drag and drop, select the item types from the left and the connection types from the right.\n Method BUsing the table interface, the diagram can be created by adding records in the diagrams data\ntables “Diagram_items\" and “Diagram_links“.\n---\n The table “Diagram_items\" contains the information about the displayed items. For example, in the mobile\nnetworks industry this could be antennas, RRUs, power devices etc.\n The table “Diagram_items\" has the two mandatory fields “Unique_ident“ and “Model”:\n “Unique_ident“ – item’s unique identification. “Unique_ident“ has to be unique for the same diagram\n “Model” – the type of graphical element for the item visualization\nThe table “Diagram_links” comprises the information about the connections between the items. The table\n“Diagram_links“ has the following fields:\n Item1 – the item a connection comes from. For example, RRU\n Port1 – a port of Item1\n Item2 – the item a connection goes to. For example, antenna\n Port2 – a port of Item2\n Model – type of a connection/cable. For example, RF_cable\nFollowing successful table configuration, the diagram can be shown in the graphical editor interface. Simply\ngo to the table “Diagrams“, select the diagram record, and press the button . Example:\n---\nFor follow up diagram modifications, both the graphical and the table interface can be used. The changes\nmade by using the graphical editor will be displayed in the diagrams data tables and vice versa.\nDiagrams toolbar functions:\nundo / redo action\nclear paper\nopen as SVG / PNG in a pop-up window\nopen print dialog\ntoggle full-screen mode\nbring object to front / send object to back\n---\nauto-layout graph\nzoom to fit\nzoom out / zoom in\nchange grid size\nenable / disable snaplines\nshow / hide port names\nsave diagram"
+  },
+  {
+    "chunk_id": "inventory3d-user-guide_chunk_19",
+    "document_id": "inventory3d-user-guide",
+    "document_title": "Inventory3D User Guide v4.6",
+    "section_title": "7.2 Integration with Google Sheets",
+    "product": "Inventory3D",
+    "version": "Unknown",
+    "category": "User Guides",
+    "source_file": "docs/inventory3d/user-guide.md",
+    "text": "There is the possibility to integrate one or more tables from Google Sheets into the CE Inventory3D webapp.\nFirst, the Google Sheet should be prepared with CE Inventory3D configuration and Google script. Then an\nextra button “Inv3D” will appear on the Google Sheets toolbar:\n---\nClicking this button opens a dropdown menu with the commands “Connect” for connecting to the\nInventory3D database on the server, “Sync” for synchronizing data from Google Sheets with CE\nInventory3D, and “Help”:\nAfter connecting to the CE Inventory3D database, a list of tables appears (here: Orders and Warehouse).\nThe list of tables depends on the configuration in Google sheets:\nAny changes in the Google Sheets are synchronized with CE Inventory3D by clicking the command\nSynchronize from the dropdown menu.\nNote: Google Sheets must have additional configuration to connect to the CE Inventory3D database and\nto choose which tables can be accessed. A prepared script should be there, too.\n---"
+  }
+]

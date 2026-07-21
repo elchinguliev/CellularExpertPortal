@@ -1,0 +1,123 @@
+[
+  {
+    "chunk_id": "ce-express-tr-workspace_chunk_1",
+    "document_id": "ce-express-tr-workspace",
+    "document_title": "01 — Creating Workspace",
+    "section_title": "01. Creating Workspace",
+    "product": "CE Express",
+    "version": "Unknown",
+    "category": "Training",
+    "source_file": "docs/ce-express/training/01-creating-workspace.md",
+    "text": "> **Version:** CE Express v7.2\n1. Objective\nThis module provides a step-by-step, best-practice-driven introduction to creating and\nmanaging workspaces in CE Server-Express. The material is designed from an RF planning\nand optimization perspective, focusing not only on how to perform actions, but also why they\nmatter in real-world network design workflows.\nBy the end of this exercise, participants will be able to:\n- Create and configure a workspace correctly\n- Understand workspace structure and scope\n- Manage and visualize layers efficiently\n- Switch between 2D and 3D environments for RF-relevant analysis\n- Prepare the workspace for further RF planning and optimization tasks\n2. Initial data\nThe following data is pre-configured for this exercise:\n- Prepared geodata (high-resolution terrain and [clutter](#kw:clutter-classification-values:ce-express-geodata))\n- Predefined external services for visualization\nTrainer note: Emphasize that workspace quality directly affects prediction accuracy,\nvisualization clarity, and collaboration efficiency.\n3. Understanding the Workspace Concept\nA Workspace in CE Express represents a project container that holds:\n- [Network objects](#kw:object-types:ce-express-network-objects) (sites, cells, links, etc.)\n- Geodata used for propagation modeling\n- Additional visualization layers (GIS, 3D meshes, administrative boundaries)\nWorkspaces can be:\n- Assigned to one or multiple user groups\n- Used collaboratively by RF planners, optimization engineers, and managers\n- Reused as templates for similar geographic areas\n---"
+  },
+  {
+    "chunk_id": "ce-express-tr-workspace_chunk_2",
+    "document_id": "ce-express-tr-workspace",
+    "document_title": "01 — Creating Workspace",
+    "section_title": "3.1 Step 1 – Accessing CE Express",
+    "product": "CE Express",
+    "version": "Unknown",
+    "category": "Training",
+    "source_file": "docs/ce-express/training/01-creating-workspace.md",
+    "text": "1. Open the following URL in your web browser: https://cecom2.cellular-expert.com/ce_express/\n2. On the login page, select Login as ArcGIS.\n3. Enter your User Name and Password (that information is provided separetely for each\nstudent)\n4. After successful authentication, the system displays all workspaces available to your\nuser group.\n---\nBest practice: Always verify you are working in the correct workspace before making\nchanges to avoid unintended modifications."
+  },
+  {
+    "chunk_id": "ce-express-tr-workspace_chunk_3",
+    "document_id": "ce-express-tr-workspace",
+    "document_title": "01 — Creating Workspace",
+    "section_title": "3.2 Step 2 – Reviewing an Existing Workspace",
+    "product": "CE Express",
+    "version": "Unknown",
+    "category": "Training",
+    "source_file": "docs/ce-express/training/01-creating-workspace.md",
+    "text": "1. From the workspace list, click on a provided workspace.\n2. The map automatically zooms to the workspace extent.\n3. Review visible objects and layers.\nTrainer insight: Encourage users to explore existing workspaces to understand naming\nconventions, layer organization, and visualization standards."
+  },
+  {
+    "chunk_id": "ce-express-tr-workspace_chunk_4",
+    "document_id": "ce-express-tr-workspace",
+    "document_title": "01 — Creating Workspace",
+    "section_title": "3.3 Step 3 – Creating a New Workspace",
+    "product": "CE Express",
+    "version": "Unknown",
+    "category": "Training",
+    "source_file": "docs/ce-express/training/01-creating-workspace.md",
+    "text": "1. Open the Workspaces tool.\n2. Click + New Workspace.\n---\n3. In the dialog window, define the following parameters:\nWorkspace Parameters\n- Workspace Name: Use your name (e.g., John_Smith_Training)\n- Geodata Set: Select Vilnius_1m\n- Extent:\no Click Copy from geodata set\no Ensures spatial alignment between workspace and terrain data\n4. Adding Extra Layers\nClick + Add layer and include the following services:\n- Administrative regions:\n---\nhttps://cecom2.cellular-expert.com/server/rest/services/Hosted/Regions/FeatureServer/0\n- Google 3D Mesh:\nhttps://tile.googleapis.com/v1/3dtiles/root.json\n- OpenStreetMap 3D Buildings:\nhttps://basemaps3d.arcgis.com/arcgis/rest/services/OpenStreetMap3D_Buildings\n_v1/SceneServer\n4. Click Accept to create the workspace."
+  },
+  {
+    "chunk_id": "ce-express-tr-workspace_chunk_5",
+    "document_id": "ce-express-tr-workspace",
+    "document_title": "01 — Creating Workspace",
+    "section_title": "3.4 Step 4 – Opening and Locating the Workspace",
+    "product": "CE Express",
+    "version": "Unknown",
+    "category": "Training",
+    "source_file": "docs/ce-express/training/01-creating-workspace.md",
+    "text": "1. Return to the Workspaces tool.\n2. Use the Search function to find your newly created workspace.\n---\n3. Click on it to load.\nThe map zooms to the workspace area. Blue contours indicate the workspace extent."
+  },
+  {
+    "chunk_id": "ce-express-tr-workspace_chunk_6",
+    "document_id": "ce-express-tr-workspace",
+    "document_title": "01 — Creating Workspace",
+    "section_title": "3.5 Step 5 – Layer Management Overview",
+    "product": "CE Express",
+    "version": "Unknown",
+    "category": "Training",
+    "source_file": "docs/ce-express/training/01-creating-workspace.md",
+    "text": "Open the Layers tool. It is divided into logical sections:\n1. Preview available layers.\n1. Features\n- Displays all [network objects](#kw:object-types:ce-express-network-objects)\n- Includes sites, cells, links, and other RF elements\n2. Geodata\n- Terrain, [clutter](#kw:clutter-classification-values:ce-express-geodata), and elevation data\n---\n- Used directly in propagation calculations\n3. Other\n- Additional GIS and visualization layers\n- Can be used for RF planning – such as statistical calculations.\n2. In the Other section, switch OFF the Regions layer.\nObserve changes on the map."
+  },
+  {
+    "chunk_id": "ce-express-tr-workspace_chunk_7",
+    "document_id": "ce-express-tr-workspace",
+    "document_title": "01 — Creating Workspace",
+    "section_title": "3.6 Step 6 – Switching Between 2D and 3D Views",
+    "product": "CE Express",
+    "version": "Unknown",
+    "category": "Training",
+    "source_file": "docs/ce-express/training/01-creating-workspace.md",
+    "text": "1. Click the 3D button to switch from 2D to 3D view.\n2. Zoom into the workspace area.\n3. Switch OFF the OpenStreetMap3D Buildings layer.\nThe map now displays the Google 3D Mesh, which provides realistic urban morphology.\n---\nRF planning value: 3D meshes help validate antenna heights, LOS conditions, and urban\ncanyon effects.\n4. Switch OFF Google 3D tiles.\n5. Enable OpenStreetMap3D Buildings again.\nYou can also visualize 3D objects, such as polygons, lines and zones.\n6. Return to 2D view.\n---"
+  },
+  {
+    "chunk_id": "ce-express-tr-workspace_chunk_8",
+    "document_id": "ce-express-tr-workspace",
+    "document_title": "01 — Creating Workspace",
+    "section_title": "3.7 Step 7 – Basemap Configuration",
+    "product": "CE Express",
+    "version": "Unknown",
+    "category": "Training",
+    "source_file": "docs/ce-express/training/01-creating-workspace.md",
+    "text": "1. Expand the [Basemap](#kw:37-step-7-basemap-configuration:none) options in Layers tool.\n2. Review available ESRI basemaps.\n3. Enable each [basemap](#kw:37-step-7-basemap-configuration:none) briefly to understand differences.\n4. Leave Topographic basemap enabled."
+  },
+  {
+    "chunk_id": "ce-express-tr-workspace_chunk_9",
+    "document_id": "ce-express-tr-workspace",
+    "document_title": "01 — Creating Workspace",
+    "section_title": "3.8 Step 8 – Enabling and Reviewing Geodata",
+    "product": "CE Express",
+    "version": "Unknown",
+    "category": "Training",
+    "source_file": "docs/ce-express/training/01-creating-workspace.md",
+    "text": "1. In the Geodata section, enable the Elevation layer.\n---\nThis layer:\n- Visualizes terrain height\n- Helps quickly identify hills, valleys, and potential shadowing areas\n2. Review [Clutter](#kw:clutter-classification-values:ce-express-geodata) height and [Clutter classes](#kw:clutter-classification-values:ce-express-geodata) layers.\n3. If Geodata Is Not Visible\n1. Open Settings.\n2. Enable Load geodata when opening workspace.\n3. Refresh the workspace:\no Open Workspaces tool\no Click on your workspace again\n---\n4. Return to Layers and verify geodata visibility."
+  },
+  {
+    "chunk_id": "ce-express-tr-workspace_chunk_10",
+    "document_id": "ce-express-tr-workspace",
+    "document_title": "01 — Creating Workspace",
+    "section_title": "3.9 Step 9 – Editing an Existing Workspace",
+    "product": "CE Express",
+    "version": "Unknown",
+    "category": "Training",
+    "source_file": "docs/ce-express/training/01-creating-workspace.md",
+    "text": "1. Open the Workspaces tool.\n2. Hover over your workspace name to reveal options.\n3. Click Edit workspace.\nAdding an Additional Layer\nAdd the following service:\n- https://cecom2.cellular-expert.com/server/rest/services/Hosted/Adresai_Vilnius/FeatureServer/82\n---\n4. Click Accept.\n5. Verify the new layer (Adresai Vilnius) is visible on the map."
+  },
+  {
+    "chunk_id": "ce-express-tr-workspace_chunk_11",
+    "document_id": "ce-express-tr-workspace",
+    "document_title": "01 — Creating Workspace",
+    "section_title": "3.10 Step 10 – Using the Identify Tool",
+    "product": "CE Express",
+    "version": "Unknown",
+    "category": "Training",
+    "source_file": "docs/ce-express/training/01-creating-workspace.md",
+    "text": "1. Open the [Identify tool](#kw:310-step-10-using-the-identify-tool:none).\n2. Click on one of the address points.\n3. Review the popup information.\n4. Summary and Key Takeaways\n- A well-configured workspace is the foundation of reliable RF planning\n- [Layer management](#kw:35-step-5-layer-management-overview:none) improves clarity and performance\n- 3D visualization enhances understanding of real-world propagation challenges\n---"
+  }
+]

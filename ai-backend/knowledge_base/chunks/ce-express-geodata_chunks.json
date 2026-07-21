@@ -1,0 +1,112 @@
+[
+  {
+    "chunk_id": "ce-express-geodata_chunk_1",
+    "document_id": "ce-express-geodata",
+    "document_title": "Geodata & Rasters",
+    "section_title": "Geodata & Rasters",
+    "product": "CE Express",
+    "version": "Unknown",
+    "category": "Getting Started",
+    "source_file": "docs/ce-express/geodata.md",
+    "text": "> **Version:** CE Express v7.2\nCE Express uses raster files to model terrain and land use when calculating RF predictions. These files must be prepared and placed on the CE Express server before running any predictions."
+  },
+  {
+    "chunk_id": "ce-express-geodata_chunk_2",
+    "document_id": "ce-express-geodata",
+    "document_title": "Geodata & Rasters",
+    "section_title": "Required Files",
+    "product": "CE Express",
+    "version": "Unknown",
+    "category": "Getting Started",
+    "source_file": "docs/ce-express/geodata.md",
+    "text": "| File | Required | Description |\n|---|---|---|\n| `elevation.tif` | **Yes** | Digital Terrain Model (DTM) — ground elevation in metres |\n| `clutterClasses.tif` | No | Land use classification (urban, suburban, forest, water, etc.) |\n| `clutterHeight.tif` | No | Height of [clutter](#kw:clutter-classification-values:none) above terrain (buildings, trees) in metres |"
+  },
+  {
+    "chunk_id": "ce-express-geodata_chunk_3",
+    "document_id": "ce-express-geodata",
+    "document_title": "Geodata & Rasters",
+    "section_title": "Format Requirements",
+    "product": "CE Express",
+    "version": "Unknown",
+    "category": "Getting Started",
+    "source_file": "docs/ce-express/geodata.md",
+    "text": "All raster files must meet the following specification:\n- **Format**: GeoTIFF (`.tif`)\n- **Coordinate Reference System**: [Projected CRS](#kw:what-is-a-projected-[crs](#kw:check-crs:none):none) (e.g. [UTM](#kw:what-is-a-projected-[crs](#kw:check-crs:none):none), national grid) — **not** geographic [WGS84](#kw:what-is-a-projected-[crs](#kw:check-crs:none):none) ([EPSG](#kw:what-is-a-projected-crs:none):4326)\n- **[NoData](#kw:check-and-set-nodata-value:none) value**: `-9999`\n- **All files in the same CRS** as each other and as the workspace setting\n> ⚠️ If any file uses a different CRS or [NoData](#kw:check-and-set-nodata-value:none) value, predictions will fail or produce incorrect results."
+  },
+  {
+    "chunk_id": "ce-express-geodata_chunk_4",
+    "document_id": "ce-express-geodata",
+    "document_title": "Geodata & Rasters",
+    "section_title": "What is a Projected CRS?",
+    "product": "CE Express",
+    "version": "Unknown",
+    "category": "Getting Started",
+    "source_file": "docs/ce-express/geodata.md",
+    "text": "A **[Projected CRS](#kw:what-is-a-projected-crs:none)** represents the Earth's curved surface on a flat plane (in metres). Examples:\n| CRS | [EPSG](#kw:what-is-a-projected-crs:none) Code | Used In |\n|---|---|---|\n| WGS 84 / [UTM](#kw:what-is-a-projected-crs:none) Zone 34N | [EPSG](#kw:what-is-a-projected-crs:none):32634 | Lithuania, much of Eastern Europe |\n| WGS 84 / [UTM](#kw:what-is-a-projected-crs:none) Zone 35N | EPSG:32635 | Eastern Lithuania, Latvia |\n| LKS94 / Lithuania TM | EPSG:3346 | Lithuania national grid |\n| ETRS89 / TM35FIN | EPSG:3067 | Finland |\nUse GIS software ([QGIS](#kw:preparing-rasters-with-qgis-free:none), ArcGIS Pro) to check or [reproject](#kw:reproject-to-projected-crs:none) your rasters if needed."
+  },
+  {
+    "chunk_id": "ce-express-geodata_chunk_5",
+    "document_id": "ce-express-geodata",
+    "document_title": "Geodata & Rasters",
+    "section_title": "Check CRS",
+    "product": "CE Express",
+    "version": "Unknown",
+    "category": "Getting Started",
+    "source_file": "docs/ce-express/geodata.md",
+    "text": "1. Open your `.tif` file in [QGIS](#kw:preparing-rasters-with-qgis-free:none).\n2. Right-click the layer **Properties** **Information** tab.\n3. Look for \"CRS\" — it should show a [Projected CRS](#kw:what-is-a-projected-crs:none), not EPSG:4326."
+  },
+  {
+    "chunk_id": "ce-express-geodata_chunk_6",
+    "document_id": "ce-express-geodata",
+    "document_title": "Geodata & Rasters",
+    "section_title": "Reproject to Projected CRS",
+    "product": "CE Express",
+    "version": "Unknown",
+    "category": "Getting Started",
+    "source_file": "docs/ce-express/geodata.md",
+    "text": "1. **Raster** menu **Projections** **Warp ([Reproject](#kw:reproject-to-projected-crs:none))**.\n2. Set Target CRS to your required projected CRS.\n3. Set [NoData](#kw:check-and-set-nodata-value:none) value to `-9999`.\n4. Save output as `.tif`."
+  },
+  {
+    "chunk_id": "ce-express-geodata_chunk_7",
+    "document_id": "ce-express-geodata",
+    "document_title": "Geodata & Rasters",
+    "section_title": "Check and Set NoData Value",
+    "product": "CE Express",
+    "version": "Unknown",
+    "category": "Getting Started",
+    "source_file": "docs/ce-express/geodata.md",
+    "text": "1. **Raster** **Miscellaneous** **Build Virtual Raster**, or use the Raster Calculator.\n2. Alternatively, use GDAL: `gdal_translate -a_nodata -9999 input.tif output.tif`"
+  },
+  {
+    "chunk_id": "ce-express-geodata_chunk_8",
+    "document_id": "ce-express-geodata",
+    "document_title": "Geodata & Rasters",
+    "section_title": "Placing Files on the Server",
+    "product": "CE Express",
+    "version": "Unknown",
+    "category": "Getting Started",
+    "source_file": "docs/ce-express/geodata.md",
+    "text": "Geodata files must be stored on the **CE Express server** (not the user's computer). Work with your system administrator to:\n1. Create a folder for each project (e.g. `D:\\geodata\\vilnius_2025\\`).\n2. Copy `elevation.tif` (and optional [clutter](#kw:clutter-classification-values:none) files) into the folder.\n3. Use this server path when creating or configuring a workspace."
+  },
+  {
+    "chunk_id": "ce-express-geodata_chunk_9",
+    "document_id": "ce-express-geodata",
+    "document_title": "Geodata & Rasters",
+    "section_title": "Clutter Classification Values",
+    "product": "CE Express",
+    "version": "Unknown",
+    "category": "Getting Started",
+    "source_file": "docs/ce-express/geodata.md",
+    "text": "The `clutterClasses.tif` file assigns a land-use category to each pixel. Typical values:\n| Value | Class |\n|---|---|\n| 0 | Open / Water |\n| 1 | Open Rural |\n| 2 | Suburban |\n| 3 | Urban |\n| 4 | Dense Urban |\n| 5 | Forest |\n| 6 | Industrial |\nThe exact values and their mapping to propagation loss are configured in the prediction model settings."
+  },
+  {
+    "chunk_id": "ce-express-geodata_chunk_10",
+    "document_id": "ce-express-geodata",
+    "document_title": "Geodata & Rasters",
+    "section_title": "Related Pages",
+    "product": "CE Express",
+    "version": "Unknown",
+    "category": "Getting Started",
+    "source_file": "docs/ce-express/geodata.md",
+    "text": "- Workspaces — linking geodata to a workspace\n- RF Prediction — how geodata is used in predictions\n- System Requirements — server storage recommendations"
+  }
+]

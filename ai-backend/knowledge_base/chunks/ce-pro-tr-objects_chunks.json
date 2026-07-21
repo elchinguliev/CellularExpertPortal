@@ -1,0 +1,145 @@
+[
+  {
+    "chunk_id": "ce-pro-tr-objects_chunk_1",
+    "document_id": "ce-pro-tr-objects",
+    "document_title": "06 — Objects",
+    "section_title": "06. Creating Objects",
+    "product": "CE Pro",
+    "version": "Unknown",
+    "category": "Training",
+    "source_file": "docs/ce-pro/training/06-objects.md",
+    "text": "> **Version:** CE Pro v4.9\n> **Version:** CE Pro v4.9"
+  },
+  {
+    "chunk_id": "ce-pro-tr-objects_chunk_2",
+    "document_id": "ce-pro-tr-objects",
+    "document_title": "06 — Objects",
+    "section_title": "Overview",
+    "product": "CE Pro",
+    "version": "Unknown",
+    "category": "Training",
+    "source_file": "docs/ce-pro/training/06-objects.md",
+    "text": "CE Pro objects (Cells, Sites, Links, etc.) are stored as feature classes in the Workspace geodatabase. You can create them in three ways: import from file, create manually on the map, or duplicate existing objects.\n---"
+  },
+  {
+    "chunk_id": "ce-pro-tr-objects_chunk_3",
+    "document_id": "ce-pro-tr-objects",
+    "document_title": "06 — Objects",
+    "section_title": "Methods for Creating Objects",
+    "product": "CE Pro",
+    "version": "Unknown",
+    "category": "Training",
+    "source_file": "docs/ce-pro/training/06-objects.md",
+    "text": "| Method | Best For |\n|---|---|\n| Import from text/CSV | Bulk creation from existing network data |\n| Add Object tool (manual) | One-off additions directly on the map |\n| Duplicate existing object | Copying an object with similar parameters |\n| Move existing object | Relocating a cell or site to a new position |\n---"
+  },
+  {
+    "chunk_id": "ce-pro-tr-objects_chunk_4",
+    "document_id": "ce-pro-tr-objects",
+    "document_title": "06 — Objects",
+    "section_title": "Step 1 — Define Location",
+    "product": "CE Pro",
+    "version": "Unknown",
+    "category": "Training",
+    "source_file": "docs/ce-pro/training/06-objects.md",
+    "text": "Choose one of these coordinate input methods:\n- **Projected coordinate system** — enter X and Y values in metres\n- **Geographic coordinate system** — enter Latitude and Longitude in decimal degrees\n- **Click on map** — click the desired point; coordinates are filled automatically\nIf placing by map click, also define the **Azimuth** (direction from north, 0–360°)."
+  },
+  {
+    "chunk_id": "ce-pro-tr-objects_chunk_5",
+    "document_id": "ce-pro-tr-objects",
+    "document_title": "06 — Objects",
+    "section_title": "Step 2 — Define Name",
+    "product": "CE Pro",
+    "version": "Unknown",
+    "category": "Training",
+    "source_file": "docs/ce-pro/training/06-objects.md",
+    "text": "The **Cell Name** must be unique within the project. It is also used as the Best Server identifier in prediction outputs."
+  },
+  {
+    "chunk_id": "ce-pro-tr-objects_chunk_6",
+    "document_id": "ce-pro-tr-objects",
+    "document_title": "06 — Objects",
+    "section_title": "Step 3 — Choose Template or Fill Parameters Manually",
+    "product": "CE Pro",
+    "version": "Unknown",
+    "category": "Training",
+    "source_file": "docs/ce-pro/training/06-objects.md",
+    "text": "- **Template**: select a pre-configured template that auto-fills standard RF parameters (frequency, power, antenna, etc.)\n- **Manual**: fill in each parameter individually\n---"
+  },
+  {
+    "chunk_id": "ce-pro-tr-objects_chunk_7",
+    "document_id": "ce-pro-tr-objects",
+    "document_title": "06 — Objects",
+    "section_title": "Templates",
+    "product": "CE Pro",
+    "version": "Unknown",
+    "category": "Training",
+    "source_file": "docs/ce-pro/training/06-objects.md",
+    "text": "Templates speed up object creation by pre-populating common parameter sets.\n- Managed under **CE Desktop → Template Manager**\n- Can be stored in the workspace or in a shared table\n- Once applied, individual parameters can still be overridden per object\n---\nAfter creating objects, use the **Symbology** pane to style how sites and cells appear on the map:\n---"
+  },
+  {
+    "chunk_id": "ce-pro-tr-objects_chunk_8",
+    "document_id": "ce-pro-tr-objects",
+    "document_title": "06 — Objects",
+    "section_title": "Creating a Cell — Key Parameters",
+    "product": "CE Pro",
+    "version": "Unknown",
+    "category": "Training",
+    "source_file": "docs/ce-pro/training/06-objects.md",
+    "text": "| Parameter | Field Name | Unit | Example |\n|---|---|---|---|\n| Cell name | cell_name | text | `5GCell_001` |\n| Site name | site_name | text | `Site_Vilnius_01` |\n| Latitude | latitude | decimal degrees | `54.6872` |\n| Longitude | longitude | decimal degrees | `25.2797` |\n| Height above ground | height | metres | `30` |\n| Azimuth | azimuth | degrees | `120` |\n| Mechanical tilt | tilt | degrees | `2` |\n| Frequency | frequency | MHz | `3500` |\n| Power | power | dBm | `40` |\n| Antenna gain | antenna_gain | dBi | `18.2` |\n| Misc. loss | misc_loss | dB | `1` |\n| Technology | technology | text | `5G` |\n> **Note:** RF prediction does **not** require a Site object — a Cell can exist independently. Sites are used for grouping and visual organisation.\n---"
+  },
+  {
+    "chunk_id": "ce-pro-tr-objects_chunk_9",
+    "document_id": "ce-pro-tr-objects",
+    "document_title": "06 — Objects",
+    "section_title": "Creating a Site",
+    "product": "CE Pro",
+    "version": "Unknown",
+    "category": "Training",
+    "source_file": "docs/ce-pro/training/06-objects.md",
+    "text": "1. Click **Add Object → Site**\n2. Place the site on the map or enter coordinates\n3. Enter a unique **Site Name**\n4. Optionally link existing cells to this site via the **site_name** field on each cell\n---"
+  },
+  {
+    "chunk_id": "ce-pro-tr-objects_chunk_10",
+    "document_id": "ce-pro-tr-objects",
+    "document_title": "06 — Objects",
+    "section_title": "Creating a Link (Microwave / RL)",
+    "product": "CE Pro",
+    "version": "Unknown",
+    "category": "Training",
+    "source_file": "docs/ce-pro/training/06-objects.md",
+    "text": "1. Click **Add Object → Link**\n2. Click the **start point** (Tx site) on the map\n3. Click the **end point** (Rx site) on the map\n4. Enter link parameters: frequency, Tx power, antenna types, feeder losses\n5. Click **Create**\n---"
+  },
+  {
+    "chunk_id": "ce-pro-tr-objects_chunk_11",
+    "document_id": "ce-pro-tr-objects",
+    "document_title": "06 — Objects",
+    "section_title": "Duplicating Objects",
+    "product": "CE Pro",
+    "version": "Unknown",
+    "category": "Training",
+    "source_file": "docs/ce-pro/training/06-objects.md",
+    "text": "1. Select one or more objects on the map\n2. Right-click → **Duplicate**\n3. The duplicate is placed at the same location with all parameters copied\n4. Move it to the new position and update the name\n---"
+  },
+  {
+    "chunk_id": "ce-pro-tr-objects_chunk_12",
+    "document_id": "ce-pro-tr-objects",
+    "document_title": "06 — Objects",
+    "section_title": "Moving Objects",
+    "product": "CE Pro",
+    "version": "Unknown",
+    "category": "Training",
+    "source_file": "docs/ce-pro/training/06-objects.md",
+    "text": "1. Select the object on the map\n2. Click **Move Object** in the CE toolbar, or drag the object directly\n3. The coordinates are updated automatically in the attribute table\n---"
+  },
+  {
+    "chunk_id": "ce-pro-tr-objects_chunk_13",
+    "document_id": "ce-pro-tr-objects",
+    "document_title": "06 — Objects",
+    "section_title": "Import from Text / CSV",
+    "product": "CE Pro",
+    "version": "Unknown",
+    "category": "Training",
+    "source_file": "docs/ce-pro/training/06-objects.md",
+    "text": "For bulk import:\n1. Click **CE Desktop → Import → From Text**\n2. Select your CSV file (must include at minimum: cell_name, latitude, longitude)\n3. Map CSV columns to CE field names\n4. Click **Import**\nSee `C:\\CE_Course\\0. Descriptions\\2. Import.pdf` for the full field mapping reference.\n---\n**Exercise:** `C:\\CE_Course\\0. Descriptions\\3. Create Objects.pdf`\n**Contact:** info@cellular-expert.com | +370 5 2150575 | www.cellular-expert.com"
+  }
+]

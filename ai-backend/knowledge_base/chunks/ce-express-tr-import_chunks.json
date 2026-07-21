@@ -1,0 +1,57 @@
+[
+  {
+    "chunk_id": "ce-express-tr-import_chunk_1",
+    "document_id": "ce-express-tr-import",
+    "document_title": "05 — Import Data",
+    "section_title": "05. Import Data",
+    "product": "CE Express",
+    "version": "Unknown",
+    "category": "Training",
+    "source_file": "docs/ce-express/training/05-import-data.md",
+    "text": "> **Version:** CE Express v7.2\n1. Objective\nThis module explains how to import external data into CE Express and how imported data\nbecomes part of the project environment. It covers the import of [network objects](#kw:object-types:ce-express-network-objects) from CSV\nfiles and [antenna patterns](#kw:importing-antenna-patterns:ce-express-antenna) from external files, as well as the use of mapping templates to\nensure consistency and repeatability.\nBy the end of this exercise, participants will be able to:\n- Import [network objects](#kw:object-types:ce-express-network-objects) using CSV files\n- Map external data fields to CE Express object attributes\n- Create and reuse import mapping templates\n- Import [antenna pattern](#kw:managing-the-antenna-library:ce-express-antenna) files into the CE Express database\n- Verify and review imported data within the workspace\n2. Understanding Data Import in CE Express\nData import is a key capability in CE Express, allowing users to bring information from\nexternal sources into a workspace. Imported data may originate from:\n- External planning tools\n- Inventory systems\n- Field surveys\n- Desktop-based CE projects\nCE Express supports structured import workflows to ensure that imported data is:\n- Correctly mapped to internal object [models](#kw:31-models:ce-express-tr-models)\n- Consistent across multiple imports\n- Easy to review and validate after import\n3. Initial Data and Prerequisites\nThis exercise assumes:\n---\n- A prepared workspace created in previous exercises\n- Prepared geodata loaded in the workspace\n- Access to import files stored locally on the computer\n4. Exercise"
+  },
+  {
+    "chunk_id": "ce-express-tr-import_chunk_2",
+    "document_id": "ce-express-tr-import",
+    "document_title": "05 — Import Data",
+    "section_title": "4.1 Step 1 – Open the Workspace",
+    "product": "CE Express",
+    "version": "Unknown",
+    "category": "Training",
+    "source_file": "docs/ce-express/training/05-import-data.md",
+    "text": "1. Open the CE Express application:\nhttps://cecom2.cellular-expert.com/ce_express/\n2. From the workspace list, select the workspace used in the previous exercise."
+  },
+  {
+    "chunk_id": "ce-express-tr-import_chunk_3",
+    "document_id": "ce-express-tr-import",
+    "document_title": "05 — Import Data",
+    "section_title": "4.2 Step 2 – Importing Network Objects (Cells and Sites)",
+    "product": "CE Express",
+    "version": "Unknown",
+    "category": "Training",
+    "source_file": "docs/ce-express/training/05-import-data.md",
+    "text": "4.2.1 Purpose of [Network Object](#kw:object-types:ce-express-network-objects) Import\nImporting [network objects](#kw:object-types:ce-express-network-objects) allows users to rapidly populate a workspace with sites and cells\ninstead of creating them manually. This approach is especially useful when working with\nexisting datasets or migrating data between systems.\n4.2.2 Opening the Import Tool\n1. Open the Features tool.\n2. Click Import Features.\n3. Select Cells.\n---\nThe Import dialog opens on the right side of the screen.\n4.2.3 Loading the CSV File\n1. Open Windows File Explorer.\n2. Navigate to:\nC:\\CE_Course\\ImportingData\\Network\n3. Select the file Cells_CE_Express.csv.\n4. Drag and drop the file into the Import dialog.\nThe CSV file is uploaded and ready for mapping.\n4.2.4 Defining Import Options\nEnable the following options:\n- Create Sites – automatically creates site objects based on site-related fields\n---\n- Use Mapping – allows explicit mapping between CSV fields and CE Express\nattributes\nThese options ensure that both sites and cells are created correctly during import.\n4.2.5 Mapping CSV Fields to CE Express Attributes\nMapping defines how columns in the CSV file are translated into CE Express object\nparameters.\nFor each attribute, define the following mappings:\nCE Express CSV file Fill\nCell name Cell Name Leave empty\nX longitude Leave empty\nY latitude Leave empty\nAzimuth Azimuth Leave empty\nSite name Tower Name Leave empty\nHeight Height Above Ground Leave empty\nDowntilt Tilt Leave empty\nEl. Downtilt Leave empty 0\nFrequency Frequency Leave empty\nPower Cell Power Leave empty\nMisc loss, dB Leave empty 0\nBandwidth Bandwidth Leave empty\nNoise figure Leave empty 6\nDownlink duplex factor Leave empty 0.6\nSubcarrier spacing Leave empty 30\n---\nTX MIMO TxMIMO Leave empty\nRX MIMO RxMIMO Leave empty\nActive antenna effect Leave empty 6\nCell load, % Leave empty 30\nColor index Leave empty Leave empty\nTechnology Tech Leave empty\nPrediction model ID Leave empty 3\nPrediction model configuration ID Leave empty 4\nFrequency group frequency_group Leave empty\nantenna_id Leave empty 515\ncarriers Leave empty []\nsite_id Leave empty Leave empty\nduplex_mode Duplex Leave empty\n---\n4.2.6 Saving a Mapping Template\nBefore importing, save the mapping configuration:\n1. In Mapping presets, click + New mapping preset.\n2. Enter the template name:\nImport template\n3. Click Apply to save the preset.\nUsing mapping templates ensures consistency and avoids repeating manual configuration\nfor future imports.\n4.2.7 Importing the Data\n1. Click Accept to start the import.\n2. Wait until the import process completes.\n3. Close the Import tool.\n---\n4.2.8 Verifying Imported Objects\n1. Ensure the Features tool is active.\n2. Click once on the map to select imported objects.\n3. Review the objects listed in the Features panel.\nThis confirms that cells and sites were successfully created and loaded into the workspace.\n---"
+  },
+  {
+    "chunk_id": "ce-express-tr-import_chunk_4",
+    "document_id": "ce-express-tr-import",
+    "document_title": "05 — Import Data",
+    "section_title": "4.3 Step 3 – Importing Antenna Patterns",
+    "product": "CE Express",
+    "version": "Unknown",
+    "category": "Training",
+    "source_file": "docs/ce-express/training/05-import-data.md",
+    "text": "4.3.1 Purpose of Antenna Import\n[Antenna patterns](#kw:importing-antenna-patterns:ce-express-antenna) define how energy is distributed spatially. Importing accurate antenna\npatterns ensures that predictions and analyses reflect real equipment behavior.\n4.3.2 Reviewing the Antenna File\n1. Navigate to:\nC:\\CE_Course\\ImportingData\\Antenna\n2. Open the file ADU4518R6v06_2655.txt using Notepad.\nThe file is in Planet format and contains:\n- Header information\n- Horizontal [radiation pattern](#kw:viewing-patterns:ce-express-antenna)\n- Vertical [radiation pattern](#kw:viewing-patterns:ce-express-antenna)\nThis format is supported for direct import into CE Express.\n4.3.3 Importing the Antenna File\n1. Open the Antennas tool.\n---\n2. Click + New Antenna.\n3. Click Import files.\n4. Drag and drop the antenna text file into the import area.\nThe antenna is automatically added to the CE Express antenna database."
+  },
+  {
+    "chunk_id": "ce-express-tr-import_chunk_5",
+    "document_id": "ce-express-tr-import",
+    "document_title": "05 — Import Data",
+    "section_title": "4.4 Reviewing Imported Antenna Data",
+    "product": "CE Express",
+    "version": "Unknown",
+    "category": "Training",
+    "source_file": "docs/ce-express/training/05-import-data.md",
+    "text": "1. Select the imported antenna from the list.\n2. Review antenna properties and radiation patterns.\nVerifying antenna data ensures it is ready for assignment to cells and use in predictions.\n---\n3. Close the Antennas tool.\n5. Summary and Key Takeaways\n- Data import enables rapid population of workspaces using external datasets\n- CSV import with explicit mapping ensures correct parameter assignment\n- Mapping templates provide repeatability and consistency\n- [Antenna pattern](#kw:managing-the-antenna-library:ce-express-antenna) import allows use of real equipment characteristics\n- Verifying imported data is essential before running predictions or further analysis\n---"
+  }
+]

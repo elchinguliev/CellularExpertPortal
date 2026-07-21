@@ -1,0 +1,24 @@
+[
+  {
+    "chunk_id": "ce-pro-tr-fwa_chunk_1",
+    "document_id": "ce-pro-tr-fwa",
+    "document_title": "FWA RF Prediction",
+    "section_title": "FWA RF Prediction",
+    "product": "CE Pro",
+    "version": "Unknown",
+    "category": "Training",
+    "source_file": "docs/ce-pro/training/12-fwa-prediction.md",
+    "text": "> **Version:** CE Pro v4.9"
+  },
+  {
+    "chunk_id": "ce-pro-tr-fwa_chunk_2",
+    "document_id": "ce-pro-tr-fwa",
+    "document_title": "FWA RF Prediction",
+    "section_title": "9.4 FWA RF Prediction",
+    "product": "CE Pro",
+    "version": "Unknown",
+    "category": "Training",
+    "source_file": "docs/ce-pro/training/12-fwa-prediction.md",
+    "text": "The FWA RF Prediction tool enables batch radio profile calculations to quickly estimate link performance\nfrom a single transmitter to multiple CPEs or to a set of selected receiver points. For each receiver point,\nthe tool computes and displays Downlink FS, Uplink FS, FWA Downlink RSL, and FWA Uplink RSL. These\noutputs enable a quick assessment of link viability and quality at each location. Results for each receiver\npoint are listed in a structured table, allowing comparison of link performance across multiple points.\nClick the button to open the FWA RF Prediction dialogue.\nThis tool is designed for rapid evaluation of coverage quality for potential customer sites in FWA networks,\nas well as batch link feasibility checks for network planning and rollout, validation of antenna placement\nand orientation impacts on service availability, and comparative performance analysis across multiple CPE\nconfigurations.\nOne transmitter can be selected at a time, and the receiver point layer can either be a point feature layer\nadded to the map or CPE network objects. If no receiver points are selected on the map, all points are used\nfor calculations. A CPE template can be used to fill in missing values from the receiver point layer.\nFurthermore, receiver point fields can be mapped from the receiver point attributes, or alternatively, used\nfrom CPE template.\nOnce all fields are selected, press the Run button to perform the calculations. The result is the table showing\nDownlink/Uplink FS, and FWA downlink/uplink RSL values for each receiver point."
+  }
+]

@@ -1,0 +1,57 @@
+[
+  {
+    "chunk_id": "ce-express-introduction_chunk_1",
+    "document_id": "ce-express-introduction",
+    "document_title": "Introduction (Detailed)",
+    "section_title": "Introduction to Cellular Expert Express",
+    "product": "CE Express",
+    "version": "Unknown",
+    "category": "Reference",
+    "source_file": "docs/ce-express/01-introduction.md",
+    "text": "> **Version:** CE Express v7.2\nCellular Expert Express (CE Express) is a **web-based** telecommunication network planning, optimization, and [data management](#kw:31-data-management-tools:inventory3d-user-guide) solution built on **Esri ArcGIS Enterprise**.\nCE Express is the merged **Inventory 3D** and **Cellular Expert Express** solution in one product:\n- **Inventory 3D** — [data management](#kw:31-data-management-tools:inventory3d-user-guide) (sites, assets, equipment inventory)\n- **CE Express** — network planning, RF calculations, optimization, analysis\nFrom a desktop, laptop, or tablet with internet access, users connect to a central server and can edit database records, manage [network objects](#kw:object-types:ce-express-network-objects), and run RF calculations — **without installing any local GIS software**."
+  },
+  {
+    "chunk_id": "ce-express-introduction_chunk_2",
+    "document_id": "ce-express-introduction",
+    "document_title": "Introduction (Detailed)",
+    "section_title": "Key Capabilities",
+    "product": "CE Express",
+    "version": "Unknown",
+    "category": "Reference",
+    "source_file": "docs/ce-express/01-introduction.md",
+    "text": "| Capability | Description |\n|-----------|-------------|\n| RF Coverage Prediction | Signal level, [RSRP](#kw:typical-rsrp-thresholds:ce-express-rf-prediction), RSRQ, SINR, throughput maps |\n| 3D RF Prediction | Full 3D propagation with building data |\n| [Quick RF Prediction](#kw:quick-rf-prediction:ce-express-rf-prediction) | Rapid what-if testing without DB changes |\n| Microwave / Radio Link | Link budgets, path profiles, rain fade, availability |\n| Network Optimization | Best server, interference, C/I analysis |\n| Mesh Network Planning | Connectivity, automatic frequency planning |\n| [Line of Sight](#kw:running-a-profile:ce-express-profile) / Profile | Terrain cross-sections, Fresnel zones |\n| [Visibility Prediction](#kw:43-step-3-visibility-prediction-pointtoarea-analysis:ce-express-tr-los) | Radar and antenna visibility analysis |\n| Indoor Planning | In-building signal propagation |\n| Sound Propagation | Siren audibility, acoustic analysis (ISO9613) |\n| Light / Lux Prediction | Lighting design calculations |\n| EMF Analysis | Electromagnetic field compliance |\n| Model Tuning | Calibrate propagation [models](#kw:31-models:ce-express-tr-models) against drive-test data |\n| Optimal Placement | Find best site locations automatically |"
+  },
+  {
+    "chunk_id": "ce-express-introduction_chunk_3",
+    "document_id": "ce-express-introduction",
+    "document_title": "Introduction (Detailed)",
+    "section_title": "Architecture",
+    "product": "CE Express",
+    "version": "Unknown",
+    "category": "Reference",
+    "source_file": "docs/ce-express/01-introduction.md",
+    "text": "```\nUser Browser (Chrome recommended)\n       ↓  HTTPS only\nCE Express Web Server (Windows Server / Linux)\n       ↓\nArcGIS Enterprise (Portal + Server)\n       ↓\nPostgreSQL + PostGIS Database\n       ↓\nCE Calculation Engine (multi-threaded C++, optional GPU)\n```\n> CE Express is **not** intended to replicate CE Desktop Pro feature-for-feature. It provides a simplified, task-oriented interface for shared workflows."
+  },
+  {
+    "chunk_id": "ce-express-introduction_chunk_4",
+    "document_id": "ce-express-introduction",
+    "document_title": "Introduction (Detailed)",
+    "section_title": "Supported Browsers",
+    "product": "CE Express",
+    "version": "Unknown",
+    "category": "Reference",
+    "source_file": "docs/ce-express/01-introduction.md",
+    "text": "- **Google Chrome** (recommended — latest version)\n- Mozilla Firefox\n- Microsoft Edge\n> All communication uses **HTTPS only**. HTTP is not supported."
+  },
+  {
+    "chunk_id": "ce-express-introduction_chunk_5",
+    "document_id": "ce-express-introduction",
+    "document_title": "Introduction (Detailed)",
+    "section_title": "Related Topics",
+    "product": "CE Express",
+    "version": "Unknown",
+    "category": "Reference",
+    "source_file": "docs/ce-express/01-introduction.md",
+    "text": "- Logging In\n- [Map View](#kw:switching-between-views:ce-express-login) Overview\n- Creating Workspaces\n- System Requirements (Admin)"
+  }
+]

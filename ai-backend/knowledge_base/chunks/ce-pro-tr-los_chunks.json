@@ -1,0 +1,123 @@
+[
+  {
+    "chunk_id": "ce-pro-tr-los_chunk_1",
+    "document_id": "ce-pro-tr-los",
+    "document_title": "05 — Line of Sight",
+    "section_title": "05. Line of Sight (Profile)",
+    "product": "CE Pro",
+    "version": "Unknown",
+    "category": "Training",
+    "source_file": "docs/ce-pro/training/05-line-of-sight.md",
+    "text": "> **Version:** CE Pro v4.9\nLOS and profile results are displayed in the ArcGIS Pro map view. The map canvas shows the terrain cross-section and any obstruction points:\nThe **Contents** and **Catalog** panes show the DEM, clutter, and obstacle layers required for LOS calculation:\n---"
+  },
+  {
+    "chunk_id": "ce-pro-tr-los_chunk_2",
+    "document_id": "ce-pro-tr-los",
+    "document_title": "05 — Line of Sight",
+    "section_title": "Geodata Layers Used",
+    "product": "CE Pro",
+    "version": "Unknown",
+    "category": "Training",
+    "source_file": "docs/ce-pro/training/05-line-of-sight.md",
+    "text": "CE Pro uses three GIS data layers for precise RF propagation modelling:\n| Layer | Description |\n|-------|-------------|\n| **DTM / DEM** | Digital Terrain Model — ground elevation above sea level |\n| **Obstacles** | Buildings and structures above ground (principal impediments) |\n| **Clutter** | Vegetation, crops, gardens — partially penetrable by radio waves |\nTogether these layers form the **DSM (Digital Surface Model)**:\n```\nDSM = DTM + Obstacles (buildings/vegetation)\n```\n---"
+  },
+  {
+    "chunk_id": "ce-pro-tr-los_chunk_3",
+    "document_id": "ce-pro-tr-los",
+    "document_title": "05 — Line of Sight",
+    "section_title": "Input Parameters",
+    "product": "CE Pro",
+    "version": "Unknown",
+    "category": "Training",
+    "source_file": "docs/ce-pro/training/05-line-of-sight.md",
+    "text": "| Category | Parameter |\n|----------|-----------|\n| Geodata | Elevation, Buildings, Clutter |\n| RF | Frequency (MHz), Fresnel Zone (%), Earth radius factor |\n| Transmitter | Height (m), Power (dBm) |\n| Receiver | Height (m), Power (dBm) |"
+  },
+  {
+    "chunk_id": "ce-pro-tr-los_chunk_4",
+    "document_id": "ce-pro-tr-los",
+    "document_title": "05 — Line of Sight",
+    "section_title": "Profile Calculation Results",
+    "product": "CE Pro",
+    "version": "Unknown",
+    "category": "Training",
+    "source_file": "docs/ce-pro/training/05-line-of-sight.md",
+    "text": "**General Clearance:**\n| Output | Description |\n|--------|-------------|\n| Clearance | Distance (m) between LOS line and highest obstacle |\n| Clearance Percentage | Clearance as % of 1st Fresnel zone radius |\n| Clearance Distance | Horizontal distance to first obstruction |\n| Distance to NLOS | Distance at which path becomes NLOS |\n| Distance to OLOS | Distance at which path becomes OLOS |\n**Power Budget:**\n| Output | Description |\n|--------|-------------|\n| Downlink FS | Downlink received signal (Free Space) |\n| Uplink FS | Uplink received signal (Free Space) |\n| FWA Downlink RSL | Fixed Wireless Access downlink received signal level |\n| FWA Uplink RSL | Fixed Wireless Access uplink received signal level |\n**Path Loss Breakdown:**\n| Output | Description |\n|--------|-------------|\n| Total Path Loss | Sum of all loss components (dB) |\n| Model Loss | Loss from selected propagation model |\n| Diffraction Loss | Loss from obstacles per ITU-R P.526 |\n| Penetration Loss | Outdoor-to-indoor loss (3GPP TR 38.901) |\n| Receiver Clutter Loss | Loss due to clutter at receiver location |\n| Clutter Loss | General clutter loss from ITU-R P.2108 |\n**Angles:**\n- Elevation angle of the LOS path (degrees)\n---"
+  },
+  {
+    "chunk_id": "ce-pro-tr-los_chunk_5",
+    "document_id": "ce-pro-tr-los",
+    "document_title": "05 — Line of Sight",
+    "section_title": "Fresnel Zone Clearance",
+    "product": "CE Pro",
+    "version": "Unknown",
+    "category": "Training",
+    "source_file": "docs/ce-pro/training/05-line-of-sight.md",
+    "text": "The Fresnel zone radius at distance d from transmitter:\n```\nr = sqrt(λ × d1 × d2 / (d1 + d2))\nwhere:\n  λ  = wavelength (m)\n  d1 = distance from Tx to obstacle (m)\n  d2 = distance from obstacle to Rx (m)\n```\nRecommended minimum clearance: **60% of 1st Fresnel zone radius** to avoid significant diffraction loss.\n---"
+  },
+  {
+    "chunk_id": "ce-pro-tr-los_chunk_6",
+    "document_id": "ce-pro-tr-los",
+    "document_title": "05 — Line of Sight",
+    "section_title": "Input Parameters",
+    "product": "CE Pro",
+    "version": "Unknown",
+    "category": "Training",
+    "source_file": "docs/ce-pro/training/05-line-of-sight.md",
+    "text": "| Parameter | Description |\n|-----------|-------------|\n| Geodata | Elevation + Obstacles |\n| Frequency (MHz) | Used for Fresnel zone calculation |\n| Calculation radius (km) | Area around transmitter to analyse |\n| Earth radius factor | Accounts for atmospheric refraction (typically k = 4/3) |\n| Transmitter height (m) | Fixed antenna height |\n| Receiver height (m) | Height of mobile UE |"
+  },
+  {
+    "chunk_id": "ce-pro-tr-los_chunk_7",
+    "document_id": "ce-pro-tr-los",
+    "document_title": "05 — Line of Sight",
+    "section_title": "Visibility Result Layers",
+    "product": "CE Pro",
+    "version": "Unknown",
+    "category": "Training",
+    "source_file": "docs/ce-pro/training/05-line-of-sight.md",
+    "text": "| Layer | Values | Description |\n|-------|--------|-------------|\n| Line of Sight | 0 / 1 | 0 = NLOS, 1 = LOS |\n| Required Height for LoS | meters | Minimum receiver height to achieve LOS |\n| Clearance | meters | Clearance distance at receiver point |\n**Example:** If Clearance = 6.5 m, the LOS line passes 6.5 m above the highest obstacle at that location.\n---"
+  },
+  {
+    "chunk_id": "ce-pro-tr-los_chunk_8",
+    "document_id": "ce-pro-tr-los",
+    "document_title": "05 — Line of Sight",
+    "section_title": "Surface Models Compared",
+    "product": "CE Pro",
+    "version": "Unknown",
+    "category": "Training",
+    "source_file": "docs/ce-pro/training/05-line-of-sight.md",
+    "text": "```\nSurface grid     = DTM + Obstacles + Clutter (full DSM)\nElevation grid   = DTM only (bare earth)\nObstacles grid   = Buildings and structures only\n```\nVisual LOS check:\n```\nTx ─────────────── Rx    (LOS — no obstruction)\nTx ──── [building] ─ Rx  (NLOS — building blocks path)\nTx ──── [trees] ─── Rx   (OLOS — partially penetrable)\n```\n---"
+  },
+  {
+    "chunk_id": "ce-pro-tr-los_chunk_9",
+    "document_id": "ce-pro-tr-los",
+    "document_title": "05 — Line of Sight",
+    "section_title": "Dynamic Profile Mode",
+    "product": "CE Pro",
+    "version": "Unknown",
+    "category": "Training",
+    "source_file": "docs/ce-pro/training/05-line-of-sight.md",
+    "text": "- **Fix transmitter** — anchor one end of the profile at a fixed cell/antenna location\n- **Dynamic option** — move the receiver endpoint interactively on the map; profile updates in real time\n---"
+  },
+  {
+    "chunk_id": "ce-pro-tr-los_chunk_10",
+    "document_id": "ce-pro-tr-los",
+    "document_title": "05 — Line of Sight",
+    "section_title": "Profile Symbology",
+    "product": "CE Pro",
+    "version": "Unknown",
+    "category": "Training",
+    "source_file": "docs/ce-pro/training/05-line-of-sight.md",
+    "text": "Define custom colours for each element displayed in the profile view:\n- Ground (DTM)\n- Buildings / Obstacles\n- Clutter / Vegetation\n- LOS line\n- Fresnel zone ellipse\n---"
+  },
+  {
+    "chunk_id": "ce-pro-tr-los_chunk_11",
+    "document_id": "ce-pro-tr-los",
+    "document_title": "05 — Line of Sight",
+    "section_title": "3D Profile View",
+    "product": "CE Pro",
+    "version": "Unknown",
+    "category": "Training",
+    "source_file": "docs/ce-pro/training/05-line-of-sight.md",
+    "text": "CE Pro can display the terrain profile in 3D, showing the transmitter, receiver, terrain, obstacles, and the LOS path in a three-dimensional view.\n---\n*Reference: CE Desktop Training — 2. Line of Sight (Profile)*\n*Contact: info@cellular-expert.com | +370 5 2150575*"
+  }
+]

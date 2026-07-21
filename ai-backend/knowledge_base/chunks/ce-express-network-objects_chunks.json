@@ -1,0 +1,156 @@
+[
+  {
+    "chunk_id": "ce-express-network-objects_chunk_1",
+    "document_id": "ce-express-network-objects",
+    "document_title": "Network Objects",
+    "section_title": "Network Objects",
+    "product": "CE Express",
+    "version": "Unknown",
+    "category": "Network Objects",
+    "source_file": "docs/ce-express/network-objects.md",
+    "text": "> **Version:** CE Express v7.2\n[Network objects](#kw:object-types:none) are the radio infrastructure elements managed in CE Express: **sites**, **cells**, and **repeaters**. All objects are stored in the PostgreSQL database and are visible on the map when a workspace is selected."
+  },
+  {
+    "chunk_id": "ce-express-network-objects_chunk_2",
+    "document_id": "ce-express-network-objects",
+    "document_title": "Network Objects",
+    "section_title": "Object Types",
+    "product": "CE Express",
+    "version": "Unknown",
+    "category": "Network Objects",
+    "source_file": "docs/ce-express/network-objects.md",
+    "text": "| Type | Description |\n|---|---|\n| **Site** | A physical location (tower, rooftop, pole) that hosts one or more cells |\n| **Cell** | A single radio sector — one antenna with defined position, direction, frequency, and power |\n| **Repeater** | A signal booster that receives and retransmits a cell's signal |"
+  },
+  {
+    "chunk_id": "ce-express-network-objects_chunk_3",
+    "document_id": "ce-express-network-objects",
+    "document_title": "Network Objects",
+    "section_title": "Required Cell Attributes",
+    "product": "CE Express",
+    "version": "Unknown",
+    "category": "Network Objects",
+    "source_file": "docs/ce-express/network-objects.md",
+    "text": "| Attribute | Description |\n|---|---|\n| `cell_name` | Unique identifier for the cell |\n| `latitude` | [WGS84](#kw:what-is-a-projected-[crs](#kw:check-crs:ce-express-geodata):ce-express-geodata) decimal degrees (e.g. 54.6872) |\n| `longitude` | [WGS84](#kw:what-is-a-projected-[crs](#kw:check-crs:ce-express-geodata):ce-express-geodata) decimal degrees (e.g. 25.2797) |"
+  },
+  {
+    "chunk_id": "ce-express-network-objects_chunk_4",
+    "document_id": "ce-express-network-objects",
+    "document_title": "Network Objects",
+    "section_title": "Common Optional Attributes",
+    "product": "CE Express",
+    "version": "Unknown",
+    "category": "Network Objects",
+    "source_file": "docs/ce-express/network-objects.md",
+    "text": "| Attribute | Description |\n|---|---|\n| `site_name` | Parent site name |\n| `height` | Antenna height above ground (metres) |\n| `azimuth` | Horizontal direction the antenna faces (0–360°, clockwise from north) |\n| `tilt` | Vertical downtilt angle (degrees) |\n| `frequency_mhz` | Operating frequency in MHz (e.g. 1800, 2100, 3500) |\n| `power_dbm` | Transmit power in dBm |\n| `technology` | Radio technology: `2G`, `3G`, `4G`, or `5G` |\n| `antenna_pattern` | Name of the assigned [antenna pattern](#kw:managing-the-antenna-library:ce-express-antenna) file |"
+  },
+  {
+    "chunk_id": "ce-express-network-objects_chunk_5",
+    "document_id": "ce-express-network-objects",
+    "document_title": "Network Objects",
+    "section_title": "Adding Objects Manually",
+    "product": "CE Express",
+    "version": "Unknown",
+    "category": "Network Objects",
+    "source_file": "docs/ce-express/network-objects.md",
+    "text": "1. Open **Network [Data Management](#kw:31-data-management-tools:inventory3d-user-guide)** (button in top toolbar).\n2. Click **Add New Record**.\n3. Fill in `cell_name`, `latitude`, and `longitude` (minimum required).\n4. Fill in any additional attributes.\n5. Click **Save**.\n6. Click **Synchronize Changes** to push to the database and display on the map."
+  },
+  {
+    "chunk_id": "ce-express-network-objects_chunk_6",
+    "document_id": "ce-express-network-objects",
+    "document_title": "Network Objects",
+    "section_title": "Importing Objects from CSV",
+    "product": "CE Express",
+    "version": "Unknown",
+    "category": "Network Objects",
+    "source_file": "docs/ce-express/network-objects.md",
+    "text": "Bulk import is the fastest way to add many cells at once.\n1. Open **Network [Data Management](#kw:31-data-management-tools:inventory3d-user-guide)**.\n2. Click **Import**.\n3. Select your CSV file. The file must have a header row with column names matching CE Express field names.\n4. Map any columns that don't match automatically.\n5. Click **Import**.\n6. Click **Synchronize Changes** to confirm."
+  },
+  {
+    "chunk_id": "ce-express-network-objects_chunk_7",
+    "document_id": "ce-express-network-objects",
+    "document_title": "Network Objects",
+    "section_title": "CSV Template",
+    "product": "CE Express",
+    "version": "Unknown",
+    "category": "Network Objects",
+    "source_file": "docs/ce-express/network-objects.md",
+    "text": "Minimum required columns:\n```\ncell_name,latitude,longitude\n```\nFull template:\n```\ncell_name,site_name,latitude,longitude,height,azimuth,tilt,frequency_mhz,power_dbm,technology,antenna_pattern\nSITE01_A,SITE01,54.6872,25.2797,30,0,3,1800,43,4G,\nSITE01_B,SITE01,54.6872,25.2797,30,120,3,1800,43,4G,\nSITE01_C,SITE01,54.6872,25.2797,30,240,3,1800,43,4G,\n```\n> Download the template from the Downloads page."
+  },
+  {
+    "chunk_id": "ce-express-network-objects_chunk_8",
+    "document_id": "ce-express-network-objects",
+    "document_title": "Network Objects",
+    "section_title": "On the Map",
+    "product": "CE Express",
+    "version": "Unknown",
+    "category": "Network Objects",
+    "source_file": "docs/ce-express/network-objects.md",
+    "text": "Click an object to select it. Its attributes appear in the side panel where you can edit them inline."
+  },
+  {
+    "chunk_id": "ce-express-network-objects_chunk_9",
+    "document_id": "ce-express-network-objects",
+    "document_title": "Network Objects",
+    "section_title": "In the Table",
+    "product": "CE Express",
+    "version": "Unknown",
+    "category": "Network Objects",
+    "source_file": "docs/ce-express/network-objects.md",
+    "text": "Switch to Network Data Management, find the row, and click any cell to edit it. Click **Synchronize Changes** when done."
+  },
+  {
+    "chunk_id": "ce-express-network-objects_chunk_10",
+    "document_id": "ce-express-network-objects",
+    "document_title": "Network Objects",
+    "section_title": "Moving an Object",
+    "product": "CE Express",
+    "version": "Unknown",
+    "category": "Network Objects",
+    "source_file": "docs/ce-express/network-objects.md",
+    "text": "1. Select the object on the map.\n2. Click the **Move** tool in the toolbar.\n3. Click the new position on the map — a yellow dot marks it and coordinates update automatically.\n   - Alternatively, type new latitude/longitude values directly.\n4. Click **Accept** to confirm."
+  },
+  {
+    "chunk_id": "ce-express-network-objects_chunk_11",
+    "document_id": "ce-express-network-objects",
+    "document_title": "Network Objects",
+    "section_title": "Duplicating Objects",
+    "product": "CE Express",
+    "version": "Unknown",
+    "category": "Network Objects",
+    "source_file": "docs/ce-express/network-objects.md",
+    "text": "1. Select the objects to duplicate (use Rectangle Selection for multiple).\n2. Click **Duplicate selected objects**.\n3. Choose the target workspace from the dropdown.\n4. Set the new position by clicking the map or entering coordinates.\n5. Click **Accept**."
+  },
+  {
+    "chunk_id": "ce-express-network-objects_chunk_12",
+    "document_id": "ce-express-network-objects",
+    "document_title": "Network Objects",
+    "section_title": "Deleting Objects",
+    "product": "CE Express",
+    "version": "Unknown",
+    "category": "Network Objects",
+    "source_file": "docs/ce-express/network-objects.md",
+    "text": "Select the object right-click **Delete**, or select the row in Network Data Management and click **Delete Record**.\n> In Inventory3D, permanent deletion requires the **Delete Object Permanently** admin function. Standard deletion in CE Express moves objects to a soft-deleted state."
+  },
+  {
+    "chunk_id": "ce-express-network-objects_chunk_13",
+    "document_id": "ce-express-network-objects",
+    "document_title": "Network Objects",
+    "section_title": "Selecting Multiple Objects",
+    "product": "CE Express",
+    "version": "Unknown",
+    "category": "Network Objects",
+    "source_file": "docs/ce-express/network-objects.md",
+    "text": "Use the **Rectangle Selection** tool to draw a box on the map and select all objects within it. Then use **Show In Table Cells** to view and bulk-edit their attributes."
+  },
+  {
+    "chunk_id": "ce-express-network-objects_chunk_14",
+    "document_id": "ce-express-network-objects",
+    "document_title": "Network Objects",
+    "section_title": "Related Pages",
+    "product": "CE Express",
+    "version": "Unknown",
+    "category": "Network Objects",
+    "source_file": "docs/ce-express/network-objects.md",
+    "text": "- [Antenna Patterns](#kw:importing-antenna-patterns:ce-express-antenna) — assigning patterns to cells\n- RF Prediction — running predictions on selected cells\n- Workspaces — workspace and database overview"
+  }
+]

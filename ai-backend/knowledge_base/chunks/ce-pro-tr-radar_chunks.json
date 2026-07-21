@@ -1,0 +1,68 @@
+[
+  {
+    "chunk_id": "ce-pro-tr-radar_chunk_1",
+    "document_id": "ce-pro-tr-radar",
+    "document_title": "Radar Prediction",
+    "section_title": "Radar Prediction",
+    "product": "CE Pro",
+    "version": "Unknown",
+    "category": "Training",
+    "source_file": "docs/ce-pro/training/14-radar-prediction.md",
+    "text": "> **Version:** CE Pro v4.9"
+  },
+  {
+    "chunk_id": "ce-pro-tr-radar_chunk_2",
+    "document_id": "ce-pro-tr-radar",
+    "document_title": "Radar Prediction",
+    "section_title": "Overview",
+    "product": "CE Pro",
+    "version": "Unknown",
+    "category": "Training",
+    "source_file": "docs/ce-pro/training/14-radar-prediction.md",
+    "text": "Radar Prediction calculates the detection reach of radar signals across an area. The tool accounts for terrain (DTM), obstacles, and the radar cross-section of different target types. Detection range varies by target — drones are identified within a shorter distance than aircraft.\n---"
+  },
+  {
+    "chunk_id": "ce-pro-tr-radar_chunk_3",
+    "document_id": "ce-pro-tr-radar",
+    "document_title": "Radar Prediction",
+    "section_title": "How to Run",
+    "product": "CE Pro",
+    "version": "Unknown",
+    "category": "Training",
+    "source_file": "docs/ce-pro/training/14-radar-prediction.md",
+    "text": "1. Click the **Radar Prediction** button in the CE Desktop tab\n2. The Radar Prediction dialogue opens\n3. Set the parameters below\n4. Click **Run Calculation**\n---"
+  },
+  {
+    "chunk_id": "ce-pro-tr-radar_chunk_4",
+    "document_id": "ce-pro-tr-radar",
+    "document_title": "Radar Prediction",
+    "section_title": "Parameters",
+    "product": "CE Pro",
+    "version": "Unknown",
+    "category": "Training",
+    "source_file": "docs/ce-pro/training/14-radar-prediction.md",
+    "text": "| Parameter | Description |\n|-----------|-------------|\n| Calculation name | Unique name to identify this prediction result |\n| Resolution | Cell size of the output raster, in metres |\n| Best Server count | Calculate up to 5 best servers (radar sources) |\n| Radar template | Pre-configured template defining radar specifications |\n| Target cross-section | Radar cross-section (RCS) of the target — affects detection range. Drones have a smaller RCS than aircraft |\n| Selected | Number of radar objects currently selected on the map |\n---"
+  },
+  {
+    "chunk_id": "ce-pro-tr-radar_chunk_5",
+    "document_id": "ce-pro-tr-radar",
+    "document_title": "Radar Prediction",
+    "section_title": "Results",
+    "product": "CE Pro",
+    "version": "Unknown",
+    "category": "Training",
+    "source_file": "docs/ce-pro/training/14-radar-prediction.md",
+    "text": "The output is a raster layer added to the map:\n- **Field Strength raster** — signal level in dBm across the coverage area\n- Higher values indicate stronger radar detection at that location\n- Areas below detection threshold appear as no-data or a separate colour class\n---"
+  },
+  {
+    "chunk_id": "ce-pro-tr-radar_chunk_6",
+    "document_id": "ce-pro-tr-radar",
+    "document_title": "Radar Prediction",
+    "section_title": "Use Cases",
+    "product": "CE Pro",
+    "version": "Unknown",
+    "category": "Training",
+    "source_file": "docs/ce-pro/training/14-radar-prediction.md",
+    "text": "- Airport and airspace surveillance coverage planning\n- Drone detection zone mapping\n- Military and defence radar network design\n- Identifying gaps in radar coverage requiring additional sensors"
+  }
+]

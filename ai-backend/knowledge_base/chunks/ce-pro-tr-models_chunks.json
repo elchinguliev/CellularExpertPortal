@@ -1,0 +1,167 @@
+[
+  {
+    "chunk_id": "ce-pro-tr-models_chunk_1",
+    "document_id": "ce-pro-tr-models",
+    "document_title": "08 — Prediction Models",
+    "section_title": "08. Prediction Models",
+    "product": "CE Pro",
+    "version": "Unknown",
+    "category": "Training",
+    "source_file": "docs/ce-pro/training/08-prediction-models.md",
+    "text": "> **Version:** CE Pro v4.9\nPrediction model output is displayed as a coverage raster on the active map:\nSelect the prediction model from the contextual CE Desktop tab in the ArcGIS Pro ribbon:\n---"
+  },
+  {
+    "chunk_id": "ce-pro-tr-models_chunk_2",
+    "document_id": "ce-pro-tr-models",
+    "document_title": "08 — Prediction Models",
+    "section_title": "Overview — Path Loss",
+    "product": "CE Pro",
+    "version": "Unknown",
+    "category": "Training",
+    "source_file": "docs/ce-pro/training/08-prediction-models.md",
+    "text": "The fundamental relationship used in CE Pro predictions:\n```\nField Strength (dBm) = EIRP – Antenna Attenuation – Path Loss\n```\nCE Pro supports five path loss models covering 10 kHz – 100 GHz. Choose the model based on frequency band and environment.\n---"
+  },
+  {
+    "chunk_id": "ce-pro-tr-models_chunk_3",
+    "document_id": "ce-pro-tr-models",
+    "document_title": "08 — Prediction Models",
+    "section_title": "CE Path Loss Models",
+    "product": "CE Pro",
+    "version": "Unknown",
+    "category": "Training",
+    "source_file": "docs/ce-pro/training/08-prediction-models.md",
+    "text": "| Model | Frequency Range | Best For |\n|-------|----------------|----------|\n| CEC ITU-R | 100 MHz – 6 GHz | Cellular (2G/3G/4G/5G) |\n| ITU-R P.452 | 6 GHz – 50 GHz | Microwave, mmWave |\n| LOS ITU-R P.525 | 6 GHz – 100 GHz | Fixed point-to-point links |\n| UniMacro | 400 MHz – 3 GHz | CE proprietary cellular model |\n| ITU-R P.368 | 10 kHz – 30 MHz | HF/VHF ground wave |\n---"
+  },
+  {
+    "chunk_id": "ce-pro-tr-models_chunk_4",
+    "document_id": "ce-pro-tr-models",
+    "document_title": "08 — Prediction Models",
+    "section_title": "1. CEC ITU-R Model (100 MHz – 6 GHz)",
+    "product": "CE Pro",
+    "version": "Unknown",
+    "category": "Training",
+    "source_file": "docs/ce-pro/training/08-prediction-models.md",
+    "text": "Combination model for cellular networks. Distinguishes three radio visibility conditions:\n- **LOS** — Free Space Loss (ITU-R P.525)\n- **OLOS** (Obstructed LOS) — FSL + Clutter Loss (ITU-R P.2108)\n- **NLOS** — FSL + Diffraction Loss (ITU-R P.526) + Clutter Loss (ITU-R P.2108)"
+  },
+  {
+    "chunk_id": "ce-pro-tr-models_chunk_5",
+    "document_id": "ce-pro-tr-models",
+    "document_title": "08 — Prediction Models",
+    "section_title": "Path Loss Equation (LOS / OLOS)",
+    "product": "CE Pro",
+    "version": "Unknown",
+    "category": "Training",
+    "source_file": "docs/ce-pro/training/08-prediction-models.md",
+    "text": "```\nL = K_off + K_LogD × log(d) + K_LogF × log(f)\n```\n| Parameter | Description | Default |\n|-----------|-------------|---------|\n| K_off | Constant offset (dB) | 32 |\n| K_LogD | Distance influence coefficient | 20 |\n| K_LogF | Frequency influence coefficient | 20 |\n| d | Distance (km) | — |\n| f | Frequency (MHz) | — |"
+  },
+  {
+    "chunk_id": "ce-pro-tr-models_chunk_6",
+    "document_id": "ce-pro-tr-models",
+    "document_title": "08 — Prediction Models",
+    "section_title": "Path Loss Equation (NLOS)",
+    "product": "CE Pro",
+    "version": "Unknown",
+    "category": "Training",
+    "source_file": "docs/ce-pro/training/08-prediction-models.md",
+    "text": "```\nL = K_off + K_LogD_obs × log(d) + K_LogF × log(f)\n```\nK_LogD_obs (obstructed distance coefficient) default = **30**"
+  },
+  {
+    "chunk_id": "ce-pro-tr-models_chunk_7",
+    "document_id": "ce-pro-tr-models",
+    "document_title": "08 — Prediction Models",
+    "section_title": "Clutter Loss",
+    "product": "CE Pro",
+    "version": "Unknown",
+    "category": "Training",
+    "source_file": "docs/ce-pro/training/08-prediction-models.md",
+    "text": "Estimated per **ITU-R P.2108** — Method 1: clutter shadowing loss with diffraction as dominant effect.\nSolid obstacle (building) diffraction uses **Single Knife Edge (SKE)** per ITU-R P.526:\n```\nTx ---d1--- [obstacle h > 0] ---d2--- Rx\n```"
+  },
+  {
+    "chunk_id": "ce-pro-tr-models_chunk_8",
+    "document_id": "ce-pro-tr-models",
+    "document_title": "08 — Prediction Models",
+    "section_title": "Penetration Loss (Outdoor → Indoor) — 3GPP TR 38.901",
+    "product": "CE Pro",
+    "version": "Unknown",
+    "category": "Training",
+    "source_file": "docs/ce-pro/training/08-prediction-models.md",
+    "text": "**Low-loss BEL Model** (traditional buildings):\n```\nL_glass     = 2.0 + 0.2f\nL_concrete  = 5.0 + 4.0f\nL_IIR_glass = 23.0 + 0.3f        (f = frequency in GHz)\n```\n**High-loss BEL Model** (modern thermally insulated buildings) uses higher wall penetration coefficients for the same materials.\n---"
+  },
+  {
+    "chunk_id": "ce-pro-tr-models_chunk_9",
+    "document_id": "ce-pro-tr-models",
+    "document_title": "08 — Prediction Models",
+    "section_title": "2. ITU-R P.452 Model (6 GHz – 50 GHz)",
+    "product": "CE Pro",
+    "version": "Unknown",
+    "category": "Training",
+    "source_file": "docs/ce-pro/training/08-prediction-models.md",
+    "text": "Universal model (0.1–50 GHz) per **Recommendation ITU-R P.452**. Treats clutter as part of general obstacles — only LOS and NLOS are distinguished (no separate OLOS).\n- **LOS** — Free Space Loss\n- **NLOS** — Basic transmission loss + diffraction losses\n---"
+  },
+  {
+    "chunk_id": "ce-pro-tr-models_chunk_10",
+    "document_id": "ce-pro-tr-models",
+    "document_title": "08 — Prediction Models",
+    "section_title": "3. LOS ITU-R P.525 Model (6 GHz – 100 GHz)",
+    "product": "CE Pro",
+    "version": "Unknown",
+    "category": "Training",
+    "source_file": "docs/ce-pro/training/08-prediction-models.md",
+    "text": "Pure Free Space Loss per **ITU-R P.525**. Use when LOS is guaranteed:\n```\nL = K_off + K_LogD × log(d) + K_LogF × log(f)\n```\n(Defaults: K_off = 32, K_LogD = 20, K_LogF = 20)\nUse for fixed microwave links and 5G NR mmWave (FR2).\n---"
+  },
+  {
+    "chunk_id": "ce-pro-tr-models_chunk_11",
+    "document_id": "ce-pro-tr-models",
+    "document_title": "08 — Prediction Models",
+    "section_title": "4. UniMacro Model (400 MHz – 3 GHz)",
+    "product": "CE Pro",
+    "version": "Unknown",
+    "category": "Training",
+    "source_file": "docs/ce-pro/training/08-prediction-models.md",
+    "text": "CE proprietary model, calibrated from real-world drive tests for cellular networks (400 MHz – 2600 MHz).\n- **LOS** — Free Space Loss\n- **OLOS** — Extended Hata (Open Area) + Clutter Loss (P.2108)\n- **NLOS** — Extended Hata + Diffraction (P.526) + Clutter Loss (P.2108)"
+  },
+  {
+    "chunk_id": "ce-pro-tr-models_chunk_12",
+    "document_id": "ce-pro-tr-models",
+    "document_title": "08 — Prediction Models",
+    "section_title": "9999 Ericsson Path Loss Equation",
+    "product": "CE Pro",
+    "version": "Unknown",
+    "category": "Training",
+    "source_file": "docs/ce-pro/training/08-prediction-models.md",
+    "text": "```\nL_H = a0 + a1×log(d) + a2×log(hB) + a3×log(hB)×log(d)\n        + 3.2×[log(11.75×hM)]² + g(f)\ng(f) = 44.49×log(f) – 4.78×[log(f)]²\n```\n| Parameter | Description | Default |\n|-----------|-------------|---------|\n| a0 | Constant offset — adjusts absolute level of loss curve | 36.8 |\n| a1 | Distance coefficient — controls slope of curve | 30.2 |\n| a2 | Transmitter height coefficient | -12.0 |\n| a3 | Okumura-Hata multiplier for log(hB)×log(d) | 0.1 |\n| hB | Base station antenna height (m) | — |\n| hM | Mobile (UE) antenna height (m) | — |\n| d | Distance (km) | — |\n| f | Frequency (MHz) | — |\n**Calibration (drive-test):**\n- **a0** — shifts entire curve vertically (mean error correction)\n- **a1** — changes slope of curve vs distance\n- **a2** — adjusts loss relative to base station height\n- **a3** — fine-tunes height-distance interaction\n---"
+  },
+  {
+    "chunk_id": "ce-pro-tr-models_chunk_13",
+    "document_id": "ce-pro-tr-models",
+    "document_title": "08 — Prediction Models",
+    "section_title": "5. ITU-R P.368 (10 kHz – 30 MHz)",
+    "product": "CE Pro",
+    "version": "Unknown",
+    "category": "Training",
+    "source_file": "docs/ce-pro/training/08-prediction-models.md",
+    "text": "Ground wave propagation for HF/VHF broadcast and land mobile systems.\n---"
+  },
+  {
+    "chunk_id": "ce-pro-tr-models_chunk_14",
+    "document_id": "ce-pro-tr-models",
+    "document_title": "08 — Prediction Models",
+    "section_title": "Prediction Model Manager",
+    "product": "CE Pro",
+    "version": "Unknown",
+    "category": "Training",
+    "source_file": "docs/ce-pro/training/08-prediction-models.md",
+    "text": "Navigate to: **Cellular Expert tab → Prediction Model Manager**\n- The **Default** model cannot be deleted\n- New models copy parameters from Default as a starting point\n- Each model can be independently calibrated per environment\n---"
+  },
+  {
+    "chunk_id": "ce-pro-tr-models_chunk_15",
+    "document_id": "ce-pro-tr-models",
+    "document_title": "08 — Prediction Models",
+    "section_title": "Required Input Data",
+    "product": "CE Pro",
+    "version": "Unknown",
+    "category": "Training",
+    "source_file": "docs/ce-pro/training/08-prediction-models.md",
+    "text": "| Data | Required | Notes |\n|------|----------|-------|\n| DTM / DEM | ✅ Yes | Terrain elevation grid |\n| Clutter classes | Optional | Improves OLOS/NLOS |\n| Clutter height grid | Optional | Required for P.2108 |\n| Receiver height | ✅ Yes | UE height above ground |\n| Model coefficients | ✅ Yes | K_off, K_LogD, K_LogF |\n---\n*Reference: CE Desktop Training — 5. Prediction Models*\n*Contact: info@cellular-expert.com | +370 5 2150575*"
+  }
+]

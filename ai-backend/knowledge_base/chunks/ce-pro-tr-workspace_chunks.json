@@ -1,0 +1,101 @@
+[
+  {
+    "chunk_id": "ce-pro-tr-workspace_chunk_1",
+    "document_id": "ce-pro-tr-workspace",
+    "document_title": "04 — Workspace",
+    "section_title": "04. Creating Workspace",
+    "product": "CE Pro",
+    "version": "Unknown",
+    "category": "Training",
+    "source_file": "docs/ce-pro/training/04-workspace.md",
+    "text": "> **Version:** CE Pro v4.9\n> **Version:** CE Pro v4.9"
+  },
+  {
+    "chunk_id": "ce-pro-tr-workspace_chunk_2",
+    "document_id": "ce-pro-tr-workspace",
+    "document_title": "04 — Workspace",
+    "section_title": "What Is a Workspace?",
+    "product": "CE Pro",
+    "version": "Unknown",
+    "category": "Training",
+    "source_file": "docs/ce-pro/training/04-workspace.md",
+    "text": "A CE Pro Workspace is a geodatabase (`.gdb`) that stores all project data — cells, sites, antennas, links, and prediction results. Every CE Pro project must have one workspace before any RF work can begin.\n---"
+  },
+  {
+    "chunk_id": "ce-pro-tr-workspace_chunk_3",
+    "document_id": "ce-pro-tr-workspace",
+    "document_title": "04 — Workspace",
+    "section_title": "CE Tools State",
+    "product": "CE Pro",
+    "version": "Unknown",
+    "category": "Training",
+    "source_file": "docs/ce-pro/training/04-workspace.md",
+    "text": "The **CE Tools** tab in the ArcGIS Pro ribbon shows one of three states:\n| State | Meaning |\n|---|---|\n| Workspace is not added | No workspace linked to this project yet |\n| Workspace is added | Workspace found and geodata path is valid |\n| Workspace is added, but Geodata is missing | Workspace exists but the geodata folder path is broken |\n---"
+  },
+  {
+    "chunk_id": "ce-pro-tr-workspace_chunk_4",
+    "document_id": "ce-pro-tr-workspace",
+    "document_title": "04 — Workspace",
+    "section_title": "Creating a New Workspace",
+    "product": "CE Pro",
+    "version": "Unknown",
+    "category": "Training",
+    "source_file": "docs/ce-pro/training/04-workspace.md",
+    "text": "When ArcGIS Pro opens, the start page lets you create a new project or open an existing one:\n1. Open ArcGIS Pro and add a **Map** or **Local Scene** to your project\n2. Click the **CE Desktop** tab in the ribbon\n3. Click **Create Workspace**\n4. Fill in the required fields:\n| Field | Description |\n|---|---|\n| New workspace path | Folder where the `.gdb` will be created |\n| Geodata folder path | Path to your DTM / clutter / obstacle rasters |\n| Projected coordinate system | Must match your geodata CRS (e.g., EPSG:3346 for Lithuania) |\n| Also create Local Scene | Tick to add a 3D scene view automatically |\n5. Click **Create** — CE Pro will build the geodatabase and populate it with the default schema\n---"
+  },
+  {
+    "chunk_id": "ce-pro-tr-workspace_chunk_5",
+    "document_id": "ce-pro-tr-workspace",
+    "document_title": "04 — Workspace",
+    "section_title": "Cellular Expert Project Structure",
+    "product": "CE Pro",
+    "version": "Unknown",
+    "category": "Training",
+    "source_file": "docs/ce-pro/training/04-workspace.md",
+    "text": "After creation, the workspace folder contains:\n```\nMyProject/\n├── Predictions/          ← RF prediction output rasters\n├── Results/              ← Processed result layers\n├── SystemFiles/          ← Internal CE configuration files\n├── Temp/                 ← Temporary calculation files\n├── VolatileResults/      ← Short-lived result cache\n├── VolatileTemp/         ← Short-lived temp cache\n└── Workspace.gdb/        ← Main geodatabase (cells, sites, antennas, links)\n```\n---"
+  },
+  {
+    "chunk_id": "ce-pro-tr-workspace_chunk_6",
+    "document_id": "ce-pro-tr-workspace",
+    "document_title": "04 — Workspace",
+    "section_title": "Cellular Expert Dataset Objects",
+    "product": "CE Pro",
+    "version": "Unknown",
+    "category": "Training",
+    "source_file": "docs/ce-pro/training/04-workspace.md",
+    "text": "The `Workspace.gdb` contains the following feature classes:\n| Object | Description |\n|---|---|\n| Cell | Radio cell with RF parameters (frequency, power, antenna, technology) |\n| Site | Physical mast or rooftop location grouping one or more cells |\n| Radar | Radar interference source object |\n| Repeater | Signal repeater / booster |\n| CPE | Customer Premises Equipment (fixed wireless terminal) |\n| OMEN | Omni-directional microwave node |\n| Link | Point-to-point microwave or RL link |\n---"
+  },
+  {
+    "chunk_id": "ce-pro-tr-workspace_chunk_7",
+    "document_id": "ce-pro-tr-workspace",
+    "document_title": "04 — Workspace",
+    "section_title": "Changing Project Paths",
+    "product": "CE Pro",
+    "version": "Unknown",
+    "category": "Training",
+    "source_file": "docs/ce-pro/training/04-workspace.md",
+    "text": "If you move the geodata folder or the workspace after creation:\n1. Click **CE Desktop → Workspace → Settings**\n2. Update the **Geodata path** to the new location\n3. Update **Calculation paths** (Predictions, Results, Temp) if needed\n4. Click **Apply**\n---"
+  },
+  {
+    "chunk_id": "ce-pro-tr-workspace_chunk_8",
+    "document_id": "ce-pro-tr-workspace",
+    "document_title": "04 — Workspace",
+    "section_title": "Project Settings and Rounding",
+    "product": "CE Pro",
+    "version": "Unknown",
+    "category": "Training",
+    "source_file": "docs/ce-pro/training/04-workspace.md",
+    "text": "Under **CE Desktop → Workspace → Project Settings** you can configure:\n- Coordinate display format (decimal degrees vs projected metres)\n- Power units (dBm / dBW)\n- Distance units (km / miles)\n- Rounding precision for displayed values\n---"
+  },
+  {
+    "chunk_id": "ce-pro-tr-workspace_chunk_9",
+    "document_id": "ce-pro-tr-workspace",
+    "document_title": "04 — Workspace",
+    "section_title": "Workspace Upgrade",
+    "product": "CE Pro",
+    "version": "Unknown",
+    "category": "Training",
+    "source_file": "docs/ce-pro/training/04-workspace.md",
+    "text": "When you open a workspace created with an older CE version, CE Pro will detect a schema mismatch and prompt an upgrade:\n1. Go to **CE Desktop → Workspace → Upgrade**\n2. Review the list of new tables and fields that will be added\n3. Click **Upgrade Database**\n> Upgrade is non-destructive — existing data is preserved. Always back up the `.gdb` before upgrading.\n---\n**Exercise:** `C:\\CE_Course\\0. Descriptions\\1. Create workspace.pdf`\n**Contact:** info@cellular-expert.com | +370 5 2150575 | www.cellular-expert.com"
+  }
+]

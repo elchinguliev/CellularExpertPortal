@@ -14,7 +14,8 @@ const chip = (color, text) => (
 );
 const now = () => new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});
 const boldify = (text) => text.split('**').map((p,i) => i%2===1 ? <strong key={i} style={{color:'var(--text-bright)'}}>{p}</strong> : p);
-
+const cleanMarkdownLinks = (text = '') =>
+  text.replace(/\[([^\]]+)\]\([^)]+\)/g, '$1');
 export default function SupportPortal({ onViewDocs }) {
   const [currentUser, setCurrentUser] = useState(null);
 const [users,       setUsers]       = useState([]);
@@ -44,6 +45,14 @@ const [users,       setUsers]       = useState([]);
   const [docMode,     setDocMode]     = useState('list'); // 'list' | 'edit' | 'new'
   const [docDraft,    setDocDraft]    = useState(null);
   const [docSaving,   setDocSaving]   = useState(false);
+
+  const [docImages,    setDocImages]    = useState([]);
+  const [newImgFile,   setNewImgFile]   = useState(null);
+  const [newImgCaption,setNewImgCaption]= useState('');
+  const [newImgAnchor, setNewImgAnchor] = useState('');
+  const [imgUploading, setImgUploading] = useState(false);
+  const [ticketDraft, setTicketDraft] = useState(null);
+  const [pageLoadStart, setPageLoadStart] = useState(null);
 
   const isAdmin   = currentUser?.role==='admin' || currentUser?.role==='agent';
   // Restore a saved session on page load/refresh
@@ -80,15 +89,15 @@ const [users,       setUsers]       = useState([]);
     if (tab === 'adm-docs' && docMode === 'list') loadDocsList();
   }, [tab, docMode]);
 
-  const openEditDoc = async (docId) => {
+const openEditDoc = async (docId) => {
     setDocsError('');
     const res = await fetch(`${API_BASE}/docs/${docId}`);
     if (!res.ok) { setDocsError('Could not load this document.'); return; }
     const data = await res.json();
     setDocDraft({ doc_id: data.doc_id, title: data.title, product: data.product, category: data.category, content: data.content });
+    setDocImages(data.images || []);
     setDocMode('edit');
   };
-
   const openNewDoc = () => {
     setDocDraft({ doc_id: '', title: '', product: 'CE Express', category: '', content: '' });
     setDocMode('new');
@@ -128,8 +137,60 @@ const [users,       setUsers]       = useState([]);
       setDocsError('Could not delete this document.');
     }
   };
+  const uploadImage = async () => {
+    if (!newImgFile) { setDocsError('Choose a file first.'); return; }
+    setImgUploading(true);
+    setDocsError('');
+    try {
+      const form = new FormData();
+      form.append('image', newImgFile);
+      form.append('caption', newImgCaption);
+      form.append('section_anchor', newImgAnchor);
+      const res = await fetch(`${API_BASE}/docs/${docDraft.doc_id}/images/upload`, { method: 'POST', body: form });
+      const data = await res.json();
+      if (!res.ok) { setDocsError(data.error || 'Upload failed.'); setImgUploading(false); return; }
+      setDocImages(p => [...p, data]);
+      setNewImgFile(null); setNewImgCaption(''); setNewImgAnchor('');
+      setImgUploading(false);
+    } catch {
+      setDocsError('Could not reach the server.');
+      setImgUploading(false);
+    }
+  };
+
+  const deleteImage = async (imageId) => {
+    if (!window.confirm('Delete this image?')) return;
+    const res = await fetch(`${API_BASE}/docs/${docDraft.doc_id}/images/${imageId}`, { method: 'DELETE' });
+    if (res.ok) {
+      setDocImages(p => p.filter(i => i.id !== imageId));
+    } else {
+      setDocsError('Could not delete this image.');
+    }
+  };
   const myTickets = currentUser ? tickets.filter(t => t.userId===currentUser.id) : [];
   const openTktCount = myTickets.filter(t => t.status==='Open' || t.status==='In Progress').length;
+  const logActivity = (activityType, page, details = '') => {
+    if (!currentUser) return;
+    fetch('http://localhost:8000/admin/log-activity', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        user_id: currentUser.id,
+        user_name: currentUser.name,
+        user_role: currentUser.role,
+        activity_type: activityType,
+        page: page,
+        details: details
+      })
+    }).catch(() => {});
+  };
+
+  useEffect(() => {
+    if (!pageLoadStart || !currentUser) return;
+    const duration = Math.round(performance.now() - pageLoadStart);
+    logActivity('performance', tab, `Page opened in ${duration} ms`);
+    setPageLoadStart(null);
+  }, [tab, pageLoadStart, currentUser]);
 
   useEffect(() => { msgEnd.current?.scrollIntoView({behavior:'smooth'}); }, [messages, typing]);
 
@@ -154,6 +215,7 @@ const [users,       setUsers]       = useState([]);
       const data = await res.json();
       if (!res.ok) return { ok: false, error: data.error || 'Sign in failed.' };
       setCurrentUser(data);
+      logActivity('login', 'Support Portal', 'User logged in');
       localStorage.setItem('ce_support_user', JSON.stringify(data));
       setTab((data.role==='admin'||data.role==='agent') ? 'adm-dashboard' : 'chat');
       return { ok: true };
@@ -172,6 +234,7 @@ const [users,       setUsers]       = useState([]);
       const data = await res.json();
       if (!res.ok) return { ok: false, error: data.error || 'Registration failed.' };
       setCurrentUser(data);
+      logActivity('register', 'Support Portal', 'New user registered');
       localStorage.setItem('ce_support_user', JSON.stringify(data));
       setTab('chat');
       return { ok: true };
@@ -180,31 +243,105 @@ const [users,       setUsers]       = useState([]);
     }
   };
 
-  const logout = () => {
+const logout = () => {
+    logActivity('logout', 'Support Portal', 'User logged out');
     setCurrentUser(null); setMessages([]); setShowSug(true); setTab('chat');
     localStorage.removeItem('ce_support_user');
   };
 
-
   // ── Chat ──────────────────────────────────────────────────────────────────
-  const sendMsg = (text) => {
-    const t = text.trim(); if (!t) return;
-    setShowSug(false);
-    setMessages(p => [...p, {from:'user', text:t, time:now()}]);
-    setTyping(true);
-    setTimeout(() => {
-      setTyping(false);
-      const res = findAnswer(t);
-      if (res) {
-        setMessages(p => [...p, {from:'bot', time:now(), type:'article', title:res.title, text:res.answer}]);
-        setTimeout(() => setMessages(p => [...p, {from:'bot', time:now(), type:'followup', text:'Was this helpful? Ask another question or use the options below:'}]), 500);
-      } else {
-        setMessages(p => [...p, {from:'bot', time:now(), type:'no-answer',
-          text:`I don't have a specific answer for that in my knowledge base.\n\nPlease contact our support team:\n📧 **${SUPPORT_EMAIL}**\n\nOr open a support ticket and an engineer will respond.`}]);
-      }
-    }, 800 + Math.random()*600);
-  };
+  const sendMsg = async (text) => {
+    const t = text.trim();
+    if (!t) return;
 
+    setShowSug(false);
+    setMessages(p => [...p, { from: 'user', text: t, time: now() }]);
+    setTyping(true);
+
+    try {
+      const response = await fetch('http://127.0.0.1:8000/ask', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          question: t,
+          user: currentUser?.name || 'Demo User',
+          conversation: messages.map(m => ({
+            role: m.from === 'bot' ? 'assistant' : 'user',
+            message: m.text || ''
+          }))
+        })
+      });
+
+      const data = await response.json();
+      setTyping(false);
+
+      const shouldOpenTicket =
+        data.ticket_needed ||
+        data.confidence < 0.6 ||
+        !data.sources ||
+        data.sources.length === 0 ||
+        data.answer.toLowerCase().includes("could not find") ||
+        data.answer.toLowerCase().includes("couldn't find");
+
+      if (!shouldOpenTicket) {
+        setMessages(p => [...p, {
+          from: 'bot',
+          time: now(),
+          type: 'article',
+          title: 'AI Documentation Answer',
+          text:
+            `Answer:\n${cleanMarkdownLinks(data.answer)}\n\n` +
+            `Confidence:\n${Math.round(data.confidence * 100)}%\n\n` +
+            `Sources used:\n` +
+            data.sources.map((s, index) =>
+              `${index + 1}. ${s.document}\n   Section: ${s.section}\n   Product: ${s.product} ${s.version}`
+            ).join('\n\n')
+        }]);
+      } else {
+        const ticket = data.ticket_prefill || {
+          product: data.sources?.[0]?.product || 'CE Express',
+          version: data.sources?.[0]?.version || '7.3',
+          ticket_title: `Question about: ${t}`,
+          issue_type: 'Documentation / User Question',
+          full_question: t,
+          retrieved_documents: data.sources || [],
+          user: currentUser?.name || 'Demo User',
+          time: new Date().toISOString(),
+          conversation_context: messages.map(m => ({
+            role: m.from === 'bot' ? 'assistant' : 'user',
+            message: m.text || ''
+          })),
+          priority_suggestion: 'Low'
+        };
+
+        setTicketDraft(ticket);
+
+        setMessages(p => [...p, {
+          from: 'bot',
+          time: now(),
+          type: 'no-answer',
+          text:
+            `${cleanMarkdownLinks(data.answer)}\n\n` +
+            `I can prepare a support ticket for review.\n\n` +
+            `**Ticket draft:**\n` +
+            `Product: ${ticket.product}\n` +
+            `Version: ${ticket.version}\n` +
+            `Title: ${ticket.ticket_title}\n` +
+            `Issue type: ${ticket.issue_type}\n` +
+            `Priority suggestion: ${ticket.priority_suggestion}\n\n` +
+            `**Question:**\n${ticket.full_question}`
+        }]);
+      }
+    } catch (error) {
+      setTyping(false);
+      setMessages(p => [...p, {
+        from: 'bot',
+        time: now(),
+        type: 'no-answer',
+        text: 'AI backend is not reachable. Please check if FastAPI is running on http://127.0.0.1:8000.'
+      }]);
+    }
+  };
   // ── Tickets ───────────────────────────────────────────────────────────────
   const createTicket = (data) => {
     const t = { id:'T-'+String(tickets.length+1).padStart(3,'0'), userId:currentUser.id,
@@ -213,6 +350,8 @@ const [users,       setUsers]       = useState([]);
       updated:new Date().toISOString().split('T')[0], assignedTo:'u4',
       messages:[{from:currentUser.id, text:data.description, time:new Date().toLocaleString()}] };
     setTickets(p=>[t,...p]); setShowNewTkt(false);
+        setTicketDraft(null);
+
     setActiveTkt(t.id); setTab('tickets');
   };
   const replyTicket = (id, text) => {
@@ -234,6 +373,7 @@ const [users,       setUsers]       = useState([]);
           {id:'adm-dashboard',icon:'◈',label:'Dashboard'},
           {id:'adm-tickets',  icon:'◉',label:'All Tickets'},
           {id:'adm-agents',   icon:'◐',label:'Agent Stats'},
+          {id:'adm-ai-insights', icon:'✦', label:'AI Insights'},
           {id:'adm-users',    icon:'◎',label:'Users'},
           {id:'adm-docs',     icon:'▤',label:'Documentation'},
         ] : [
@@ -359,8 +499,7 @@ const [users,       setUsers]       = useState([]);
         <div style={{fontWeight:700,color:'var(--text-bright)',fontSize:13}}>My Tickets ({myTickets.length})</div>
         <button onClick={() => setShowNewTkt(true)} style={{padding:'7px 14px',background:'linear-gradient(135deg, var(--accent), var(--accent2))',border:'none',color:'#fff',borderRadius:8,fontSize:11,cursor:'pointer',fontFamily:'var(--font-mono)',letterSpacing:'.06em',fontWeight:600}}>+ New</button>
       </div>
-      {showNewTkt && <NewTicketForm onSubmit={createTicket} onCancel={() => setShowNewTkt(false)}/>}
-      {myTickets.length===0 && !showNewTkt && (
+{showNewTkt && <NewTicketForm onSubmit={createTicket} onCancel={() => { setShowNewTkt(false); setTicketDraft(null); }} draft={ticketDraft}/>}      {myTickets.length===0 && !showNewTkt && (
         <div style={{textAlign:'center',padding:'36px 16px',color:'var(--text-dim)'}}>
           <div style={{fontSize:30,marginBottom:8,opacity:.5}}>◉</div>
           <div style={{color:'var(--text-bright)',marginBottom:3,fontSize:13}}>No tickets yet</div>
@@ -525,7 +664,19 @@ const [users,       setUsers]       = useState([]);
   );
 
   // ── Admin Users ───────────────────────────────────────────────────────────
-  const AdminUsers = () => (
+const changeUserRole = async (id, role) => {
+    const res = await fetch(`${API_BASE}/auth/users/${id}/role`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ role }),
+    });
+    if (res.ok) {
+      const updated = await res.json();
+      setUsers(p => p.map(u => u.id === id ? updated : u));
+    }
+  };
+
+const AdminUsers = () => (
     <div style={{flex:1,overflowY:'auto',padding:14}}>
       <div style={{fontWeight:700,color:'var(--text-bright)',fontSize:12,marginBottom:9}}>All Users ({users.length})</div>
       {users.map(u => (
@@ -541,8 +692,379 @@ const [users,       setUsers]       = useState([]);
       ))}
     </div>
   );
+    const AdminAIInsights = () => {
+    const [insights, setInsights] = useState(null);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState('');
+
+    useEffect(() => {
+      fetch('http://localhost:8000/admin/ai-insights')
+        .then(response => {
+          if (!response.ok) {
+            throw new Error('Failed to load AI insights');
+          }
+          return response.json();
+        })
+        .then(data => {
+          setInsights(data);
+          setLoading(false);
+        })
+        .catch(() => {
+          setError('AI insights backend is not reachable. Please check FastAPI on port 8000.');
+          setLoading(false);
+        });
+    }, []);
+
+    if (loading) {
+      return (
+        <div style={{flex:1,overflowY:'auto',padding:14}}>
+          <div style={{fontWeight:700,color:'var(--text-bright)',fontSize:12,marginBottom:9}}>
+            AI Insights
+          </div>
+          <div style={{color:'var(--text-dim)',fontSize:12}}>Loading AI analytics...</div>
+        </div>
+      );
+    }
+
+    if (error) {
+      return (
+        <div style={{flex:1,overflowY:'auto',padding:14}}>
+          <div style={{fontWeight:700,color:'var(--text-bright)',fontSize:12,marginBottom:9}}>
+            AI Insights
+          </div>
+          <div style={{color:'#dc2626',fontSize:12}}>{error}</div>
+        </div>
+      );
+    }
+
+        const summary = insights?.summary || {};
+
+    const totalQuestions = summary.total_questions || 0;
+    const ticketNeededCount = summary.ticket_needed_count || 0;
+    const answeredWithoutTicket = Math.max(
+      totalQuestions - ticketNeededCount,
+      0
+    );
+
+    const ticketRate = totalQuestions > 0
+      ? Math.round((ticketNeededCount / totalQuestions) * 100)
+      : 0;
+
+    const lowConfidenceCount =
+      insights?.low_confidence_questions?.length || 0;
+
+    return (
+      <div style={{flex:1,overflowY:'auto',padding:14}}>
+        <div style={{marginBottom:14}}>
+          <div style={{fontWeight:700,color:'var(--text-bright)',fontSize:12,marginBottom:4}}>
+            AI Insights
+          </div>
+          <div style={{fontSize:11,color:'var(--text-dim)'}}>
+            Clear overview of chatbot usage, confidence, ticket demand, and unclear topics.
+          </div>
+        </div>
+
+        <div style={{
+          display:'grid',
+          gridTemplateColumns:'repeat(3, minmax(0, 1fr))',
+          gap:10,
+          marginBottom:10
+        }}>
+          <div style={{
+            background:'var(--bg2)',
+            border:'1px solid var(--border)',
+            borderRadius:10,
+            padding:12
+          }}>
+            <div style={{
+              fontFamily:'var(--font-mono)',
+              fontSize:9,
+              color:'var(--text-dim)',
+              letterSpacing:'.08em',
+              marginBottom:5
+            }}>
+              TOTAL AI QUESTIONS
+            </div>
+
+            <div style={{
+              fontSize:24,
+              fontWeight:800,
+              color:'var(--text-bright)'
+            }}>
+              {totalQuestions}
+            </div>
+
+            <div style={{
+              fontSize:10,
+              color:'var(--text-dim)',
+              marginTop:4
+            }}>
+              All chatbot questions recorded
+            </div>
+          </div>
+
+          <div style={{
+            background:'var(--bg2)',
+            border:'1px solid var(--border)',
+            borderRadius:10,
+            padding:12
+          }}>
+            <div style={{
+              fontFamily:'var(--font-mono)',
+              fontSize:9,
+              color:'var(--text-dim)',
+              letterSpacing:'.08em',
+              marginBottom:5
+            }}>
+              TICKET NEEDED
+            </div>
+
+            <div style={{
+              fontSize:24,
+              fontWeight:800,
+              color:'#d97706'
+            }}>
+              {ticketNeededCount}
+            </div>
+
+            <div style={{
+              fontSize:10,
+              color:'var(--text-dim)',
+              marginTop:4
+            }}>
+              {ticketRate}% of all AI questions
+            </div>
+          </div>
+
+          <div style={{
+            background:'var(--bg2)',
+            border:'1px solid var(--border)',
+            borderRadius:10,
+            padding:12
+          }}>
+            <div style={{
+              fontFamily:'var(--font-mono)',
+              fontSize:9,
+              color:'var(--text-dim)',
+              letterSpacing:'.08em',
+              marginBottom:5
+            }}>
+              AVG CONFIDENCE
+            </div>
+
+            <div style={{
+              fontSize:24,
+              fontWeight:800,
+              color:'var(--accent)'
+            }}>
+              {Math.round((summary.average_confidence || 0) * 100)}%
+            </div>
+
+            <div style={{
+              fontSize:10,
+              color:'var(--text-dim)',
+              marginTop:4
+            }}>
+              Average confidence across responses
+            </div>
+          </div>
+        </div>
+
+        <div style={{
+          display:'grid',
+          gridTemplateColumns:'repeat(3, minmax(0, 1fr))',
+          gap:10,
+          marginBottom:12
+        }}>
+          <div style={{
+            background:'var(--bg2)',
+            border:'1px solid var(--border)',
+            borderRadius:10,
+            padding:12
+          }}>
+            <div style={{
+              fontFamily:'var(--font-mono)',
+              fontSize:9,
+              color:'var(--text-dim)',
+              letterSpacing:'.08em',
+              marginBottom:5
+            }}>
+              ANSWERED WITHOUT TICKET
+            </div>
+
+            <div style={{
+              fontSize:22,
+              fontWeight:800,
+              color:'var(--accent2)'
+            }}>
+              {answeredWithoutTicket}
+            </div>
+
+            <div style={{
+              fontSize:10,
+              color:'var(--text-dim)',
+              marginTop:4
+            }}>
+              Questions handled directly by AI
+            </div>
+          </div>
+
+          <div style={{
+            background:'var(--bg2)',
+            border:'1px solid var(--border)',
+            borderRadius:10,
+            padding:12
+          }}>
+            <div style={{
+              fontFamily:'var(--font-mono)',
+              fontSize:9,
+              color:'var(--text-dim)',
+              letterSpacing:'.08em',
+              marginBottom:5
+            }}>
+              TICKET RATE
+            </div>
+
+            <div style={{
+              fontSize:22,
+              fontWeight:800,
+              color:'#d97706'
+            }}>
+              {ticketRate}%
+            </div>
+
+            <div style={{
+              fontSize:10,
+              color:'var(--text-dim)',
+              marginTop:4
+            }}>
+              Share of questions needing support
+            </div>
+          </div>
+
+          <div style={{
+            background:'var(--bg2)',
+            border:'1px solid var(--border)',
+            borderRadius:10,
+            padding:12
+          }}>
+            <div style={{
+              fontFamily:'var(--font-mono)',
+              fontSize:9,
+              color:'var(--text-dim)',
+              letterSpacing:'.08em',
+              marginBottom:5
+            }}>
+              LOW-CONFIDENCE QUESTIONS
+            </div>
+
+            <div style={{
+              fontSize:22,
+              fontWeight:800,
+              color:'#dc2626'
+            }}>
+              {lowConfidenceCount}
+            </div>
+
+            <div style={{
+              fontSize:10,
+              color:'var(--text-dim)',
+              marginTop:4
+            }}>
+              Possible unclear or missing documentation
+            </div>
+          </div>
+        </div>
+
+        <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:10,marginBottom:12}}>
+          <div style={{background:'var(--bg2)',border:'1px solid var(--border)',borderRadius:10,padding:12}}>
+            <div style={{fontWeight:700,color:'var(--text-bright)',fontSize:12,marginBottom:8}}>
+              Questions by Product
+            </div>
+
+            {(insights?.questions_by_product || []).length === 0 ? (
+              <div style={{fontSize:11,color:'var(--text-dim)'}}>No product data yet.</div>
+            ) : (
+              (insights?.questions_by_product || []).map(item => (
+                <div key={item.product} style={{display:'flex',justifyContent:'space-between',alignItems:'center',padding:'7px 0',borderBottom:'1px solid var(--border)'}}>
+                  <div style={{fontSize:12,color:'var(--text-bright)'}}>{item.product}</div>
+                  <div style={{fontFamily:'var(--font-mono)',fontSize:11,color:'var(--accent)'}}>
+                    {item.question_count}
+                  </div>
+                </div>
+              ))
+            )}
+          </div>
+
+          <div style={{background:'var(--bg2)',border:'1px solid var(--border)',borderRadius:10,padding:12}}>
+            <div style={{fontWeight:700,color:'var(--text-bright)',fontSize:12,marginBottom:8}}>
+              Ticket-Needed Questions
+            </div>
+
+            {(insights?.ticket_needed_questions || []).length === 0 ? (
+              <div style={{fontSize:11,color:'var(--text-dim)'}}>No ticket-needed questions yet.</div>
+            ) : (
+              (insights?.ticket_needed_questions || []).slice(0, 5).map(q => (
+                <div key={q.id} style={{padding:'7px 0',borderBottom:'1px solid var(--border)'}}>
+                  <div style={{fontSize:12,color:'var(--text-bright)',marginBottom:3}}>
+                    {q.question}
+                  </div>
+                  <div style={{fontFamily:'var(--font-mono)',fontSize:10,color:'var(--text-dim)'}}>
+                    {q.product || 'Unknown'} · {Math.round((q.confidence || 0) * 100)}%
+                  </div>
+                </div>
+              ))
+            )}
+          </div>
+        </div>
+
+        <div style={{background:'var(--bg2)',border:'1px solid var(--border)',borderRadius:10,padding:12,marginBottom:12}}>
+          <div style={{fontWeight:700,color:'var(--text-bright)',fontSize:12,marginBottom:8}}>
+            Low-Confidence Questions
+          </div>
+
+          {(insights?.low_confidence_questions || []).length === 0 ? (
+            <div style={{fontSize:11,color:'var(--text-dim)'}}>No low-confidence questions yet.</div>
+          ) : (
+            (insights?.low_confidence_questions || []).map(q => (
+              <div key={q.id} style={{padding:'8px 0',borderBottom:'1px solid var(--border)'}}>
+                <div style={{fontSize:12,color:'var(--text-bright)',marginBottom:3}}>
+                  {q.question}
+                </div>
+                <div style={{fontFamily:'var(--font-mono)',fontSize:10,color:'var(--text-dim)'}}>
+                  User: {q.user_name || 'Unknown'} · Product: {q.product || 'Unknown'} · Confidence: {Math.round((q.confidence || 0) * 100)}%
+                </div>
+              </div>
+            ))
+          )}
+        </div>
+
+        <div style={{background:'var(--bg2)',border:'1px solid var(--border)',borderRadius:10,padding:12}}>
+          <div style={{fontWeight:700,color:'var(--text-bright)',fontSize:12,marginBottom:8}}>
+            Recent AI Questions
+          </div>
+
+          {(insights?.recent_questions || []).length === 0 ? (
+            <div style={{fontSize:11,color:'var(--text-dim)'}}>No AI questions yet.</div>
+          ) : (
+            (insights?.recent_questions || []).map(q => (
+              <div key={q.id} style={{padding:'8px 0',borderBottom:'1px solid var(--border)'}}>
+                <div style={{fontSize:12,color:'var(--text-bright)',marginBottom:3}}>
+                  {q.question}
+                </div>
+                <div style={{fontFamily:'var(--font-mono)',fontSize:10,color:'var(--text-dim)'}}>
+                  User: {q.user_name || 'Unknown'} · Product: {q.product || 'Unknown'} · Ticket needed: {q.ticket_needed ? 'Yes' : 'No'}
+                </div>
+              </div>
+            ))
+          )}
+        </div>
+      </div>
+    );
+  };
+
   // ── Admin Documentation (CRUD) ───────────────────────────────────────────────
-  const AdminDocs = () => {
+const AdminDocs = () => {
     if (docMode === 'edit' || docMode === 'new') {
       return (
         <div style={{flex:1,overflowY:'auto',padding:14}}>
@@ -596,6 +1118,43 @@ const [users,       setUsers]       = useState([]);
               rows={16}
               style={{width:'100%',padding:'11px 12px',border:'1px solid var(--border)',borderRadius:8,fontSize:12.5,color:'var(--text-bright)',background:'var(--bg)',outline:'none',boxSizing:'border-box',fontFamily:'var(--font-mono)',lineHeight:1.6,resize:'vertical'}}/>
           </div>
+
+          {docMode === 'edit' && (
+            <div style={{marginBottom:20,padding:14,background:'var(--bg2)',border:'1px solid var(--border)',borderRadius:10}}>
+              <div style={{fontSize:11,fontWeight:700,color:'var(--text-bright)',marginBottom:10,fontFamily:'var(--font-mono)',letterSpacing:'.06em',textTransform:'uppercase'}}>
+                Images ({docImages.length})
+              </div>
+
+              {docImages.map(img => (
+                <div key={img.id} style={{display:'flex',alignItems:'center',gap:10,padding:'7px 0',borderBottom:'1px solid var(--border)'}}>
+                  <img src={img.image_url} alt="" style={{width:36,height:36,objectFit:'contain',borderRadius:6,background:'var(--bg)',flexShrink:0}}
+                    onError={e => { e.target.style.opacity = 0.2; }}/>
+                  <div style={{flex:1,minWidth:0}}>
+                    <div style={{fontSize:11,color:'var(--text-bright)',overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap'}}>{img.caption || '(no caption)'}</div>
+                    <div style={{fontFamily:'var(--font-mono)',fontSize:9,color:'var(--text-dim)'}}>anchor: {img.section_anchor || '—'}</div>
+                  </div>
+                  <button onClick={() => deleteImage(img.id)}
+                    style={{padding:'5px 10px',background:'transparent',border:'1px solid #dc2626',borderRadius:6,color:'#ef4444',fontSize:9,fontWeight:600,cursor:'pointer',fontFamily:'var(--font-mono)'}}>
+                    DELETE
+                  </button>
+                </div>
+              ))}
+
+              <div style={{marginTop:12,paddingTop:12,borderTop:'1px solid var(--border)'}}>
+                <div style={{fontSize:10,color:'var(--text-dim)',fontFamily:'var(--font-mono)',letterSpacing:'.06em',textTransform:'uppercase',marginBottom:8}}>Upload new image</div>
+                <input type="file" accept="image/*" onChange={e => setNewImgFile(e.target.files[0])}
+                  style={{fontSize:11,color:'var(--text)',marginBottom:8,display:'block'}}/>
+                <input value={newImgCaption} onChange={e=>setNewImgCaption(e.target.value)} placeholder="Caption (optional)"
+                  style={{width:'100%',padding:'8px 10px',border:'1px solid var(--border)',borderRadius:7,fontSize:12,color:'var(--text-bright)',background:'var(--bg)',outline:'none',boxSizing:'border-box',marginBottom:6}}/>
+                <input value={newImgAnchor} onChange={e=>setNewImgAnchor(e.target.value)} placeholder="Section anchor — e.g. workspace-setup (optional)"
+                  style={{width:'100%',padding:'8px 10px',border:'1px solid var(--border)',borderRadius:7,fontSize:12,color:'var(--text-bright)',background:'var(--bg)',outline:'none',boxSizing:'border-box',marginBottom:8,fontFamily:'var(--font-mono)'}}/>
+                <button onClick={uploadImage} disabled={imgUploading}
+                  style={{padding:'8px 16px',background:'var(--accent)',border:'none',borderRadius:7,color:'#fff',fontSize:11,fontWeight:700,cursor:imgUploading?'default':'pointer',opacity:imgUploading?0.7:1,fontFamily:'var(--font-mono)'}}>
+                  {imgUploading ? 'UPLOADING…' : 'UPLOAD'}
+                </button>
+              </div>
+            </div>
+          )}
 
           <div style={{display:'flex',gap:8}}>
             <button onClick={saveDoc} disabled={docSaving}
@@ -663,7 +1222,8 @@ const [users,       setUsers]       = useState([]);
       case 'adm-tickets':   return <AdminTickets/>;
       case 'adm-agents':    return <AdminAgents/>;
       case 'adm-users':     return <AdminUsers/>;
-      case 'adm-docs':      return <AdminDocs/>;
+case 'adm-docs':      return AdminDocs();
+case 'adm-ai-insights': return <AdminAIInsights/>;
       default:              return <ChatTab/>;
     }
   };
