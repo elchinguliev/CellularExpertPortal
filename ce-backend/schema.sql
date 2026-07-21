@@ -83,3 +83,46 @@ CREATE TABLE IF NOT EXISTS users (
 );
 
 CREATE INDEX IF NOT EXISTS idx_users_email ON users(email);
+
+
+CREATE TABLE IF NOT EXISTS tickets (
+  id            SERIAL PRIMARY KEY,
+  ticket_number TEXT UNIQUE NOT NULL,
+  user_id       INTEGER REFERENCES users(id),
+  title         TEXT NOT NULL,
+  product       TEXT,
+  version       TEXT,
+  category      TEXT,
+  priority      TEXT DEFAULT 'Normal',
+  status        TEXT DEFAULT 'Open',
+  assigned_to   INTEGER REFERENCES users(id),
+  created_at    TIMESTAMP DEFAULT NOW(),
+  updated_at    TIMESTAMP DEFAULT NOW()
+);
+
+CREATE TABLE IF NOT EXISTS ticket_messages (
+  id          SERIAL PRIMARY KEY,
+  ticket_id   INTEGER REFERENCES tickets(id) ON DELETE CASCADE,
+  sender_id   INTEGER,
+  sender_name TEXT,
+  message     TEXT NOT NULL,
+  created_at  TIMESTAMP DEFAULT NOW()
+);
+
+CREATE INDEX IF NOT EXISTS idx_tickets_user_id ON tickets(user_id);
+CREATE INDEX IF NOT EXISTS idx_tickets_status ON tickets(status);
+CREATE INDEX IF NOT EXISTS idx_ticket_messages_ticket_id ON ticket_messages(ticket_id);
+
+
+CREATE TABLE IF NOT EXISTS verification_codes (
+  id          SERIAL PRIMARY KEY,
+  email       TEXT NOT NULL,
+  code        TEXT NOT NULL,
+  purpose     TEXT NOT NULL, -- 'register' | 'reset_password'
+  payload     JSONB,          -- pending registration data (name, password_hash, company, product)
+  expires_at  TIMESTAMP NOT NULL,
+  used        BOOLEAN DEFAULT FALSE,
+  created_at  TIMESTAMP DEFAULT NOW()
+);
+
+CREATE INDEX IF NOT EXISTS idx_verification_codes_email ON verification_codes(email);

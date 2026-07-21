@@ -43,18 +43,22 @@ const priorityHints = {
   Critical: 'Urgent blocker. The system is down, production work is affected, there is possible data loss, or the user cannot work at all.'
 };
 
-export default function NewTicketForm({ onSubmit, onCancel, draft }) {
+// Accepts formats like: 7, 7.3, 7.3.1, v7.3
+const VERSION_RE = /^v?\d+(\.\d+){0,2}$/i;
+
+export default function NewTicketForm({ onSubmit, onCancel, draft, currentUserName }) {
   const [title, setTitle] = useState(draft?.ticket_title || '');
   const [prod, setProd] = useState(draft?.product || 'CE Pro');
-  const [version, setVersion] = useState(draft?.version || '');
-  const [cat, setCat] = useState(draft?.issue_type || 'Question');
+const DEFAULT_VERSIONS = { 'CE Pro': '4.9', 'CE Express': '7.3', 'Inventory3D': '4.6', 'Both': '' };
+  const [version, setVersion] = useState(draft?.version || DEFAULT_VERSIONS[draft?.product || 'CE Pro'] || '');  const [cat, setCat] = useState(draft?.issue_type || 'Question');
   const [pri, setPri] = useState(
     draft?.priority_suggestion === 'Medium'
       ? 'Normal'
       : (draft?.priority_suggestion || 'Normal')
   );
-  const [user, setUser] = useState(draft?.user || '');
-  const [ticketTime, setTicketTime] = useState(draft?.time || '');
+  const [user] = useState(draft?.user || currentUserName || 'Unknown User'); // auto-filled, read-only
+  const [error, setError] = useState('');
+  const [createdAt] = useState(() => new Date().toLocaleString()); // fixed the moment the form opens — read-only
 
   const defaultDescription = draft
     ? `User question:
@@ -74,7 +78,15 @@ ${(draft.conversation_context || [])
   const [desc, setDesc] = useState(defaultDescription);
 
   const submit = () => {
-    if (!title || !desc) return;
+    if (!title.trim()) { setError('Please enter a subject for the ticket.'); return; }
+    if (!version.trim()) { setError('Please enter the product version (e.g. 7.3).'); return; }
+    if (!VERSION_RE.test(version.trim())) {
+      setError('Version format looks invalid. Use something like "7.3", "4.9.1", or "v7.3".');
+      return;
+    }
+    if (!desc.trim()) { setError('Please add a description.'); return; }
+
+    setError('');
 
     const finalDescription =
       `Priority selected: ${pri}\n` +
@@ -82,13 +94,13 @@ ${(draft.conversation_context || [])
       desc;
 
     onSubmit({
-      title,
+      title: title.trim(),
       product: prod,
-      version,
+      version: version.trim(),
       category: cat,
       priority: pri,
       user,
-      time: ticketTime,
+      time: createdAt, // fixed at form open — read-only, never editable by the user
       description: finalDescription
     });
   };
@@ -128,6 +140,20 @@ ${(draft.conversation_context || [])
         </div>
       )}
 
+      {error && (
+        <div style={{
+          marginBottom: 12,
+          padding: 10,
+          border: '1px solid #dc2626',
+          borderRadius: 9,
+          background: 'rgba(220,38,38,.08)',
+          fontSize: 11,
+          color: '#ef4444'
+        }}>
+          {error}
+        </div>
+      )}
+
       <div style={{ marginBottom: 10 }}>
         <label style={labelSt}>Subject</label>
         <input
@@ -150,7 +176,7 @@ ${(draft.conversation_context || [])
         </div>
 
         <div>
-          <label style={labelSt}>Version</label>
+          <label style={labelSt}>Version *</label>
           <input
             type="text"
             value={version}
@@ -200,18 +226,18 @@ ${(draft.conversation_context || [])
           <input
             type="text"
             value={user}
-            onChange={e => setUser(e.target.value)}
-            style={inpSt}
+            disabled
+            style={{ ...inpSt, opacity: 0.6, cursor: 'not-allowed' }}
           />
         </div>
 
         <div>
-          <label style={labelSt}>Time</label>
+          <label style={labelSt}>Created</label>
           <input
             type="text"
-            value={ticketTime}
-            onChange={e => setTicketTime(e.target.value)}
-            style={inpSt}
+            value={createdAt}
+            disabled
+            style={{ ...inpSt, opacity: 0.6, cursor: 'not-allowed' }}
           />
         </div>
       </div>

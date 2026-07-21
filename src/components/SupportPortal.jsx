@@ -19,8 +19,8 @@ const cleanMarkdownLinks = (text = '') =>
 export default function SupportPortal({ onViewDocs }) {
   const [currentUser, setCurrentUser] = useState(null);
 const [users,       setUsers]       = useState([]);
-  const [tickets,     setTickets]     = useState(SEED_TICKETS);
-  const [tab,         setTab]         = useState('chat');
+const [tickets,     setTickets]     = useState([]);
+  const [selectedAdmTktId, setSelectedAdmTktId] = useState(null);  const [tab,         setTab]         = useState('chat');
 
   // Chat state
   const [messages,  setMessages]  = useState([]);
@@ -85,6 +85,14 @@ const [users,       setUsers]       = useState([]);
       .then(rows => { setDocsList(rows); setDocsLoading(false); })
       .catch(() => { setDocsError('Could not load documents.'); setDocsLoading(false); });
   };
+ const loadTickets = () => {
+    const url = isAdmin ? `${API_BASE}/tickets` : `${API_BASE}/tickets?userId=${currentUser?.id}`;
+    fetch(url).then(r => r.json()).then(setTickets).catch(() => {});
+  };
+
+  useEffect(() => {
+    if (currentUser) loadTickets();
+  }, [currentUser, isAdmin]);
   useEffect(() => {
     if (tab === 'adm-docs' && docMode === 'list') loadDocsList();
   }, [tab, docMode]);
@@ -167,8 +175,7 @@ const openEditDoc = async (docId) => {
       setDocsError('Could not delete this image.');
     }
   };
-  const myTickets = currentUser ? tickets.filter(t => t.userId===currentUser.id) : [];
-  const openTktCount = myTickets.filter(t => t.status==='Open' || t.status==='In Progress').length;
+  const myTickets = currentUser ? tickets.filter(t => t.user_id===currentUser.id) : [];  const openTktCount = myTickets.filter(t => t.status==='Open' || t.status==='In Progress').length;
   const logActivity = (activityType, page, details = '') => {
     if (!currentUser) return;
     fetch('http://localhost:8000/admin/log-activity', {
@@ -224,15 +231,30 @@ const openEditDoc = async (docId) => {
     }
   };
 
-  const handleRegister = async (regData) => {
+const sendRegisterCode = async (regData) => {
     try {
-      const res = await fetch(`${API_BASE}/auth/register`, {
+      const res = await fetch(`${API_BASE}/auth/register/send-code`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(regData),
       });
       const data = await res.json();
-      if (!res.ok) return { ok: false, error: data.error || 'Registration failed.' };
+      if (!res.ok) return { ok: false, error: data.error || 'Could not send verification code.' };
+      return { ok: true };
+    } catch {
+      return { ok: false, error: 'Could not reach the server. Is the backend running?' };
+    }
+  };
+
+  const verifyRegisterCode = async (email, code) => {
+    try {
+      const res = await fetch(`${API_BASE}/auth/register/verify`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, code }),
+      });
+      const data = await res.json();
+      if (!res.ok) return { ok: false, error: data.error || 'Verification failed.' };
       setCurrentUser(data);
       logActivity('register', 'Support Portal', 'New user registered');
       localStorage.setItem('ce_support_user', JSON.stringify(data));
@@ -243,10 +265,45 @@ const openEditDoc = async (docId) => {
     }
   };
 
+  const sendResetCode = async (email) => {
+    try {
+      const res = await fetch(`${API_BASE}/auth/forgot-password/send-code`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email }),
+      });
+      const data = await res.json();
+      if (!res.ok) return { ok: false, error: data.error || 'Could not send reset code.' };
+      return { ok: true };
+    } catch {
+      return { ok: false, error: 'Could not reach the server. Is the backend running?' };
+    }
+  };
+
+  const verifyResetCode = async (email, code, newPassword) => {
+    try {
+      const res = await fetch(`${API_BASE}/auth/forgot-password/verify`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, code, newPassword }),
+      });
+      const data = await res.json();
+      if (!res.ok) return { ok: false, error: data.error || 'Reset failed.' };
+      return { ok: true };
+    } catch {
+      return { ok: false, error: 'Could not reach the server. Is the backend running?' };
+    }
+  };
+
 const logout = () => {
     logActivity('logout', 'Support Portal', 'User logged out');
     setCurrentUser(null); setMessages([]); setShowSug(true); setTab('chat');
     localStorage.removeItem('ce_support_user');
+  };
+
+  const startNewConversation = () => {
+    setMessages([]);
+    setShowSug(true);
   };
 
   // ── Chat ──────────────────────────────────────────────────────────────────
@@ -343,19 +400,61 @@ const logout = () => {
     }
   };
   // ── Tickets ───────────────────────────────────────────────────────────────
-  const createTicket = (data) => {
-    const t = { id:'T-'+String(tickets.length+1).padStart(3,'0'), userId:currentUser.id,
-      title:data.title, product:data.product, category:data.category, priority:data.priority,
-      status:'Open', created:new Date().toISOString().split('T')[0],
-      updated:new Date().toISOString().split('T')[0], assignedTo:'u4',
-      messages:[{from:currentUser.id, text:data.description, time:new Date().toLocaleString()}] };
-    setTickets(p=>[t,...p]); setShowNewTkt(false);
-        setTicketDraft(null);
-
-    setActiveTkt(t.id); setTab('tickets');
+const createTicket = async (data) => {
+    try {
+      const res = await fetch(`${API_BASE}/tickets`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          userId: currentUser.id,
+          title: data.title,
+          product: data.product,
+          version: data.version,
+          category: data.category,
+          priority: data.priority,
+          description: data.description,
+          senderName: currentUser.name,
+        }),
+      });
+      const ticket = await res.json();
+      setShowNewTkt(false);
+      setTicketDraft(null);
+      loadTickets();
+      setActiveTkt(ticket.id);
+      setTab('tickets');
+    } catch {
+      alert('Could not create the ticket. Is the backend running?');
+    }
   };
-  const replyTicket = (id, text) => {
-    setTickets(p => p.map(t => t.id===id ? {...t, messages:[...t.messages,{from:currentUser.id,text,time:new Date().toLocaleString()}]} : t));
+
+  const replyTicket = async (id, text) => {
+    await fetch(`${API_BASE}/tickets/${id}/messages`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ senderId: currentUser.id, senderName: currentUser.name, message: text }),
+    });
+    loadTickets();
+    if (activeTktMessages[id]) fetchTicketMessages(id);
+    if (admTktMessages[id]) fetchTicketMessages(id, true);
+  };
+
+  // Fetch and cache a single ticket's message thread on demand
+  const [activeTktMessages, setActiveTktMessages] = useState({});
+  const [admTktMessages, setAdmTktMessages] = useState({});
+  const fetchTicketMessages = async (id, isAdminSide = false) => {
+    const res = await fetch(`${API_BASE}/tickets/${id}`);
+    const data = await res.json();
+    if (isAdminSide) setAdmTktMessages(p => ({ ...p, [id]: data.messages }));
+    else setActiveTktMessages(p => ({ ...p, [id]: data.messages }));
+  };
+
+  const updateTicketStatus = async (id, status) => {
+    await fetch(`${API_BASE}/tickets/${id}/status`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ status }),
+    });
+    loadTickets();
   };
 
   // ── Sidebar ───────────────────────────────────────────────────────────────
@@ -376,9 +475,10 @@ const logout = () => {
           {id:'adm-ai-insights', icon:'✦', label:'AI Insights'},
           {id:'adm-users',    icon:'◎',label:'Users'},
           {id:'adm-docs',     icon:'▤',label:'Documentation'},
-        ] : [
+] : [
           {id:'chat',      icon:'◈',label:'Support Chat'},
           {id:'tickets',   icon:'◉',label:'My Tickets', badge:openTktCount||null},
+          {id:'faq',       icon:'✦',label:'FAQ'},
           {id:'docs-link', icon:'▤',label:'Documentation'},
           {id:'profile',   icon:'◎',label:'Profile'},
         ]).map(item => (
@@ -406,8 +506,18 @@ const logout = () => {
   );
 
   // ── Chat Tab ──────────────────────────────────────────────────────────────
-  const ChatTab = () => (
+const ChatTab = () => (
     <div style={{display:'flex',flexDirection:'column',flex:1,overflow:'hidden'}}>
+      {messages.length > 0 && (
+        <div style={{display:'flex',justifyContent:'flex-end',padding:'10px 14px 0'}}>
+          <button onClick={startNewConversation}
+            style={{padding:'6px 12px',background:'transparent',border:'1px solid var(--border2)',borderRadius:8,color:'var(--text-dim)',fontSize:11,cursor:'pointer',fontFamily:'var(--font-mono)',letterSpacing:'.04em',display:'flex',alignItems:'center',gap:6}}
+            onMouseEnter={e=>{e.currentTarget.style.borderColor='var(--accent)';e.currentTarget.style.color='var(--accent)';}}
+            onMouseLeave={e=>{e.currentTarget.style.borderColor='var(--border2)';e.currentTarget.style.color='var(--text-dim)';}}>
+            ↻ Start New Conversation
+          </button>
+        </div>
+      )}
       <div style={{flex:1,overflowY:'auto',padding:14,display:'flex',flexDirection:'column',gap:11}}>
         {messages.map((m,i) => (
           <div key={i}>
@@ -420,14 +530,16 @@ const logout = () => {
                 {(m.type==='text'||m.type==='welcome'||m.type==='followup'||m.type==='no-answer') && (
                   <div style={{maxWidth:'88%',padding:'10px 13px',background:'var(--bg2)',border:'1px solid var(--border)',borderRadius:'4px 12px 12px 12px',fontSize:12,color:'var(--text)',lineHeight:1.7,whiteSpace:'pre-line'}}>
                     {boldify(m.text)}
-                    {m.type==='no-answer' && (
+            {m.type==='no-answer' && (
                       <div style={{marginTop:10,display:'flex',gap:7,flexWrap:'wrap'}}>
-                        <a href={`mailto:${SUPPORT_EMAIL}`} style={{padding:'6px 12px',background:'var(--accent)',borderRadius:7,color:'#fff',fontSize:11,textDecoration:'none',fontFamily:'var(--font-mono)',letterSpacing:'.06em'}}>✉ Email Support</a>
-                        <button onClick={() => setTab('tickets')} style={{padding:'6px 12px',background:'transparent',border:'1px solid var(--accent)',borderRadius:7,color:'var(--accent)',fontSize:11,cursor:'pointer',fontFamily:'var(--font-mono)',letterSpacing:'.06em'}}>◉ Open Ticket</button>
+                        <button onClick={() => setTab('tickets')} style={{padding:'6px 12px',background:'var(--accent)',border:'none',borderRadius:7,color:'#fff',fontSize:11,cursor:'pointer',fontFamily:'var(--font-mono)',letterSpacing:'.06em'}}>◉ Open Ticket</button>
+                        <a href={`mailto:${SUPPORT_EMAIL}`} style={{padding:'6px 12px',background:'transparent',border:'1px solid var(--accent)',borderRadius:7,color:'var(--accent)',fontSize:11,textDecoration:'none',fontFamily:'var(--font-mono)',letterSpacing:'.06em'}}>✉ Email Support</a>
+                        <button onClick={startNewConversation} style={{padding:'6px 12px',background:'transparent',border:'1px solid var(--border2)',borderRadius:7,color:'var(--text-dim)',fontSize:11,cursor:'pointer',fontFamily:'var(--font-mono)',letterSpacing:'.06em'}}>↻ Try a different question</button>
                       </div>
                     )}
                     {m.type==='followup' && (
                       <div style={{marginTop:10,display:'flex',gap:7,flexWrap:'wrap'}}>
+                        <button onClick={startNewConversation} style={{padding:'5px 11px',background:'var(--accent-l)',border:'1px solid var(--accent)',borderRadius:7,color:'var(--accent)',fontSize:11,cursor:'pointer',fontWeight:600}}>✓ Yes, resolved — new topic</button>
                         <button onClick={() => setTab('tickets')} style={{padding:'5px 11px',background:'transparent',border:'1px solid var(--border2)',borderRadius:7,color:'var(--text-dim)',fontSize:11,cursor:'pointer'}}>◉ Open a ticket</button>
                         <a href={`mailto:${SUPPORT_EMAIL}`} style={{padding:'5px 11px',background:'transparent',border:'1px solid var(--border2)',borderRadius:7,color:'var(--text-dim)',fontSize:11,textDecoration:'none'}}>✉ Email support</a>
                         <button onClick={onViewDocs} style={{padding:'5px 11px',background:'transparent',border:'1px solid var(--border2)',borderRadius:7,color:'var(--text-dim)',fontSize:11,cursor:'pointer'}}>▤ View docs</button>
@@ -443,11 +555,12 @@ const logout = () => {
                         <span style={{fontSize:13}}>✦</span>
                         <div style={{fontWeight:600,color:'var(--text-bright)',fontSize:13}}>{m.title}</div>
                       </div>
-                      <div style={{padding:'12px 14px',fontSize:12,color:'var(--text)',lineHeight:1.8,whiteSpace:'pre-line',maxHeight:240,overflowY:'auto'}}>
+                      <div style={{padding:'12px 14px',fontSize:12,color:'var(--text)',lineHeight:1.8,whiteSpace:'pre-line'}}>
                         {boldify(m.text)}
                       </div>
                     </div>
                     <div style={{display:'flex',gap:7,marginTop:8,flexWrap:'wrap'}}>
+                      <button onClick={startNewConversation} style={{padding:'5px 11px',background:'var(--accent-l)',border:'1px solid var(--accent)',borderRadius:7,color:'var(--accent)',fontSize:11,cursor:'pointer',fontWeight:600}}>✓ Resolved — new topic</button>
                       <button onClick={() => setTab('tickets')} style={{padding:'5px 11px',background:'transparent',border:'1px solid var(--border2)',borderRadius:7,color:'var(--text-dim)',fontSize:11,cursor:'pointer'}}>◉ Still need help?</button>
                       <a href={`mailto:${SUPPORT_EMAIL}`} style={{padding:'5px 11px',background:'transparent',border:'1px solid var(--border2)',borderRadius:7,color:'var(--text-dim)',fontSize:11,textDecoration:'none'}}>✉ Email support</a>
                       <button onClick={onViewDocs} style={{padding:'5px 11px',background:'transparent',border:'1px solid var(--border2)',borderRadius:7,color:'var(--text-dim)',fontSize:11,cursor:'pointer'}}>▤ Full docs</button>
@@ -491,7 +604,6 @@ const logout = () => {
       <ChatComposer onSend={sendMsg}/>
     </div>
   );
-
   // ── Tickets Tab ───────────────────────────────────────────────────────────
   const TicketsTab = () => (
     <div style={{flex:1,overflowY:'auto',padding:14}}>
@@ -499,8 +611,7 @@ const logout = () => {
         <div style={{fontWeight:700,color:'var(--text-bright)',fontSize:13}}>My Tickets ({myTickets.length})</div>
         <button onClick={() => setShowNewTkt(true)} style={{padding:'7px 14px',background:'linear-gradient(135deg, var(--accent), var(--accent2))',border:'none',color:'#fff',borderRadius:8,fontSize:11,cursor:'pointer',fontFamily:'var(--font-mono)',letterSpacing:'.06em',fontWeight:600}}>+ New</button>
       </div>
-{showNewTkt && <NewTicketForm onSubmit={createTicket} onCancel={() => { setShowNewTkt(false); setTicketDraft(null); }} draft={ticketDraft}/>}      {myTickets.length===0 && !showNewTkt && (
-        <div style={{textAlign:'center',padding:'36px 16px',color:'var(--text-dim)'}}>
+{showNewTkt && <NewTicketForm onSubmit={createTicket} onCancel={() => { setShowNewTkt(false); setTicketDraft(null); }} draft={ticketDraft} currentUserName={currentUser?.name}/>}        <div style={{textAlign:'center',padding:'36px 16px',color:'var(--text-dim)'}}>
           <div style={{fontSize:30,marginBottom:8,opacity:.5}}>◉</div>
           <div style={{color:'var(--text-bright)',marginBottom:3,fontSize:13}}>No tickets yet</div>
           <div style={{fontSize:12}}>Open a ticket when you need direct help from our team.</div>
@@ -508,21 +619,19 @@ const logout = () => {
       )}
       {myTickets.map(t => (
         <div key={t.id} style={{marginBottom:6}}>
-          <div onClick={() => setActiveTkt(activeTkt===t.id?null:t.id)}
-            style={{background:'var(--bg2)',border:`1px solid ${activeTkt===t.id?'var(--accent)':'var(--border)'}`,borderRadius:activeTkt===t.id?'10px 10px 0 0':10,padding:'10px 13px',cursor:'pointer',transition:'all .15s',borderLeft:`3px solid ${SC[t.status]||'var(--border)'}`}}>
+<div onClick={() => { const next = activeTkt===t.id?null:t.id; setActiveTkt(next); if (next) fetchTicketMessages(next); }}            style={{background:'var(--bg2)',border:`1px solid ${activeTkt===t.id?'var(--accent)':'var(--border)'}`,borderRadius:activeTkt===t.id?'10px 10px 0 0':10,padding:'10px 13px',cursor:'pointer',transition:'all .15s',borderLeft:`3px solid ${SC[t.status]||'var(--border)'}`}}>
             <div style={{display:'flex',gap:5,marginBottom:4,flexWrap:'wrap'}}>
               <span style={{fontFamily:'var(--font-mono)',fontSize:10,color:'var(--text-dim)'}}>{t.id}</span>
               {chip(SC[t.status]||'#6b7280',t.status)}&nbsp;{chip(PRIC[t.priority]||'#6b7280',t.priority)}
             </div>
             <div style={{fontSize:12,fontWeight:500,color:'var(--text-bright)'}}>{t.title}</div>
-            <div style={{fontSize:10,color:'var(--text-dim)',marginTop:3}}>{t.created} · {t.messages.length} messages</div>
-          </div>
+<div style={{fontSize:10,color:'var(--text-dim)',marginTop:3}}>{new Date(t.created_at).toLocaleDateString()} · {(activeTktMessages[t.id]||[]).length} messages</div>          </div>
           {activeTkt===t.id && (
             <div style={{background:'var(--bg)',border:'1px solid var(--accent)',borderTop:'none',borderRadius:'0 0 10px 10px',padding:'11px 13px'}}>
-              {t.messages.map((m,i) => (
-                <div key={i} style={{display:'flex',flexDirection:'column',alignItems:m.from===currentUser?.id?'flex-end':'flex-start',marginBottom:8}}>
-                  <div style={{maxWidth:'84%',padding:'8px 12px',background:m.from===currentUser?.id?'var(--accent)':'var(--bg2)',color:m.from===currentUser?.id?'#fff':'var(--text)',fontSize:12,lineHeight:1.6,borderRadius:m.from===currentUser?.id?'10px 4px 10px 10px':'4px 10px 10px 10px',border:m.from===currentUser?.id?'none':'1px solid var(--border)'}}>{m.text}</div>
-                  <div style={{fontFamily:'var(--font-mono)',fontSize:9,color:'var(--text-dim)',marginTop:2}}>{m.time}</div>
+      {(activeTktMessages[t.id]||[]).map((m,i) => (
+                <div key={i} style={{display:'flex',flexDirection:'column',alignItems:m.sender_id===currentUser?.id?'flex-end':'flex-start',marginBottom:8}}>
+                  <div style={{maxWidth:'84%',padding:'8px 12px',background:m.sender_id===currentUser?.id?'var(--accent)':'var(--bg2)',color:m.sender_id===currentUser?.id?'#fff':'var(--text)',fontSize:12,lineHeight:1.6,borderRadius:m.sender_id===currentUser?.id?'10px 4px 10px 10px':'4px 10px 10px 10px',border:m.sender_id===currentUser?.id?'none':'1px solid var(--border)'}}>{m.message}</div>
+                  <div style={{fontFamily:'var(--font-mono)',fontSize:9,color:'var(--text-dim)',marginTop:2}}>{new Date(m.created_at).toLocaleString()}</div>
                 </div>
               ))}
               {t.status!=='Closed' && <ReplyBox onSend={(text) => replyTicket(t.id, text)}/>}
@@ -548,7 +657,27 @@ const logout = () => {
       </div>
     </div>
   );
-
+// ── FAQ Tab (client-facing) ──────────────────────────────────────────────────
+  const FaqTab = () => (
+    <div style={{flex:1,overflowY:'auto',padding:14}}>
+      <div style={{fontWeight:700,color:'var(--text-bright)',fontSize:13,marginBottom:4,display:'flex',alignItems:'center',gap:6}}>
+        <span style={{color:'var(--accent)'}}>✦</span> Frequently Asked Questions
+      </div>
+      <div style={{fontSize:11,color:'var(--text-dim)',marginBottom:14}}>
+        Quick answers to common questions. Can't find yours? Try the Support Chat.
+      </div>
+      {KB.map((f,i) => (
+        <div key={i} onClick={() => setOpenFaq(openFaq===i?null:i)}
+          style={{background:'var(--bg2)',border:'1px solid var(--border)',borderRadius:10,padding:'11px 13px',marginBottom:6,cursor:'pointer'}}>
+          <div style={{display:'flex',justifyContent:'space-between',gap:8,fontSize:12,fontWeight:500,color:'var(--text-bright)',alignItems:'flex-start'}}>
+            <span style={{flex:1,lineHeight:1.4}}>{f.title}</span>
+            <span style={{color:'var(--text-dim)',flexShrink:0,fontSize:10,transform:openFaq===i?'rotate(180deg)':'none',transition:'transform .15s'}}>▾</span>
+          </div>
+          {openFaq===i && <div style={{fontSize:11,color:'var(--text)',lineHeight:1.7,marginTop:7,paddingLeft:9,borderLeft:'2px solid var(--accent)',whiteSpace:'pre-line'}}>{f.answer.replace(/\*\*(.+?)\*\*/g,'$1')}</div>}
+        </div>
+      ))}
+    </div>
+  );
   // ── Admin Dashboard ───────────────────────────────────────────────────────
   const AdminDashboard = () => (
     <div style={{flex:1,overflowY:'auto',padding:14}}>
@@ -566,13 +695,16 @@ const logout = () => {
         ))}
       </div>
       <div style={{fontWeight:700,color:'var(--text-bright)',fontSize:12,marginBottom:8}}>Recent Tickets</div>
-      {tickets.slice(0,4).map(t => (
-        <div key={t.id} style={{background:'var(--bg2)',border:'1px solid var(--border)',borderRadius:9,padding:'9px 12px',marginBottom:5,display:'flex',justifyContent:'space-between',alignItems:'center',gap:8}}>
+{tickets.slice(0,4).map(t => (
+        <div key={t.id} onClick={() => { setAdmTkt(t.id); fetchTicketMessages(t.id, true); setTab('adm-tickets'); }}
+          style={{background:'var(--bg2)',border:'1px solid var(--border)',borderRadius:9,padding:'9px 12px',marginBottom:5,display:'flex',justifyContent:'space-between',alignItems:'center',gap:8,cursor:'pointer',transition:'border-color .15s'}}
+          onMouseEnter={e=>e.currentTarget.style.borderColor='var(--accent)'}
+          onMouseLeave={e=>e.currentTarget.style.borderColor='var(--border)'}>
           <div>
             <div style={{fontSize:11,color:'var(--text-bright)',fontWeight:500}}>{t.title.slice(0,44)}{t.title.length>44?'…':''}</div>
             <div style={{display:'flex',gap:4,marginTop:4}}>{chip(SC[t.status]||'#6b7280',t.status)}&nbsp;{chip(PRIC[t.priority]||'#6b7280',t.priority)}</div>
           </div>
-          <span style={{fontFamily:'var(--font-mono)',fontSize:10,color:'var(--text-dim)',flexShrink:0}}>{t.updated}</span>
+          <span style={{fontFamily:'var(--font-mono)',fontSize:10,color:'var(--text-dim)',flexShrink:0}}>{new Date(t.updated_at).toLocaleDateString()}</span>
         </div>
       ))}
       <div style={{marginTop:14,paddingTop:12,borderTop:'1px solid var(--border)'}}>
@@ -593,6 +725,7 @@ const logout = () => {
   );
 
   // ── Admin Tickets ─────────────────────────────────────────────────────────
+// ── Admin Tickets ─────────────────────────────────────────────────────────
   const AdminTickets = () => (
     <div style={{flex:1,overflowY:'auto',padding:14}}>
       <div style={{display:'flex',gap:5,marginBottom:10,flexWrap:'wrap'}}>
@@ -603,17 +736,17 @@ const logout = () => {
       </div>
       {(admFilter==='All'?tickets:tickets.filter(t=>t.status===admFilter)).map(t => (
         <div key={t.id} style={{marginBottom:6}}>
-          <div onClick={() => setAdmTkt(admTkt===t.id?null:t.id)}
+          <div onClick={() => { const next = admTkt===t.id?null:t.id; setAdmTkt(next); if (next) fetchTicketMessages(next, true); }}
             style={{background:'var(--bg2)',border:`1px solid ${admTkt===t.id?'var(--accent)':'var(--border)'}`,borderRadius:admTkt===t.id?'10px 10px 0 0':10,padding:'10px 12px',cursor:'pointer',transition:'all .15s',borderLeft:`3px solid ${SC[t.status]||'var(--border)'}`}}>
             <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',gap:8}}>
               <div>
                 <div style={{display:'flex',gap:4,marginBottom:4,flexWrap:'wrap'}}>
-                  <span style={{fontFamily:'var(--font-mono)',fontSize:10,color:'var(--accent)'}}>{t.id}</span>
+                  <span style={{fontFamily:'var(--font-mono)',fontSize:10,color:'var(--accent)'}}>{t.ticket_number}</span>
                   {chip(SC[t.status]||'#6b7280',t.status)}&nbsp;{chip(PRIC[t.priority]||'#6b7280',t.priority)}
                 </div>
                 <div style={{fontSize:12,fontWeight:500,color:'var(--text-bright)'}}>{t.title}</div>
               </div>
-              <select value={t.status} onClick={e=>e.stopPropagation()} onChange={e=>setTickets(p=>p.map(x=>x.id===t.id?{...x,status:e.target.value}:x))}
+              <select value={t.status} onClick={e=>e.stopPropagation()} onChange={e=>updateTicketStatus(t.id, e.target.value)}
                 style={{padding:'5px 8px',border:'1px solid var(--border)',borderRadius:7,fontSize:10,color:'var(--text-bright)',background:'var(--bg)',outline:'none',cursor:'pointer'}}>
                 {['Open','In Progress','Resolved','Closed'].map(s=><option key={s}>{s}</option>)}
               </select>
@@ -621,19 +754,19 @@ const logout = () => {
           </div>
           {admTkt===t.id && (
             <div style={{background:'var(--bg)',border:'1px solid var(--accent)',borderTop:'none',borderRadius:'0 0 10px 10px',padding:'10px 12px'}}>
-              {t.messages.map((m,i) => (
+              {(admTktMessages[t.id]||[]).map((m,i) => (
                 <div key={i} style={{marginBottom:8,padding:'8px 11px',background:'var(--bg2)',border:'1px solid var(--border)',borderRadius:8}}>
-                  <div style={{fontFamily:'var(--font-mono)',fontSize:10,color:'var(--accent)',marginBottom:3}}>{m.from==='u4'?'◈ Agent':'◎ Customer'} · {m.time}</div>
-                  <div style={{fontSize:11,color:'var(--text)',lineHeight:1.6}}>{m.text}</div>
+                  <div style={{fontFamily:'var(--font-mono)',fontSize:10,color:'var(--accent)',marginBottom:3}}>{m.sender_name || 'Unknown'} · {new Date(m.created_at).toLocaleString()}</div>
+                  <div style={{fontSize:11,color:'var(--text)',lineHeight:1.6}}>{m.message}</div>
                 </div>
               ))}
+              {t.status!=='Closed' && <ReplyBox onSend={(text) => replyTicket(t.id, text)}/>}
             </div>
           )}
         </div>
       ))}
     </div>
   );
-
   // ── Admin Agents ──────────────────────────────────────────────────────────
   const AdminAgents = () => (
     <div style={{flex:1,overflowY:'auto',padding:14}}>
@@ -1217,7 +1350,8 @@ const AdminDocs = () => {
     switch(tab) {
       case 'chat':          return <ChatTab/>;
       case 'tickets':       return <TicketsTab/>;
-      case 'profile':       return <ProfileTab/>;
+    case 'profile':       return <ProfileTab/>;
+      case 'faq':           return <FaqTab/>;
       case 'adm-dashboard': return <AdminDashboard/>;
       case 'adm-tickets':   return <AdminTickets/>;
       case 'adm-agents':    return <AdminAgents/>;
@@ -1228,11 +1362,18 @@ case 'adm-ai-insights': return <AdminAIInsights/>;
     }
   };
 
-  return (
+return (
     <div style={{flex:1,display:'flex',background:'var(--bg)'}}>
       <style>{`@keyframes tdot{0%,80%,100%{transform:translateY(0);opacity:.4}40%{transform:translateY(-5px);opacity:1}}`}</style>
       {!currentUser ? (
-<LoginForm onLogin={handleLogin} onRegister={handleRegister}/>      ) : (
+        <LoginForm
+          onLogin={handleLogin}
+          onSendRegisterCode={sendRegisterCode}
+          onVerifyRegisterCode={verifyRegisterCode}
+          onSendResetCode={sendResetCode}
+          onVerifyResetCode={verifyResetCode}
+        />
+      ) : (
         <>
           <Sidebar/>
           <div style={{flex:1,display:'flex',flexDirection:'column',overflow:'hidden',minHeight:0}}>

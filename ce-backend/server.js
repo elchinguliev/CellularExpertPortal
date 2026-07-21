@@ -1,7 +1,7 @@
 // server.js
 // Minimal Express API that serves documentation from PostgreSQL.
 // Run with: npm start
-
+const { sendWelcomeEmail, sendPasswordChangedEmail, sendVerificationCode } = require('./mailer');
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
@@ -292,6 +292,220 @@ app.delete('/api/docs/:docId/images/:imageId', async (req, res) => {
     const { imageId } = req.params;
     const { rowCount } = await pool.query(`DELETE FROM document_images WHERE id = $1`, [imageId]);
     if (rowCount === 0) return res.status(404).json({ error: 'Not found' });
+    res.json({ ok: true });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// ── Tickets ──────────────────────────────────────────────────────────────────
+
+// List tickets — pass ?userId=X for a specific user's tickets, omit for all (admin)
+app.get('/api/tickets', async (req, res) => {
+  try {
+    const { userId } = req.query;
+    const query = userId
+      ? `SELECT * FROM tickets WHERE user_id = $1 ORDER BY created_at DESC`
+      : `SELECT * FROM tickets ORDER BY created_at DESC`;
+    const { rows } = await pool.query(query, userId ? [userId] : []);
+    res.json(rows);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// Get one ticket with its messages
+app.get('/api/tickets/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const t = await pool.query(`SELECT * FROM tickets WHERE id = $1`, [id]);
+    if (t.rows.length === 0) return res.status(404).json({ error: 'Not found' });
+    const m = await pool.query(`SELECT * FROM ticket_messages WHERE ticket_id = $1 ORDER BY created_at ASC`, [id]);
+    res.json({ ...t.rows[0], messages: m.rows });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// Create a ticket
+app.post('/api/tickets', async (req, res) => {
+  try {
+    const { userId, title, product, version, category, priority, description, senderName } = req.body;
+    if (!userId || !title) return res.status(400).json({ error: 'userId and title are required' });
+
+    const countRes = await pool.query(`SELECT COUNT(*) FROM tickets`);
+    const ticketNumber = 'T-' + String(parseInt(countRes.rows[0].count, 10) + 1).padStart(3, '0');
+
+    const { rows } = await pool.query(
+      `INSERT INTO tickets (ticket_number, user_id, title, product, version, category, priority, status)
+       VALUES ($1,$2,$3,$4,$5,$6,$7,'Open') RETURNING *`,
+      [ticketNumber, userId, title, product, version, category, priority || 'Normal']
+    );
+    const ticket = rows[0];
+
+    if (description) {
+      await pool.query(
+        `INSERT INTO ticket_messages (ticket_id, sender_id, sender_name, message) VALUES ($1,$2,$3,$4)`,
+        [ticket.id, userId, senderName || 'User', description]
+      );
+    }
+
+    res.status(201).json(ticket);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// Update ticket status
+app.put('/api/tickets/:id/status', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { status } = req.body;
+    const { rows } = await pool.query(
+      `UPDATE tickets SET status = $2, updated_at = NOW() WHERE id = $1 RETURNING *`,
+      [id, status]
+    );
+    if (rows.length === 0) return res.status(404).json({ error: 'Not found' });
+    res.json(rows[0]);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// Add a reply message to a ticket
+app.post('/api/tickets/:id/messages', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { senderId, senderName, message } = req.body;
+    if (!message) return res.status(400).json({ error: 'message is required' });
+
+    const { rows } = await pool.query(
+      `INSERT INTO ticket_messages (ticket_id, sender_id, sender_name, message) VALUES ($1,$2,$3,$4) RETURNING *`,
+      [id, senderId, senderName, message]
+    );
+    await pool.query(`UPDATE tickets SET updated_at = NOW() WHERE id = $1`, [id]);
+    res.status(201).json(rows[0]);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// ── Email verification helpers ────────────────────────────────────────────────
+function generateCode() {
+  return String(Math.floor(100000 + Math.random() * 900000)); // 6-digit code
+}
+
+// ── Registration: step 1 — send verification code ────────────────────────────
+app.post('/api/auth/register/send-code', async (req, res) => {
+  try {
+    const { name, email, password, company, product } = req.body;
+    if (!name || !email || !password) {
+      return res.status(400).json({ error: 'Name, email, and password are required' });
+    }
+    const existing = await pool.query(`SELECT id FROM users WHERE email = $1`, [email.toLowerCase()]);
+    if (existing.rows.length > 0) {
+      return res.status(409).json({ error: 'An account with this email already exists' });
+    }
+
+    const hash = await bcrypt.hash(password, 10);
+    const avatar = name.trim().split(/\s+/).map(w => w[0]).join('').slice(0, 2).toUpperCase();
+    const code = generateCode();
+    const payload = { name, email: email.toLowerCase(), password_hash: hash, company: company || null, product: product || 'CE Express', avatar };
+
+    await pool.query(
+      `INSERT INTO verification_codes (email, code, purpose, payload, expires_at)
+       VALUES ($1, $2, 'register', $3, NOW() + INTERVAL '10 minutes')`,
+      [email.toLowerCase(), code, JSON.stringify(payload)]
+    );
+
+    await sendVerificationCode(email, code, 'register');
+    res.json({ ok: true });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// ── Registration: step 2 — verify code, create account ───────────────────────
+app.post('/api/auth/register/verify', async (req, res) => {
+  try {
+    const { email, code } = req.body;
+    if (!email || !code) return res.status(400).json({ error: 'Email and code are required' });
+
+    const { rows } = await pool.query(
+      `SELECT * FROM verification_codes
+       WHERE email = $1 AND code = $2 AND purpose = 'register' AND used = FALSE AND expires_at > NOW()
+       ORDER BY created_at DESC LIMIT 1`,
+      [email.toLowerCase(), code]
+    );
+    if (rows.length === 0) return res.status(401).json({ error: 'Invalid or expired code' });
+
+    const payload = rows[0].payload;
+    const created = await pool.query(
+      `INSERT INTO users (name, email, password_hash, company, product, role, avatar)
+       VALUES ($1,$2,$3,$4,$5,'user',$6)
+       RETURNING id, name, email, company, product, role, avatar, created_at`,
+      [payload.name, payload.email, payload.password_hash, payload.company, payload.product, payload.avatar]
+    );
+
+    await pool.query(`UPDATE verification_codes SET used = TRUE WHERE id = $1`, [rows[0].id]);
+    sendWelcomeEmail(created.rows[0].email, created.rows[0].name).catch(err => console.error('Email error:', err.message));
+
+    res.status(201).json(created.rows[0]);
+  } catch (err) {
+    if (err.code === '23505') return res.status(409).json({ error: 'An account with this email already exists' });
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// ── Forgot password: step 1 — send verification code ──────────────────────────
+app.post('/api/auth/forgot-password/send-code', async (req, res) => {
+  try {
+    const { email } = req.body;
+    if (!email) return res.status(400).json({ error: 'Email is required' });
+
+    const user = await pool.query(`SELECT id, name FROM users WHERE email = $1`, [email.toLowerCase()]);
+    if (user.rows.length === 0) return res.status(404).json({ error: 'No account found with this email' });
+
+    const code = generateCode();
+    await pool.query(
+      `INSERT INTO verification_codes (email, code, purpose, expires_at)
+       VALUES ($1, $2, 'reset_password', NOW() + INTERVAL '10 minutes')`,
+      [email.toLowerCase(), code]
+    );
+
+    await sendVerificationCode(email, code, 'reset_password');
+    res.json({ ok: true });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// ── Forgot password: step 2 — verify code, set new password ──────────────────
+app.post('/api/auth/forgot-password/verify', async (req, res) => {
+  try {
+    const { email, code, newPassword } = req.body;
+    if (!email || !code || !newPassword) {
+      return res.status(400).json({ error: 'Email, code, and new password are required' });
+    }
+    if (newPassword.length < 6) return res.status(400).json({ error: 'Password must be at least 6 characters' });
+
+    const { rows } = await pool.query(
+      `SELECT * FROM verification_codes
+       WHERE email = $1 AND code = $2 AND purpose = 'reset_password' AND used = FALSE AND expires_at > NOW()
+       ORDER BY created_at DESC LIMIT 1`,
+      [email.toLowerCase(), code]
+    );
+    if (rows.length === 0) return res.status(401).json({ error: 'Invalid or expired code' });
+
+    const newHash = await bcrypt.hash(newPassword, 10);
+    const updated = await pool.query(
+      `UPDATE users SET password_hash = $2 WHERE email = $1 RETURNING name, email`,
+      [email.toLowerCase(), newHash]
+    );
+
+    await pool.query(`UPDATE verification_codes SET used = TRUE WHERE id = $1`, [rows[0].id]);
+    sendPasswordChangedEmail(updated.rows[0].email, updated.rows[0].name).catch(err => console.error('Email error:', err.message));
+
     res.json({ ok: true });
   } catch (err) {
     res.status(500).json({ error: err.message });
