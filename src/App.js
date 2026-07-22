@@ -12,7 +12,7 @@ import ceLogoIcon from "./assets/ce-logo-icon.png";
 
 // ── Theme ─────────────────────────────────────────────────────────────────────
 function useTheme() {
-  const [dark, setDark] = useState(true);
+  const [dark, setDark] = useState(false);
   useEffect(() => {
     document.body.classList.toggle("light", !dark);
   }, [dark]);
@@ -653,7 +653,7 @@ const HeroSection = ({ onDocsClick, onSupportClick }) => {
                 letterSpacing: "0.1em",
               }}
             >
-              ESRI GOLD PARTNER · SINCE 1995
+             DOCUMENTATION · AI SUPPORT PORTAL
             </span>
           </div>
           <h1
@@ -666,9 +666,9 @@ const HeroSection = ({ onDocsClick, onSupportClick }) => {
               letterSpacing: "-0.03em",
             }}
           >
-            Network Planning
+            Documentation
             <br />
-            <span style={{ color: "var(--accent)" }}>in ArcGIS</span>
+            <span style={{ color: "var(--accent)" }}>& AI Support</span>
           </h1>
           <p
             style={{
@@ -679,12 +679,13 @@ const HeroSection = ({ onDocsClick, onSupportClick }) => {
               maxWidth: 520,
             }}
           >
-            Ultra-fast wave propagation modelling for telecommunication
-            networks. Covering electromagnetic, light, and sound waves — from{" "}
+            Browse complete guides for CE Express, CE Desktop Pro,
+            Inventory3D, and Geodata — or ask our{" "}
             <strong style={{ color: "var(--text-bright)" }}>
-              10 kHz to 350 GHz
-            </strong>
-            .
+              AI assistant
+            </strong>{" "}
+            for an instant answer and open a support ticket in seconds if you
+            need more help.
           </p>
           <div style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>
             <button
@@ -728,9 +729,9 @@ const HeroSection = ({ onDocsClick, onSupportClick }) => {
           {/* Stats */}
           <div style={{ display: "flex", gap: 32, marginTop: 48 }}>
             {[
-              ["170+", "Clients"],
-              ["50+", "Countries"],
-              ["30+", "Years"],
+     ["67+", "Docs"],
+              ["4", "Products"],
+              ["24/7", "AI Support"],
             ].map(([n, l]) => (
               <div key={l}>
                 <div

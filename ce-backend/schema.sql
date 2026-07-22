@@ -97,7 +97,9 @@ CREATE TABLE IF NOT EXISTS tickets (
   status        TEXT DEFAULT 'Open',
   assigned_to   INTEGER REFERENCES users(id),
   created_at    TIMESTAMP DEFAULT NOW(),
-  updated_at    TIMESTAMP DEFAULT NOW()
+  updated_at    TIMESTAMP DEFAULT NOW(),
+  assigned_to   INTEGER REFERENCES users(id),
+  attachment_url TEXT,
 );
 
 CREATE TABLE IF NOT EXISTS ticket_messages (

@@ -24,12 +24,17 @@ app.use('/downloads', express.static(path.join(__dirname, 'public', 'downloads')
 //   http://localhost:4000/images/<doc-id>/<file>.png
 app.use('/images', express.static(path.join(__dirname, 'public', 'images')));
 
+// Serves ticket screenshots at:
+//   http://localhost:4000/ticket-attachments/<ticket-id>/<file>.png
+app.use('/ticket-attachments', express.static(path.join(__dirname, 'public', 'ticket-attachments')));
+
 const pool = new Pool({
   host: process.env.DB_HOST,
   port: process.env.DB_PORT,
   database: process.env.DB_NAME,
   user: process.env.DB_USER,
   password: process.env.DB_PASSWORD,
+  options: `-c search_path=${process.env.DB_SCHEMA || 'ce_boss'}`,
 });
 
 // ── Health check ──────────────────────────────────────────────────────────────
@@ -62,11 +67,7 @@ app.get('/api/docs/:docId', async (req, res) => {
     const docRes = await pool.query(`SELECT * FROM documents WHERE doc_id = $1`, [docId]);
     if (docRes.rows.length === 0) return res.status(404).json({ error: 'Not found' });
 
-    // Exclude inline UI icons (gear/book/button glyphs scraped alongside real
-    // screenshots) — these were never meant to be shown as standalone figures.
-    // Real screenshots are captioned as "... page" / "... dialog" etc.;
-    // scraped inline icons are captioned "... icon".
-const imagesRes = await pool.query(
+    const imagesRes = await pool.query(
       `SELECT id, image_url, caption, section_anchor, display_order
        FROM document_images
        WHERE doc_id = $1
@@ -351,6 +352,45 @@ app.post('/api/tickets', async (req, res) => {
     }
 
     res.status(201).json(ticket);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// ── Ticket screenshot attachment ──────────────────────────────────────────────
+const ticketUpload = multer({
+  storage: multer.diskStorage({
+    destination: (req, file, cb) => {
+      const dir = path.join(__dirname, 'public', 'ticket-attachments', req.params.id);
+      fs.mkdirSync(dir, { recursive: true });
+      cb(null, dir);
+    },
+    filename: (req, file, cb) => {
+      const safe = Date.now() + '-' + file.originalname.replace(/[^a-zA-Z0-9.\-_]/g, '_');
+      cb(null, safe);
+    },
+  }),
+  limits: { fileSize: 8 * 1024 * 1024 }, // 8MB max
+  fileFilter: (req, file, cb) => {
+    if (!file.mimetype.startsWith('image/')) return cb(new Error('Only image files are allowed'));
+    cb(null, true);
+  },
+});
+
+// Upload/replace the screenshot attached to a ticket (client, right after creating it)
+app.post('/api/tickets/:id/attachment', ticketUpload.single('screenshot'), async (req, res) => {
+  try {
+    const { id } = req.params;
+    if (!req.file) return res.status(400).json({ error: 'No file uploaded' });
+
+    const attachment_url = `http://localhost:${process.env.PORT || 4000}/ticket-attachments/${id}/${req.file.filename}`;
+
+    const { rows } = await pool.query(
+      `UPDATE tickets SET attachment_url = $2, updated_at = NOW() WHERE id = $1 RETURNING *`,
+      [id, attachment_url]
+    );
+    if (rows.length === 0) return res.status(404).json({ error: 'Ticket not found' });
+    res.status(201).json(rows[0]);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }

@@ -76,7 +76,23 @@ ${(draft.conversation_context || [])
     : '';
 
   const [desc, setDesc] = useState(defaultDescription);
+const [screenshot, setScreenshot] = useState(null);
+  const [screenshotPreview, setScreenshotPreview] = useState(null);
 
+  const pickScreenshot = (file) => {
+    if (!file) return;
+    if (!file.type.startsWith('image/')) { setError('Please select an image file.'); return; }
+    if (file.size > 8 * 1024 * 1024) { setError('Screenshot must be under 8MB.'); return; }
+    setError('');
+    setScreenshot(file);
+    setScreenshotPreview(URL.createObjectURL(file));
+  };
+
+  const removeScreenshot = () => {
+    if (screenshotPreview) URL.revokeObjectURL(screenshotPreview);
+    setScreenshot(null);
+    setScreenshotPreview(null);
+  };
   const submit = () => {
     if (!title.trim()) { setError('Please enter a subject for the ticket.'); return; }
     if (!version.trim()) { setError('Please enter the product version (e.g. 7.3).'); return; }
@@ -101,7 +117,9 @@ ${(draft.conversation_context || [])
       priority: pri,
       user,
       time: createdAt, // fixed at form open — read-only, never editable by the user
-      description: finalDescription
+      description: finalDescription,
+      description: finalDescription,
+      screenshot
     });
   };
 
@@ -250,6 +268,27 @@ ${(draft.conversation_context || [])
           placeholder="Describe your issue in detail..."
           style={{ ...inpSt, resize: 'vertical', minHeight: 120, lineHeight: 1.5 }}
         />
+        <div style={{ marginBottom: 12 }}>
+        <label style={labelSt}>Screenshot (optional)</label>
+        {!screenshotPreview ? (
+          <label style={{
+            display: 'flex', alignItems: 'center', gap: 8,
+            padding: '9px 12px', border: '1px dashed var(--border2)', borderRadius: 8,
+            fontSize: 12, color: 'var(--text-dim)', cursor: 'pointer'
+          }}>
+            📎 Attach a screenshot of the problem
+            <input type="file" accept="image/*" onChange={e => pickScreenshot(e.target.files?.[0])} style={{ display: 'none' }}/>
+          </label>
+        ) : (
+          <div style={{ position: 'relative', display: 'inline-block' }}>
+            <img src={screenshotPreview} alt="Screenshot preview" style={{ maxHeight: 140, borderRadius: 8, border: '1px solid var(--border)', display: 'block' }}/>
+            <button onClick={removeScreenshot} style={{
+              position: 'absolute', top: -8, right: -8, width: 22, height: 22, borderRadius: '50%',
+              background: '#dc2626', color: '#fff', border: 'none', fontSize: 12, cursor: 'pointer', lineHeight: '22px'
+            }} title="Remove screenshot">✕</button>
+          </div>
+        )}
+      </div>
       </div>
 
       <div style={{ display: 'flex', gap: 8, justifyContent: 'flex-end' }}>

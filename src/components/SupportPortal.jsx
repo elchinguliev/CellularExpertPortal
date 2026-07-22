@@ -51,6 +51,7 @@ const [tickets,     setTickets]     = useState([]);
   const [newImgCaption,setNewImgCaption]= useState('');
   const [newImgAnchor, setNewImgAnchor] = useState('');
   const [imgUploading, setImgUploading] = useState(false);
+  const [docHeadings, setDocHeadings] = useState([]);
   const [ticketDraft, setTicketDraft] = useState(null);
   const [pageLoadStart, setPageLoadStart] = useState(null);
 
@@ -104,6 +105,7 @@ const openEditDoc = async (docId) => {
     const data = await res.json();
     setDocDraft({ doc_id: data.doc_id, title: data.title, product: data.product, category: data.category, content: data.content });
     setDocImages(data.images || []);
+    setDocHeadings(data.headings || []);
     setDocMode('edit');
   };
   const openNewDoc = () => {
@@ -417,6 +419,13 @@ const createTicket = async (data) => {
         }),
       });
       const ticket = await res.json();
+      if (data.screenshot) {
+        try {
+          const fd = new FormData();
+          fd.append('screenshot', data.screenshot);
+          await fetch(`${API_BASE}/tickets/${ticket.id}/attachment`, { method: 'POST', body: fd });
+        } catch {}
+      }
       setShowNewTkt(false);
       setTicketDraft(null);
       loadTickets();
@@ -626,8 +635,13 @@ const ChatTab = () => (
             </div>
             <div style={{fontSize:12,fontWeight:500,color:'var(--text-bright)'}}>{t.title}</div>
 <div style={{fontSize:10,color:'var(--text-dim)',marginTop:3}}>{new Date(t.created_at).toLocaleDateString()} · {(activeTktMessages[t.id]||[]).length} messages</div>          </div>
-          {activeTkt===t.id && (
+{activeTkt===t.id && (
             <div style={{background:'var(--bg)',border:'1px solid var(--accent)',borderTop:'none',borderRadius:'0 0 10px 10px',padding:'11px 13px'}}>
+              {t.attachment_url && (
+                <a href={t.attachment_url} target="_blank" rel="noreferrer" style={{display:'inline-block',marginBottom:10}}>
+                  <img src={t.attachment_url} alt="Ticket screenshot" style={{maxWidth:220,maxHeight:150,borderRadius:8,border:'1px solid var(--border)',display:'block'}}/>
+                </a>
+              )}
       {(activeTktMessages[t.id]||[]).map((m,i) => (
                 <div key={i} style={{display:'flex',flexDirection:'column',alignItems:m.sender_id===currentUser?.id?'flex-end':'flex-start',marginBottom:8}}>
                   <div style={{maxWidth:'84%',padding:'8px 12px',background:m.sender_id===currentUser?.id?'var(--accent)':'var(--bg2)',color:m.sender_id===currentUser?.id?'#fff':'var(--text)',fontSize:12,lineHeight:1.6,borderRadius:m.sender_id===currentUser?.id?'10px 4px 10px 10px':'4px 10px 10px 10px',border:m.sender_id===currentUser?.id?'none':'1px solid var(--border)'}}>{m.message}</div>
@@ -752,8 +766,13 @@ const ChatTab = () => (
               </select>
             </div>
           </div>
-          {admTkt===t.id && (
+{admTkt===t.id && (
             <div style={{background:'var(--bg)',border:'1px solid var(--accent)',borderTop:'none',borderRadius:'0 0 10px 10px',padding:'10px 12px'}}>
+              {t.attachment_url && (
+                <a href={t.attachment_url} target="_blank" rel="noreferrer" style={{display:'inline-block',marginBottom:10}}>
+                  <img src={t.attachment_url} alt="Ticket screenshot" style={{maxWidth:220,maxHeight:150,borderRadius:8,border:'1px solid var(--border)',display:'block'}}/>
+                </a>
+              )}
               {(admTktMessages[t.id]||[]).map((m,i) => (
                 <div key={i} style={{marginBottom:8,padding:'8px 11px',background:'var(--bg2)',border:'1px solid var(--border)',borderRadius:8}}>
                   <div style={{fontFamily:'var(--font-mono)',fontSize:10,color:'var(--accent)',marginBottom:3}}>{m.sender_name || 'Unknown'} · {new Date(m.created_at).toLocaleString()}</div>
@@ -1279,8 +1298,13 @@ const AdminDocs = () => {
                   style={{fontSize:11,color:'var(--text)',marginBottom:8,display:'block'}}/>
                 <input value={newImgCaption} onChange={e=>setNewImgCaption(e.target.value)} placeholder="Caption (optional)"
                   style={{width:'100%',padding:'8px 10px',border:'1px solid var(--border)',borderRadius:7,fontSize:12,color:'var(--text-bright)',background:'var(--bg)',outline:'none',boxSizing:'border-box',marginBottom:6}}/>
-                <input value={newImgAnchor} onChange={e=>setNewImgAnchor(e.target.value)} placeholder="Section anchor — e.g. workspace-setup (optional)"
-                  style={{width:'100%',padding:'8px 10px',border:'1px solid var(--border)',borderRadius:7,fontSize:12,color:'var(--text-bright)',background:'var(--bg)',outline:'none',boxSizing:'border-box',marginBottom:8,fontFamily:'var(--font-mono)'}}/>
+<select value={newImgAnchor} onChange={e=>setNewImgAnchor(e.target.value)}
+                  style={{width:'100%',padding:'8px 10px',border:'1px solid var(--border)',borderRadius:7,fontSize:12,color:'var(--text-bright)',background:'var(--bg)',outline:'none',boxSizing:'border-box',marginBottom:8,fontFamily:'var(--font-mono)',cursor:'pointer'}}>
+                  <option value="">— Place at the bottom of the page (default) —</option>
+                  {docHeadings.map(h => (
+                    <option key={h.heading_slug} value={h.heading_slug}>{'  '.repeat(h.level-2)}{h.heading_text}</option>
+                  ))}
+                </select>
                 <button onClick={uploadImage} disabled={imgUploading}
                   style={{padding:'8px 16px',background:'var(--accent)',border:'none',borderRadius:7,color:'#fff',fontSize:11,fontWeight:700,cursor:imgUploading?'default':'pointer',opacity:imgUploading?0.7:1,fontFamily:'var(--font-mono)'}}>
                   {imgUploading ? 'UPLOADING…' : 'UPLOAD'}
