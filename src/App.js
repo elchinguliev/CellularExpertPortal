@@ -17,6 +17,7 @@ function inline(t) {
     .replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>')
     .replace(/\*(.+?)\*/g,'<em>$1</em>')
     .replace(/`(.+?)`/g,'<code>$1</code>')
+    .replace(/!\[([^\]]*)\]\((.+?)\)/g,'<img src="$2" alt="$1" loading="lazy" />')
     .replace(/\[(.+?)\]\(#(.+?)\)/g,'<a href="#" data-doc="$2" class="doc-lnk">$1 →</a>')
     .replace(/\[(.+?)\]\(mailto:(.+?)\)/g,'<a href="mailto:$2">$1</a>')
     .replace(/\[(.+?)\]\((.+?)\)/g,'<a href="$2" target="_blank" rel="noopener">$1</a>');
@@ -81,6 +82,7 @@ const ART_CSS=`
   .art tr:nth-child(even) td{background:var(--bg2)}
   .art ul,.art ol{padding-left:22px;margin:0 0 12px}
   .art li{margin:5px 0;line-height:1.65;color:var(--text)}
+  .art img{max-width:100%;height:auto;display:block;margin:14px 0;border-radius:8px;border:1px solid var(--border)}
   .art blockquote{border-left:3px solid var(--accent);background:var(--accent-l);padding:12px 16px;margin:12px 0;border-radius:0 8px 8px 0;font-size:13px}
   .art blockquote p{margin:0;color:var(--text)}
   .art hr{border:none;border-top:1px solid var(--border);margin:24px 0}

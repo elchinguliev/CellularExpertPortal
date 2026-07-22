@@ -102,6 +102,32 @@ export const NAV = {
 // Cache so we don't re-fetch the same file every time
 const cache = {};
 
+// Resolve a relative path (e.g. "../../assets/images/foo.png") against the
+// directory of a doc's own path (e.g. "docs/ce-express/user-guide/x.md"),
+// the same way a browser would resolve a relative URL.
+function resolveRelativePath(basePath, relPath) {
+  const baseDir = basePath.split('/').slice(0, -1);
+  const result = [...baseDir];
+  for (const part of relPath.split('/')) {
+    if (part === '..') result.pop();
+    else if (part === '.' || part === '') continue;
+    else result.push(part);
+  }
+  return result.join('/');
+}
+
+// Markdown image sources are written relative to each doc's own file (as they
+// were laid out in the GitHub repo). The browser has no notion of that folder
+// structure, so relative paths like ../../assets/images/x.png resolve against
+// the *page* URL and silently 404. Rewrite them to absolute GitHub raw URLs.
+function resolveImagePaths(content, docPath) {
+  return content.replace(/(!\[[^\]]*\]\()([^)]+)(\))/g, (match, pre, src, post) => {
+    if (/^([a-z]+:)?\/\//i.test(src)) return match; // already absolute
+    const resolved = resolveRelativePath(docPath, src);
+    return `${pre}${GITHUB_RAW}/${resolved}${post}`;
+  });
+}
+
 /**
  * Fetch a single markdown file from GitHub raw content
  * Falls back to a friendly error message if the file doesn't exist yet
@@ -124,6 +150,8 @@ export async function fetchDoc(docId) {
       const parts = raw.split('---');
       if (parts.length >= 3) content = parts.slice(2).join('---').trim();
     }
+
+    content = resolveImagePaths(content, entry.path);
 
     const doc = { ...entry, content };
     cache[docId] = doc;
