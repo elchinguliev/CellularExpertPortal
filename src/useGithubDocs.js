@@ -9,23 +9,31 @@ const GITHUB_API = 'https://api.github.com/repos/elchinguliev/CellularExpertDocs
 // To add a new doc: 1) add the .md file to GitHub  2) add its entry here
 export const DOC_INDEX = [
   // CE Express — Getting Started
-  { id:'ce-express-introduction',       path:'docs/ce-express/01-introduction.md',       title:'Introduction to CE Express',                  product:'CE Express', category:'Getting Started',   order:1  },
-  { id:'ce-express-login',              path:'docs/ce-express/02-login.md',               title:'Logging In',                                  product:'CE Express', category:'Getting Started',   order:2  },
-  { id:'ce-express-map-view',           path:'docs/ce-express/03-map-view.md',            title:'Map View Overview',                           product:'CE Express', category:'Interface',         order:3  },
-  { id:'ce-express-workspace',          path:'docs/ce-express/04-workspace.md',           title:'Workspaces',                                  product:'CE Express', category:'Getting Started',   order:4  },
+  // NOTE: the old per-topic curated docs (docs/ce-express/01-18-*.md) were deleted from the
+  // repo. Entries below are repointed at the surviving PDF-derived manual and the surviving
+  // topic-level training docs (docs/ce-express/training/*.md) where a matching topic exists.
+  { id:'ce-express-introduction',       path:'docs/ce-express/user-guide/user-guide-v7.3.md',       title:'Introduction to CE Express',                  product:'CE Express', category:'Getting Started',   order:1  },
+  { id:'ce-express-login',              path:'docs/ce-express/user-guide/user-guide-v7.3.md',       title:'Logging In',                                  product:'CE Express', category:'Getting Started',   order:2  },
+  { id:'ce-express-map-view',           path:'docs/ce-express/user-guide/user-guide-v7.3.md',       title:'Map View Overview',                           product:'CE Express', category:'Interface',         order:3  },
+  { id:'ce-express-workspace',          path:'docs/ce-express/training/01-creating-workspace.md',   title:'Workspaces',                                  product:'CE Express', category:'Getting Started',   order:4  },
   // CE Express — Network Objects
-  { id:'ce-express-features',           path:'docs/ce-express/05-features.md',            title:'Features — Network Objects',                  product:'CE Express', category:'Network Objects',   order:5  },
+  { id:'ce-express-features',           path:'docs/ce-express/training/02-create-objects.md',       title:'Features — Network Objects',  product:'CE Express', category:'Network Objects',    order:5  },
+  // CE Express — Tools
+  { id:'ce-express-layers',             path:'docs/ce-express/user-guide/user-guide-v7.3.md',       title:'Layers',                      product:'CE Express', category:'Tools',              order:11 },
+  { id:'ce-express-prediction-history', path:'docs/ce-express/user-guide/user-guide-v7.3.md',       title:'Prediction History',          product:'CE Express', category:'Tools',              order:12 },
+  { id:'ce-express-antennas',           path:'docs/ce-express/user-guide/user-guide-v7.3.md',       title:'Antennas',                    product:'CE Express', category:'Tools',              order:13 },
+  { id:'ce-express-feature-templates',  path:'docs/ce-express/user-guide/user-guide-v7.3.md',       title:'Feature Templates',           product:'CE Express', category:'Tools',              order:14 },
+  { id:'ce-express-radios',             path:'docs/ce-express/user-guide/user-guide-v7.3.md',       title:'Radios',                      product:'CE Express', category:'Tools',              order:18 },
   // CE Express — Calculations
-  { id:'ce-express-rf-prediction',      path:'docs/ce-express/06-rf-prediction.md',       title:'RF Prediction',                               product:'CE Express', category:'Calculations',      order:6  },
-  { id:'ce-express-prediction-models',  path:'docs/ce-express/07-prediction-models.md',   title:'Prediction Models',                           product:'CE Express', category:'Calculations',      order:7  },
-  { id:'ce-express-profile',            path:'docs/ce-express/08-profile-los.md',         title:'Line of Sight & Profile',                     product:'CE Express', category:'Calculations',      order:8  },
-  { id:'ce-express-radio-link',         path:'docs/ce-express/09-radio-link.md',          title:'Radio Link (Microwave)',                       product:'CE Express', category:'Calculations',      order:9  },
+  { id:'ce-express-rf-prediction',      path:'docs/ce-express/training/04-rf-prediction.md',        title:'RF Prediction',               product:'CE Express', category:'Calculations',       order:6  },
+  { id:'ce-express-prediction-models',  path:'docs/ce-express/training/06-prediction-models.md',    title:'Prediction Models',           product:'CE Express', category:'Calculations',       order:7  },
+  { id:'ce-express-profile',            path:'docs/ce-express/training/03-line-of-sight.md',        title:'Line of Sight & Profile',     product:'CE Express', category:'Calculations',       order:8  },
+  { id:'ce-express-radio-link',         path:'docs/ce-express/training/08-mw-prediction.md',        title:'Radio Link (Microwave)',       product:'CE Express', category:'Calculations',       order:9  },
+  { id:'ce-express-visibility',         path:'docs/ce-express/user-guide/user-guide-v7.3.md',title:'Visibility Prediction',      product:'CE Express', category:'Calculations',       order:15 },
+  { id:'ce-express-radar',              path:'docs/ce-express/user-guide/user-guide-v7.3.md',    title:'Radar Prediction',            product:'CE Express', category:'Calculations',       order:16 },
+  { id:'ce-express-model-tuning',       path:'docs/ce-express/user-guide/user-guide-v7.3.md',        title:'Model Tuning',                product:'CE Express', category:'Calculations',       order:17 },
   // CE Express — Network Management
-  { id:'ce-express-networks',           path:'docs/ce-express/10-networks.md',            title:'Networks — Batch Prediction',                 product:'CE Express', category:'Network Management', order:10 },
-  // CE Express — Administration
-  { id:'ce-express-admin-requirements', path:'docs/ce-express/admin-01-requirements.md',  title:'System Requirements',                         product:'CE Express', category:'Administration',    order:20 },
-  { id:'ce-express-admin-installation', path:'docs/ce-express/admin-02-installation.md',  title:'Installation Guide',                          product:'CE Express', category:'Administration',    order:21 },
-  { id:'ce-express-admin-user-management', path:'docs/ce-express/admin-03-user-management.md', title:'User Management',                        product:'CE Express', category:'Administration',    order:22 },
+  { id:'ce-express-networks',           path:'docs/ce-express/user-guide/user-guide-v7.3.md',            title:'Networks — Batch Prediction', product:'CE Express', category:'Network Management', order:10 },
   // CE Pro — Getting Started
   { id:'ce-pro-installation',           path:'docs/ce-pro/training/00-installation.md',   title:'Installation & Activation',                   product:'CE Pro',     category:'Getting Started',   order:0  },
   { id:'ce-pro-data-types',             path:'docs/ce-pro/training/01-data-types.md',     title:'Data Types & Geodata Layers',                 product:'CE Pro',     category:'Getting Started',   order:1  },
@@ -38,14 +46,16 @@ export const DOC_INDEX = [
   { id:'ce-pro-cell-prediction',        path:'docs/ce-pro/training/07-cell-prediction.md',       title:'Cell Prediction',                product:'CE Pro', category:'Calculations', order:7  },
   { id:'ce-pro-prediction-models',      path:'docs/ce-pro/training/08-prediction-models.md',     title:'Prediction Models',              product:'CE Pro', category:'Calculations', order:8  },
   { id:'ce-pro-rl-prediction',          path:'docs/ce-pro/training/10-rl-prediction.md',         title:'RL / Microwave Link Prediction',  product:'CE Pro', category:'Calculations', order:10 },
-  { id:'ce-pro-fwa-prediction',         path:'docs/ce-pro/training/12-fwa-prediction.md',        title:'FWA RF Prediction',              product:'CE Pro', category:'Calculations', order:12 },
-  { id:'ce-pro-quick-prediction',       path:'docs/ce-pro/training/13-quick-prediction.md',      title:'Quick Prediction',               product:'CE Pro', category:'Calculations', order:13 },
-  { id:'ce-pro-radar-prediction',       path:'docs/ce-pro/training/14-radar-prediction.md',      title:'Radar Prediction',               product:'CE Pro', category:'Calculations', order:14 },
-  { id:'ce-pro-visibility-prediction',  path:'docs/ce-pro/training/15-visibility-prediction.md', title:'Visibility Prediction',          product:'CE Pro', category:'Calculations', order:15 },
-  { id:'ce-pro-compare-predictions',    path:'docs/ce-pro/training/16-compare-predictions.md',   title:'Compare Predictions',            product:'CE Pro', category:'Calculations', order:16 },
-  { id:'ce-pro-emf-calculation',        path:'docs/ce-pro/training/17-emf-calculation.md',       title:'EMF Calculation',                product:'CE Pro', category:'Calculations', order:17 },
-  { id:'ce-pro-indoor-coverage',        path:'docs/ce-pro/training/18-indoor-coverage.md',       title:'Indoor Coverage Prediction',     product:'CE Pro', category:'Calculations', order:18 },
-  { id:'ce-pro-sound-prediction',       path:'docs/ce-pro/training/19-sound-prediction.md',      title:'Sound Level Prediction',         product:'CE Pro', category:'Calculations', order:19 },
+  // NOTE: FWA/Quick/Radar/Visibility/Compare were curated from the RCP PDF and were deleted;
+  // repointed at the surviving full RCP manual. EMF/Indoor/Sound repointed at their own surviving guides.
+  { id:'ce-pro-fwa-prediction',         path:'docs/ce-pro/rcp-user-guide.md',        title:'FWA RF Prediction',              product:'CE Pro', category:'Calculations', order:12 },
+  { id:'ce-pro-quick-prediction',       path:'docs/ce-pro/rcp-user-guide.md',      title:'Quick Prediction',               product:'CE Pro', category:'Calculations', order:13 },
+  { id:'ce-pro-radar-prediction',       path:'docs/ce-pro/rcp-user-guide.md',      title:'Radar Prediction',               product:'CE Pro', category:'Calculations', order:14 },
+  { id:'ce-pro-visibility-prediction',  path:'docs/ce-pro/rcp-user-guide.md', title:'Visibility Prediction',          product:'CE Pro', category:'Calculations', order:15 },
+  { id:'ce-pro-compare-predictions',    path:'docs/ce-pro/rcp-user-guide.md',   title:'Compare Predictions',            product:'CE Pro', category:'Calculations', order:16 },
+  { id:'ce-pro-emf-calculation',        path:'docs/ce-pro/emf-user-guide.md',       title:'EMF Calculation',                product:'CE Pro', category:'Calculations', order:17 },
+  { id:'ce-pro-indoor-coverage',        path:'docs/ce-pro/indoor-user-guide.md',       title:'Indoor Coverage Prediction',     product:'CE Pro', category:'Calculations', order:18 },
+  { id:'ce-pro-sound-prediction',       path:'docs/ce-pro/sound-user-guide.md',      title:'Sound Level Prediction',         product:'CE Pro', category:'Calculations', order:19 },
   // CE Pro — User Guides
   { id:'ce-pro-rcp-guide',              path:'docs/ce-pro/rcp-user-guide.md',              title:'RCP User Guide',                              product:'CE Pro',     category:'User Guides',        order:20 },
   { id:'ce-pro-rlp-guide',              path:'docs/ce-pro/rlp-user-guide.md',              title:'RLP User Guide',                              product:'CE Pro',     category:'User Guides',        order:21 },
@@ -53,13 +63,17 @@ export const DOC_INDEX = [
   { id:'ce-pro-indoor-guide',           path:'docs/ce-pro/indoor-user-guide.md',           title:'Indoor User Guide',                           product:'CE Pro',     category:'User Guides',        order:23 },
   { id:'ce-pro-sound-guide',            path:'docs/ce-pro/sound-user-guide.md',            title:'Sound User Guide',                            product:'CE Pro',     category:'User Guides',        order:24 },
   // Geodata
-  { id:'geodata-requirements',          path:'docs/geodata/01-overview.md',               title:'Geodata Requirements Overview',               product:'Both',       category:'Geodata',           order:1  },
-  { id:'geodata-dem',                   path:'docs/geodata/02-dem.md',                    title:'Digital Terrain Model (DEM/DTM)',             product:'Both',       category:'Geodata',           order:2  },
-  { id:'geodata-clutter',               path:'docs/geodata/03-clutter.md',                title:'Clutter Classes & Heights',                   product:'Both',       category:'Geodata',           order:3  },
-  { id:'network-object-requirements',   path:'docs/geodata/04-network-objects.md',        title:'Network Object Requirements',                 product:'Both',       category:'Geodata',           order:4  },
+  // NOTE: 01-04 curated files were deleted; repointed at the surviving raw geodata manuals
+  // (which contain the DTM/clutter sections directly, just not split into separate files).
+  { id:'geodata-requirements',          path:'docs/geodata/geodata-requirements.md',               title:'Geodata Requirements Overview',               product:'Both',       category:'Geodata',           order:1  },
+  { id:'geodata-dem',                   path:'docs/geodata/geodata-requirements.md',                    title:'Digital Terrain Model (DEM/DTM)',             product:'Both',       category:'Geodata',           order:2  },
+  { id:'geodata-clutter',               path:'docs/geodata/geodata-requirements.md',                title:'Clutter Classes & Heights',                   product:'Both',       category:'Geodata',           order:3  },
+  { id:'network-object-requirements',   path:'docs/geodata/network-objects-requirements.md',        title:'Network Object Requirements',                 product:'Both',       category:'Geodata',           order:4  },
   // Training
-  { id:'training-ce-express-workspace', path:'docs/training/01-ce-express-workspace.md',  title:'Training 01: Creating a Workspace',           product:'Training',   category:'Training',          order:1  },
-  { id:'training-rf-prediction',        path:'docs/training/04-rf-prediction.md',         title:'Training 04: RF Prediction',                  product:'Training',   category:'Training',          order:4  },
+  // NOTE: the curated duplicates under docs/training/ were deleted; repointed at the
+  // surviving originals under docs/ce-express/training/ (same content, different path).
+  { id:'training-ce-express-workspace', path:'docs/ce-express/training/01-creating-workspace.md',  title:'Training 01: Creating a Workspace',           product:'Training',   category:'Training',          order:1  },
+  { id:'training-rf-prediction',        path:'docs/ce-express/training/04-rf-prediction.md',         title:'Training 04: RF Prediction',                  product:'Training',   category:'Training',          order:4  },
 ];
 
 // Navigation structure for the sidebar
@@ -68,9 +82,9 @@ export const NAV = {
     'Getting Started':    DOC_INDEX.filter(d => d.product==='CE Express' && d.category==='Getting Started'),
     'Interface':          DOC_INDEX.filter(d => d.product==='CE Express' && d.category==='Interface'),
     'Network Objects':    DOC_INDEX.filter(d => d.product==='CE Express' && d.category==='Network Objects'),
+    'Tools':              DOC_INDEX.filter(d => d.product==='CE Express' && d.category==='Tools'),
     'Calculations':       DOC_INDEX.filter(d => d.product==='CE Express' && d.category==='Calculations'),
     'Network Management': DOC_INDEX.filter(d => d.product==='CE Express' && d.category==='Network Management'),
-    'Administration':     DOC_INDEX.filter(d => d.product==='CE Express' && d.category==='Administration'),
   },
   'CE Desktop Pro': {
     'Getting Started': DOC_INDEX.filter(d => d.product==='CE Pro' && d.category==='Getting Started'),
