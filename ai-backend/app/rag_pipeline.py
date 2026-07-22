@@ -4,6 +4,7 @@ from app.prompt_builder import build_rag_prompt
 from app.services.llm_service import generate as generate_llm
 from app.ticket_service import build_ticket_prefill
 from app.analytics_logger import log_ai_question
+from app.image_lookup import get_images_for_sources
 
 
 CONFIDENCE_THRESHOLD = 0.60
@@ -21,6 +22,7 @@ def extract_sources(results: dict) -> list:
         metadata = results["metadatas"][0][i]
 
         sources.append({
+            "document_id": metadata.get("document_id") or metadata.get("doc_id"),
             "document": metadata["document_title"],
             "section": metadata["section_title"],
             "product": metadata["product"],
@@ -232,11 +234,14 @@ def prepare_ticket_response(
         answer_status="ticket_needed"
     )
 
+    images = get_images_for_sources(sources)
+
     return {
         "answer": answer,
         "confidence": confidence,
         "ticket_needed": True,
         "sources": sources,
+        "images": images,
         "ticket_prefill": ticket_prefill
     }
 
@@ -333,10 +338,13 @@ Important: Answer the current user question. Use previous conversation only to r
         answer_status="answered"
     )
 
+    images = get_images_for_sources(sources)
+
     return {
         "answer": answer,
         "confidence": confidence,
         "ticket_needed": False,
         "sources": sources,
+        "images": images,
         "ticket_prefill": None
     }

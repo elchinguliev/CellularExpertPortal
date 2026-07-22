@@ -2,7 +2,7 @@ import requests
 
 
 OLLAMA_URL = "http://localhost:11434/api/generate"
-MODEL = "llama3.2:latest"
+MODEL = "llama3.2:3b"
 
 
 def generate(prompt: str) -> str:
@@ -13,6 +13,9 @@ def generate(prompt: str) -> str:
             "model": MODEL,
             "prompt": prompt,
             "stream": False,
+            "options": {
+                "temperature": 0.2
+            },
         },
         timeout=120,
     )
