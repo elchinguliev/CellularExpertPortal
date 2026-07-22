@@ -618,6 +618,24 @@ export default function App() {
     setDoc(result); setLoading(false);
   }, []);
 
+  // Several sidebar entries share one long source doc (the per-topic files were
+  // removed upstream) and rely on `anchor` to jump straight to their section
+  // instead of always showing the top of the shared doc.
+  useEffect(() => {
+    if (!doc) return;
+    if (doc.anchor) {
+      requestAnimationFrame(() => {
+        const el = document.getElementById(doc.anchor);
+        if (el) {
+          const y = el.getBoundingClientRect().top + window.pageYOffset - 90;
+          window.scrollTo({ top: y, behavior: 'auto' });
+        }
+      });
+    } else {
+      window.scrollTo(0, 0);
+    }
+  }, [doc]);
+
   return (
     <div style={{display:'flex',flexDirection:'column',minHeight:'100vh',background:'var(--bg)'}}>
       <style>{ART_CSS}</style>
