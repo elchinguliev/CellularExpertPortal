@@ -3,6 +3,7 @@
 // Run with: npm run sync
 
 require('dotenv').config();
+const path = require('path');
 const { Pool } = require('pg');
 
 const pool = new Pool({
@@ -15,10 +16,65 @@ const pool = new Pool({
 });
 
 const GITHUB_RAW = process.env.GITHUB_RAW_BASE;
+const SERVER_BASE = `http://localhost:${process.env.PORT || 4000}`;
 const DOC_INDEX = require('./doc-index.json');
+
+const MIME_TYPES = { png:'image/png', jpg:'image/jpeg', jpeg:'image/jpeg', gif:'image/gif', svg:'image/svg+xml', webp:'image/webp' };
 
 function slugify(text) {
   return text.toLowerCase().replace(/[^a-z0-9\s]/g, '').trim().replace(/\s+/g, '-');
+}
+
+// Downloads one image from GitHub and stores its bytes in the synced_images
+// table (skipped if we already have it — re-run the sync after truncating
+// synced_images if you need to force a refresh of already-stored images).
+async function downloadAndStoreImage(resolvedPath) {
+  try {
+    const existing = await pool.query(`SELECT 1 FROM synced_images WHERE path = $1`, [resolvedPath]);
+    if (existing.rows.length > 0) return;
+
+    const ext = resolvedPath.split('.').pop().toLowerCase();
+    const mimeType = MIME_TYPES[ext] || 'application/octet-stream';
+    const res = await fetch(`${GITHUB_RAW}/${resolvedPath}`);
+    if (!res.ok) {
+      console.log(`    ⚠️  image not found on GitHub: ${resolvedPath}`);
+      return;
+    }
+    const buf = Buffer.from(await res.arrayBuffer());
+    await pool.query(
+      `INSERT INTO synced_images (path, mime_type, data, updated_at) VALUES ($1,$2,$3,NOW())
+       ON CONFLICT (path) DO UPDATE SET mime_type = EXCLUDED.mime_type, data = EXCLUDED.data, updated_at = NOW()`,
+      [resolvedPath, mimeType, buf]
+    );
+  } catch (err) {
+    console.log(`    ⚠️  image download failed: ${resolvedPath} — ${err.message}`);
+  }
+}
+
+// Markdown image links are written relative to the .md file's own location
+// in the repo (e.g. "../../assets/images/foo.png"). This downloads the actual
+// image bytes from GitHub into the synced_images table, then rewrites the
+// markdown link to point at our own /api/synced-images endpoint — so the
+// image is served straight from Postgres, not from GitHub, at render time.
+async function resolveImagePaths(content, entryPath) {
+  const baseDir = path.posix.dirname(entryPath);
+  const regex = /!\[([^\]]*)\]\((?!https?:\/\/)([^)\s]+)(\s+"[^"]*")?\)/g;
+  const resolvedMap = new Map(); // relPath -> resolved repo-relative path
+
+  for (const m of content.matchAll(regex)) {
+    const relPath = m[2];
+    if (!resolvedMap.has(relPath)) {
+      const resolved = path.posix.normalize(path.posix.join(baseDir, relPath));
+      resolvedMap.set(relPath, resolved);
+      await downloadAndStoreImage(resolved);
+    }
+  }
+
+  return content.replace(regex, (match, alt, relPath, titlePart) => {
+    const resolved = resolvedMap.get(relPath);
+    const newUrl = `${SERVER_BASE}/api/synced-images?path=${encodeURIComponent(resolved)}`;
+    return `![${alt}](${newUrl}${titlePart || ''})`;
+  });
 }
 
 function extractHeadings(content) {
@@ -57,6 +113,7 @@ async function syncDoc(entry) {
       const parts = content.split('---');
       if (parts.length >= 3) content = parts.slice(2).join('---').trim();
     }
+    content = await resolveImagePaths(content, entry.path);
   } catch (err) {
     console.log(`  ❌ FETCH ERROR: ${entry.path} — ${err.message}`);
     return { ok: false };

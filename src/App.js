@@ -2497,7 +2497,7 @@ export default function App() {
                     fontFamily: "var(--font-mono)",
                   }}
                 >
-                  Loading from GitHub…
+                  Loading...
                 </div>
               </div>
             ) : !activeDocId ? (

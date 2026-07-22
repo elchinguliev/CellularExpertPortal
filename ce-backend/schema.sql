@@ -128,3 +128,25 @@ CREATE TABLE IF NOT EXISTS verification_codes (
 );
 
 CREATE INDEX IF NOT EXISTS idx_verification_codes_email ON verification_codes(email);
+
+SET search_path TO ce_boss;
+
+CREATE TABLE IF NOT EXISTS faq_items (
+  id             SERIAL PRIMARY KEY,
+  title          TEXT NOT NULL,
+  answer         TEXT NOT NULL,
+  tags           TEXT[] DEFAULT '{}',
+  display_order  INTEGER DEFAULT 99,
+  created_at     TIMESTAMP DEFAULT NOW(),
+  updated_at     TIMESTAMP DEFAULT NOW()
+);
+CREATE INDEX IF NOT EXISTS idx_faq_items_display_order ON faq_items(display_order);
+
+SET search_path TO ce_boss;
+CREATE TABLE IF NOT EXISTS synced_images (
+  id         SERIAL PRIMARY KEY,
+  path       TEXT UNIQUE NOT NULL,
+  mime_type  TEXT NOT NULL,
+  data       BYTEA NOT NULL,
+  updated_at TIMESTAMP DEFAULT NOW()
+);

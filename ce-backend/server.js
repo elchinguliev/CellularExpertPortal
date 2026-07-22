@@ -67,7 +67,11 @@ app.get('/api/docs/:docId', async (req, res) => {
     const docRes = await pool.query(`SELECT * FROM documents WHERE doc_id = $1`, [docId]);
     if (docRes.rows.length === 0) return res.status(404).json({ error: 'Not found' });
 
-    const imagesRes = await pool.query(
+    // Exclude inline UI icons (gear/book/button glyphs scraped alongside real
+    // screenshots) — these were never meant to be shown as standalone figures.
+    // Real screenshots are captioned as "... page" / "... dialog" etc.;
+    // scraped inline icons are captioned "... icon".
+const imagesRes = await pool.query(
       `SELECT id, image_url, caption, section_anchor, display_order
        FROM document_images
        WHERE doc_id = $1
@@ -182,14 +186,57 @@ app.post('/api/auth/login', async (req, res) => {
   }
 });
 
-// ── List all users (admin "Users" tab) ───────────────────────────────────────
+// ── List all users (admin "Users" tab) — includes ticket count per user ─────
 app.get('/api/auth/users', async (req, res) => {
   try {
     const { rows } = await pool.query(
-      `SELECT id, name, email, company, product, role, avatar, created_at
-       FROM users ORDER BY created_at DESC`
+      `SELECT u.id, u.name, u.email, u.company, u.product, u.role, u.avatar, u.created_at,
+              COUNT(t.id)::int AS ticket_count
+       FROM users u
+       LEFT JOIN tickets t ON t.user_id = u.id
+       GROUP BY u.id
+       ORDER BY u.created_at DESC`
     );
     res.json(rows);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// ── Change a user's role (admin) ─────────────────────────────────────────────
+app.put('/api/auth/users/:id/role', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { role } = req.body;
+    if (!['user', 'agent', 'admin'].includes(role)) {
+      return res.status(400).json({ error: 'role must be user, agent, or admin' });
+    }
+    const { rows } = await pool.query(
+      `UPDATE users SET role = $2 WHERE id = $1
+       RETURNING id, name, email, company, product, role, avatar, created_at`,
+      [id, role]
+    );
+    if (rows.length === 0) return res.status(404).json({ error: 'Not found' });
+    const countRes = await pool.query(`SELECT COUNT(*)::int AS c FROM tickets WHERE user_id = $1`, [id]);
+    res.json({ ...rows[0], ticket_count: countRes.rows[0].c });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// ── Change a user's product (admin) ──────────────────────────────────────────
+app.put('/api/auth/users/:id/product', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { product } = req.body;
+    const { rows } = await pool.query(
+      `UPDATE users SET product = $2 WHERE id = $1
+       RETURNING id, name, email, company, product, role, avatar, created_at`,
+      [id, product]
+    );
+    if (rows.length === 0) return res.status(404).json({ error: 'Not found' });
+    const countRes = await pool.query(`SELECT COUNT(*)::int AS c FROM tickets WHERE user_id = $1`, [id]);
+    res.json({ ...rows[0], ticket_count: countRes.rows[0].c });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
@@ -299,6 +346,89 @@ app.delete('/api/docs/:docId/images/:imageId', async (req, res) => {
   }
 });
 
+// ── Serve images that were downloaded from GitHub and stored in the DB ───────
+// (as opposed to /images/... which serves admin-uploaded files from disk)
+app.get('/api/synced-images', async (req, res) => {
+  try {
+    const { path: imgPath } = req.query;
+    if (!imgPath) return res.status(400).json({ error: 'path query param is required' });
+    const { rows } = await pool.query(
+      `SELECT data, mime_type FROM synced_images WHERE path = $1`,
+      [imgPath]
+    );
+    if (rows.length === 0) return res.status(404).send('Not found');
+    res.set('Content-Type', rows[0].mime_type);
+    res.set('Cache-Control', 'public, max-age=86400');
+    res.send(rows[0].data);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// ── FAQ ──────────────────────────────────────────────────────────────────────
+
+// List all FAQ items (public — used by client FAQ tab and admin FAQ panel)
+app.get('/api/faq', async (req, res) => {
+  try {
+    const { rows } = await pool.query(
+      `SELECT * FROM faq_items ORDER BY display_order, id`
+    );
+    res.json(rows);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// Create a FAQ item (admin)
+app.post('/api/faq', async (req, res) => {
+  try {
+    const { title, answer, tags, display_order } = req.body;
+    if (!title || !answer) return res.status(400).json({ error: 'title and answer are required' });
+    const { rows } = await pool.query(
+      `INSERT INTO faq_items (title, answer, tags, display_order)
+       VALUES ($1,$2,$3,$4) RETURNING *`,
+      [title, answer, tags || [], display_order || 99]
+    );
+    res.status(201).json(rows[0]);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// Update a FAQ item (admin)
+app.put('/api/faq/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { title, answer, tags, display_order } = req.body;
+    const { rows } = await pool.query(
+      `UPDATE faq_items
+       SET title = COALESCE($2, title),
+           answer = COALESCE($3, answer),
+           tags = COALESCE($4, tags),
+           display_order = COALESCE($5, display_order),
+           updated_at = NOW()
+       WHERE id = $1 RETURNING *`,
+      [id, title, answer, tags, display_order]
+    );
+    if (rows.length === 0) return res.status(404).json({ error: 'Not found' });
+    res.json(rows[0]);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// Delete a FAQ item (admin)
+app.delete('/api/faq/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { rowCount } = await pool.query(`DELETE FROM faq_items WHERE id = $1`, [id]);
+    if (rowCount === 0) return res.status(404).json({ error: 'Not found' });
+    res.json({ ok: true });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
 // ── Tickets ──────────────────────────────────────────────────────────────────
 
 // List tickets — pass ?userId=X for a specific user's tickets, omit for all (admin)
@@ -306,8 +436,12 @@ app.get('/api/tickets', async (req, res) => {
   try {
     const { userId } = req.query;
     const query = userId
-      ? `SELECT * FROM tickets WHERE user_id = $1 ORDER BY created_at DESC`
-      : `SELECT * FROM tickets ORDER BY created_at DESC`;
+      ? `SELECT t.*, u.name AS user_name, u.email AS user_email
+         FROM tickets t LEFT JOIN users u ON u.id = t.user_id
+         WHERE t.user_id = $1 ORDER BY t.created_at DESC`
+      : `SELECT t.*, u.name AS user_name, u.email AS user_email
+         FROM tickets t LEFT JOIN users u ON u.id = t.user_id
+         ORDER BY t.created_at DESC`;
     const { rows } = await pool.query(query, userId ? [userId] : []);
     res.json(rows);
   } catch (err) {

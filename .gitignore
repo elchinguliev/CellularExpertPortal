@@ -9,3 +9,4 @@ ai-backend/app/__pycache__/
 ai-backend/app/services/__pycache__/
 **/__pycache__/
 *.pyc
+*.conf

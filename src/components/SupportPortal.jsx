@@ -1,9 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { KB, findAnswer, SUGGESTED, SEED_TICKETS, AGENTS, SUPPORT_EMAIL } from '../supportData';
+import { findAnswer, SUGGESTED, SEED_TICKETS, AGENTS, SUPPORT_EMAIL } from '../supportData';
 import { API_BASE } from '../useGithubDocs';import LoginForm from './LoginForm';
 import NewTicketForm from './NewTicketForm';
 import ReplyBox from './ReplyBox';
 import ChatComposer from './ChatComposer';
+import { StableInput, StableTextarea } from './StableInput';
 
 const SC   = {'Open':'#d97706','In Progress':'var(--accent)','Resolved':'var(--accent2)','Closed':'#6b7280'};
 const PRIC = {'Critical':'#dc2626','High':'#d97706','Normal':'var(--accent)','Low':'#6b7280'};
@@ -37,6 +38,10 @@ const [tickets,     setTickets]     = useState([]);
   const [admFilter, setAdmFilter] = useState('All');
   const [admTkt,    setAdmTkt]    = useState(null);
   const [openFaq,   setOpenFaq]   = useState(null);
+  const [admTicketSearch, setAdmTicketSearch] = useState('');
+  const [admTimeFilter,   setAdmTimeFilter]   = useState('all'); // 'all' | '6h' | '24h' | '1m' | 'custom'
+  const [admCustomFrom,   setAdmCustomFrom]   = useState('');
+  const [admCustomTo,     setAdmCustomTo]     = useState('');
 
   // Admin — Documentation CRUD state
   const [docsList,    setDocsList]    = useState([]);
@@ -51,9 +56,15 @@ const [tickets,     setTickets]     = useState([]);
   const [newImgCaption,setNewImgCaption]= useState('');
   const [newImgAnchor, setNewImgAnchor] = useState('');
   const [imgUploading, setImgUploading] = useState(false);
-  const [docHeadings, setDocHeadings] = useState([]);
   const [ticketDraft, setTicketDraft] = useState(null);
   const [pageLoadStart, setPageLoadStart] = useState(null);
+
+  // FAQ state (client list + admin CRUD)
+  const [faqItems,  setFaqItems]  = useState([]);
+  const [faqMode,   setFaqMode]   = useState('list'); // 'list' | 'edit' | 'new'
+  const [faqDraft,  setFaqDraft]  = useState(null);
+  const [faqSaving, setFaqSaving] = useState(false);
+  const [faqError,  setFaqError]  = useState('');
 
   const isAdmin   = currentUser?.role==='admin' || currentUser?.role==='agent';
   // Restore a saved session on page load/refresh
@@ -91,6 +102,14 @@ const [tickets,     setTickets]     = useState([]);
     fetch(url).then(r => r.json()).then(setTickets).catch(() => {});
   };
 
+  const loadFaq = () => {
+    fetch(`${API_BASE}/faq`).then(r => r.json()).then(setFaqItems).catch(() => {});
+  };
+
+  useEffect(() => {
+    if (currentUser) loadFaq();
+  }, [currentUser]);
+
   useEffect(() => {
     if (currentUser) loadTickets();
   }, [currentUser, isAdmin]);
@@ -105,7 +124,6 @@ const openEditDoc = async (docId) => {
     const data = await res.json();
     setDocDraft({ doc_id: data.doc_id, title: data.title, product: data.product, category: data.category, content: data.content });
     setDocImages(data.images || []);
-    setDocHeadings(data.headings || []);
     setDocMode('edit');
   };
   const openNewDoc = () => {
@@ -419,13 +437,17 @@ const createTicket = async (data) => {
         }),
       });
       const ticket = await res.json();
+
       if (data.screenshot) {
         try {
           const fd = new FormData();
           fd.append('screenshot', data.screenshot);
           await fetch(`${API_BASE}/tickets/${ticket.id}/attachment`, { method: 'POST', body: fd });
-        } catch {}
+        } catch {
+          // Ticket itself was created fine — attachment upload failing shouldn't block the flow.
+        }
       }
+
       setShowNewTkt(false);
       setTicketDraft(null);
       loadTickets();
@@ -483,6 +505,7 @@ const createTicket = async (data) => {
           {id:'adm-agents',   icon:'◐',label:'Agent Stats'},
           {id:'adm-ai-insights', icon:'✦', label:'AI Insights'},
           {id:'adm-users',    icon:'◎',label:'Users'},
+          {id:'adm-faq',      icon:'✦',label:'FAQ'},
           {id:'adm-docs',     icon:'▤',label:'Documentation'},
 ] : [
           {id:'chat',      icon:'◈',label:'Support Chat'},
@@ -625,7 +648,7 @@ const ChatTab = () => (
           <div style={{color:'var(--text-bright)',marginBottom:3,fontSize:13}}>No tickets yet</div>
           <div style={{fontSize:12}}>Open a ticket when you need direct help from our team.</div>
         </div>
-      )}
+      )
       {myTickets.map(t => (
         <div key={t.id} style={{marginBottom:6}}>
 <div onClick={() => { const next = activeTkt===t.id?null:t.id; setActiveTkt(next); if (next) fetchTicketMessages(next); }}            style={{background:'var(--bg2)',border:`1px solid ${activeTkt===t.id?'var(--accent)':'var(--border)'}`,borderRadius:activeTkt===t.id?'10px 10px 0 0':10,padding:'10px 13px',cursor:'pointer',transition:'all .15s',borderLeft:`3px solid ${SC[t.status]||'var(--border)'}`}}>
@@ -635,7 +658,7 @@ const ChatTab = () => (
             </div>
             <div style={{fontSize:12,fontWeight:500,color:'var(--text-bright)'}}>{t.title}</div>
 <div style={{fontSize:10,color:'var(--text-dim)',marginTop:3}}>{new Date(t.created_at).toLocaleDateString()} · {(activeTktMessages[t.id]||[]).length} messages</div>          </div>
-{activeTkt===t.id && (
+          {activeTkt===t.id && (
             <div style={{background:'var(--bg)',border:'1px solid var(--accent)',borderTop:'none',borderRadius:'0 0 10px 10px',padding:'11px 13px'}}>
               {t.attachment_url && (
                 <a href={t.attachment_url} target="_blank" rel="noreferrer" style={{display:'inline-block',marginBottom:10}}>
@@ -662,7 +685,7 @@ const ChatTab = () => (
       <div style={{background:'var(--bg2)',border:'1px solid var(--border)',borderRadius:14,padding:20,position:'relative',overflow:'hidden'}}>
         <div style={{position:'absolute',top:-40,right:-40,width:120,height:120,borderRadius:'50%',background:'var(--accent-l)',pointerEvents:'none'}}/>
         <div style={{width:50,height:50,borderRadius:14,background:'linear-gradient(135deg, var(--accent), var(--accent2))',display:'flex',alignItems:'center',justifyContent:'center',fontFamily:'var(--font-mono)',fontSize:16,color:'#fff',fontWeight:700,marginBottom:16,position:'relative'}}>{currentUser?.avatar}</div>
-        {[['Name',currentUser?.name],['Email',currentUser?.email],['Company',currentUser?.company],['Product',currentUser?.product],['Role',currentUser?.role],['Since',currentUser?.joined]].map(([l,v]) => (
+        {[['Name',currentUser?.name],['Email',currentUser?.email],['Company',currentUser?.company],['Product',currentUser?.product],['Role',currentUser?.role],['Since',currentUser?.created_at ? new Date(currentUser.created_at).toLocaleDateString(undefined,{year:'numeric',month:'long',day:'numeric'}) : '—']].map(([l,v]) => (
           <div key={l} style={{display:'flex',gap:10,padding:'7px 0',borderBottom:'1px solid var(--border)',position:'relative'}}>
             <span style={{fontFamily:'var(--font-mono)',fontSize:10,color:'var(--text-dim)',letterSpacing:'.1em',textTransform:'uppercase',width:68,flexShrink:0}}>{l}</span>
             <span style={{fontSize:12,color:'var(--text-bright)'}}>{v}</span>
@@ -680,8 +703,11 @@ const ChatTab = () => (
       <div style={{fontSize:11,color:'var(--text-dim)',marginBottom:14}}>
         Quick answers to common questions. Can't find yours? Try the Support Chat.
       </div>
-      {KB.map((f,i) => (
-        <div key={i} onClick={() => setOpenFaq(openFaq===i?null:i)}
+      {faqItems.length === 0 && (
+        <div style={{fontSize:12,color:'var(--text-dim)'}}>No FAQ items yet.</div>
+      )}
+      {faqItems.map((f,i) => (
+        <div key={f.id} onClick={() => setOpenFaq(openFaq===i?null:i)}
           style={{background:'var(--bg2)',border:'1px solid var(--border)',borderRadius:10,padding:'11px 13px',marginBottom:6,cursor:'pointer'}}>
           <div style={{display:'flex',justifyContent:'space-between',gap:8,fontSize:12,fontWeight:500,color:'var(--text-bright)',alignItems:'flex-start'}}>
             <span style={{flex:1,lineHeight:1.4}}>{f.title}</span>
@@ -722,11 +748,12 @@ const ChatTab = () => (
         </div>
       ))}
       <div style={{marginTop:14,paddingTop:12,borderTop:'1px solid var(--border)'}}>
-        <div style={{fontWeight:700,color:'var(--text-bright)',fontSize:12,marginBottom:9,display:'flex',alignItems:'center',gap:6}}>
-          <span style={{color:'var(--accent)'}}>✦</span> Frequently Asked Questions
+        <div style={{fontWeight:700,color:'var(--text-bright)',fontSize:12,marginBottom:9,display:'flex',alignItems:'center',justifyContent:'space-between'}}>
+          <span style={{display:'flex',alignItems:'center',gap:6}}><span style={{color:'var(--accent)'}}>✦</span> Frequently Asked Questions</span>
+          <span onClick={()=>setTab('adm-faq')} style={{fontSize:10,color:'var(--accent)',cursor:'pointer',fontWeight:600}}>Manage →</span>
         </div>
-        {KB.slice(0,6).map((f,i) => (
-          <div key={i} onClick={() => setOpenFaq(openFaq===i?null:i)} style={{borderBottom:'1px solid var(--border)',padding:'9px 0',cursor:'pointer'}}>
+        {faqItems.slice(0,6).map((f,i) => (
+          <div key={f.id} onClick={() => setOpenFaq(openFaq===i?null:i)} style={{borderBottom:'1px solid var(--border)',padding:'9px 0',cursor:'pointer'}}>
             <div style={{display:'flex',justifyContent:'space-between',gap:8,fontSize:12,fontWeight:500,color:'var(--text-bright)',alignItems:'flex-start'}}>
               <span style={{flex:1,lineHeight:1.4}}>{f.title}</span>
               <span style={{color:'var(--text-dim)',flexShrink:0,fontSize:10,transform:openFaq===i?'rotate(180deg)':'none',transition:'transform .15s'}}>▾</span>
@@ -740,6 +767,28 @@ const ChatTab = () => (
 
   // ── Admin Tickets ─────────────────────────────────────────────────────────
 // ── Admin Tickets ─────────────────────────────────────────────────────────
+  const admFilteredTickets = () => {
+    let list = admFilter==='All' ? tickets : tickets.filter(t=>t.status===admFilter);
+
+    const q = admTicketSearch.trim().toLowerCase();
+    if (q) {
+      list = list.filter(t => (t.user_name||'').toLowerCase().includes(q) || (t.user_email||'').toLowerCase().includes(q));
+    }
+
+    if (admTimeFilter !== 'all') {
+      const nowMs = Date.now();
+      if (admTimeFilter === '6h')  list = list.filter(t => nowMs - new Date(t.created_at).getTime() <= 6*60*60*1000);
+      if (admTimeFilter === '24h') list = list.filter(t => nowMs - new Date(t.created_at).getTime() <= 24*60*60*1000);
+      if (admTimeFilter === '1m')  list = list.filter(t => nowMs - new Date(t.created_at).getTime() <= 30*24*60*60*1000);
+      if (admTimeFilter === 'custom') {
+        const from = admCustomFrom ? new Date(admCustomFrom).getTime() : -Infinity;
+        const to   = admCustomTo   ? new Date(admCustomTo).getTime()   : Infinity;
+        list = list.filter(t => { const ts = new Date(t.created_at).getTime(); return ts >= from && ts <= to; });
+      }
+    }
+    return list;
+  };
+
   const AdminTickets = () => (
     <div style={{flex:1,overflowY:'auto',padding:14}}>
       <div style={{display:'flex',gap:5,marginBottom:10,flexWrap:'wrap'}}>
@@ -748,15 +797,48 @@ const ChatTab = () => (
             style={{padding:'5px 11px',borderRadius:20,border:`1px solid ${admFilter===s?'var(--accent)':'var(--border)'}`,background:admFilter===s?'var(--accent-l)':'transparent',color:admFilter===s?'var(--accent)':'var(--text-dim)',fontFamily:'var(--font-mono)',fontSize:10,letterSpacing:'.06em',cursor:'pointer',fontWeight:600}}>{s}</button>
         ))}
       </div>
-      {(admFilter==='All'?tickets:tickets.filter(t=>t.status===admFilter)).map(t => (
+
+      <input
+        value={admTicketSearch}
+        onChange={e=>setAdmTicketSearch(e.target.value)}
+        placeholder="Search by requester name or email..."
+        style={{width:'100%',padding:'8px 11px',border:'1px solid var(--border)',borderRadius:8,fontSize:12,color:'var(--text-bright)',background:'var(--bg2)',outline:'none',marginBottom:8,boxSizing:'border-box'}}
+      />
+
+      <div style={{display:'flex',gap:5,marginBottom:6,flexWrap:'wrap'}}>
+        {[['all','All time'],['6h','Last 6 hours'],['24h','Last 24 hours'],['1m','Last 1 month'],['custom','Custom range']].map(([v,l]) => (
+          <button key={v} onClick={() => setAdmTimeFilter(v)}
+            style={{padding:'5px 11px',borderRadius:20,border:`1px solid ${admTimeFilter===v?'var(--accent2)':'var(--border)'}`,background:admTimeFilter===v?'var(--accent-l)':'transparent',color:admTimeFilter===v?'var(--accent2)':'var(--text-dim)',fontFamily:'var(--font-mono)',fontSize:10,letterSpacing:'.06em',cursor:'pointer',fontWeight:600}}>{l}</button>
+        ))}
+      </div>
+
+      {admTimeFilter==='custom' && (
+        <div style={{display:'flex',gap:8,marginBottom:12,alignItems:'center',flexWrap:'wrap'}}>
+          <label style={{fontSize:10,color:'var(--text-dim)',fontFamily:'var(--font-mono)'}}>From
+            <input type="datetime-local" value={admCustomFrom} onChange={e=>setAdmCustomFrom(e.target.value)}
+              style={{marginLeft:6,padding:'5px 8px',border:'1px solid var(--border)',borderRadius:6,fontSize:11,background:'var(--bg2)',color:'var(--text-bright)'}}/>
+          </label>
+          <label style={{fontSize:10,color:'var(--text-dim)',fontFamily:'var(--font-mono)'}}>To
+            <input type="datetime-local" value={admCustomTo} onChange={e=>setAdmCustomTo(e.target.value)}
+              style={{marginLeft:6,padding:'5px 8px',border:'1px solid var(--border)',borderRadius:6,fontSize:11,background:'var(--bg2)',color:'var(--text-bright)'}}/>
+          </label>
+        </div>
+      )}
+
+      {admFilteredTickets().length === 0 && (
+        <div style={{fontSize:12,color:'var(--text-dim)',padding:'10px 0'}}>No tickets match this filter.</div>
+      )}
+
+      {admFilteredTickets().map(t => (
         <div key={t.id} style={{marginBottom:6}}>
           <div onClick={() => { const next = admTkt===t.id?null:t.id; setAdmTkt(next); if (next) fetchTicketMessages(next, true); }}
             style={{background:'var(--bg2)',border:`1px solid ${admTkt===t.id?'var(--accent)':'var(--border)'}`,borderRadius:admTkt===t.id?'10px 10px 0 0':10,padding:'10px 12px',cursor:'pointer',transition:'all .15s',borderLeft:`3px solid ${SC[t.status]||'var(--border)'}`}}>
             <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',gap:8}}>
               <div>
-                <div style={{display:'flex',gap:4,marginBottom:4,flexWrap:'wrap'}}>
+                <div style={{display:'flex',gap:4,marginBottom:4,flexWrap:'wrap',alignItems:'center'}}>
                   <span style={{fontFamily:'var(--font-mono)',fontSize:10,color:'var(--accent)'}}>{t.ticket_number}</span>
                   {chip(SC[t.status]||'#6b7280',t.status)}&nbsp;{chip(PRIC[t.priority]||'#6b7280',t.priority)}
+                  <span style={{fontSize:10,color:'var(--text-dim)'}}>{t.user_name || 'Unknown user'}</span>
                 </div>
                 <div style={{fontSize:12,fontWeight:500,color:'var(--text-bright)'}}>{t.title}</div>
               </div>
@@ -766,7 +848,7 @@ const ChatTab = () => (
               </select>
             </div>
           </div>
-{admTkt===t.id && (
+          {admTkt===t.id && (
             <div style={{background:'var(--bg)',border:'1px solid var(--accent)',borderTop:'none',borderRadius:'0 0 10px 10px',padding:'10px 12px'}}>
               {t.attachment_url && (
                 <a href={t.attachment_url} target="_blank" rel="noreferrer" style={{display:'inline-block',marginBottom:10}}>
@@ -828,18 +910,148 @@ const changeUserRole = async (id, role) => {
     }
   };
 
+  const changeUserProduct = async (id, product) => {
+    const res = await fetch(`${API_BASE}/auth/users/${id}/product`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ product }),
+    });
+    if (res.ok) {
+      const updated = await res.json();
+      setUsers(p => p.map(u => u.id === id ? updated : u));
+    }
+  };
+
+  const openEditFaq = (item) => {
+    setFaqDraft({ id: item.id, title: item.title, answer: item.answer, display_order: item.display_order });
+    setFaqError('');
+    setFaqMode('edit');
+  };
+  const openNewFaq = () => {
+    setFaqDraft({ title: '', answer: '', display_order: 99 });
+    setFaqError('');
+    setFaqMode('new');
+  };
+  const saveFaq = async () => {
+    if (!faqDraft.title || !faqDraft.answer) { setFaqError('Please fill in question and answer.'); return; }
+    setFaqSaving(true);
+    setFaqError('');
+    try {
+      const url = faqMode === 'new' ? `${API_BASE}/faq` : `${API_BASE}/faq/${faqDraft.id}`;
+      const method = faqMode === 'new' ? 'POST' : 'PUT';
+      const res = await fetch(url, {
+        method,
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(faqDraft),
+      });
+      const data = await res.json();
+      if (!res.ok) { setFaqError(data.error || 'Save failed.'); setFaqSaving(false); return; }
+      setFaqSaving(false);
+      setFaqMode('list');
+      setFaqDraft(null);
+      loadFaq();
+    } catch {
+      setFaqError('Could not reach the backend.');
+      setFaqSaving(false);
+    }
+  };
+  const deleteFaq = async (id) => {
+    if (!window.confirm('Delete this FAQ item?')) return;
+    await fetch(`${API_BASE}/faq/${id}`, { method: 'DELETE' });
+    loadFaq();
+  };
+
+  const AdminFaq = () => {
+    if (faqMode === 'edit' || faqMode === 'new') {
+      return (
+        <div style={{flex:1,overflowY:'auto',padding:14}}>
+          <div style={{fontWeight:700,color:'var(--text-bright)',fontSize:12,marginBottom:12}}>
+            {faqMode === 'new' ? 'New FAQ Item' : 'Edit FAQ Item'}
+          </div>
+          {faqError && <div style={{background:'#dc262614',border:'1px solid #dc262640',color:'#dc2626',fontSize:11,padding:'8px 11px',borderRadius:8,marginBottom:10}}>{faqError}</div>}
+          <div style={{marginBottom:10}}>
+            <label style={{fontFamily:'var(--font-mono)',fontSize:10,color:'var(--text-dim)',textTransform:'uppercase',letterSpacing:'.06em'}}>Question</label>
+            <StableInput value={faqDraft.title} onChange={v=>setFaqDraft(d=>({...d, title:v}))}
+              style={{width:'100%',padding:'8px 11px',border:'1px solid var(--border)',borderRadius:8,fontSize:12,color:'var(--text-bright)',background:'var(--bg2)',outline:'none',marginTop:5,boxSizing:'border-box'}}/>
+          </div>
+          <div style={{marginBottom:10}}>
+            <label style={{fontFamily:'var(--font-mono)',fontSize:10,color:'var(--text-dim)',textTransform:'uppercase',letterSpacing:'.06em'}}>Answer</label>
+            <StableTextarea rows={7} value={faqDraft.answer} onChange={v=>setFaqDraft(d=>({...d, answer:v}))}
+              style={{width:'100%',minHeight:140,padding:'8px 11px',border:'1px solid var(--border)',borderRadius:8,fontSize:12,color:'var(--text-bright)',background:'var(--bg2)',outline:'none',marginTop:5,boxSizing:'border-box',resize:'vertical',lineHeight:1.5}}/>
+          </div>
+          <div style={{marginBottom:14}}>
+            <label style={{fontFamily:'var(--font-mono)',fontSize:10,color:'var(--text-dim)',textTransform:'uppercase',letterSpacing:'.06em'}}>Display order</label>
+            <StableInput type="number" value={faqDraft.display_order} onChange={v=>setFaqDraft(d=>({...d, display_order:parseInt(v)||0}))}
+              style={{width:100,padding:'8px 11px',border:'1px solid var(--border)',borderRadius:8,fontSize:12,color:'var(--text-bright)',background:'var(--bg2)',outline:'none',marginTop:5,boxSizing:'border-box'}}/>
+          </div>
+          <div style={{display:'flex',gap:8}}>
+            <button onClick={saveFaq} disabled={faqSaving}
+              style={{padding:'8px 16px',borderRadius:8,border:'none',background:'var(--accent)',color:'#fff',fontSize:12,fontWeight:600,cursor:'pointer'}}>
+              {faqSaving ? 'Saving...' : 'Save'}
+            </button>
+            <button onClick={()=>{setFaqMode('list'); setFaqDraft(null); setFaqError('');}}
+              style={{padding:'8px 16px',borderRadius:8,border:'1px solid var(--border)',background:'transparent',color:'var(--text)',fontSize:12,cursor:'pointer'}}>
+              Cancel
+            </button>
+          </div>
+        </div>
+      );
+    }
+
+    return (
+      <div style={{flex:1,overflowY:'auto',padding:14}}>
+        <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:12}}>
+          <div style={{fontWeight:700,color:'var(--text-bright)',fontSize:12}}>FAQ Items ({faqItems.length})</div>
+          <button onClick={openNewFaq}
+            style={{padding:'6px 13px',borderRadius:8,border:'none',background:'var(--accent)',color:'#fff',fontSize:11,fontWeight:600,cursor:'pointer'}}>
+            + New FAQ
+          </button>
+        </div>
+        {faqItems.length === 0 && <div style={{fontSize:12,color:'var(--text-dim)'}}>No FAQ items yet — add the first one.</div>}
+        {faqItems.map(f => (
+          <div key={f.id} style={{background:'var(--bg2)',border:'1px solid var(--border)',borderRadius:10,padding:'10px 12px',marginBottom:6}}>
+            <div style={{display:'flex',justifyContent:'space-between',gap:8,alignItems:'flex-start'}}>
+              <div style={{fontSize:12,fontWeight:500,color:'var(--text-bright)',flex:1}}>{f.title}</div>
+              <div style={{display:'flex',gap:6,flexShrink:0}}>
+                <button onClick={()=>openEditFaq(f)}
+                  style={{padding:'4px 10px',borderRadius:6,border:'1px solid var(--border)',background:'transparent',color:'var(--text)',fontSize:10,cursor:'pointer'}}>Edit</button>
+                <button onClick={()=>deleteFaq(f.id)}
+                  style={{padding:'4px 10px',borderRadius:6,border:'1px solid #dc262640',background:'#dc262614',color:'#dc2626',fontSize:10,cursor:'pointer'}}>Delete</button>
+              </div>
+            </div>
+            <div style={{fontSize:11,color:'var(--text-dim)',marginTop:5,lineHeight:1.5,whiteSpace:'pre-line'}}>
+              {f.answer.length > 160 ? f.answer.slice(0,160) + '…' : f.answer}
+            </div>
+          </div>
+        ))}
+      </div>
+    );
+  };
+
 const AdminUsers = () => (
     <div style={{flex:1,overflowY:'auto',padding:14}}>
       <div style={{fontWeight:700,color:'var(--text-bright)',fontSize:12,marginBottom:9}}>All Users ({users.length})</div>
       {users.map(u => (
-        <div key={u.id} style={{background:'var(--bg2)',border:'1px solid var(--border)',borderRadius:10,padding:'9px 12px',marginBottom:6,display:'flex',alignItems:'center',gap:10}}>
+        <div key={u.id} style={{background:'var(--bg2)',border:'1px solid var(--border)',borderRadius:10,padding:'9px 12px',marginBottom:6,display:'flex',alignItems:'center',gap:10,flexWrap:'wrap'}}>
           <div style={{width:28,height:28,borderRadius:8,background:'linear-gradient(135deg, var(--accent), var(--accent2))',display:'flex',alignItems:'center',justifyContent:'center',fontFamily:'var(--font-mono)',fontSize:10,color:'#fff',fontWeight:700,flexShrink:0}}>{u.avatar}</div>
-          <div style={{flex:1,minWidth:0}}>
+          <div style={{flex:1,minWidth:120}}>
             <div style={{fontSize:12,fontWeight:500,color:'var(--text-bright)'}}>{u.name}</div>
             <div style={{fontFamily:'var(--font-mono)',fontSize:10,color:'var(--text-dim)',overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap'}}>{u.email}</div>
           </div>
-          {chip(PC[u.product]||'#6b7280',u.product)}&nbsp;
-          {chip(u.role==='admin'?'#7c3aed':u.role==='agent'?'var(--accent2)':'var(--accent)',u.role)}
+
+          <span title="Tickets created" style={{fontFamily:'var(--font-mono)',fontSize:10,color:'var(--text-dim)',padding:'3px 8px',border:'1px solid var(--border)',borderRadius:20}}>
+            {u.ticket_count ?? 0} tickets
+          </span>
+
+          <select value={u.product||''} onChange={e=>changeUserProduct(u.id, e.target.value)}
+            style={{padding:'4px 8px',border:'1px solid var(--border)',borderRadius:7,fontSize:10,color:'var(--text-bright)',background:'var(--bg)',outline:'none',cursor:'pointer'}}>
+            {['CE Express','CE Pro','Both','Training'].map(p=><option key={p} value={p}>{p}</option>)}
+          </select>
+
+          <select value={u.role} onChange={e=>changeUserRole(u.id, e.target.value)}
+            style={{padding:'4px 8px',border:'1px solid var(--border)',borderRadius:7,fontSize:10,color:u.role==='admin'?'#7c3aed':u.role==='agent'?'var(--accent2)':'var(--accent)',background:'var(--bg)',outline:'none',cursor:'pointer',fontWeight:600}}>
+            {['user','agent','admin'].map(r=><option key={r} value={r}>{r}</option>)}
+          </select>
         </div>
       ))}
     </div>
@@ -1298,13 +1510,8 @@ const AdminDocs = () => {
                   style={{fontSize:11,color:'var(--text)',marginBottom:8,display:'block'}}/>
                 <input value={newImgCaption} onChange={e=>setNewImgCaption(e.target.value)} placeholder="Caption (optional)"
                   style={{width:'100%',padding:'8px 10px',border:'1px solid var(--border)',borderRadius:7,fontSize:12,color:'var(--text-bright)',background:'var(--bg)',outline:'none',boxSizing:'border-box',marginBottom:6}}/>
-<select value={newImgAnchor} onChange={e=>setNewImgAnchor(e.target.value)}
-                  style={{width:'100%',padding:'8px 10px',border:'1px solid var(--border)',borderRadius:7,fontSize:12,color:'var(--text-bright)',background:'var(--bg)',outline:'none',boxSizing:'border-box',marginBottom:8,fontFamily:'var(--font-mono)',cursor:'pointer'}}>
-                  <option value="">— Place at the bottom of the page (default) —</option>
-                  {docHeadings.map(h => (
-                    <option key={h.heading_slug} value={h.heading_slug}>{'  '.repeat(h.level-2)}{h.heading_text}</option>
-                  ))}
-                </select>
+                <input value={newImgAnchor} onChange={e=>setNewImgAnchor(e.target.value)} placeholder="Section anchor — e.g. workspace-setup (optional)"
+                  style={{width:'100%',padding:'8px 10px',border:'1px solid var(--border)',borderRadius:7,fontSize:12,color:'var(--text-bright)',background:'var(--bg)',outline:'none',boxSizing:'border-box',marginBottom:8,fontFamily:'var(--font-mono)'}}/>
                 <button onClick={uploadImage} disabled={imgUploading}
                   style={{padding:'8px 16px',background:'var(--accent)',border:'none',borderRadius:7,color:'#fff',fontSize:11,fontWeight:700,cursor:imgUploading?'default':'pointer',opacity:imgUploading?0.7:1,fontFamily:'var(--font-mono)'}}>
                   {imgUploading ? 'UPLOADING…' : 'UPLOAD'}
@@ -1377,9 +1584,10 @@ const AdminDocs = () => {
     case 'profile':       return <ProfileTab/>;
       case 'faq':           return <FaqTab/>;
       case 'adm-dashboard': return <AdminDashboard/>;
-      case 'adm-tickets':   return <AdminTickets/>;
+      case 'adm-tickets':   return AdminTickets();
       case 'adm-agents':    return <AdminAgents/>;
       case 'adm-users':     return <AdminUsers/>;
+      case 'adm-faq':       return AdminFaq();
 case 'adm-docs':      return AdminDocs();
 case 'adm-ai-insights': return <AdminAIInsights/>;
       default:              return <ChatTab/>;
