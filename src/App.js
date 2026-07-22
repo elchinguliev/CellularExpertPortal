@@ -283,11 +283,11 @@ const ProductsSection = ({ onDocsClick }) => {
     { name:'CE Express', tag:'Web Platform', icon:'🌐', color:'#00d4a0',
       desc:'Multi-user web-based platform for radio planning, optimization and network inventory within ArcGIS Enterprise.',
       features:['Browser-based, no local install','Cloud or on-premise deployment','CE Inventory3D integrated','Full RF prediction suite'],
-      docId:'ce-express-introduction' },
+      docId:'ce-express-1-introduction' },
     { name:'Inventory3D', tag:'Asset Management', icon:'🗄', color:'#a78bfa',
       desc:'Database component for network asset management. Runs standalone or as part of CE Express system.',
       features:['Telecom tower asset tracking','3D visualization support','OSS/BSS integration','SketchUp plug-in available'],
-      docId:'ce-express-introduction' },
+      docId:'ce-express-1-introduction' },
   ];
   return (
     <section id="products" style={{padding:'100px 48px',maxWidth:1200,margin:'0 auto'}}>
@@ -473,10 +473,10 @@ const DocsHome = React.memo(function DocsHome({ onSelect }) {
   DOC_INDEX.forEach(d=>{const s=d.product==='CE Express'?'CE Express':d.product==='CE Pro'?'CE Desktop Pro':d.product==='Both'?'Geodata & Data':'Training';counts[s]=(counts[s]||0)+1;});
 
   const cards=[
-    {key:'CE Express',icon:'🌐',color:'#00b4ff',desc:'Web-based RF planning — browser access, multi-user, CE Inventory3D integrated.',firstDoc:'ce-express-introduction'},
+    {key:'CE Express',icon:'🌐',color:'#00b4ff',desc:'Web-based RF planning — browser access, multi-user, CE Inventory3D integrated.',firstDoc:'ce-express-1-introduction'},
     {key:'CE Desktop Pro',icon:'🖥',color:'#00d4a0',desc:'ArcGIS Pro extension — RCP, RLP, Indoor, Sound, EMF modules. 10 kHz–350 GHz.',firstDoc:'ce-pro-installation'},
     {key:'Geodata & Data',icon:'🗺',color:'#f59e0b',desc:'DEM, clutter, buildings, antenna patterns — formats, resolutions, requirements.',firstDoc:'geodata-requirements'},
-    {key:'Training',icon:'🎓',color:'#a78bfa',desc:'Step-by-step practical exercises for CE Express and CE Desktop Pro.',firstDoc:'training-ce-express-workspace'},
+    {key:'Training',icon:'🎓',color:'#a78bfa',desc:'Step-by-step practical exercises for CE Express and CE Desktop Pro.',firstDoc:'training-import-data'},
   ];
 
   return (
@@ -510,7 +510,7 @@ const DocsHome = React.memo(function DocsHome({ onSelect }) {
       <div style={{marginBottom:36}}>
         <div style={{fontSize:12,fontWeight:600,color:'var(--text-dim)',letterSpacing:'0.06em',textTransform:'uppercase',marginBottom:12,fontFamily:'var(--font-mono)'}}>Popular Topics</div>
         <div style={{display:'flex',flexWrap:'wrap',gap:7}}>
-          {[['ce-express-workspace','Creating Workspaces'],['ce-express-rf-prediction','RF Prediction'],['ce-express-prediction-models','Propagation Models'],['ce-express-features','Network Objects'],['geodata-requirements','Geodata Requirements'],['geodata-dem','DEM / Terrain'],['network-object-requirements','Network Object Fields'],['ce-express-radio-link','Microwave Link Planning'],['ce-express-admin-installation','CE Express Installation'],['ce-pro-installation','CE Pro Installation']].map(([id,label])=>(
+          {[['ce-express-3-1-1-workspaces','Creating Workspaces'],['ce-express-3-1-18-rf-prediction','RF Prediction'],['ce-express-3-1-9-prediction-models','Propagation Models'],['ce-express-3-1-2-features','Network Objects'],['geodata-requirements','Geodata Requirements'],['geodata-dem','DEM / Terrain'],['network-object-requirements','Network Object Fields'],['ce-express-3-1-37-link-prediction','Microwave Link Planning'],['ce-express-2-ce-express-application','CE Express Installation'],['ce-pro-installation','CE Pro Installation']].map(([id,label])=>(
             <div key={id} onClick={()=>onSelect(id)}
               style={{padding:'5px 13px',border:'1px solid var(--border)',borderRadius:20,fontSize:12,color:'var(--accent)',cursor:'pointer',transition:'all .12s'}}
               onMouseEnter={e=>{e.currentTarget.style.background='var(--accent-l)';e.currentTarget.style.borderColor='var(--accent)';}}
