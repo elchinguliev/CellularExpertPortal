@@ -74,6 +74,12 @@ export const DOC_INDEX = [
   // surviving originals under docs/ce-express/training/ (same content, different path).
   { id:'training-ce-express-workspace', path:'docs/ce-express/training/01-creating-workspace.md',  title:'Training 01: Creating a Workspace',           product:'Training',   category:'Training',          order:1  },
   { id:'training-rf-prediction',        path:'docs/ce-express/training/04-rf-prediction.md',         title:'Training 04: RF Prediction',                  product:'Training',   category:'Training',          order:4  },
+  // NOTE: 05/07/09 were never wired up anywhere in the sidebar even though the files exist.
+  // 01-04, 06, and 08 are intentionally NOT duplicated here -- they're already linked under
+  // CE Express (Getting Started / Network Objects / Calculations).
+  { id:'training-import-data',          path:'docs/ce-express/training/05-import-data.md',           title:'Training 05: Import Data',                    product:'Training',   category:'Training',          order:5  },
+  { id:'training-mw-equipment',         path:'docs/ce-express/training/07-mw-equipment.md',          title:'Training 07: MW Equipment',                   product:'Training',   category:'Training',          order:7  },
+  { id:'training-preparing-geodata',    path:'docs/ce-express/training/09-preparing-geodata.md',     title:'Training 09: Preparing Geodata',              product:'Training',   category:'Training',          order:9  },
 ];
 
 // Navigation structure for the sidebar
