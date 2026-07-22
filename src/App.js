@@ -48,7 +48,7 @@ function renderMD(text) {
     if(/^---+$/.test(line.trim())){closeL();closeBq();html+='<hr/>';continue;}
     if(line.startsWith('> ')){if(!inBq){html+='<blockquote>';inBq=true;}html+=`<p>${inline(line.slice(2))}</p>`;continue;}
     if(/^\s*[-*]\s/.test(line)){if(!inList||lt!=='ul'){closeL();html+='<ul>';inList=true;lt='ul';}html+=`<li>${inline(line.trim().slice(2))}</li>`;continue;}
-    if(/^\s*\d+\.\s/.test(line)){if(!inList||lt!=='ol'){closeL();html+='<ol>';inList=true;lt='ol';}html+=`<li>${inline(line.replace(/^\s*\d+\.\s/,'').trim())}</li>`;continue;}
+    if(/^\s*\d+\.\s/.test(line)){if(!inList||lt!=='ul'){closeL();html+='<ul>';inList=true;lt='ul';}html+=`<li>${inline(line.replace(/^\s*\d+\.\s/,'').trim())}</li>`;continue;}
     if(line.trim()===''){closeL();closeBq();html+='<div class="sp"></div>';continue;}
     html+=`<p>${inline(line)}</p>`;
   }
