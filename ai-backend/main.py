@@ -6,6 +6,7 @@ from app.generator import generate_answer
 from app.ticket_service import build_ticket_prefill
 from app.admin_analytics import get_ai_insights
 from app.activity_logger import log_user_activity
+from build_index import build_index
 
 
 app = FastAPI(
@@ -104,3 +105,25 @@ def admin_log_activity(request: ActivityLogRequest):
     )
 
     return {"ok": True}
+
+
+@app.post("/admin/rebuild-index")
+def admin_rebuild_index():
+    """
+    Rebuild AI vector database from the latest shared PostgreSQL documents.
+    Use this after documentation is synced or updated.
+    """
+    try:
+        build_index()
+
+        return {
+            "ok": True,
+            "message": "AI vector index rebuilt successfully from PostgreSQL."
+        }
+
+    except Exception as error:
+        return {
+            "ok": False,
+            "message": "AI vector index rebuild failed.",
+            "error": str(error)
+        }
