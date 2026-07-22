@@ -99,51 +99,6 @@
     "pdf": "ce-express/training/09. Preparing Geodata.pdf"
   },
   {
-    "id": "ce-pro-rcp",
-    "path": "docs/ce-pro/rcp-user-guide.md",
-    "title": "RCP — Radio Coverage Planning",
-    "product": "CE Pro",
-    "category": "User Guides",
-    "order": 1,
-    "pdf": "ce-pro/user-guide/CE Desktop RCP for ArcGIS Pro User Guide v4.9.pdf"
-  },
-  {
-    "id": "ce-pro-rlp",
-    "path": "docs/ce-pro/rlp-user-guide.md",
-    "title": "RLP — Radio Link Planning",
-    "product": "CE Pro",
-    "category": "User Guides",
-    "order": 2,
-    "pdf": "ce-pro/user-guide/CE Desktop RLP for ArcGIS Pro User Guide v4.9.pdf"
-  },
-  {
-    "id": "ce-pro-indoor",
-    "path": "docs/ce-pro/indoor-user-guide.md",
-    "title": "Indoor Planning",
-    "product": "CE Pro",
-    "category": "User Guides",
-    "order": 3,
-    "pdf": "ce-pro/user-guide/CE Desktop Indoor for ArcGIS Pro User Guide v4.9.pdf"
-  },
-  {
-    "id": "ce-pro-sound",
-    "path": "docs/ce-pro/sound-user-guide.md",
-    "title": "Sound Propagation",
-    "product": "CE Pro",
-    "category": "User Guides",
-    "order": 4,
-    "pdf": "ce-pro/user-guide/CE Desktop Sound for ArcGIS Pro User Guide v4.9.pdf"
-  },
-  {
-    "id": "ce-pro-emf",
-    "path": "docs/ce-pro/emf-user-guide.md",
-    "title": "EMF Analysis",
-    "product": "CE Pro",
-    "category": "User Guides",
-    "order": 5,
-    "pdf": "ce-pro/user-guide/CE Desktop EMF for ArcGIS Pro User Guide v4.9.pdf"
-  },
-  {
     "id": "ce-pro-tr-install",
     "path": "docs/ce-pro/training/00-installation.md",
     "title": "00 — Installation",
@@ -268,54 +223,6 @@
     "category": "User Guides",
     "order": 1,
     "pdf": "inventory3d/Inventory3D User Guide v4.6.pdf"
-  },
-  {
-    "id": "ce-express-v73-1-introduction",
-    "path": "docs/ce-express/user-guide/v73-sections/1-introduction.md",
-    "title": "1 Introduction",
-    "product": "CE Express",
-    "category": "Introduction",
-    "order": 200
-  },
-  {
-    "id": "ce-express-v73-2-ce-express-application",
-    "path": "docs/ce-express/user-guide/v73-sections/2-ce-express-application.md",
-    "title": "2 CE Express application",
-    "product": "CE Express",
-    "category": "CE Express Application",
-    "order": 201
-  },
-  {
-    "id": "ce-express-v73-2-1-log-in-to-the-express-network-data-management-application",
-    "path": "docs/ce-express/user-guide/v73-sections/2-1-log-in-to-the-express-network-data-management-application.md",
-    "title": "2.1 Log in to the Express Network Data Management application",
-    "product": "CE Express",
-    "category": "CE Express Application",
-    "order": 202
-  },
-  {
-    "id": "ce-express-v73-2-2-open-the-express-map-view",
-    "path": "docs/ce-express/user-guide/v73-sections/2-2-open-the-express-map-view.md",
-    "title": "2.2 Open the Express Map view",
-    "product": "CE Express",
-    "category": "CE Express Application",
-    "order": 203
-  },
-  {
-    "id": "ce-express-v73-2-3-log-out",
-    "path": "docs/ce-express/user-guide/v73-sections/2-3-log-out.md",
-    "title": "2.3 Log out",
-    "product": "CE Express",
-    "category": "CE Express Application",
-    "order": 204
-  },
-  {
-    "id": "ce-express-v73-3-map-view",
-    "path": "docs/ce-express/user-guide/v73-sections/3-map-view.md",
-    "title": "3 Map view",
-    "product": "CE Express",
-    "category": "Express Tools",
-    "order": 205
   },
   {
     "id": "ce-express-v73-3-1-cellular-expert-express-tools",
@@ -678,563 +585,243 @@
     "order": 250
   },
   {
-    "id": "ce-express-v73-3-2-map",
-    "path": "docs/ce-express/user-guide/v73-sections/3-2-map.md",
-    "title": "3.2 Map",
-    "product": "CE Express",
-    "category": "Express Tools",
-    "order": 251
-  },
-  {
-    "id": "ce-express-v73-3-2-1-search-bar",
-    "path": "docs/ce-express/user-guide/v73-sections/3-2-1-search-bar.md",
-    "title": "3.2.1 Search bar",
-    "product": "CE Express",
-    "category": "Express Tools",
-    "order": 252
-  },
-  {
-    "id": "ce-express-v73-3-2-2-zoom-in",
-    "path": "docs/ce-express/user-guide/v73-sections/3-2-2-zoom-in.md",
-    "title": "3.2.2 Zoom in",
-    "product": "CE Express",
-    "category": "Express Tools",
-    "order": 253
-  },
-  {
-    "id": "ce-express-v73-3-2-3-zoom-out",
-    "path": "docs/ce-express/user-guide/v73-sections/3-2-3-zoom-out.md",
-    "title": "3.2.3 Zoom out",
-    "product": "CE Express",
-    "category": "Express Tools",
-    "order": 254
-  },
-  {
-    "id": "ce-express-v73-3-2-4-fine-zoom",
-    "path": "docs/ce-express/user-guide/v73-sections/3-2-4-fine-zoom.md",
-    "title": "3.2.4 Fine zoom",
-    "product": "CE Express",
-    "category": "Express Tools",
-    "order": 255
-  },
-  {
-    "id": "ce-express-v73-3-2-5-compass",
-    "path": "docs/ce-express/user-guide/v73-sections/3-2-5-compass.md",
-    "title": "3.2.5 Compass",
-    "product": "CE Express",
-    "category": "Express Tools",
-    "order": 256
-  },
-  {
-    "id": "ce-express-v73-3-2-6-3d2d-button",
-    "path": "docs/ce-express/user-guide/v73-sections/3-2-6-3d2d-button.md",
-    "title": "3.2.6 3D/2D Button",
-    "product": "CE Express",
-    "category": "Express Tools",
-    "order": 257
-  },
-  {
-    "id": "ce-express-v73-3-2-7-legend",
-    "path": "docs/ce-express/user-guide/v73-sections/3-2-7-legend.md",
-    "title": "3.2.7 Legend",
-    "product": "CE Express",
-    "category": "Express Tools",
-    "order": 258
-  },
-  {
-    "id": "ce-express-v73-3-2-8-home",
-    "path": "docs/ce-express/user-guide/v73-sections/3-2-8-home.md",
-    "title": "3.2.8 Home",
-    "product": "CE Express",
-    "category": "Express Tools",
-    "order": 259
-  },
-  {
-    "id": "ce-express-v73-3-2-9-mini-calculation-task-window",
-    "path": "docs/ce-express/user-guide/v73-sections/3-2-9-mini-calculation-task-window.md",
-    "title": "3.2.9 Mini calculation task window",
-    "product": "CE Express",
-    "category": "Express Tools",
-    "order": 260
-  },
-  {
-    "id": "ce-express-v73-3-2-10-active-side-switch",
-    "path": "docs/ce-express/user-guide/v73-sections/3-2-10-active-side-switch.md",
-    "title": "3.2.10 Active side switch",
-    "product": "CE Express",
-    "category": "Express Tools",
-    "order": 261
-  },
-  {
-    "id": "ce-express-v73-3-2-11-quick-menu",
-    "path": "docs/ce-express/user-guide/v73-sections/3-2-11-quick-menu.md",
-    "title": "3.2.11 Quick menu",
-    "product": "CE Express",
-    "category": "Express Tools",
-    "order": 262
-  },
-  {
-    "id": "ce-express-v73-3-3-data-management-and-visualization-section",
-    "path": "docs/ce-express/user-guide/v73-sections/3-3-data-management-and-visualization-section.md",
-    "title": "3.3 Data management and visualization section",
-    "product": "CE Express",
-    "category": "Express Tools",
-    "order": 263
-  },
-  {
-    "id": "ce-express-v73-3-4-calculation-section",
-    "path": "docs/ce-express/user-guide/v73-sections/3-4-calculation-section.md",
-    "title": "3.4 Calculation section",
-    "product": "CE Express",
-    "category": "Express Tools",
-    "order": 264
-  },
-  {
-    "id": "ce-express-v73-3-5-maptable-view-modes",
-    "path": "docs/ce-express/user-guide/v73-sections/3-5-maptable-view-modes.md",
-    "title": "3.5 Map/table view modes",
-    "product": "CE Express",
-    "category": "Express Tools",
-    "order": 265
-  },
-  {
-    "id": "ce-express-v73-3-5-1-map-view",
-    "path": "docs/ce-express/user-guide/v73-sections/3-5-1-map-view.md",
-    "title": "3.5.1 Map view",
-    "product": "CE Express",
-    "category": "Express Tools",
-    "order": 266
-  },
-  {
-    "id": "ce-express-v73-3-5-2-display-data-table-full-screen",
-    "path": "docs/ce-express/user-guide/v73-sections/3-5-2-display-data-table-full-screen.md",
-    "title": "3.5.2 Display data table full screen",
-    "product": "CE Express",
-    "category": "Express Tools",
-    "order": 267
-  },
-  {
-    "id": "ce-express-v73-3-5-3-split-window-vertically",
-    "path": "docs/ce-express/user-guide/v73-sections/3-5-3-split-window-vertically.md",
-    "title": "3.5.3 Split window vertically",
-    "product": "CE Express",
-    "category": "Express Tools",
-    "order": 268
-  },
-  {
-    "id": "ce-express-v73-3-5-4-split-window-horizontally",
-    "path": "docs/ce-express/user-guide/v73-sections/3-5-4-split-window-horizontally.md",
-    "title": "3.5.4 Split window horizontally",
-    "product": "CE Express",
-    "category": "Express Tools",
-    "order": 269
-  },
-  {
-    "id": "ce-express-v73-4-database-structure",
-    "path": "docs/ce-express/user-guide/v73-sections/4-database-structure.md",
-    "title": "4 Database structure",
-    "product": "CE Express",
-    "category": "Database Structure",
-    "order": 270
-  },
-  {
-    "id": "ce-express-v73-4-1-sites",
-    "path": "docs/ce-express/user-guide/v73-sections/4-1-sites.md",
-    "title": "4.1 Sites",
-    "product": "CE Express",
-    "category": "Database Structure",
-    "order": 271
-  },
-  {
-    "id": "ce-express-v73-4-2-cells",
-    "path": "docs/ce-express/user-guide/v73-sections/4-2-cells.md",
-    "title": "4.2 Cells",
-    "product": "CE Express",
-    "category": "Database Structure",
-    "order": 272
-  },
-  {
-    "id": "ce-express-v73-4-3-repeaters",
-    "path": "docs/ce-express/user-guide/v73-sections/4-3-repeaters.md",
-    "title": "4.3 Repeaters",
-    "product": "CE Express",
-    "category": "Database Structure",
-    "order": 273
-  },
-  {
-    "id": "ce-express-v73-4-4-radars",
-    "path": "docs/ce-express/user-guide/v73-sections/4-4-radars.md",
-    "title": "4.4 Radars",
-    "product": "CE Express",
-    "category": "Database Structure",
-    "order": 274
-  },
-  {
-    "id": "ce-express-v73-4-5-cpe",
-    "path": "docs/ce-express/user-guide/v73-sections/4-5-cpe.md",
-    "title": "4.5 CPE",
-    "product": "CE Express",
-    "category": "Database Structure",
-    "order": 275
-  },
-  {
-    "id": "ce-express-v73-4-6-measurements",
-    "path": "docs/ce-express/user-guide/v73-sections/4-6-measurements.md",
-    "title": "4.6 Measurements",
-    "product": "CE Express",
-    "category": "Database Structure",
-    "order": 276
-  },
-  {
-    "id": "ce-express-v73-4-7-workspace",
-    "path": "docs/ce-express/user-guide/v73-sections/4-7-workspace.md",
-    "title": "4.7 Workspace",
-    "product": "CE Express",
-    "category": "Database Structure",
-    "order": 277
-  },
-  {
-    "id": "ce-express-v73-5-ce-express-api",
-    "path": "docs/ce-express/user-guide/v73-sections/5-ce-express-api.md",
-    "title": "5 CE Express API",
-    "product": "CE Express",
-    "category": "CE Express API",
-    "order": 278
-  },
-  {
-    "id": "ce-express-v73-6-network-data-management",
-    "path": "docs/ce-express/user-guide/v73-sections/6-network-data-management.md",
-    "title": "6 Network Data Management",
-    "product": "CE Express",
-    "category": "Network Data Management",
-    "order": 279
-  },
-  {
-    "id": "ce-express-v73-6-1-data-management-tools",
-    "path": "docs/ce-express/user-guide/v73-sections/6-1-data-management-tools.md",
-    "title": "6.1 Data management tools",
-    "product": "CE Express",
-    "category": "Network Data Management",
-    "order": 280
-  },
-  {
-    "id": "ce-express-v73-6-1-1-table-view",
-    "path": "docs/ce-express/user-guide/v73-sections/6-1-1-table-view.md",
-    "title": "6.1.1 Table view",
-    "product": "CE Express",
-    "category": "Network Data Management",
-    "order": 281
-  },
-  {
-    "id": "ce-express-v73-6-1-2-back",
-    "path": "docs/ce-express/user-guide/v73-sections/6-1-2-back.md",
-    "title": "6.1.2 Back",
-    "product": "CE Express",
-    "category": "Network Data Management",
-    "order": 282
-  },
-  {
-    "id": "ce-express-v73-6-1-3-sieve",
-    "path": "docs/ce-express/user-guide/v73-sections/6-1-3-sieve.md",
-    "title": "6.1.3 Sieve",
-    "product": "CE Express",
-    "category": "Network Data Management",
-    "order": 283
-  },
-  {
-    "id": "ce-express-v73-6-1-4-multiple-table-view",
-    "path": "docs/ce-express/user-guide/v73-sections/6-1-4-multiple-table-view.md",
-    "title": "6.1.4 Multiple table view",
-    "product": "CE Express",
-    "category": "Network Data Management",
-    "order": 284
-  },
-  {
-    "id": "ce-express-v73-6-1-5-view-attachments",
-    "path": "docs/ce-express/user-guide/v73-sections/6-1-5-view-attachments.md",
-    "title": "6.1.5 View attachments",
-    "product": "CE Express",
-    "category": "Network Data Management",
-    "order": 285
-  },
-  {
-    "id": "ce-express-v73-6-1-6-synchronize-changes",
-    "path": "docs/ce-express/user-guide/v73-sections/6-1-6-synchronize-changes.md",
-    "title": "6.1.6 Synchronize changes",
-    "product": "CE Express",
-    "category": "Network Data Management",
-    "order": 286
-  },
-  {
-    "id": "ce-express-v73-6-1-7-selectunselect-all",
-    "path": "docs/ce-express/user-guide/v73-sections/6-1-7-selectunselect-all.md",
-    "title": "6.1.7 Select/unselect all",
-    "product": "CE Express",
-    "category": "Network Data Management",
-    "order": 287
-  },
-  {
-    "id": "ce-express-v73-6-1-8-show-selectedshow-all",
-    "path": "docs/ce-express/user-guide/v73-sections/6-1-8-show-selectedshow-all.md",
-    "title": "6.1.8 Show selected/Show all",
-    "product": "CE Express",
-    "category": "Network Data Management",
-    "order": 288
-  },
-  {
-    "id": "ce-express-v73-6-1-9-move-record",
-    "path": "docs/ce-express/user-guide/v73-sections/6-1-9-move-record.md",
-    "title": "6.1.9 Move record",
-    "product": "CE Express",
-    "category": "Network Data Management",
-    "order": 289
-  },
-  {
-    "id": "ce-express-v73-6-1-10-copy-record",
-    "path": "docs/ce-express/user-guide/v73-sections/6-1-10-copy-record.md",
-    "title": "6.1.10 Copy record",
-    "product": "CE Express",
-    "category": "Network Data Management",
-    "order": 290
-  },
-  {
-    "id": "ce-express-v73-6-1-11-add-new-record",
-    "path": "docs/ce-express/user-guide/v73-sections/6-1-11-add-new-record.md",
-    "title": "6.1.11 Add new record",
-    "product": "CE Express",
-    "category": "Network Data Management",
-    "order": 291
-  },
-  {
-    "id": "ce-express-v73-6-1-12-ce-api",
-    "path": "docs/ce-express/user-guide/v73-sections/6-1-12-ce-api.md",
-    "title": "6.1.12 CE API",
-    "product": "CE Express",
-    "category": "Network Data Management",
-    "order": 292
-  },
-  {
-    "id": "ce-express-v73-6-1-13-export-selected",
-    "path": "docs/ce-express/user-guide/v73-sections/6-1-13-export-selected.md",
-    "title": "6.1.13 Export selected",
-    "product": "CE Express",
-    "category": "Network Data Management",
-    "order": 293
-  },
-  {
-    "id": "ce-express-v73-6-1-14-delete-record",
-    "path": "docs/ce-express/user-guide/v73-sections/6-1-14-delete-record.md",
-    "title": "6.1.14 Delete record",
-    "product": "CE Express",
-    "category": "Network Data Management",
-    "order": 294
-  },
-  {
-    "id": "ce-express-v73-6-1-15-remove-selected",
-    "path": "docs/ce-express/user-guide/v73-sections/6-1-15-remove-selected.md",
-    "title": "6.1.15 Remove selected",
-    "product": "CE Express",
-    "category": "Network Data Management",
-    "order": 295
-  },
-  {
-    "id": "ce-express-v73-6-2-view-options-and-user-administration",
-    "path": "docs/ce-express/user-guide/v73-sections/6-2-view-options-and-user-administration.md",
-    "title": "6.2 View options and User administration",
-    "product": "CE Express",
-    "category": "Network Data Management",
-    "order": 296
-  },
-  {
-    "id": "ce-express-v73-6-2-1-import-export",
-    "path": "docs/ce-express/user-guide/v73-sections/6-2-1-import-export.md",
-    "title": "6.2.1 Import Export",
-    "product": "CE Express",
-    "category": "Network Data Management",
-    "order": 297
-  },
-  {
-    "id": "ce-express-v73-6-2-2-settings",
-    "path": "docs/ce-express/user-guide/v73-sections/6-2-2-settings.md",
-    "title": "6.2.2 Settings",
-    "product": "CE Express",
-    "category": "Network Data Management",
-    "order": 298
-  },
-  {
-    "id": "ce-express-v73-6-2-3-user-name-help-logout",
-    "path": "docs/ce-express/user-guide/v73-sections/6-2-3-user-name-help-logout.md",
-    "title": "6.2.3 User name/ Help/ Logout",
-    "product": "CE Express",
-    "category": "Network Data Management",
-    "order": 299
-  },
-  {
-    "id": "ce-express-v73-6-3-table",
-    "path": "docs/ce-express/user-guide/v73-sections/6-3-table.md",
-    "title": "6.3 Table",
-    "product": "CE Express",
-    "category": "Network Data Management",
-    "order": 300
-  },
-  {
-    "id": "ce-express-v73-6-4-view-options",
-    "path": "docs/ce-express/user-guide/v73-sections/6-4-view-options.md",
-    "title": "6.4 View Options",
-    "product": "CE Express",
-    "category": "Network Data Management",
-    "order": 301
-  },
-  {
-    "id": "ce-express-v73-7-database-organization",
-    "path": "docs/ce-express/user-guide/v73-sections/7-database-organization.md",
-    "title": "7 Database organization",
-    "product": "CE Express",
-    "category": "Database Organization",
-    "order": 302
-  },
-  {
-    "id": "ce-express-v73-7-1-page-setup-and-navigation",
-    "path": "docs/ce-express/user-guide/v73-sections/7-1-page-setup-and-navigation.md",
-    "title": "7.1 Page setup and navigation",
-    "product": "CE Express",
-    "category": "Database Organization",
-    "order": 303
-  },
-  {
-    "id": "ce-express-v73-7-1-1-organization-of-single-and-multiple-tables",
-    "path": "docs/ce-express/user-guide/v73-sections/7-1-1-organization-of-single-and-multiple-tables.md",
-    "title": "7.1.1 Organization of single and multiple tables",
-    "product": "CE Express",
-    "category": "Database Organization",
-    "order": 304
-  },
-  {
-    "id": "ce-express-v73-7-1-2-organization-of-columns",
-    "path": "docs/ce-express/user-guide/v73-sections/7-1-2-organization-of-columns.md",
-    "title": "7.1.2 Organization of columns",
-    "product": "CE Express",
-    "category": "Database Organization",
-    "order": 305
-  },
-  {
-    "id": "ce-express-v73-7-1-3-navigation-across-tables",
-    "path": "docs/ce-express/user-guide/v73-sections/7-1-3-navigation-across-tables.md",
-    "title": "7.1.3 Navigation across tables",
-    "product": "CE Express",
-    "category": "Database Organization",
-    "order": 306
-  },
-  {
-    "id": "ce-express-v73-7-2-filtering-sorting-editing-and-linking-database-records",
-    "path": "docs/ce-express/user-guide/v73-sections/7-2-filtering-sorting-editing-and-linking-database-records.md",
-    "title": "7.2 Filtering, sorting, editing, and linking database records",
-    "product": "CE Express",
-    "category": "Database Organization",
-    "order": 307
-  },
-  {
-    "id": "ce-express-v73-7-2-1-set-selected",
-    "path": "docs/ce-express/user-guide/v73-sections/7-2-1-set-selected.md",
-    "title": "7.2.1 Set selected",
-    "product": "CE Express",
-    "category": "Database Organization",
-    "order": 308
-  },
-  {
-    "id": "ce-express-v73-7-2-2-add-link",
-    "path": "docs/ce-express/user-guide/v73-sections/7-2-2-add-link.md",
-    "title": "7.2.2 Add link",
-    "product": "CE Express",
-    "category": "Database Organization",
-    "order": 309
-  },
-  {
-    "id": "ce-express-v73-7-3-adding-viewing-downloading-and-deleting-attachments",
-    "path": "docs/ce-express/user-guide/v73-sections/7-3-adding-viewing-downloading-and-deleting-attachments.md",
-    "title": "7.3 Adding, viewing, downloading and deleting attachments",
-    "product": "CE Express",
-    "category": "Database Organization",
-    "order": 310
-  },
-  {
-    "id": "ce-express-v73-7-4-sieve",
-    "path": "docs/ce-express/user-guide/v73-sections/7-4-sieve.md",
-    "title": "7.4 Sieve",
-    "product": "CE Express",
-    "category": "Database Organization",
-    "order": 311
-  },
-  {
-    "id": "ce-express-v73-7-5-ce-api",
-    "path": "docs/ce-express/user-guide/v73-sections/7-5-ce-api.md",
-    "title": "7.5 CE API",
-    "product": "CE Express",
-    "category": "Database Organization",
-    "order": 312
-  },
-  {
-    "id": "ce-express-v73-7-6-import-csv",
-    "path": "docs/ce-express/user-guide/v73-sections/7-6-import-csv.md",
-    "title": "7.6 Import CSV",
-    "product": "CE Express",
-    "category": "Database Organization",
-    "order": 313
-  },
-  {
-    "id": "ce-express-v73-8-exploring-data",
-    "path": "docs/ce-express/user-guide/v73-sections/8-exploring-data.md",
-    "title": "8 Exploring data",
-    "product": "CE Express",
-    "category": "Exploring Data",
-    "order": 314
-  },
-  {
-    "id": "ce-express-v73-8-1-export-selected",
-    "path": "docs/ce-express/user-guide/v73-sections/8-1-export-selected.md",
-    "title": "8.1 Export selected",
-    "product": "CE Express",
-    "category": "Exploring Data",
-    "order": 315
-  },
-  {
-    "id": "ce-express-v73-8-2-pdf-report",
-    "path": "docs/ce-express/user-guide/v73-sections/8-2-pdf-report.md",
-    "title": "8.2 PDF report",
-    "product": "CE Express",
-    "category": "Exploring Data",
-    "order": 316
-  },
-  {
-    "id": "ce-express-v73-8-3-file-browser",
-    "path": "docs/ce-express/user-guide/v73-sections/8-3-file-browser.md",
-    "title": "8.3 File browser",
-    "product": "CE Express",
-    "category": "Exploring Data",
-    "order": 317
-  },
-  {
-    "id": "ce-express-v73-8-4-quick-references",
-    "path": "docs/ce-express/user-guide/v73-sections/8-4-quick-references.md",
-    "title": "8.4 Quick references",
-    "product": "CE Express",
-    "category": "Exploring Data",
-    "order": 318
-  },
-  {
-    "id": "ce-express-v73-8-5-default-editing-and-manual-editing",
-    "path": "docs/ce-express/user-guide/v73-sections/8-5-default-editing-and-manual-editing.md",
-    "title": "8.5 Default editing and manual editing",
-    "product": "CE Express",
-    "category": "Exploring Data",
-    "order": 319
-  },
-  {
     "id": "ce-express-admin-guide-only",
     "path": "docs/ce-express/user-guide/admin-guide-only-v7.2.md",
     "title": "Administrator Guide (Express Only) v7.2",
     "product": "CE Express",
     "category": "Getting Started",
     "order": 199
+  },
+  {
+    "id": "ce-express-overview-merged",
+    "path": "docs/ce-express/user-guide/sections/overview.md",
+    "title": "Overview / Getting Started",
+    "product": "CE Express",
+    "category": "Getting Started",
+    "order": 5
+  },
+  {
+    "id": "ce-express-map-view-overview",
+    "path": "docs/ce-express/user-guide/sections/map-view-overview.md",
+    "title": "Map View Overview",
+    "product": "CE Express",
+    "category": "Map View",
+    "order": 100
+  },
+  {
+    "id": "ce-express-map",
+    "path": "docs/ce-express/user-guide/sections/map.md",
+    "title": "Map",
+    "product": "CE Express",
+    "category": "Map View",
+    "order": 101
+  },
+  {
+    "id": "ce-express-map-table-view-modes",
+    "path": "docs/ce-express/user-guide/sections/map-table-view-modes.md",
+    "title": "Map / Table View Modes",
+    "product": "CE Express",
+    "category": "Map View",
+    "order": 102
+  },
+  {
+    "id": "ce-express-database-structure-merged",
+    "path": "docs/ce-express/user-guide/sections/database-structure.md",
+    "title": "Database Structure",
+    "product": "CE Express",
+    "category": "Database Structure",
+    "order": 300
+  },
+  {
+    "id": "ce-express-api-merged",
+    "path": "docs/ce-express/user-guide/sections/ce-express-api.md",
+    "title": "CE Express API",
+    "product": "CE Express",
+    "category": "CE Express API",
+    "order": 400
+  },
+  {
+    "id": "ce-express-network-data-management-merged",
+    "path": "docs/ce-express/user-guide/sections/network-data-management.md",
+    "title": "Network Data Management",
+    "product": "CE Express",
+    "category": "Network Data Management",
+    "order": 500
+  },
+  {
+    "id": "ce-express-database-organization-merged",
+    "path": "docs/ce-express/user-guide/sections/database-organization.md",
+    "title": "Database Organization",
+    "product": "CE Express",
+    "category": "Database Organization",
+    "order": 600
+  },
+  {
+    "id": "ce-express-exploring-data-merged",
+    "path": "docs/ce-express/user-guide/sections/exploring-data.md",
+    "title": "Exploring Data",
+    "product": "CE Express",
+    "category": "Exploring Data",
+    "order": 700
+  },
+  {
+    "id": "ce-pro-overview",
+    "path": "docs/ce-pro/overview.md",
+    "title": "Overview / Getting Started",
+    "product": "CE Pro",
+    "category": "Getting Started",
+    "order": 1
+  },
+  {
+    "id": "ce-pro-geographic-data",
+    "path": "docs/ce-pro/geographic-data.md",
+    "title": "Geographic Data",
+    "product": "CE Pro",
+    "category": "Geographic Data",
+    "order": 2
+  },
+  {
+    "id": "ce-pro-workspace-merged",
+    "path": "docs/ce-pro/workspace.md",
+    "title": "Workspace",
+    "product": "CE Pro",
+    "category": "Workspace",
+    "order": 3
+  },
+  {
+    "id": "ce-pro-indoor-workspace",
+    "path": "docs/ce-pro/indoor-workspace.md",
+    "title": "Indoor Workspace",
+    "product": "CE Pro",
+    "category": "Workspace",
+    "order": 4
+  },
+  {
+    "id": "ce-pro-dm-network-objects",
+    "path": "docs/ce-pro/data-management-network-objects.md",
+    "title": "Network Objects",
+    "product": "CE Pro",
+    "category": "Data Management",
+    "order": 10
+  },
+  {
+    "id": "ce-pro-dm-object-editor",
+    "path": "docs/ce-pro/data-management-object-editor.md",
+    "title": "Object Editor",
+    "product": "CE Pro",
+    "category": "Data Management",
+    "order": 11
+  },
+  {
+    "id": "ce-pro-dm-clutter-classes",
+    "path": "docs/ce-pro/data-management-clutter-classes.md",
+    "title": "Clutter Classes",
+    "product": "CE Pro",
+    "category": "Data Management",
+    "order": 12
+  },
+  {
+    "id": "ce-pro-dm-antenna-viewer",
+    "path": "docs/ce-pro/data-management-antenna-viewer.md",
+    "title": "Antenna Viewer",
+    "product": "CE Pro",
+    "category": "Data Management",
+    "order": 13
+  },
+  {
+    "id": "ce-pro-dm-prediction-model-manager",
+    "path": "docs/ce-pro/data-management-prediction-model-manager.md",
+    "title": "Prediction Model Manager",
+    "product": "CE Pro",
+    "category": "Data Management",
+    "order": 14
+  },
+  {
+    "id": "ce-pro-dm-template-manager",
+    "path": "docs/ce-pro/data-management-template-manager.md",
+    "title": "Template Manager",
+    "product": "CE Pro",
+    "category": "Data Management",
+    "order": 15
+  },
+  {
+    "id": "ce-pro-dm-import-export",
+    "path": "docs/ce-pro/data-management-import-export.md",
+    "title": "Import / Export",
+    "product": "CE Pro",
+    "category": "Data Management",
+    "order": 16
+  },
+  {
+    "id": "ce-pro-dm-radio-frequency-data",
+    "path": "docs/ce-pro/data-management-radio-frequency-data.md",
+    "title": "Radio / Frequency Data",
+    "product": "CE Pro",
+    "category": "Data Management",
+    "order": 17
+  },
+  {
+    "id": "ce-pro-profile-merged",
+    "path": "docs/ce-pro/profile.md",
+    "title": "Profile",
+    "product": "CE Pro",
+    "category": "Profile",
+    "order": 20
+  },
+  {
+    "id": "ce-pro-coverage-prediction-overview",
+    "path": "docs/ce-pro/coverage-prediction-overview.md",
+    "title": "Coverage Prediction Overview",
+    "product": "CE Pro",
+    "category": "Coverage Prediction",
+    "order": 30
+  },
+  {
+    "id": "ce-pro-rcp-coverage-tools",
+    "path": "docs/ce-pro/rcp-coverage-tools.md",
+    "title": "RCP Coverage Tools",
+    "product": "CE Pro",
+    "category": "Coverage Prediction",
+    "order": 31
+  },
+  {
+    "id": "ce-pro-rlp-mesh-networks",
+    "path": "docs/ce-pro/rlp-mesh-networks.md",
+    "title": "Mesh Networks",
+    "product": "CE Pro",
+    "category": "RLP Tools",
+    "order": 40
+  },
+  {
+    "id": "ce-pro-rlp-radio-links",
+    "path": "docs/ce-pro/rlp-radio-links.md",
+    "title": "Radio Links",
+    "product": "CE Pro",
+    "category": "RLP Tools",
+    "order": 41
+  },
+  {
+    "id": "ce-pro-emf-tools",
+    "path": "docs/ce-pro/emf-tools.md",
+    "title": "EMF Tools",
+    "product": "CE Pro",
+    "category": "EMF Tools",
+    "order": 50
+  },
+  {
+    "id": "ce-pro-about",
+    "path": "docs/ce-pro/about.md",
+    "title": "About",
+    "product": "CE Pro",
+    "category": "About",
+    "order": 90
+  },
+  {
+    "id": "ce-pro-technical-support",
+    "path": "docs/ce-pro/technical-support.md",
+    "title": "Technical Support",
+    "product": "CE Pro",
+    "category": "About",
+    "order": 91
   }
 ]
