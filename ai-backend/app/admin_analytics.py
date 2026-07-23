@@ -3,14 +3,7 @@ from psycopg2.extras import RealDictCursor
 from decimal import Decimal
 from datetime import datetime
 
-
-DB_CONFIG = {
-    "host": "localhost",
-    "port": 5432,
-    "dbname": "cellular_expert_docs",
-    "user": "postgres",
-    "password": "cellular123",
-}
+from app.db_config import DB_CONFIG, set_search_path
 
 
 def make_json_safe(value):
@@ -50,6 +43,8 @@ def get_ai_insights():
 
     connection = psycopg2.connect(**DB_CONFIG)
     cursor = connection.cursor(cursor_factory=RealDictCursor)
+
+    set_search_path(cursor)
 
     cursor.execute("""
         SELECT

@@ -1,22 +1,6 @@
-import os
-
 import psycopg2
-from dotenv import load_dotenv
 
-
-load_dotenv()
-
-
-DB_CONFIG = {
-    "host": os.getenv("DB_HOST", "localhost"),
-    "port": int(os.getenv("DB_PORT", "5432")),
-    "dbname": os.getenv("DB_NAME", "cellular_expert_docs"),
-    "user": os.getenv("DB_USER", "postgres"),
-    "password": os.getenv("DB_PASSWORD", "cellular123"),
-}
-
-
-DB_SCHEMA = os.getenv("DB_SCHEMA", "public")
+from app.db_config import DB_CONFIG, set_search_path
 
 
 def load_documents_from_postgres() -> list:
@@ -29,7 +13,8 @@ def load_documents_from_postgres() -> list:
 
     connection = psycopg2.connect(**DB_CONFIG)
     cursor = connection.cursor()
-    cursor.execute(f"SET search_path TO {DB_SCHEMA};")
+
+    set_search_path(cursor)
 
     cursor.execute("""
         SELECT

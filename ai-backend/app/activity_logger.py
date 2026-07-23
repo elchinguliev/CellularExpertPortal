@@ -1,13 +1,6 @@
 import psycopg2
 
-
-DB_CONFIG = {
-    "host": "localhost",
-    "port": 5432,
-    "dbname": "cellular_expert_docs",
-    "user": "postgres",
-    "password": "cellular123",
-}
+from app.db_config import DB_CONFIG, set_search_path
 
 
 def log_user_activity(user_id, user_name, user_role, activity_type, page=None, details=None):
@@ -19,6 +12,8 @@ def log_user_activity(user_id, user_name, user_role, activity_type, page=None, d
     try:
         connection = psycopg2.connect(**DB_CONFIG)
         cursor = connection.cursor()
+
+        set_search_path(cursor)
 
         cursor.execute(
             """
