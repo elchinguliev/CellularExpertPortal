@@ -360,12 +360,13 @@ const logout = () => {
         data.answer.toLowerCase().includes("could not find") ||
         data.answer.toLowerCase().includes("couldn't find");
 
-      if (!shouldOpenTicket) {
+if (!shouldOpenTicket) {
         setMessages(p => [...p, {
           from: 'bot',
           time: now(),
           type: 'article',
           title: 'AI Documentation Answer',
+          images: data.images || [],
           text:
             `Answer:\n${cleanMarkdownLinks(data.answer)}\n\n` +
             `Confidence:\n${Math.round(data.confidence * 100)}%\n\n` +
@@ -590,6 +591,21 @@ const ChatTab = () => (
                       <div style={{padding:'12px 14px',fontSize:12,color:'var(--text)',lineHeight:1.8,whiteSpace:'pre-line'}}>
                         {boldify(m.text)}
                       </div>
+                      {m.images && m.images.length > 0 && (
+                        <div style={{padding:'0 14px 14px',display:'flex',gap:8,flexWrap:'wrap'}}>
+                          {m.images.map((img, imgIdx) => (
+                            <a key={imgIdx} href={img.image_url} target="_blank" rel="noreferrer">
+                              <img
+                                src={img.image_url}
+                                alt={img.caption || 'Documentation screenshot'}
+                                loading="lazy"
+                                style={{maxWidth:160,maxHeight:120,borderRadius:8,border:'1px solid var(--border)',display:'block'}}
+                                onError={(e) => { e.target.style.display = 'none'; }}
+                              />
+                            </a>
+                          ))}
+                        </div>
+                      )}
                     </div>
                     <div style={{display:'flex',gap:7,marginTop:8,flexWrap:'wrap'}}>
                       <button onClick={startNewConversation} style={{padding:'5px 11px',background:'var(--accent-l)',border:'1px solid var(--accent)',borderRadius:7,color:'var(--accent)',fontSize:11,cursor:'pointer',fontWeight:600}}>✓ Resolved — new topic</button>

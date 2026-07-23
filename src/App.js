@@ -398,17 +398,6 @@ background:
           >
             <span style={{ color: "var(--accent)" }}>CELLULAR EXPERT</span>
           </div>
-<div
-            style={{
-              fontFamily: "var(--font-mono)",
-              fontSize: 10.5,
-              fontWeight: 600,
-              color: "var(--text-dim)",
-              letterSpacing: "0.1em",
-            }}
-          >
-            NETWORK PLANNING IN ARCGIS
-          </div>
         </div>
       </div>
 
@@ -1140,10 +1129,7 @@ const AboutSection = () => (
   >
     <div
       style={{
-        display: "grid",
-        gridTemplateColumns: "1fr 1fr",
-        gap: 60,
-        alignItems: "center",
+        maxWidth: 640,
       }}
     >
       <div>
@@ -1157,7 +1143,7 @@ const AboutSection = () => (
             marginBottom: 12,
           }}
         >
-          About
+          How It Works
         </div>
         <h2
           style={{
@@ -1168,7 +1154,7 @@ const AboutSection = () => (
             marginBottom: 20,
           }}
         >
-          UAB Cellular Expert
+          About This Documentation Platform
         </h2>
         <p
           style={{
@@ -1178,137 +1164,46 @@ const AboutSection = () => (
             marginBottom: 16,
           }}
         >
-          Founded in{" "}
-          <strong style={{ color: "var(--text-bright)" }}>1995</strong> in
-          Vilnius, Lithuania, Cellular Expert specialises in the development of
-          telecommunications planning and operations software based on Esri's
-          ArcGIS platform.
-        </p>
-        <p
-          style={{
-            fontSize: 14,
-            color: "var(--text-dim)",
-            lineHeight: 1.8,
-            marginBottom: 24,
-          }}
-        >
-          In 2000, the "Cellular Expert" brand was introduced as an ArcGIS-based
-          wireless network planning tool. Today CE enhances the intelligence of
-          more than{" "}
+          This page is where you find guides, training material, and
+          reference documentation for every Cellular Expert product —{" "}
+          <strong style={{ color: "var(--text-bright)" }}>CE Express</strong>,{" "}
           <strong style={{ color: "var(--text-bright)" }}>
-            170 communication network companies, regulators, and defense
-            organizations
-          </strong>{" "}
-          in over 50 countries.
+            CE Desktop Pro
+          </strong>
+          , <strong style={{ color: "var(--text-bright)" }}>Inventory3D</strong>
+          , and <strong style={{ color: "var(--text-bright)" }}>Geodata</strong>.
         </p>
         <p
           style={{
             fontSize: 14,
             color: "var(--text-dim)",
             lineHeight: 1.8,
-            marginBottom: 32,
+            marginBottom: 16,
           }}
         >
-          CE is an{" "}
-          <strong style={{ color: "var(--accent)" }}>Esri Gold Partner</strong>{" "}
-          and part of the HNIT group — Esri distributors in Iceland, Lithuania,
-          Latvia and Estonia.
+          Use the <strong style={{ color: "var(--text-bright)" }}>sidebar</strong>{" "}
+          to browse by product and category — each tool and workflow has its
+          own page. Once you're reading a page, the{" "}
+          <strong style={{ color: "var(--text-bright)" }}>
+            "On this page"
+          </strong>{" "}
+          panel on the right lets you jump straight to any subsection without
+          scrolling.
         </p>
-        <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-          {[
-            ["🏛", "A. Vivulskio g. 7, LT-03162 Vilnius, Lithuania"],
-            ["📞", "+370 5 206 3240"],
-            ["✉", "info@cellular-expert.com"],
-            ["🌐", "www.cellular-expert.com"],
-          ].map(([icon, text]) => (
-            <div
-              key={text}
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: 10,
-                fontSize: 13,
-                color: "var(--text-dim)",
-              }}
-            >
-              <span>{icon}</span>
-              <span>{text}</span>
-            </div>
-          ))}
-        </div>
-      </div>
-      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14 }}>
-        {[
-          ["30+", "Years of Experience", "var(--accent)"],
-          ["170+", "Clients Worldwide", "var(--accent2)"],
-          ["50+", "Countries", "#a78bfa"],
-          ["2000", "CE Brand Founded", "#f59e0b)"],
-        ].map(([n, l, c]) => (
-          <div
-            key={l}
-            style={{
-              padding: "28px 24px",
-              background: "var(--bg2)",
-              border: "1px solid var(--border)",
-              borderRadius: 14,
-              textAlign: "center",
-            }}
-          >
-            <div
-              style={{
-                fontFamily: "var(--font-display)",
-                fontSize: 36,
-                fontWeight: 700,
-                color: c,
-                lineHeight: 1,
-                marginBottom: 8,
-              }}
-            >
-              {n}
-            </div>
-            <div
-              style={{
-                fontFamily: "var(--font-mono)",
-                fontSize: 10,
-                color: "var(--text-dim)",
-                letterSpacing: "0.08em",
-                textTransform: "uppercase",
-                lineHeight: 1.4,
-              }}
-            >
-              {l}
-            </div>
-          </div>
-        ))}
-        <div
+        <p
           style={{
-            gridColumn: "1/-1",
-            padding: "20px 24px",
-            background: "var(--accent-l)",
-            border: "1px solid var(--border2)",
-            borderRadius: 14,
+            fontSize: 14,
+            color: "var(--text-dim)",
+            lineHeight: 1.8,
+            marginBottom: 0,
           }}
         >
-          <div
-            style={{
-              fontFamily: "var(--font-mono)",
-              fontSize: 10,
-              color: "var(--accent)",
-              letterSpacing: "0.1em",
-              textTransform: "uppercase",
-              marginBottom: 6,
-            }}
-          >
-            EU Project
-          </div>
-          <div style={{ fontSize: 13, color: "var(--text)", lineHeight: 1.65 }}>
-            EU co-funded project for spreading GIS in Telecoms. Value:{" "}
-            <strong style={{ color: "var(--text-bright)" }}>€205,301</strong> ·
-            EU financing:{" "}
-            <strong style={{ color: "var(--text-bright)" }}>€100,624</strong> ·
-            March 2024 – September 2026
-          </div>
-        </div>
+          Can't find what you're looking for? Ask the{" "}
+          <strong style={{ color: "var(--accent)" }}>AI Assistant</strong> in
+          the Support Chat — it searches the documentation for you and, if it
+          can't find a reliable answer, helps you open a support ticket
+          instead.
+        </p>
       </div>
     </div>
   </section>

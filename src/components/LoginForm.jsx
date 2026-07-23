@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import ceLogoIcon from '../assets/ce-logo-icon.png';
 
 const labelSt = {display:'block',fontSize:10,color:'var(--text-dim)',fontFamily:'var(--font-mono)',letterSpacing:'.12em',textTransform:'uppercase',marginBottom:5};
 const inpSt   = {width:'100%',padding:'10px 13px',border:'1px solid var(--border)',borderRadius:9,fontSize:13,color:'var(--text-bright)',background:'var(--bg)',outline:'none',boxSizing:'border-box',fontFamily:'var(--font)',transition:'border-color .15s, box-shadow .15s'};
@@ -18,13 +19,11 @@ function FocusInput(props) {
 
 const Logo = () => (
   <div style={{textAlign:'center',marginBottom:26}}>
-    <div style={{display:'inline-flex',alignItems:'center',justifyContent:'center',width:48,height:48,borderRadius:14,background:'linear-gradient(135deg, var(--accent), var(--accent2))',marginBottom:14,boxShadow:'0 8px 20px -6px var(--accent)'}}>
-      <svg width="24" height="24" viewBox="0 0 28 28" fill="none">
-        <circle cx="14" cy="14" r="12" stroke="#fff" strokeWidth="1.6"/>
-        <path d="M7 14 Q14 7 21 14 Q14 21 7 14Z" fill="none" stroke="#fff" strokeWidth="1.6"/>
-        <circle cx="14" cy="14" r="2.6" fill="#fff"/>
-      </svg>
-    </div>
+    <img
+      src={ceLogoIcon}
+      alt="Cellular Expert"
+      style={{width:48,height:48,borderRadius:14,objectFit:'contain',marginBottom:14,display:'inline-block'}}
+    />
     <div style={{fontFamily:'var(--font-display)',fontSize:19,fontWeight:700,color:'var(--text-bright)',letterSpacing:'.04em',marginBottom:4}}>CELLULAR <span style={{color:'var(--accent)'}}>EXPERT</span></div>
     <div style={{fontSize:12,color:'var(--text-dim)'}}>Support Portal — Sign in to continue</div>
   </div>
