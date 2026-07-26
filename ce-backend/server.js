@@ -1,7 +1,7 @@
 // server.js
 // Minimal Express API that serves documentation from PostgreSQL.
 // Run with: npm start
-const { sendWelcomeEmail, sendPasswordChangedEmail, sendVerificationCode } = require('./mailer');
+const { sendWelcomeEmail, sendPasswordChangedEmail, sendVerificationCode, sendSupportRequest } = require('./mailer');
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
@@ -360,6 +360,65 @@ app.get('/api/synced-images', async (req, res) => {
     res.set('Content-Type', rows[0].mime_type);
     res.set('Cache-Control', 'public, max-age=86400');
     res.send(rows[0].data);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// ── Support Request (AI chat → confirmed support form → helpdesk email) ──────
+const supportUpload = multer({
+  storage: multer.memoryStorage(), // no need to persist screenshots on disk — attach and forget
+  limits: { fileSize: 8 * 1024 * 1024, files: 5 },
+  fileFilter: (req, file, cb) => {
+    if (!file.mimetype.startsWith('image/')) return cb(new Error('Only image files are allowed'));
+    cb(null, true);
+  },
+});
+
+// Step 1 — send a verification code to the email the user typed in the form
+app.post('/api/support/send-code', async (req, res) => {
+  try {
+    const { email } = req.body;
+    if (!email) return res.status(400).json({ error: 'Email is required' });
+
+    const code = generateCode();
+    await pool.query(
+      `INSERT INTO verification_codes (email, code, purpose, expires_at)
+       VALUES ($1, $2, 'support_request', NOW() + INTERVAL '10 minutes')`,
+      [email.toLowerCase(), code]
+    );
+
+    await sendVerificationCode(email, code, 'support_request');
+    res.json({ ok: true });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// Step 2 — verify the code, then email the full request straight to the helpdesk inbox
+app.post('/api/support/submit', supportUpload.array('screenshots', 5), async (req, res) => {
+  try {
+    const { email, code, company, fullName, product, description } = req.body;
+    if (!email || !code || !fullName || !description) {
+      return res.status(400).json({ error: 'Email, code, full name, and description are required' });
+    }
+
+    const { rows } = await pool.query(
+      `SELECT * FROM verification_codes
+       WHERE email = $1 AND code = $2 AND purpose = 'support_request' AND used = FALSE AND expires_at > NOW()
+       ORDER BY created_at DESC LIMIT 1`,
+      [email.toLowerCase(), code]
+    );
+    if (rows.length === 0) return res.status(401).json({ error: 'Invalid or expired code' });
+
+    await sendSupportRequest(
+      { email, company, fullName, product, description },
+      req.files || []
+    );
+
+    await pool.query(`UPDATE verification_codes SET used = TRUE WHERE id = $1`, [rows[0].id]);
+
+    res.json({ ok: true });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
