@@ -13,6 +13,7 @@ import ReplyBox from "./ReplyBox";
 import ChatComposer from "./ChatComposer";
 import { StableInput, StableTextarea } from "./StableInput";
 import SupportRequestForm from "./SupportRequestForm";
+import ceLogoIcon from "../assets/ce-logo-icon.png";
 
 const SC = {
   Open: "#d97706",
@@ -99,6 +100,9 @@ export default function SupportPortal({ onViewDocs }) {
   const [docsError, setDocsError] = useState("");
   const [docMode, setDocMode] = useState("list"); // 'list' | 'edit' | 'new'
   const [docDraft, setDocDraft] = useState(null);
+  const [docNavProduct, setDocNavProduct] = useState(null); // null = show product picker
+  const [docNavCategory, setDocNavCategory] = useState(null); // null = show category picker
+  const [docProductCustomMode, setDocProductCustomMode] = useState(false);
   const [docSaving, setDocSaving] = useState(false);
 
   const [docImages, setDocImages] = useState([]);
@@ -158,6 +162,21 @@ export default function SupportPortal({ onViewDocs }) {
         setDocsLoading(false);
       });
   };
+
+  // Products/categories are derived from whatever documents already exist —
+  // so a brand new product or category (typed once when creating a page)
+  // just shows up here automatically next time, no code change needed.
+  const existingProducts = () => {
+    const known = ["CE Express", "CE Pro", "Both", "Inventory3D"];
+    const fromDocs = Array.from(new Set(docsList.map((d) => d.product)));
+    return Array.from(new Set([...known, ...fromDocs]));
+  };
+  const existingCategories = (product) =>
+    Array.from(
+      new Set(
+        docsList.filter((d) => d.product === product).map((d) => d.category)
+      )
+    ).sort();
   const loadTickets = () => {
     const url = isAdmin
       ? `${API_BASE}/tickets`
@@ -204,12 +223,12 @@ export default function SupportPortal({ onViewDocs }) {
     setDocImages(data.images || []);
     setDocMode("edit");
   };
-  const openNewDoc = () => {
+  const openNewDoc = (prefill = {}) => {
     setDocDraft({
       doc_id: "",
       title: "",
-      product: "CE Express",
-      category: "",
+      product: prefill.product || docNavProduct || "CE Express",
+      category: prefill.category || docNavCategory || "",
       content: "",
     });
     setDocMode("new");
@@ -684,16 +703,14 @@ export default function SupportPortal({ onViewDocs }) {
               width: 22,
               height: 22,
               borderRadius: 6,
-              background:
-                "linear-gradient(135deg, var(--accent), var(--accent2))",
+              overflow: "hidden",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
-              fontSize: 11,
               flexShrink: 0,
             }}
           >
-            🛟
+            <img src={ceLogoIcon} alt="" style={{ width: "100%", height: "100%", objectFit: "contain" }} />
           </div>
           <div
             style={{
@@ -3732,27 +3749,78 @@ export default function SupportPortal({ onViewDocs }) {
               >
                 Product
               </label>
-              <select
-                value={docDraft.product}
-                onChange={(e) =>
-                  setDocDraft((p) => ({ ...p, product: e.target.value }))
-                }
-                style={{
-                  width: "100%",
-                  padding: "9px 12px",
-                  border: "1px solid var(--border)",
-                  borderRadius: 8,
-                  fontSize: 13,
-                  color: "var(--text-bright)",
-                  background: "var(--bg)",
-                  outline: "none",
-                  cursor: "pointer",
-                }}
-              >
-                {["CE Express", "CE Pro", "Both", "Inventory3D"].map((o) => (
-                  <option key={o}>{o}</option>
-                ))}
-              </select>
+              {docProductCustomMode ? (
+                <div style={{ display: "flex", gap: 6 }}>
+                  <input
+                    autoFocus
+                    value={docDraft.product}
+                    onChange={(e) =>
+                      setDocDraft((p) => ({ ...p, product: e.target.value }))
+                    }
+                    placeholder="New product name"
+                    style={{
+                      flex: 1,
+                      padding: "9px 12px",
+                      border: "1px solid var(--accent)",
+                      borderRadius: 8,
+                      fontSize: 13,
+                      color: "var(--text-bright)",
+                      background: "var(--bg)",
+                      outline: "none",
+                      boxSizing: "border-box",
+                    }}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setDocProductCustomMode(false);
+                      setDocDraft((p) => ({
+                        ...p,
+                        product: existingProducts()[0] || "CE Express",
+                      }));
+                    }}
+                    style={{
+                      padding: "0 10px",
+                      background: "transparent",
+                      border: "1px solid var(--border)",
+                      borderRadius: 8,
+                      color: "var(--text-dim)",
+                      fontSize: 11,
+                      cursor: "pointer",
+                    }}
+                  >
+                    ✕
+                  </button>
+                </div>
+              ) : (
+                <select
+                  value={docDraft.product}
+                  onChange={(e) => {
+                    if (e.target.value === "__new__") {
+                      setDocProductCustomMode(true);
+                      setDocDraft((p) => ({ ...p, product: "" }));
+                    } else {
+                      setDocDraft((p) => ({ ...p, product: e.target.value }));
+                    }
+                  }}
+                  style={{
+                    width: "100%",
+                    padding: "9px 12px",
+                    border: "1px solid var(--border)",
+                    borderRadius: 8,
+                    fontSize: 13,
+                    color: "var(--text-bright)",
+                    background: "var(--bg)",
+                    outline: "none",
+                    cursor: "pointer",
+                  }}
+                >
+                  {existingProducts().map((o) => (
+                    <option key={o}>{o}</option>
+                  ))}
+                  <option value="__new__">+ Add new product…</option>
+                </select>
+              )}
             </div>
             <div>
               <label
@@ -3769,6 +3837,7 @@ export default function SupportPortal({ onViewDocs }) {
                 Category
               </label>
               <input
+                list="doc-category-suggestions"
                 value={docDraft.category}
                 onChange={(e) =>
                   setDocDraft((p) => ({ ...p, category: e.target.value }))
@@ -3786,6 +3855,21 @@ export default function SupportPortal({ onViewDocs }) {
                   boxSizing: "border-box",
                 }}
               />
+              <datalist id="doc-category-suggestions">
+                {existingCategories(docDraft.product).map((c) => (
+                  <option key={c} value={c} />
+                ))}
+              </datalist>
+              <div
+                style={{
+                  fontSize: 10,
+                  color: "var(--text-dim)",
+                  marginTop: 4,
+                }}
+              >
+                Pick an existing category to keep this page grouped with
+                similar ones, or type a new one to start a new section.
+              </div>
             </div>
           </div>
 
@@ -4047,6 +4131,44 @@ export default function SupportPortal({ onViewDocs }) {
       );
     }
 
+    const productsWithDocs = existingProducts().filter((p) =>
+      docsList.some((d) => d.product === p)
+    );
+    const categoriesInProduct = docNavProduct
+      ? Array.from(
+          new Set(
+            docsList
+              .filter((d) => d.product === docNavProduct)
+              .map((d) => d.category)
+          )
+        ).sort()
+      : [];
+    const pagesInCategory =
+      docNavProduct && docNavCategory
+        ? docsList.filter(
+            (d) => d.product === docNavProduct && d.category === docNavCategory
+          )
+        : [];
+
+    const crumbStyle = (activeItem) => ({
+      cursor: "pointer",
+      color: activeItem ? "var(--text-bright)" : "var(--accent)",
+      fontWeight: activeItem ? 700 : 500,
+    });
+
+    const cardStyle = {
+      background: "var(--bg2)",
+      border: "1px solid var(--border)",
+      borderRadius: 10,
+      padding: "12px 14px",
+      marginBottom: 7,
+      cursor: "pointer",
+      display: "flex",
+      justifyContent: "space-between",
+      alignItems: "center",
+      transition: "border-color .12s",
+    };
+
     return (
       <div style={{ flex: 1, overflowY: "auto", padding: 14 }}>
         <div
@@ -4055,34 +4177,67 @@ export default function SupportPortal({ onViewDocs }) {
             justifyContent: "space-between",
             alignItems: "center",
             marginBottom: 12,
+            flexWrap: "wrap",
+            gap: 8,
           }}
         >
           <div
             style={{
-              fontWeight: 700,
-              color: "var(--text-bright)",
+              display: "flex",
+              alignItems: "center",
+              gap: 6,
               fontSize: 12,
-            }}
-          >
-            All Documents ({docsList.length})
-          </div>
-          <button
-            onClick={openNewDoc}
-            style={{
-              padding: "7px 14px",
-              background: "var(--accent)",
-              border: "none",
-              borderRadius: 8,
-              color: "#fff",
-              fontSize: 11,
-              fontWeight: 700,
-              cursor: "pointer",
               fontFamily: "var(--font-mono)",
-              letterSpacing: ".04em",
             }}
           >
-            + NEW
-          </button>
+            <span
+              onClick={() => {
+                setDocNavProduct(null);
+                setDocNavCategory(null);
+              }}
+              style={crumbStyle(!docNavProduct)}
+            >
+              Documentation
+            </span>
+            {docNavProduct && (
+              <>
+                <span style={{ color: "var(--text-dim)" }}>/</span>
+                <span
+                  onClick={() => setDocNavCategory(null)}
+                  style={crumbStyle(!docNavCategory)}
+                >
+                  {docNavProduct}
+                </span>
+              </>
+            )}
+            {docNavCategory && (
+              <>
+                <span style={{ color: "var(--text-dim)" }}>/</span>
+                <span style={crumbStyle(true)}>{docNavCategory}</span>
+              </>
+            )}
+          </div>
+          {docNavProduct && docNavCategory && (
+            <button
+              onClick={() =>
+                openNewDoc({ product: docNavProduct, category: docNavCategory })
+              }
+              style={{
+                padding: "7px 14px",
+                background: "var(--accent)",
+                border: "none",
+                borderRadius: 8,
+                color: "#fff",
+                fontSize: 11,
+                fontWeight: 700,
+                cursor: "pointer",
+                fontFamily: "var(--font-mono)",
+                letterSpacing: ".04em",
+              }}
+            >
+              + NEW PAGE
+            </button>
+          )}
         </div>
 
         {docsError && (
@@ -4112,8 +4267,141 @@ export default function SupportPortal({ onViewDocs }) {
           >
             Loading…
           </div>
+        ) : !docNavProduct ? (
+          // ── Level 1: pick a product ──────────────────────────────────────
+          <>
+            <div
+              style={{
+                fontSize: 11,
+                color: "var(--text-dim)",
+                marginBottom: 12,
+              }}
+            >
+              Select a product to manage its documentation.
+            </div>
+            {productsWithDocs.map((p) => {
+              const count = docsList.filter((d) => d.product === p).length;
+              return (
+                <div
+                  key={p}
+                  onClick={() => setDocNavProduct(p)}
+                  style={cardStyle}
+                  onMouseEnter={(e) =>
+                    (e.currentTarget.style.borderColor = "var(--accent)")
+                  }
+                  onMouseLeave={(e) =>
+                    (e.currentTarget.style.borderColor = "var(--border)")
+                  }
+                >
+                  <div
+                    style={{
+                      fontSize: 13,
+                      fontWeight: 700,
+                      color: "var(--text-bright)",
+                    }}
+                  >
+                    {p}
+                  </div>
+                  <div
+                    style={{
+                      fontFamily: "var(--font-mono)",
+                      fontSize: 10,
+                      color: "var(--text-dim)",
+                    }}
+                  >
+                    {count} page{count !== 1 ? "s" : ""} →
+                  </div>
+                </div>
+              );
+            })}
+            <button
+              onClick={() => openNewDoc()}
+              style={{
+                marginTop: 8,
+                padding: "9px 14px",
+                background: "transparent",
+                border: "1px dashed var(--border2)",
+                borderRadius: 8,
+                color: "var(--text-dim)",
+                fontSize: 11,
+                cursor: "pointer",
+                width: "100%",
+                fontFamily: "var(--font-mono)",
+              }}
+            >
+              + New page (choose or type a product on the next screen)
+            </button>
+          </>
+        ) : !docNavCategory ? (
+          // ── Level 2: pick a category within the chosen product ──────────
+          <>
+            <div
+              style={{
+                fontSize: 11,
+                color: "var(--text-dim)",
+                marginBottom: 12,
+              }}
+            >
+              Select a category inside <strong style={{ color: "var(--text-bright)" }}>{docNavProduct}</strong>.
+            </div>
+            {categoriesInProduct.map((cat) => {
+              const count = docsList.filter(
+                (d) => d.product === docNavProduct && d.category === cat
+              ).length;
+              return (
+                <div
+                  key={cat}
+                  onClick={() => setDocNavCategory(cat)}
+                  style={cardStyle}
+                  onMouseEnter={(e) =>
+                    (e.currentTarget.style.borderColor = "var(--accent)")
+                  }
+                  onMouseLeave={(e) =>
+                    (e.currentTarget.style.borderColor = "var(--border)")
+                  }
+                >
+                  <div
+                    style={{
+                      fontSize: 13,
+                      fontWeight: 600,
+                      color: "var(--text-bright)",
+                    }}
+                  >
+                    {cat}
+                  </div>
+                  <div
+                    style={{
+                      fontFamily: "var(--font-mono)",
+                      fontSize: 10,
+                      color: "var(--text-dim)",
+                    }}
+                  >
+                    {count} page{count !== 1 ? "s" : ""} →
+                  </div>
+                </div>
+              );
+            })}
+            <button
+              onClick={() => openNewDoc({ product: docNavProduct })}
+              style={{
+                marginTop: 8,
+                padding: "9px 14px",
+                background: "transparent",
+                border: "1px dashed var(--border2)",
+                borderRadius: 8,
+                color: "var(--text-dim)",
+                fontSize: 11,
+                cursor: "pointer",
+                width: "100%",
+                fontFamily: "var(--font-mono)",
+              }}
+            >
+              + New page in a new category
+            </button>
+          </>
         ) : (
-          docsList.map((d) => (
+          // ── Level 3: pages inside the chosen product + category ─────────
+          pagesInCategory.map((d) => (
             <div
               key={d.doc_id}
               style={{
@@ -4147,7 +4435,7 @@ export default function SupportPortal({ onViewDocs }) {
                     color: "var(--text-dim)",
                   }}
                 >
-                  {d.doc_id} · {d.product} · {d.category}
+                  {d.doc_id}
                 </div>
               </div>
               <button

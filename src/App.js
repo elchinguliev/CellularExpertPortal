@@ -1,10 +1,11 @@
-import React, { useState, useEffect, useRef, useCallback } from "react";
+import React, { useState, useEffect, useRef, useCallback, useMemo } from "react";
 import {
   DOC_INDEX,
-  NAV,
   fetchDoc,
   preloadAllDocs,
   SERVER_BASE,
+  syncLiveDocs,
+  getNav,
 } from "./useGithubDocs";
 import SupportPortal from "./components/SupportPortal";
 import SearchBar from "./components/SearchBar";
@@ -389,14 +390,15 @@ background:
           <div
             style={{
               fontFamily: "var(--font-display)",
-              fontWeight: 700,
-              fontSize: 18,
-              color: "var(--text-bright)",
-              letterSpacing: "0.06em",
-              lineHeight: 1,
+              fontWeight: 800,
+              fontSize: 20,
+              color: "#3949ce",
+              letterSpacing: "0.01em",
+              lineHeight: 1.05,
             }}
           >
-            <span style={{ color: "var(--accent)" }}>CELLULAR EXPERT</span>
+            <div>CELLULAR</div>
+            <div>EXPERT</div>
           </div>
         </div>
       </div>
@@ -718,8 +720,8 @@ const HeroSection = ({ onDocsClick, onSupportClick }) => {
           {/* Stats */}
           <div style={{ display: "flex", gap: 32, marginTop: 48 }}>
             {[
-     ["67+", "Docs"],
-              ["4", "Products"],
+              [`${DOC_INDEX.length}+`, "Docs"],
+              [`${new Set(DOC_INDEX.map((d) => d.product)).size}`, "Products"],
               ["24/7", "AI Support"],
             ].map(([n, l]) => (
               <div key={l}>
@@ -1127,90 +1129,163 @@ const AboutSection = () => (
     id="about"
     style={{ padding: "100px 48px", maxWidth: 1200, margin: "0 auto" }}
   >
-    <div
-      style={{
-        maxWidth: 640,
-      }}
-    >
-      <div>
-        <div
-          style={{
-            fontFamily: "var(--font-mono)",
-            fontSize: 10,
-            color: "var(--accent)",
-            letterSpacing: "0.15em",
-            textTransform: "uppercase",
-            marginBottom: 12,
-          }}
-        >
-          How It Works
-        </div>
-        <h2
-          style={{
-            fontSize: 36,
-            fontWeight: 700,
-            color: "var(--text-bright)",
-            letterSpacing: "-0.02em",
-            marginBottom: 20,
-          }}
-        >
-          About This Documentation Platform
-        </h2>
-        <p
-          style={{
-            fontSize: 14,
-            color: "var(--text-dim)",
-            lineHeight: 1.8,
-            marginBottom: 16,
-          }}
-        >
-          This page is where you find guides, training material, and
-          reference documentation for every Cellular Expert product —{" "}
-          <strong style={{ color: "var(--text-bright)" }}>CE Express</strong>,{" "}
-          <strong style={{ color: "var(--text-bright)" }}>
-            CE Desktop Pro
-          </strong>
-          , <strong style={{ color: "var(--text-bright)" }}>Inventory3D</strong>
-          , and <strong style={{ color: "var(--text-bright)" }}>Geodata</strong>.
-        </p>
-        <p
-          style={{
-            fontSize: 14,
-            color: "var(--text-dim)",
-            lineHeight: 1.8,
-            marginBottom: 16,
-          }}
-        >
-          Use the <strong style={{ color: "var(--text-bright)" }}>sidebar</strong>{" "}
-          to browse by product and category — each tool and workflow has its
-          own page. Once you're reading a page, the{" "}
-          <strong style={{ color: "var(--text-bright)" }}>
-            "On this page"
-          </strong>{" "}
-          panel on the right lets you jump straight to any subsection without
-          scrolling.
-        </p>
-        <p
-          style={{
-            fontSize: 14,
-            color: "var(--text-dim)",
-            lineHeight: 1.8,
-            marginBottom: 0,
-          }}
-        >
-          Can't find what you're looking for? Ask the{" "}
-          <strong style={{ color: "var(--accent)" }}>AI Assistant</strong> in
-          the Support Chat — it searches the documentation for you and, if it
-          can't find a reliable answer, helps you open a support ticket
-          instead.
-        </p>
+    <div style={{ maxWidth: 760 }}>
+      <div
+        style={{
+          fontFamily: "var(--font-mono)",
+          fontSize: 10,
+          color: "var(--accent)",
+          letterSpacing: "0.15em",
+          textTransform: "uppercase",
+          marginBottom: 12,
+        }}
+      >
+        How It Works
+      </div>
+      <h2
+        style={{
+          fontSize: 32,
+          fontWeight: 700,
+          color: "var(--text-bright)",
+          letterSpacing: "-0.02em",
+          marginBottom: 18,
+        }}
+      >
+        How This Documentation Platform Works
+      </h2>
+      <p
+        style={{
+          fontSize: 14,
+          color: "var(--text-dim)",
+          lineHeight: 1.8,
+          marginBottom: 28,
+        }}
+      >
+        This platform converts Cellular Expert PDF manuals into structured
+        web documentation.
+      </p>
+
+      <ol
+        style={{
+          margin: 0,
+          padding: 0,
+          listStyle: "none",
+          marginBottom: 32,
+        }}
+      >
+        {[
+          "Documentation content, sections, images, and metadata are organized and stored in the database.",
+          "The website displays this content as searchable documentation pages.",
+          'Users can browse by product, use the sidebar, and use "On this page" to navigate inside each article.',
+          "If users cannot find an answer, they can ask the AI assistant.",
+          "The AI uses the documentation content to answer questions and logs useful insights.",
+          "Admins can review AI questions, low-confidence answers, and unclear topics to improve the documentation.",
+          "If the issue still cannot be solved, the user can contact support.",
+        ].map((step, i) => (
+          <li
+            key={i}
+            style={{
+              display: "flex",
+              gap: 14,
+              marginBottom: 14,
+              alignItems: "flex-start",
+            }}
+          >
+            <div
+              style={{
+                flexShrink: 0,
+                width: 24,
+                height: 24,
+                borderRadius: "50%",
+                background: "var(--accent-l)",
+                border: "1px solid var(--border2)",
+                color: "var(--accent)",
+                fontFamily: "var(--font-mono)",
+                fontSize: 11,
+                fontWeight: 700,
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              {i + 1}
+            </div>
+            <div
+              style={{
+                fontSize: 13.5,
+                color: "var(--text)",
+                lineHeight: 1.7,
+                paddingTop: 2,
+              }}
+            >
+              {step}
+            </div>
+          </li>
+        ))}
+      </ol>
+
+      <div
+        style={{
+          fontFamily: "var(--font-mono)",
+          fontSize: 10,
+          color: "var(--text-dim)",
+          letterSpacing: "0.1em",
+          textTransform: "uppercase",
+          marginBottom: 12,
+        }}
+      >
+        The Full Flow
+      </div>
+      <div
+        style={{
+          display: "flex",
+          flexWrap: "wrap",
+          alignItems: "center",
+          gap: 8,
+          background: "var(--bg2)",
+          border: "1px solid var(--border)",
+          borderRadius: 14,
+          padding: "18px 16px",
+        }}
+      >
+        {[
+          "PDF manuals",
+          "Structured documentation",
+          "PostgreSQL database",
+          "Website documentation pages",
+          "AI assistant",
+          "AI insights / admin review",
+          "Support (if needed)",
+        ].map((step, i, arr) => (
+          <React.Fragment key={step}>
+            <div
+              style={{
+                padding: "8px 13px",
+                borderRadius: 20,
+                background: "var(--bg)",
+                border: "1px solid var(--border2)",
+                fontSize: 11.5,
+                fontWeight: 600,
+                color: "var(--text-bright)",
+                whiteSpace: "nowrap",
+              }}
+            >
+              {step}
+            </div>
+            {i < arr.length - 1 && (
+              <span style={{ color: "var(--accent)", fontSize: 14, flexShrink: 0 }}>
+                →
+              </span>
+            )}
+          </React.Fragment>
+        ))}
       </div>
     </div>
   </section>
 );
 
 // ── Docs Sidebar ──────────────────────────────────────────────────────────────
-const DocsSidebar = React.memo(function DocsSidebar({ activeDocId, onSelect }) {
+const DocsSidebar = React.memo(function DocsSidebar({ activeDocId, onSelect, nav }) {
   const [openSecs, setOpenSecs] = useState({});
   const isOpen = (key) => openSecs[key] !== false;
   const toggle = (key) => setOpenSecs((p) => ({ ...p, [key]: !isOpen(key) }));
@@ -1252,7 +1327,7 @@ const DocsSidebar = React.memo(function DocsSidebar({ activeDocId, onSelect }) {
           🏠 <span>Documentation Home</span>
         </div>
       </div>
-      {Object.entries(NAV).map(([section, cats]) => (
+      {Object.entries(nav).map(([section, cats]) => (
         <div key={section} style={{ padding: "4px 0 8px" }}>
           <div
             style={{
@@ -1272,7 +1347,7 @@ const DocsSidebar = React.memo(function DocsSidebar({ activeDocId, onSelect }) {
             .map(([cat, items]) => {
               const key = `${section}::${cat}`;
               const open = isOpen(key);
-              const multi = Object.keys(cats).length > 1;
+              const multi = items.length > 1;
               return (
                 <div key={cat}>
                   {multi && (
@@ -1390,47 +1465,46 @@ const TOC = React.memo(function TOC({ toc }) {
 
 // ── Docs Home ─────────────────────────────────────────────────────────────────
 const DocsHome = React.memo(function DocsHome({ onSelect, onSupportClick }) {
+  // Count documents per actual product value — no fallback bucket, so a
+  // product that doesn't match one of the known keys below just won't be
+  // shown, instead of silently being lumped into the wrong card.
   const counts = {};
   DOC_INDEX.forEach((d) => {
-    const s =
-      d.product === "CE Express"
-        ? "CE Express"
-        : d.product === "CE Pro"
-          ? "CE Desktop Pro"
-          : d.product === "Both"
-            ? "Geodata & Data"
-            : "Training";
-    counts[s] = (counts[s] || 0) + 1;
+    counts[d.product] = (counts[d.product] || 0) + 1;
   });
 
   const cards = [
     {
       key: "CE Express",
+      product: "CE Express",
       icon: "🌐",
       color: "#00b4ff",
       desc: "Web-based RF planning — browser access, multi-user, CE Inventory3D integrated.",
-      firstDoc: "ce-express-introduction",
+      firstDoc: "ce-express-overview-merged",
     },
     {
       key: "CE Desktop Pro",
+      product: "CE Pro",
       icon: "🖥",
       color: "#00d4a0",
       desc: "ArcGIS Pro extension — RCP, RLP, Indoor, Sound, EMF modules. 10 kHz–350 GHz.",
-      firstDoc: "ce-pro-rcp",
+      firstDoc: "ce-pro-overview",
     },
     {
       key: "Geodata & Data",
+      product: "Both",
       icon: "🗺",
       color: "#f59e0b",
       desc: "DEM, clutter, buildings, antenna patterns — formats, resolutions, requirements.",
       firstDoc: "geodata-requirements",
     },
     {
-      key: "Training",
-      icon: "🎓",
+      key: "Inventory3D",
+      product: "Inventory3D",
+      icon: "📦",
       color: "#a78bfa",
-      desc: "Step-by-step practical exercises for CE Express and CE Desktop Pro.",
-      firstDoc: "ce-express-tr-workspace",
+      desc: "3D indoor/outdoor asset inventory and visualization tool.",
+      firstDoc: "inventory3d-user-guide",
     },
   ];
 
@@ -1683,7 +1757,8 @@ const DocsHome = React.memo(function DocsHome({ onSelect, onSupportClick }) {
                     letterSpacing: "0.08em",
                   }}
                 >
-                  {counts[c.key] || 0} articles
+                  {counts[c.product] || 0}{" "}
+                  {(counts[c.product] || 0) === 1 ? "article" : "articles"}
                 </div>
               </div>
             </div>
@@ -1716,16 +1791,16 @@ const DocsHome = React.memo(function DocsHome({ onSelect, onSupportClick }) {
         </div>
         <div style={{ display: "flex", flexWrap: "wrap", gap: 7 }}>
           {[
-            ["ce-express-workspace", "Creating Workspaces"],
-            ["ce-express-rf-prediction", "RF Prediction"],
-            ["ce-express-prediction-models", "Propagation Models"],
-            ["ce-express-features", "Network Objects"],
+            ["ce-express-v73-3-1-1-workspaces", "Creating Workspaces"],
+            ["ce-express-v73-3-1-18-rf-prediction", "RF Prediction"],
+            ["ce-express-v73-3-1-9-prediction-models", "Propagation Models"],
+            ["ce-express-v73-3-1-3-networks", "Network Objects"],
             ["geodata-requirements", "Geodata Requirements"],
-            ["geodata-dem", "DEM / Terrain"],
-            ["network-object-requirements", "Network Object Fields"],
-            ["ce-express-radio-link", "Microwave Link Planning"],
-            ["ce-express-admin-installation", "CE Express Installation"],
-            ["ce-pro-installation", "CE Pro Installation"],
+            ["geodata-network-objects", "Network Object Requirements"],
+            ["ce-express-v73-3-1-37-link-prediction", "Microwave Link Planning"],
+            ["ce-express-admin-guide", "CE Express Installation"],
+            ["ce-pro-tr-install", "CE Pro Installation"],
+            ["ce-pro-workspace-merged", "CE Pro Workspace"],
           ].map(([id, label]) => (
             <div
               key={id}
@@ -2264,6 +2339,17 @@ export default function App() {
   const [activeDocId, setActiveDocId] = useState(null);
   const [doc, setDoc] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [navVersion, setNavVersion] = useState(0);
+
+  // Documents created directly from the admin panel live only in Postgres —
+  // pull them into DOC_INDEX once on load so they show up in the sidebar too,
+  // not just in the admin's own document list.
+  useEffect(() => {
+    syncLiveDocs().then((changed) => {
+      if (changed) setNavVersion((v) => v + 1);
+    });
+  }, []);
+  const nav = useMemo(() => getNav(), [navVersion]);
 
   // Preload all docs in background so search has full-text data to work with
   useEffect(() => {
@@ -2370,7 +2456,7 @@ export default function App() {
             minHeight: "calc(100vh - var(--nav-h))",
           }}
         >
-          <DocsSidebar activeDocId={activeDocId} onSelect={loadDoc} />
+          <DocsSidebar activeDocId={activeDocId} onSelect={loadDoc} nav={nav} />
           <div style={{ marginLeft: 260, flex: 1, display: "flex" }}>
             {loading ? (
               <div style={{ padding: "80px", textAlign: "center", flex: 1 }}>

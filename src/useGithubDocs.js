@@ -104,43 +104,87 @@ export const DOC_INDEX = [
   { id:'ce-pro-technical-support', path:'docs/ce-pro/technical-support.md', title:'Technical Support', product:'CE Pro', category:'About', order:91 },
 ];
 
-export const NAV = {
-  'CE Express': {
-    'Getting Started': DOC_INDEX.filter(d => d.product==='CE Express' && d.category==='Getting Started'),
-    'Map View':         DOC_INDEX.filter(d => d.product==='CE Express' && d.category==='Map View'),
-    'Network Objects':  DOC_INDEX.filter(d => d.product==='CE Express' && d.category==='Network Objects'),
-    'Calculations':     DOC_INDEX.filter(d => d.product==='CE Express' && d.category==='Calculations'),
-    'Reference':        DOC_INDEX.filter(d => d.product==='CE Express' && d.category==='Reference'),
-    'Administration':   DOC_INDEX.filter(d => d.product==='CE Express' && d.category==='Administration'),
-    'User Guides':      DOC_INDEX.filter(d => d.product==='CE Express' && d.category==='User Guides'),
-    'Training':         DOC_INDEX.filter(d => d.product==='CE Express' && d.category==='Training'),
-    'Express Tools':    DOC_INDEX.filter(d => d.product==='CE Express' && d.category==='Express Tools'),
-    'Database Structure':      DOC_INDEX.filter(d => d.product==='CE Express' && d.category==='Database Structure'),
-    'CE Express API':          DOC_INDEX.filter(d => d.product==='CE Express' && d.category==='CE Express API'),
-    'Network Data Management': DOC_INDEX.filter(d => d.product==='CE Express' && d.category==='Network Data Management'),
-    'Database Organization':   DOC_INDEX.filter(d => d.product==='CE Express' && d.category==='Database Organization'),
-    'Exploring Data':          DOC_INDEX.filter(d => d.product==='CE Express' && d.category==='Exploring Data'),
-  },
-  'CE Desktop Pro': {
-    'Getting Started':     DOC_INDEX.filter(d => d.product==='CE Pro' && d.category==='Getting Started'),
-    'Geographic Data':     DOC_INDEX.filter(d => d.product==='CE Pro' && d.category==='Geographic Data'),
-    'Workspace':           DOC_INDEX.filter(d => d.product==='CE Pro' && d.category==='Workspace'),
-    'Data Management':     DOC_INDEX.filter(d => d.product==='CE Pro' && d.category==='Data Management'),
-    'Profile':             DOC_INDEX.filter(d => d.product==='CE Pro' && d.category==='Profile'),
-    'Coverage Prediction': DOC_INDEX.filter(d => d.product==='CE Pro' && d.category==='Coverage Prediction'),
-    'RLP Tools':           DOC_INDEX.filter(d => d.product==='CE Pro' && d.category==='RLP Tools'),
-    'EMF Tools':           DOC_INDEX.filter(d => d.product==='CE Pro' && d.category==='EMF Tools'),
-    'About':               DOC_INDEX.filter(d => d.product==='CE Pro' && d.category==='About'),
-    'User Guides':         DOC_INDEX.filter(d => d.product==='CE Pro' && d.category==='User Guides'),
-    'Training':            DOC_INDEX.filter(d => d.product==='CE Pro' && d.category==='Training'),
-  },
-  'Geodata & Data': {
-    'Geodata': DOC_INDEX.filter(d => d.product==='Both'),
-  },
-  'Inventory3D': {
-    'User Guides': DOC_INDEX.filter(d => d.product==='Inventory3D'),
-  },
+// Friendlier display names for known products. Anything not listed here
+// (i.e. a brand new product) just uses its raw product string as the
+// section label — so a new product shows up automatically with no code
+// change required here.
+const PRODUCT_LABELS = {
+  'CE Express': 'CE Express',
+  'CE Pro': 'CE Desktop Pro',
+  'Both': 'Geodata & Data',
+  'Inventory3D': 'Inventory3D',
 };
+// Preferred product ordering in the sidebar; anything not listed here is
+// appended afterwards, alphabetically.
+const PRODUCT_ORDER = ['CE Express', 'CE Pro', 'Both', 'Inventory3D'];
+
+function buildNav(docIndex) {
+  const products = Array.from(new Set(docIndex.map((d) => d.product)));
+  products.sort((a, b) => {
+    const ia = PRODUCT_ORDER.indexOf(a);
+    const ib = PRODUCT_ORDER.indexOf(b);
+    if (ia === -1 && ib === -1) return a.localeCompare(b);
+    if (ia === -1) return 1;
+    if (ib === -1) return -1;
+    return ia - ib;
+  });
+
+  const nav = {};
+  products.forEach((product) => {
+    const label = PRODUCT_LABELS[product] || product;
+    const categories = {};
+    docIndex
+      .filter((d) => d.product === product)
+      .forEach((d) => {
+        if (!categories[d.category]) categories[d.category] = [];
+        categories[d.category].push(d);
+      });
+    Object.values(categories).forEach((list) =>
+      list.sort((a, b) => (a.order || 0) - (b.order || 0))
+    );
+    nav[label] = categories;
+  });
+  return nav;
+}
+
+export const NAV = buildNav(DOC_INDEX);
+
+// Admin-created pages (added via the admin panel, POST /api/docs) live only
+// in Postgres — they were never part of the GitHub-synced static DOC_INDEX
+// above. Call this once when the app loads to pull in anything the admin
+// has added since, merging it into DOC_INDEX (same array reference, so
+// existing lookups like fetchDoc's `.find()` pick it up automatically).
+// Returns true if anything new was found, so the caller can trigger a re-render.
+export async function syncLiveDocs() {
+  try {
+    const res = await fetch(`${API_BASE}/docs`);
+    if (!res.ok) return false;
+    const rows = await res.json();
+    const knownIds = new Set(DOC_INDEX.map((d) => d.id));
+    let changed = false;
+    rows.forEach((row) => {
+      if (!knownIds.has(row.doc_id)) {
+        DOC_INDEX.push({
+          id: row.doc_id,
+          path: row.github_path,
+          title: row.title,
+          product: row.product,
+          category: row.category,
+          order: row.display_order ?? 99,
+        });
+        knownIds.add(row.doc_id);
+        changed = true;
+      }
+    });
+    return changed;
+  } catch {
+    return false;
+  }
+}
+
+export function getNav() {
+  return buildNav(DOC_INDEX);
+}
 
 const cache = {};
 let preloadStarted = false;
@@ -220,13 +264,33 @@ export function searchIndex(query) {
     .map(doc => {
       let score = 0;
       let snippet = '';
+      const title = doc.title.toLowerCase();
+      const category = doc.category.toLowerCase();
+      const product = doc.product.toLowerCase();
       const content = cache[doc.id]?.content || '';
+
       words.forEach(w => {
-        if (doc.title.toLowerCase().includes(w))    score += 10;
-        if (doc.category.toLowerCase().includes(w)) score += 4;
-        if (doc.product.toLowerCase().includes(w))  score += 2;
-        if (content) {
-          const occurrences = content.toLowerCase().split(w.toLowerCase()).length - 1;
+        // Exact or prefix matches are much stronger signals than "contains
+        // this substring anywhere" — especially important for short queries
+        // like "tr", where "training".startsWith("tr") should clearly beat
+        // "structure".includes("tr") deep inside some unrelated article.
+        if (category === w)              score += 30;
+        else if (category.startsWith(w)) score += 20;
+        else if (category.includes(w))   score += 4;
+
+        if (title.startsWith(w))    score += 18;
+        else if (title.includes(w)) score += 10;
+
+        if (product === w)              score += 12;
+        else if (product.startsWith(w)) score += 8;
+        else if (product.includes(w))   score += 2;
+
+        // Scanning full article content for a 2-3 letter substring produces
+        // mostly noise (e.g. "tr" inside "structure", "extract", "control").
+        // Only do content matching once the query is specific enough to mean
+        // something on its own.
+        if (content && w.length >= 4) {
+          const occurrences = content.toLowerCase().split(w).length - 1;
           if (occurrences > 0) {
             score += Math.min(occurrences, 5);
             if (!snippet) snippet = snippetAround(content, w);

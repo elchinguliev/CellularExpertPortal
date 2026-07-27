@@ -24,7 +24,9 @@ const Logo = () => (
       alt="Cellular Expert"
       style={{width:48,height:48,borderRadius:14,objectFit:'contain',marginBottom:14,display:'inline-block'}}
     />
-    <div style={{fontFamily:'var(--font-display)',fontSize:19,fontWeight:700,color:'var(--text-bright)',letterSpacing:'.04em',marginBottom:4}}>CELLULAR <span style={{color:'var(--accent)'}}>EXPERT</span></div>
+ <div style={{fontFamily:'var(--font-display)',fontSize:20,fontWeight:800,color:'#3949ce',letterSpacing:'.01em',lineHeight:1.1,marginBottom:4}}>
+      CELLULAR EXPERT
+    </div>
     <div style={{fontSize:12,color:'var(--text-dim)'}}>Support Portal — Sign in to continue</div>
   </div>
 );

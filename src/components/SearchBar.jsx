@@ -11,7 +11,8 @@ export default function SearchBar({ onSelectDoc }) {
   const wrapRef = useRef(null);
 
   useEffect(() => {
-    if (q.trim().length <= 1) {
+    const query = q.trim();
+    if (query.length <= 1) {
       setResults([]);
       setShowDrop(false);
       return;
@@ -19,7 +20,13 @@ export default function SearchBar({ onSelectDoc }) {
     setShowDrop(true);
     // Show instant local results immediately...
     setResults(searchIndex(q));
-    // ...then replace with real backend full-text results when they arrive
+    // ...then replace with real backend full-text results when they arrive —
+    // but only for queries long enough for full-text search to be meaningful.
+    // Short queries (like "tr") are better served by the local title/category
+    // matching above; Postgres full-text search on a 2-3 letter token tends
+    // to surface odd, loosely-related results that would otherwise stomp on
+    // the more relevant local ranking.
+    if (query.length < 4) return;
     let cancelled = false;
     searchAPI(q).then(apiResults => {
       if (!cancelled && apiResults.length > 0) setResults(apiResults);
@@ -35,7 +42,12 @@ export default function SearchBar({ onSelectDoc }) {
 
   return (
     <div ref={wrapRef} style={{width:'100%', position:'relative'}}>
-      <span style={{position:'absolute',left:11,top:'50%',transform:'translateY(-50%)',color:'var(--text-dim)',fontSize:14,pointerEvents:'none'}}>🔍</span>
+      <span style={{position:'absolute',left:11,top:'50%',transform:'translateY(-50%)',pointerEvents:'none',display:'flex'}}>
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--text-dim)" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+          <circle cx="11" cy="11" r="7"/>
+          <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+        </svg>
+      </span>
       <input
         value={q}
         onChange={e => setQ(e.target.value)}
