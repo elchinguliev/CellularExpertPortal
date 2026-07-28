@@ -10,10 +10,69 @@ const { Pool } = require('pg');
 const bcrypt = require('bcryptjs');
 const multer = require('multer');
 const fs = require('fs');
+const jwt = require('jsonwebtoken');
+const cookieParser = require('cookie-parser');
 
 const app = express();
-app.use(cors());
+
+// credentials: true + an explicit origin (not "*") are both required for the
+// browser to actually send/accept the session cookie set below.
+app.use(cors({
+  origin: process.env.FRONTEND_ORIGIN || 'http://localhost:3000',
+  credentials: true,
+}));
 app.use(express.json());
+app.use(cookieParser());
+
+// ── Session auth (JWT stored in an httpOnly cookie) ───────────────────────────
+// Replaces trusting whatever role the frontend happens to have in
+// localStorage — the server now verifies who's making each request instead
+// of just taking the client's word for it.
+const JWT_SECRET = process.env.JWT_SECRET || 'dev-only-secret-change-me';
+const COOKIE_NAME = 'ce_session';
+
+function signSession(user) {
+  return jwt.sign(
+    { id: user.id, name: user.name, email: user.email, role: user.role },
+    JWT_SECRET,
+    { expiresIn: '7d' }
+  );
+}
+
+function setSessionCookie(res, user) {
+  res.cookie(COOKIE_NAME, signSession(user), {
+    httpOnly: true,       // not readable from JS — protects against XSS reading it
+    sameSite: 'lax',
+    secure: process.env.NODE_ENV === 'production',
+    maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+  });
+}
+
+// Attaches req.user if a valid session cookie is present; does not block the
+// request either way (used on every request so /api/auth/me can check it).
+function readSession(req, res, next) {
+  const token = req.cookies[COOKIE_NAME];
+  if (token) {
+    try {
+      req.user = jwt.verify(token, JWT_SECRET);
+    } catch {
+      req.user = null;
+    }
+  }
+  next();
+}
+app.use(readSession);
+
+function requireAuth(req, res, next) {
+  if (!req.user) return res.status(401).json({ error: 'Please log in.' });
+  next();
+}
+
+function requireAdmin(req, res, next) {
+  if (!req.user) return res.status(401).json({ error: 'Please log in.' });
+  if (req.user.role !== 'admin') return res.status(403).json({ error: 'Admins only.' });
+  next();
+}
 
 // Serves everything under ce-backend/public/downloads at:
 //   http://localhost:4000/downloads/<product>/<...>/<file>.pdf
@@ -180,14 +239,28 @@ app.post('/api/auth/login', async (req, res) => {
       return res.status(401).json({ error: 'Incorrect password' });
     }
     delete user.password_hash;
+    setSessionCookie(res, user);
     res.json(user);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 });
 
+// Called once when the app loads to check "am I already logged in?" — reads
+// the httpOnly cookie server-side instead of trusting anything from the
+// client, so a tampered localStorage value can no longer fake a role.
+app.get('/api/auth/me', (req, res) => {
+  if (!req.user) return res.status(401).json({ error: 'Not logged in' });
+  res.json(req.user);
+});
+
+app.post('/api/auth/logout', (req, res) => {
+  res.clearCookie(COOKIE_NAME);
+  res.json({ ok: true });
+});
+
 // ── List all users (admin "Users" tab) — includes ticket count per user ─────
-app.get('/api/auth/users', async (req, res) => {
+app.get('/api/auth/users', requireAdmin, async (req, res) => {
   try {
     const { rows } = await pool.query(
       `SELECT u.id, u.name, u.email, u.company, u.product, u.role, u.avatar, u.created_at,
@@ -204,7 +277,7 @@ app.get('/api/auth/users', async (req, res) => {
 });
 
 // ── Change a user's role (admin) ─────────────────────────────────────────────
-app.put('/api/auth/users/:id/role', async (req, res) => {
+app.put('/api/auth/users/:id/role', requireAdmin, async (req, res) => {
   try {
     const { id } = req.params;
     const { role } = req.body;
@@ -225,7 +298,7 @@ app.put('/api/auth/users/:id/role', async (req, res) => {
 });
 
 // ── Change a user's product (admin) ──────────────────────────────────────────
-app.put('/api/auth/users/:id/product', async (req, res) => {
+app.put('/api/auth/users/:id/product', requireAdmin, async (req, res) => {
   try {
     const { id } = req.params;
     const { product } = req.body;
@@ -243,7 +316,7 @@ app.put('/api/auth/users/:id/product', async (req, res) => {
 });
 
 // ── Update a document (admin CRUD) ───────────────────────────────────────────
-app.put('/api/docs/:docId', async (req, res) => {
+app.put('/api/docs/:docId', requireAdmin, async (req, res) => {
   try {
     const { docId } = req.params;
     const { title, product, category, content } = req.body;
@@ -266,7 +339,7 @@ app.put('/api/docs/:docId', async (req, res) => {
 });
 
 // ── Delete a document (admin CRUD) ───────────────────────────────────────────
-app.delete('/api/docs/:docId', async (req, res) => {
+app.delete('/api/docs/:docId', requireAdmin, async (req, res) => {
   try {
     const { docId } = req.params;
     const { rowCount } = await pool.query(`DELETE FROM documents WHERE doc_id = $1`, [docId]);
@@ -278,7 +351,7 @@ app.delete('/api/docs/:docId', async (req, res) => {
 });
 
 // ── Create a new document (admin CRUD) ───────────────────────────────────────
-app.post('/api/docs', async (req, res) => {
+app.post('/api/docs', requireAdmin, async (req, res) => {
   try {
     const { doc_id, title, product, category, content, github_path } = req.body;
     if (!doc_id || !title || !product || !category) {
@@ -315,7 +388,7 @@ const upload = multer({
 });
 
 // ── Upload a new image/icon for a document (admin CRUD) ──────────────────────
-app.post('/api/docs/:docId/images/upload', upload.single('image'), async (req, res) => {
+app.post('/api/docs/:docId/images/upload', requireAdmin, upload.single('image'), async (req, res) => {
   try {
     const { docId } = req.params;
     const { caption, section_anchor, display_order } = req.body;
@@ -335,7 +408,7 @@ app.post('/api/docs/:docId/images/upload', upload.single('image'), async (req, r
 });
 
 // ── Delete an image (admin CRUD) ──────────────────────────────────────────────
-app.delete('/api/docs/:docId/images/:imageId', async (req, res) => {
+app.delete('/api/docs/:docId/images/:imageId', requireAdmin, async (req, res) => {
   try {
     const { imageId } = req.params;
     const { rowCount } = await pool.query(`DELETE FROM document_images WHERE id = $1`, [imageId]);
@@ -439,7 +512,7 @@ app.get('/api/faq', async (req, res) => {
 });
 
 // Create a FAQ item (admin)
-app.post('/api/faq', async (req, res) => {
+app.post('/api/faq', requireAdmin, async (req, res) => {
   try {
     const { title, answer, tags, display_order } = req.body;
     if (!title || !answer) return res.status(400).json({ error: 'title and answer are required' });
@@ -455,7 +528,7 @@ app.post('/api/faq', async (req, res) => {
 });
 
 // Update a FAQ item (admin)
-app.put('/api/faq/:id', async (req, res) => {
+app.put('/api/faq/:id', requireAdmin, async (req, res) => {
   try {
     const { id } = req.params;
     const { title, answer, tags, display_order } = req.body;
@@ -477,7 +550,7 @@ app.put('/api/faq/:id', async (req, res) => {
 });
 
 // Delete a FAQ item (admin)
-app.delete('/api/faq/:id', async (req, res) => {
+app.delete('/api/faq/:id', requireAdmin, async (req, res) => {
   try {
     const { id } = req.params;
     const { rowCount } = await pool.query(`DELETE FROM faq_items WHERE id = $1`, [id]);
@@ -683,6 +756,7 @@ app.post('/api/auth/register/verify', async (req, res) => {
     await pool.query(`UPDATE verification_codes SET used = TRUE WHERE id = $1`, [rows[0].id]);
     sendWelcomeEmail(created.rows[0].email, created.rows[0].name).catch(err => console.error('Email error:', err.message));
 
+    setSessionCookie(res, created.rows[0]);
     res.status(201).json(created.rows[0]);
   } catch (err) {
     if (err.code === '23505') return res.status(409).json({ error: 'An account with this email already exists' });

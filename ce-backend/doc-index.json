@@ -1,20 +1,11 @@
 [
   {
-    "id": "ce-express-user-guide",
-    "path": "docs/ce-express/user-guide/user-guide-v7.3.md",
-    "title": "User Guide v7.3",
-    "product": "CE Express",
-    "category": "User Guides",
-    "order": 30,
-    "pdf": "ce-express/user-guide/CE Express User Guide v7.3.pdf"
-  },
-  {
     "id": "ce-express-admin-guide",
     "path": "docs/ce-express/user-guide/admin-guide-v7.2.md",
     "title": "Administrator Guide v7.2",
     "product": "CE Express",
-    "category": "User Guides",
-    "order": 31,
+    "category": "Administrator Guide",
+    "order": 1000,
     "pdf": "ce-express/user-guide/CE Express Administrator Guide v7.2.pdf"
   },
   {
@@ -23,7 +14,7 @@
     "title": "01 — Creating Workspace",
     "product": "CE Express",
     "category": "Training",
-    "order": 40,
+    "order": 900,
     "pdf": "ce-express/training/01. CE Express. Creating Workspace.pdf"
   },
   {
@@ -32,7 +23,7 @@
     "title": "02 — Create Objects",
     "product": "CE Express",
     "category": "Training",
-    "order": 41,
+    "order": 901,
     "pdf": "ce-express/training/02. CE Express. Create Objects.pdf"
   },
   {
@@ -41,7 +32,7 @@
     "title": "03 — Line of Sight",
     "product": "CE Express",
     "category": "Training",
-    "order": 42,
+    "order": 902,
     "pdf": "ce-express/training/03. CE Express. Line Of Sight (Profile).pdf"
   },
   {
@@ -50,7 +41,7 @@
     "title": "04 — RF Prediction",
     "product": "CE Express",
     "category": "Training",
-    "order": 43,
+    "order": 903,
     "pdf": "ce-express/training/04. CE Express. RF Prediction.pdf"
   },
   {
@@ -59,7 +50,7 @@
     "title": "05 — Import Data",
     "product": "CE Express",
     "category": "Training",
-    "order": 44,
+    "order": 904,
     "pdf": "ce-express/training/05. CE Express. Import data.pdf"
   },
   {
@@ -68,7 +59,7 @@
     "title": "06 — Prediction Models",
     "product": "CE Express",
     "category": "Training",
-    "order": 45,
+    "order": 905,
     "pdf": "ce-express/training/06. CE Express. Prediction models.pdf"
   },
   {
@@ -77,7 +68,7 @@
     "title": "07 — MW Equipment",
     "product": "CE Express",
     "category": "Training",
-    "order": 46,
+    "order": 906,
     "pdf": "ce-express/training/07. MW Equipment.pdf"
   },
   {
@@ -86,7 +77,7 @@
     "title": "08 — MW Prediction",
     "product": "CE Express",
     "category": "Training",
-    "order": 47,
+    "order": 907,
     "pdf": "ce-express/training/08. MW Prediction.pdf"
   },
   {
@@ -95,7 +86,7 @@
     "title": "09 — Preparing Geodata",
     "product": "CE Express",
     "category": "Training",
-    "order": 48,
+    "order": 908,
     "pdf": "ce-express/training/09. Preparing Geodata.pdf"
   },
   {
@@ -104,7 +95,7 @@
     "title": "00 — Installation",
     "product": "CE Pro",
     "category": "Training",
-    "order": 10,
+    "order": 1100,
     "pdf": "ce-pro/training/0. Software installation and upgrades.pdf"
   },
   {
@@ -113,7 +104,7 @@
     "title": "01 — Data Types",
     "product": "CE Pro",
     "category": "Training",
-    "order": 11,
+    "order": 1101,
     "pdf": "ce-pro/training/00. Data types.pdf"
   },
   {
@@ -122,7 +113,7 @@
     "title": "02 — Architecture",
     "product": "CE Pro",
     "category": "Training",
-    "order": 12,
+    "order": 1102,
     "pdf": "ce-pro/training/000. Architecture.pdf"
   },
   {
@@ -131,7 +122,7 @@
     "title": "03 — Agenda",
     "product": "CE Pro",
     "category": "Training",
-    "order": 13,
+    "order": 1103,
     "pdf": "ce-pro/training/0000. Agenda.pdf"
   },
   {
@@ -140,7 +131,7 @@
     "title": "04 — Workspace",
     "product": "CE Pro",
     "category": "Training",
-    "order": 14,
+    "order": 1104,
     "pdf": "ce-pro/training/1. Creating Workspace.pdf"
   },
   {
@@ -149,7 +140,7 @@
     "title": "05 — Line of Sight",
     "product": "CE Pro",
     "category": "Training",
-    "order": 15,
+    "order": 1105,
     "pdf": "ce-pro/training/2. Line of Sight (Profile).pdf"
   },
   {
@@ -158,7 +149,7 @@
     "title": "06 — Objects",
     "product": "CE Pro",
     "category": "Training",
-    "order": 16,
+    "order": 1106,
     "pdf": "ce-pro/training/3. Creating objects.pdf"
   },
   {
@@ -167,7 +158,7 @@
     "title": "07 — Cell Prediction",
     "product": "CE Pro",
     "category": "Training",
-    "order": 17,
+    "order": 1107,
     "pdf": "ce-pro/training/4. Cell prediction.pdf"
   },
   {
@@ -176,7 +167,7 @@
     "title": "08 — Prediction Models",
     "product": "CE Pro",
     "category": "Training",
-    "order": 18,
+    "order": 1108,
     "pdf": "ce-pro/training/5. Prediction models.pdf"
   },
   {
@@ -185,7 +176,7 @@
     "title": "09 — Importing Data",
     "product": "CE Pro",
     "category": "Training",
-    "order": 19,
+    "order": 1109,
     "pdf": "ce-pro/training/6. Importing data.pdf"
   },
   {
@@ -194,7 +185,7 @@
     "title": "10 — RL Prediction",
     "product": "CE Pro",
     "category": "Training",
-    "order": 20,
+    "order": 1110,
     "pdf": "ce-pro/training/7. RL Prediction.pdf"
   },
   {
@@ -202,8 +193,8 @@
     "path": "docs/geodata/geodata-requirements.md",
     "title": "Geodata Requirements",
     "product": "Both",
-    "category": "Geodata",
-    "order": 1,
+    "category": "Geodata Requirements",
+    "order": 100,
     "pdf": "geodata/Cellular Expert Geodata Requirements 2025.pdf"
   },
   {
@@ -211,8 +202,8 @@
     "path": "docs/geodata/network-objects-requirements.md",
     "title": "Network Object Requirements",
     "product": "Both",
-    "category": "Geodata",
-    "order": 2,
+    "category": "Network Object Requirements",
+    "order": 200,
     "pdf": "geodata/Requirements for CE Network Objects.pdf"
   },
   {
@@ -230,7 +221,7 @@
     "title": "3.1 Cellular Expert Express tools",
     "product": "CE Express",
     "category": "Express Tools",
-    "order": 206
+    "order": 300
   },
   {
     "id": "ce-express-v73-3-1-1-workspaces",
@@ -238,7 +229,7 @@
     "title": "3.1.1 Workspaces",
     "product": "CE Express",
     "category": "Express Tools",
-    "order": 207
+    "order": 301
   },
   {
     "id": "ce-express-v73-3-1-2-features",
@@ -246,7 +237,7 @@
     "title": "3.1.2 Features",
     "product": "CE Express",
     "category": "Express Tools",
-    "order": 208
+    "order": 302
   },
   {
     "id": "ce-express-v73-3-1-3-networks",
@@ -254,7 +245,7 @@
     "title": "3.1.3 Networks",
     "product": "CE Express",
     "category": "Express Tools",
-    "order": 209
+    "order": 303
   },
   {
     "id": "ce-express-v73-3-1-4-layers",
@@ -262,7 +253,7 @@
     "title": "3.1.4 Layers",
     "product": "CE Express",
     "category": "Express Tools",
-    "order": 210
+    "order": 304
   },
   {
     "id": "ce-express-v73-3-1-5-prediction-history",
@@ -270,7 +261,7 @@
     "title": "3.1.5 Prediction history",
     "product": "CE Express",
     "category": "Express Tools",
-    "order": 211
+    "order": 305
   },
   {
     "id": "ce-express-v73-3-1-6-antennas",
@@ -278,7 +269,7 @@
     "title": "3.1.6 Antennas",
     "product": "CE Express",
     "category": "Express Tools",
-    "order": 212
+    "order": 306
   },
   {
     "id": "ce-express-v73-3-1-7-geodata-sets",
@@ -286,7 +277,7 @@
     "title": "3.1.7 Geodata sets",
     "product": "CE Express",
     "category": "Express Tools",
-    "order": 213
+    "order": 307
   },
   {
     "id": "ce-express-v73-3-1-8-feature-templates",
@@ -294,7 +285,7 @@
     "title": "3.1.8 Feature templates",
     "product": "CE Express",
     "category": "Express Tools",
-    "order": 214
+    "order": 308
   },
   {
     "id": "ce-express-v73-3-1-9-prediction-models",
@@ -302,7 +293,7 @@
     "title": "3.1.9 Prediction models",
     "product": "CE Express",
     "category": "Express Tools",
-    "order": 215
+    "order": 309
   },
   {
     "id": "ce-express-v73-3-1-10-settings",
@@ -310,7 +301,7 @@
     "title": "3.1.10 Settings",
     "product": "CE Express",
     "category": "Express Tools",
-    "order": 216
+    "order": 310
   },
   {
     "id": "ce-express-v73-3-1-11-identify",
@@ -318,7 +309,7 @@
     "title": "3.1.11 Identify",
     "product": "CE Express",
     "category": "Express Tools",
-    "order": 217
+    "order": 311
   },
   {
     "id": "ce-express-v73-3-1-12-measurement-tool",
@@ -326,7 +317,7 @@
     "title": "3.1.12 Measurement tool",
     "product": "CE Express",
     "category": "Express Tools",
-    "order": 218
+    "order": 312
   },
   {
     "id": "ce-express-v73-3-1-13-network-statistics",
@@ -334,7 +325,7 @@
     "title": "3.1.13 Network statistics",
     "product": "CE Express",
     "category": "Express Tools",
-    "order": 219
+    "order": 313
   },
   {
     "id": "ce-express-v73-3-1-14-street-view",
@@ -342,7 +333,7 @@
     "title": "3.1.14 Street view",
     "product": "CE Express",
     "category": "Express Tools",
-    "order": 220
+    "order": 314
   },
   {
     "id": "ce-express-v73-3-1-15-feature-report",
@@ -350,7 +341,7 @@
     "title": "3.1.15 Feature report",
     "product": "CE Express",
     "category": "Express Tools",
-    "order": 221
+    "order": 315
   },
   {
     "id": "ce-express-v73-3-1-16-profile",
@@ -358,7 +349,7 @@
     "title": "3.1.16 Profile",
     "product": "CE Express",
     "category": "Express Tools",
-    "order": 222
+    "order": 316
   },
   {
     "id": "ce-express-v73-3-1-17-quick-rf-prediction",
@@ -366,7 +357,7 @@
     "title": "3.1.17 Quick RF Prediction",
     "product": "CE Express",
     "category": "Express Tools",
-    "order": 223
+    "order": 317
   },
   {
     "id": "ce-express-v73-3-1-18-rf-prediction",
@@ -374,7 +365,7 @@
     "title": "3.1.18 RF Prediction",
     "product": "CE Express",
     "category": "Express Tools",
-    "order": 224
+    "order": 318
   },
   {
     "id": "ce-express-v73-3-1-19-3d-rf-prediction",
@@ -382,7 +373,7 @@
     "title": "3.1.19 3D RF Prediction",
     "product": "CE Express",
     "category": "Express Tools",
-    "order": 225
+    "order": 319
   },
   {
     "id": "ce-express-v73-3-1-20-visibility-prediction",
@@ -390,7 +381,7 @@
     "title": "3.1.20 Visibility prediction",
     "product": "CE Express",
     "category": "Express Tools",
-    "order": 226
+    "order": 320
   },
   {
     "id": "ce-express-v73-3-1-21-antenna-visibility-prediction",
@@ -398,7 +389,7 @@
     "title": "3.1.21 Antenna visibility prediction",
     "product": "CE Express",
     "category": "Express Tools",
-    "order": 227
+    "order": 321
   },
   {
     "id": "ce-express-v73-3-1-22-minimum-receiver-height",
@@ -406,7 +397,7 @@
     "title": "3.1.22 Minimum receiver height",
     "product": "CE Express",
     "category": "Express Tools",
-    "order": 228
+    "order": 322
   },
   {
     "id": "ce-express-v73-3-1-23-quick-minimum-receiver-height",
@@ -414,7 +405,7 @@
     "title": "3.1.23 Quick minimum receiver height",
     "product": "CE Express",
     "category": "Express Tools",
-    "order": 229
+    "order": 323
   },
   {
     "id": "ce-express-v73-3-1-24-radar-prediction",
@@ -422,7 +413,7 @@
     "title": "3.1.24 Radar prediction",
     "product": "CE Express",
     "category": "Express Tools",
-    "order": 230
+    "order": 324
   },
   {
     "id": "ce-express-v73-3-1-25-network-availability",
@@ -430,7 +421,7 @@
     "title": "3.1.25 Network availability",
     "product": "CE Express",
     "category": "Express Tools",
-    "order": 231
+    "order": 325
   },
   {
     "id": "ce-express-v73-3-1-26-model-tuning",
@@ -438,7 +429,7 @@
     "title": "3.1.26 Model Tuning",
     "product": "CE Express",
     "category": "Express Tools",
-    "order": 232
+    "order": 326
   },
   {
     "id": "ce-express-v73-3-1-27-optimal-placement",
@@ -446,7 +437,7 @@
     "title": "3.1.27 Optimal placement",
     "product": "CE Express",
     "category": "Express Tools",
-    "order": 233
+    "order": 327
   },
   {
     "id": "ce-express-v73-3-1-28-utilities",
@@ -454,7 +445,7 @@
     "title": "3.1.28 Utilities",
     "product": "CE Express",
     "category": "Express Tools",
-    "order": 234
+    "order": 328
   },
   {
     "id": "ce-express-v73-3-1-29-points-to-dxf",
@@ -462,7 +453,7 @@
     "title": "3.1.29 Points to DXF",
     "product": "CE Express",
     "category": "Express Tools",
-    "order": 235
+    "order": 329
   },
   {
     "id": "ce-express-v73-3-1-30-emf",
@@ -470,7 +461,7 @@
     "title": "3.1.30 EMF",
     "product": "CE Express",
     "category": "Express Tools",
-    "order": 236
+    "order": 330
   },
   {
     "id": "ce-express-v73-3-1-31-audibility",
@@ -478,7 +469,7 @@
     "title": "3.1.31 Audibility",
     "product": "CE Express",
     "category": "Express Tools",
-    "order": 237
+    "order": 331
   },
   {
     "id": "ce-express-v73-3-1-32-lux-calculation",
@@ -486,7 +477,7 @@
     "title": "3.1.32 Lux calculation",
     "product": "CE Express",
     "category": "Express Tools",
-    "order": 238
+    "order": 332
   },
   {
     "id": "ce-express-v73-3-1-33-geoclimatic-data",
@@ -494,7 +485,7 @@
     "title": "3.1.33 Geoclimatic data",
     "product": "CE Express",
     "category": "Express Tools",
-    "order": 239
+    "order": 333
   },
   {
     "id": "ce-express-v73-3-1-34-spectrum-masks",
@@ -502,7 +493,7 @@
     "title": "3.1.34 Spectrum masks",
     "product": "CE Express",
     "category": "Express Tools",
-    "order": 240
+    "order": 334
   },
   {
     "id": "ce-express-v73-3-1-35-radios",
@@ -510,7 +501,7 @@
     "title": "3.1.35 Radios",
     "product": "CE Express",
     "category": "Express Tools",
-    "order": 241
+    "order": 335
   },
   {
     "id": "ce-express-v73-3-1-36-frequency-plans",
@@ -518,7 +509,7 @@
     "title": "3.1.36 Frequency plans",
     "product": "CE Express",
     "category": "Express Tools",
-    "order": 242
+    "order": 336
   },
   {
     "id": "ce-express-v73-3-1-37-link-prediction",
@@ -526,7 +517,7 @@
     "title": "3.1.37 Link prediction",
     "product": "CE Express",
     "category": "Express Tools",
-    "order": 243
+    "order": 337
   },
   {
     "id": "ce-express-v73-3-1-38-automatic-frequency-planning",
@@ -534,7 +525,7 @@
     "title": "3.1.38 Automatic frequency planning",
     "product": "CE Express",
     "category": "Express Tools",
-    "order": 244
+    "order": 338
   },
   {
     "id": "ce-express-v73-3-1-39-link-hcm-fs-prediction",
@@ -542,7 +533,7 @@
     "title": "3.1.39 Link HCM-FS prediction",
     "product": "CE Express",
     "category": "Express Tools",
-    "order": 245
+    "order": 339
   },
   {
     "id": "ce-express-v73-3-1-40-mesh-topology-builder",
@@ -550,7 +541,7 @@
     "title": "3.1.40 Mesh topology builder",
     "product": "CE Express",
     "category": "Express Tools",
-    "order": 246
+    "order": 340
   },
   {
     "id": "ce-express-v73-3-1-41-mesh-connectivity",
@@ -558,7 +549,7 @@
     "title": "3.1.41 Mesh connectivity",
     "product": "CE Express",
     "category": "Express Tools",
-    "order": 247
+    "order": 341
   },
   {
     "id": "ce-express-v73-3-1-42-quick-mesh-connectivity",
@@ -566,7 +557,7 @@
     "title": "3.1.42 Quick mesh connectivity",
     "product": "CE Express",
     "category": "Express Tools",
-    "order": 248
+    "order": 342
   },
   {
     "id": "ce-express-v73-3-1-43-quick-hcm-fs-prediction",
@@ -574,7 +565,7 @@
     "title": "3.1.43 Quick HCM-FS prediction",
     "product": "CE Express",
     "category": "Express Tools",
-    "order": 249
+    "order": 343
   },
   {
     "id": "ce-express-v73-3-1-44-hcm-requests",
@@ -582,15 +573,15 @@
     "title": "3.1.44 HCM requests",
     "product": "CE Express",
     "category": "Express Tools",
-    "order": 250
+    "order": 344
   },
   {
     "id": "ce-express-admin-guide-only",
     "path": "docs/ce-express/user-guide/admin-guide-only-v7.2.md",
     "title": "Administrator Guide (Express Only) v7.2",
     "product": "CE Express",
-    "category": "Getting Started",
-    "order": 199
+    "category": "Administrator Guide",
+    "order": 1001
   },
   {
     "id": "ce-express-overview-merged",
@@ -598,7 +589,7 @@
     "title": "Overview / Getting Started",
     "product": "CE Express",
     "category": "Getting Started",
-    "order": 5
+    "order": 100
   },
   {
     "id": "ce-express-map-view-overview",
@@ -606,7 +597,7 @@
     "title": "Map View Overview",
     "product": "CE Express",
     "category": "Map View",
-    "order": 100
+    "order": 200
   },
   {
     "id": "ce-express-map",
@@ -614,7 +605,7 @@
     "title": "Map",
     "product": "CE Express",
     "category": "Map View",
-    "order": 101
+    "order": 201
   },
   {
     "id": "ce-express-map-table-view-modes",
@@ -622,7 +613,7 @@
     "title": "Map / Table View Modes",
     "product": "CE Express",
     "category": "Map View",
-    "order": 102
+    "order": 202
   },
   {
     "id": "ce-express-database-structure-merged",
@@ -630,7 +621,7 @@
     "title": "Database Structure",
     "product": "CE Express",
     "category": "Database Structure",
-    "order": 300
+    "order": 400
   },
   {
     "id": "ce-express-api-merged",
@@ -638,7 +629,7 @@
     "title": "CE Express API",
     "product": "CE Express",
     "category": "CE Express API",
-    "order": 400
+    "order": 500
   },
   {
     "id": "ce-express-network-data-management-merged",
@@ -646,7 +637,7 @@
     "title": "Network Data Management",
     "product": "CE Express",
     "category": "Network Data Management",
-    "order": 500
+    "order": 600
   },
   {
     "id": "ce-express-database-organization-merged",
@@ -654,7 +645,7 @@
     "title": "Database Organization",
     "product": "CE Express",
     "category": "Database Organization",
-    "order": 600
+    "order": 700
   },
   {
     "id": "ce-express-exploring-data-merged",
@@ -662,7 +653,7 @@
     "title": "Exploring Data",
     "product": "CE Express",
     "category": "Exploring Data",
-    "order": 700
+    "order": 800
   },
   {
     "id": "ce-pro-overview",
@@ -670,7 +661,7 @@
     "title": "Overview / Getting Started",
     "product": "CE Pro",
     "category": "Getting Started",
-    "order": 1
+    "order": 100
   },
   {
     "id": "ce-pro-geographic-data",
@@ -678,7 +669,7 @@
     "title": "Geographic Data",
     "product": "CE Pro",
     "category": "Geographic Data",
-    "order": 2
+    "order": 200
   },
   {
     "id": "ce-pro-workspace-merged",
@@ -686,7 +677,7 @@
     "title": "Workspace",
     "product": "CE Pro",
     "category": "Workspace",
-    "order": 3
+    "order": 300
   },
   {
     "id": "ce-pro-indoor-workspace",
@@ -694,7 +685,7 @@
     "title": "Indoor Workspace",
     "product": "CE Pro",
     "category": "Workspace",
-    "order": 4
+    "order": 301
   },
   {
     "id": "ce-pro-dm-network-objects",
@@ -702,7 +693,7 @@
     "title": "Network Objects",
     "product": "CE Pro",
     "category": "Data Management",
-    "order": 10
+    "order": 400
   },
   {
     "id": "ce-pro-dm-object-editor",
@@ -710,7 +701,7 @@
     "title": "Object Editor",
     "product": "CE Pro",
     "category": "Data Management",
-    "order": 11
+    "order": 401
   },
   {
     "id": "ce-pro-dm-clutter-classes",
@@ -718,7 +709,7 @@
     "title": "Clutter Classes",
     "product": "CE Pro",
     "category": "Data Management",
-    "order": 12
+    "order": 402
   },
   {
     "id": "ce-pro-dm-antenna-viewer",
@@ -726,7 +717,7 @@
     "title": "Antenna Viewer",
     "product": "CE Pro",
     "category": "Data Management",
-    "order": 13
+    "order": 403
   },
   {
     "id": "ce-pro-dm-prediction-model-manager",
@@ -734,7 +725,7 @@
     "title": "Prediction Model Manager",
     "product": "CE Pro",
     "category": "Data Management",
-    "order": 14
+    "order": 404
   },
   {
     "id": "ce-pro-dm-template-manager",
@@ -742,7 +733,7 @@
     "title": "Template Manager",
     "product": "CE Pro",
     "category": "Data Management",
-    "order": 15
+    "order": 405
   },
   {
     "id": "ce-pro-dm-import-export",
@@ -750,7 +741,7 @@
     "title": "Import / Export",
     "product": "CE Pro",
     "category": "Data Management",
-    "order": 16
+    "order": 406
   },
   {
     "id": "ce-pro-dm-radio-frequency-data",
@@ -758,7 +749,7 @@
     "title": "Radio / Frequency Data",
     "product": "CE Pro",
     "category": "Data Management",
-    "order": 17
+    "order": 407
   },
   {
     "id": "ce-pro-profile-merged",
@@ -766,7 +757,7 @@
     "title": "Profile",
     "product": "CE Pro",
     "category": "Profile",
-    "order": 20
+    "order": 500
   },
   {
     "id": "ce-pro-coverage-prediction-overview",
@@ -774,7 +765,7 @@
     "title": "Coverage Prediction Overview",
     "product": "CE Pro",
     "category": "Coverage Prediction",
-    "order": 30
+    "order": 600
   },
   {
     "id": "ce-pro-rcp-coverage-tools",
@@ -782,7 +773,7 @@
     "title": "RCP Coverage Tools",
     "product": "CE Pro",
     "category": "Coverage Prediction",
-    "order": 31
+    "order": 601
   },
   {
     "id": "ce-pro-rlp-mesh-networks",
@@ -790,7 +781,7 @@
     "title": "Mesh Networks",
     "product": "CE Pro",
     "category": "RLP Tools",
-    "order": 40
+    "order": 700
   },
   {
     "id": "ce-pro-rlp-radio-links",
@@ -798,7 +789,7 @@
     "title": "Radio Links",
     "product": "CE Pro",
     "category": "RLP Tools",
-    "order": 41
+    "order": 701
   },
   {
     "id": "ce-pro-emf-tools",
@@ -806,7 +797,7 @@
     "title": "EMF Tools",
     "product": "CE Pro",
     "category": "EMF Tools",
-    "order": 50
+    "order": 800
   },
   {
     "id": "ce-pro-about",
@@ -814,14 +805,22 @@
     "title": "About",
     "product": "CE Pro",
     "category": "About",
-    "order": 90
+    "order": 1200
   },
   {
     "id": "ce-pro-technical-support",
     "path": "docs/ce-pro/technical-support.md",
     "title": "Technical Support",
     "product": "CE Pro",
-    "category": "About",
-    "order": 91
+    "category": "Technical Support",
+    "order": 1300
+  },
+  {
+    "id": "ce-express-user-guide",
+    "path": "docs/ce-express/user-guide/user-guide-v7.3.md",
+    "title": "User Guide v7.3 (Full)",
+    "product": "CE Express",
+    "category": "Full User Guide",
+    "order": 1100
   }
 ]

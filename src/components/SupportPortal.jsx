@@ -15,6 +15,12 @@ import { StableInput, StableTextarea } from "./StableInput";
 import SupportRequestForm from "./SupportRequestForm";
 import ceLogoIcon from "../assets/ce-logo-icon.png";
 
+// Every request needs to carry the session cookie (credentials: 'include')
+// for the server to know who's logged in — a plain fetch() wouldn't send it.
+const apiFetch = (url, options = {}) =>
+  window.fetch(url, { ...options, credentials: "include" });
+
+
 const SC = {
   Open: "#d97706",
   "In Progress": "var(--accent)",
@@ -124,24 +130,27 @@ export default function SupportPortal({ onViewDocs }) {
 
   const isAdmin =
     currentUser?.role === "admin" || currentUser?.role === "agent";
-  // Restore a saved session on page load/refresh
+  // Restore a saved session on page load/refresh — ask the server (which
+  // verifies the httpOnly cookie) rather than trusting whatever role a
+  // tampered localStorage value might claim.
   useEffect(() => {
-    const saved = localStorage.getItem("ce_support_user");
-    if (saved) {
-      try {
-        const u = JSON.parse(saved);
-        setCurrentUser(u);
-        setTab(
-          u.role === "admin" || u.role === "agent" ? "adm-dashboard" : "chat",
-        );
-      } catch {}
-    }
+    apiFetch(`${API_BASE}/auth/me`)
+      .then((r) => (r.ok ? r.json() : null))
+      .then((u) => {
+        if (u) {
+          setCurrentUser(u);
+          setTab(
+            u.role === "admin" || u.role === "agent" ? "adm-dashboard" : "chat",
+          );
+        }
+      })
+      .catch(() => {});
   }, []);
 
   // Load the real user list for the admin "Users" tab
   useEffect(() => {
     if (isAdmin) {
-      fetch(`${API_BASE}/auth/users`)
+      apiFetch(`${API_BASE}/auth/users`)
         .then((r) => r.json())
         .then(setUsers)
         .catch(() => {});
@@ -151,7 +160,7 @@ export default function SupportPortal({ onViewDocs }) {
   const loadDocsList = () => {
     setDocsLoading(true);
     setDocsError("");
-    fetch(`${API_BASE}/docs`)
+    apiFetch(`${API_BASE}/docs`)
       .then((r) => r.json())
       .then((rows) => {
         setDocsList(rows);
@@ -181,14 +190,14 @@ export default function SupportPortal({ onViewDocs }) {
     const url = isAdmin
       ? `${API_BASE}/tickets`
       : `${API_BASE}/tickets?userId=${currentUser?.id}`;
-    fetch(url)
+    apiFetch(url)
       .then((r) => r.json())
       .then(setTickets)
       .catch(() => {});
   };
 
   const loadFaq = () => {
-    fetch(`${API_BASE}/faq`)
+    apiFetch(`${API_BASE}/faq`)
       .then((r) => r.json())
       .then(setFaqItems)
       .catch(() => {});
@@ -207,7 +216,7 @@ export default function SupportPortal({ onViewDocs }) {
 
   const openEditDoc = async (docId) => {
     setDocsError("");
-    const res = await fetch(`${API_BASE}/docs/${docId}`);
+    const res = await apiFetch(`${API_BASE}/docs/${docId}`);
     if (!res.ok) {
       setDocsError("Could not load this document.");
       return;
@@ -251,7 +260,7 @@ export default function SupportPortal({ onViewDocs }) {
           ? `${API_BASE}/docs`
           : `${API_BASE}/docs/${docDraft.doc_id}`;
       const method = docMode === "new" ? "POST" : "PUT";
-      const res = await fetch(url, {
+      const res = await apiFetch(url, {
         method,
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(docDraft),
@@ -272,7 +281,7 @@ export default function SupportPortal({ onViewDocs }) {
 
   const deleteDoc = async (docId) => {
     if (!window.confirm(`Delete "${docId}"? This cannot be undone.`)) return;
-    const res = await fetch(`${API_BASE}/docs/${docId}`, { method: "DELETE" });
+    const res = await apiFetch(`${API_BASE}/docs/${docId}`, { method: "DELETE" });
     if (res.ok) {
       setDocsList((p) => p.filter((d) => d.doc_id !== docId));
     } else {
@@ -291,7 +300,7 @@ export default function SupportPortal({ onViewDocs }) {
       form.append("image", newImgFile);
       form.append("caption", newImgCaption);
       form.append("section_anchor", newImgAnchor);
-      const res = await fetch(
+      const res = await apiFetch(
         `${API_BASE}/docs/${docDraft.doc_id}/images/upload`,
         { method: "POST", body: form },
       );
@@ -314,7 +323,7 @@ export default function SupportPortal({ onViewDocs }) {
 
   const deleteImage = async (imageId) => {
     if (!window.confirm("Delete this image?")) return;
-    const res = await fetch(
+    const res = await apiFetch(
       `${API_BASE}/docs/${docDraft.doc_id}/images/${imageId}`,
       { method: "DELETE" },
     );
@@ -332,7 +341,7 @@ export default function SupportPortal({ onViewDocs }) {
   ).length;
   const logActivity = (activityType, page, details = "") => {
     if (!currentUser) return;
-    fetch("http://localhost:8000/admin/log-activity", {
+    apiFetch("http://localhost:8000/admin/log-activity", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -375,7 +384,7 @@ export default function SupportPortal({ onViewDocs }) {
   // ── Auth (real backend calls) ────────────────────────────────────────────────
   const handleLogin = async (email, password) => {
     try {
-      const res = await fetch(`${API_BASE}/auth/login`, {
+      const res = await apiFetch(`${API_BASE}/auth/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
@@ -384,7 +393,6 @@ export default function SupportPortal({ onViewDocs }) {
       if (!res.ok) return { ok: false, error: data.error || "Sign in failed." };
       setCurrentUser(data);
       logActivity("login", "Support Portal", "User logged in");
-      localStorage.setItem("ce_support_user", JSON.stringify(data));
       setTab(
         data.role === "admin" || data.role === "agent"
           ? "adm-dashboard"
@@ -401,7 +409,7 @@ export default function SupportPortal({ onViewDocs }) {
 
   const sendRegisterCode = async (regData) => {
     try {
-      const res = await fetch(`${API_BASE}/auth/register/send-code`, {
+      const res = await apiFetch(`${API_BASE}/auth/register/send-code`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(regData),
@@ -423,7 +431,7 @@ export default function SupportPortal({ onViewDocs }) {
 
   const verifyRegisterCode = async (email, code) => {
     try {
-      const res = await fetch(`${API_BASE}/auth/register/verify`, {
+      const res = await apiFetch(`${API_BASE}/auth/register/verify`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, code }),
@@ -433,7 +441,6 @@ export default function SupportPortal({ onViewDocs }) {
         return { ok: false, error: data.error || "Verification failed." };
       setCurrentUser(data);
       logActivity("register", "Support Portal", "New user registered");
-      localStorage.setItem("ce_support_user", JSON.stringify(data));
       setTab("chat");
       return { ok: true };
     } catch {
@@ -446,7 +453,7 @@ export default function SupportPortal({ onViewDocs }) {
 
   const sendResetCode = async (email) => {
     try {
-      const res = await fetch(`${API_BASE}/auth/forgot-password/send-code`, {
+      const res = await apiFetch(`${API_BASE}/auth/forgot-password/send-code`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email }),
@@ -465,7 +472,7 @@ export default function SupportPortal({ onViewDocs }) {
 
   const verifyResetCode = async (email, code, newPassword) => {
     try {
-      const res = await fetch(`${API_BASE}/auth/forgot-password/verify`, {
+      const res = await apiFetch(`${API_BASE}/auth/forgot-password/verify`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, code, newPassword }),
@@ -483,11 +490,11 @@ export default function SupportPortal({ onViewDocs }) {
 
   const logout = () => {
     logActivity("logout", "Support Portal", "User logged out");
+    apiFetch(`${API_BASE}/auth/logout`, { method: "POST" }).catch(() => {});
     setCurrentUser(null);
     setMessages([]);
     setShowSug(true);
     setTab("chat");
-    localStorage.removeItem("ce_support_user");
   };
 
   const startNewConversation = () => {
@@ -505,7 +512,7 @@ export default function SupportPortal({ onViewDocs }) {
     setTyping(true);
 
     try {
-      const response = await fetch("http://127.0.0.1:8000/ask", {
+      const response = await apiFetch("http://127.0.0.1:8000/ask", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -599,7 +606,7 @@ export default function SupportPortal({ onViewDocs }) {
   // ── Tickets ───────────────────────────────────────────────────────────────
   const createTicket = async (data) => {
     try {
-      const res = await fetch(`${API_BASE}/tickets`, {
+      const res = await apiFetch(`${API_BASE}/tickets`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -619,7 +626,7 @@ export default function SupportPortal({ onViewDocs }) {
         try {
           const fd = new FormData();
           fd.append("screenshot", data.screenshot);
-          await fetch(`${API_BASE}/tickets/${ticket.id}/attachment`, {
+          await apiFetch(`${API_BASE}/tickets/${ticket.id}/attachment`, {
             method: "POST",
             body: fd,
           });
@@ -639,7 +646,7 @@ export default function SupportPortal({ onViewDocs }) {
   };
 
   const replyTicket = async (id, text) => {
-    await fetch(`${API_BASE}/tickets/${id}/messages`, {
+    await apiFetch(`${API_BASE}/tickets/${id}/messages`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -657,14 +664,14 @@ export default function SupportPortal({ onViewDocs }) {
   const [activeTktMessages, setActiveTktMessages] = useState({});
   const [admTktMessages, setAdmTktMessages] = useState({});
   const fetchTicketMessages = async (id, isAdminSide = false) => {
-    const res = await fetch(`${API_BASE}/tickets/${id}`);
+    const res = await apiFetch(`${API_BASE}/tickets/${id}`);
     const data = await res.json();
     if (isAdminSide) setAdmTktMessages((p) => ({ ...p, [id]: data.messages }));
     else setActiveTktMessages((p) => ({ ...p, [id]: data.messages }));
   };
 
   const updateTicketStatus = async (id, status) => {
-    await fetch(`${API_BASE}/tickets/${id}/status`, {
+    await apiFetch(`${API_BASE}/tickets/${id}/status`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ status }),
@@ -2513,7 +2520,7 @@ export default function SupportPortal({ onViewDocs }) {
 
   // ── Admin Users ───────────────────────────────────────────────────────────
   const changeUserRole = async (id, role) => {
-    const res = await fetch(`${API_BASE}/auth/users/${id}/role`, {
+    const res = await apiFetch(`${API_BASE}/auth/users/${id}/role`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ role }),
@@ -2525,7 +2532,7 @@ export default function SupportPortal({ onViewDocs }) {
   };
 
   const changeUserProduct = async (id, product) => {
-    const res = await fetch(`${API_BASE}/auth/users/${id}/product`, {
+    const res = await apiFetch(`${API_BASE}/auth/users/${id}/product`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ product }),
@@ -2564,7 +2571,7 @@ export default function SupportPortal({ onViewDocs }) {
           ? `${API_BASE}/faq`
           : `${API_BASE}/faq/${faqDraft.id}`;
       const method = faqMode === "new" ? "POST" : "PUT";
-      const res = await fetch(url, {
+      const res = await apiFetch(url, {
         method,
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(faqDraft),
@@ -2586,7 +2593,7 @@ export default function SupportPortal({ onViewDocs }) {
   };
   const deleteFaq = async (id) => {
     if (!window.confirm("Delete this FAQ item?")) return;
-    await fetch(`${API_BASE}/faq/${id}`, { method: "DELETE" });
+    await apiFetch(`${API_BASE}/faq/${id}`, { method: "DELETE" });
     loadFaq();
   };
 
@@ -3011,7 +3018,7 @@ export default function SupportPortal({ onViewDocs }) {
     const [error, setError] = useState("");
 
     useEffect(() => {
-      fetch("http://localhost:8000/admin/ai-insights")
+      apiFetch("http://localhost:8000/admin/ai-insights")
         .then((response) => {
           if (!response.ok) {
             throw new Error("Failed to load AI insights");
