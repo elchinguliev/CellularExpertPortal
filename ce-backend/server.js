@@ -249,9 +249,22 @@ app.post('/api/auth/login', async (req, res) => {
 // Called once when the app loads to check "am I already logged in?" — reads
 // the httpOnly cookie server-side instead of trusting anything from the
 // client, so a tampered localStorage value can no longer fake a role.
-app.get('/api/auth/me', (req, res) => {
+app.get('/api/auth/me', async (req, res) => {
   if (!req.user) return res.status(401).json({ error: 'Not logged in' });
-  res.json(req.user);
+  try {
+    // The session cookie only carries id/name/email/role (kept small on
+    // purpose) — always look up the full, current profile from the database
+    // rather than trusting whatever was baked into the token at login time.
+    const { rows } = await pool.query(
+      `SELECT id, name, email, company, product, role, avatar, created_at
+       FROM users WHERE id = $1`,
+      [req.user.id]
+    );
+    if (rows.length === 0) return res.status(401).json({ error: 'Account not found' });
+    res.json(rows[0]);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
 });
 
 app.post('/api/auth/logout', (req, res) => {

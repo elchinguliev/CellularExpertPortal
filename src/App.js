@@ -9,7 +9,7 @@ import {
 } from "./useGithubDocs";
 import SupportPortal from "./components/SupportPortal";
 import SearchBar from "./components/SearchBar";
-import ceLogoIcon from "./assets/ce-logo-icon.png";
+import ceLogoFull from "./assets/ce-logo-full.png";
 
 // ── Theme ─────────────────────────────────────────────────────────────────────
 function useTheme() {
@@ -120,7 +120,8 @@ function renderMD(text) {
         .replace(/[^a-z0-9\s]/g, "")
         .trim()
         .replace(/\s+/g, "-");
-      html += `<h${lvl} id="${id}">${inline(hm[2])}</h${lvl}>`;
+      const displayText = hm[2].replace(/^\d+(\.\d+)*\.?\s+/, "");
+      html += `<h${lvl} id="${id}">${inline(displayText)}</h${lvl}>`;
       continue;
     }
     if (/^---+$/.test(line.trim())) {
@@ -384,31 +385,14 @@ background:
         }}
       >
         <img
-          src={ceLogoIcon}
+          src={ceLogoFull}
           alt="Cellular Expert"
           style={{
-            width: 30,
-            height: 30,
-            borderRadius: 7,
+            height: 34,
             objectFit: "contain",
             display: "block",
           }}
         />
-        <div>
-          <div
-            style={{
-              fontFamily: "var(--font-display)",
-              fontWeight: 800,
-              fontSize: 13,
-              color: "#3949ce",
-              letterSpacing: "0.01em",
-              lineHeight: 1.05,
-            }}
-          >
-            <div>CELLULAR</div>
-            <div>EXPERT</div>
-          </div>
-        </div>
       </div>
 
       {view === "docs" && (
@@ -693,7 +677,7 @@ const HeroSection = ({ onDocsClick, onSupportClick }) => {
                 padding: "12px 28px",
                 background: "var(--accent)",
                 border: "none",
-                color: "#050e1a",
+                color: "#ffffff",
                 borderRadius: 8,
                 fontFamily: "var(--font-mono)",
                 fontSize: 11,
@@ -787,7 +771,7 @@ const ProductsSection = ({ onDocsClick }) => {
         "Best server, SINR, throughput maps",
         "Drive-test data validation",
       ],
-      docId: "ce-pro-rcp",
+      docId: "ce-pro-overview",
     },
     {
       name: "CE Express",
@@ -801,7 +785,7 @@ const ProductsSection = ({ onDocsClick }) => {
         "CE Inventory3D integrated",
         "Full RF prediction suite",
       ],
-      docId: "ce-express-introduction",
+      docId: "ce-express-overview-merged",
     },
     {
       name: "Inventory3D",
@@ -816,6 +800,20 @@ const ProductsSection = ({ onDocsClick }) => {
         "SketchUp plug-in available",
       ],
       docId: "inventory3d-user-guide",
+    },
+    {
+      name: "Geodata",
+      tag: "Data Requirements",
+      icon: "🗺",
+      color: "#f59e0b",
+      desc: "Geographic data foundation shared across CE Express and CE Desktop Pro — terrain, clutter, buildings, and antenna patterns.",
+      features: [
+        "DTM / terrain grid formats",
+        "Clutter classes & heights",
+        "Building & antenna pattern data",
+        "Resolution & format requirements",
+      ],
+      docId: "geodata-requirements",
     },
   ];
   return (
@@ -863,7 +861,7 @@ const ProductsSection = ({ onDocsClick }) => {
       <div
         style={{
           display: "grid",
-          gridTemplateColumns: "repeat(3,1fr)",
+          gridTemplateColumns: "repeat(2, 1fr)",
           gap: 20,
         }}
       >
@@ -2343,27 +2341,14 @@ const Footer = () => (
     >
       <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
         <img
-          src={ceLogoIcon}
+          src={ceLogoFull}
           alt="Cellular Expert"
           style={{
-            width: 24,
-            height: 24,
-            borderRadius: 6,
+            height: 26,
             objectFit: "contain",
             display: "block",
           }}
         />
-        <span
-          style={{
-            fontFamily: "var(--font-display)",
-            fontSize: 14,
-            fontWeight: 700,
-            color: "var(--text-bright)",
-            letterSpacing: "0.04em",
-          }}
-        >
-          CELLULAR EXPERT
-        </span>
       </div>
       <div
         style={{ fontSize: 11, color: "var(--text-dim)", textAlign: "center" }}
@@ -2397,7 +2382,7 @@ const Footer = () => (
 export default function App() {
   const [dark, toggleDark] = useTheme();
   // view: 'main' | 'docs' | 'support'
-  const [view, setView] = useState("main");
+  const [view, setViewRaw] = useState("main");
   const [activeDocId, setActiveDocId] = useState(null);
   const [doc, setDoc] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -2454,17 +2439,20 @@ export default function App() {
     return () => document.removeEventListener("click", h);
   }, []);
 
-  const loadDoc = useCallback(async (id, anchorId) => {
+  const loadDoc = useCallback(async (id, anchorId, skipHistory) => {
     if (!id) {
       setDoc(null);
       setActiveDocId(null);
       return;
     }
-    setView("docs");
+    setViewRaw("docs");
     setActiveDocId(id);
     setLoading(true);
     setDoc(null);
     window.scrollTo(0, 0);
+    if (!skipHistory) {
+      window.history.pushState({ view: "docs", docId: id }, "", `/docs/${encodeURIComponent(id)}`);
+    }
     const result = await fetchDoc(id);
     setDoc(result);
     setLoading(false);
@@ -2476,6 +2464,56 @@ export default function App() {
       }, 80);
     }
   }, []);
+
+  // Every view change (Home / Docs list / Support) is funneled through this
+  // single wrapper so the browser's Back/Forward buttons always land the
+  // user back where they actually were, instead of doing nothing (which is
+  // what happens when an app changes what it shows without ever touching
+  // the URL). Kept under the name "setView" so every existing call site
+  // (Navbar, DocsHome, SupportSection, etc.) keeps working unchanged.
+  const setView = useCallback((newView, skipHistory) => {
+    setViewRaw(newView);
+    if (newView !== "docs") {
+      setActiveDocId(null);
+      setDoc(null);
+    }
+    if (!skipHistory) {
+      const path = newView === "support" ? "/support" : newView === "docs" ? "/docs" : "/";
+      window.history.pushState({ view: newView, docId: null }, "", path);
+    }
+  }, []);
+
+  // Respond to the browser's Back/Forward buttons, and support opening a
+  // direct link to a specific doc or the Support view.
+  useEffect(() => {
+    const onPopState = (e) => {
+      const state = e.state;
+      if (state && state.view === "docs" && state.docId) {
+        loadDoc(state.docId, null, true);
+      } else if (state && state.view === "support") {
+        setView("support", true);
+      } else {
+        setView("main", true);
+      }
+    };
+    window.addEventListener("popstate", onPopState);
+
+    // On first load, honor a direct URL (e.g. someone bookmarked or shared
+    // a /docs/:id link) and establish a matching history entry.
+    const path = window.location.pathname;
+    const docMatch = path.match(/^\/docs\/(.+)/);
+    if (docMatch) {
+      loadDoc(decodeURIComponent(docMatch[1]), null, true);
+      window.history.replaceState({ view: "docs", docId: decodeURIComponent(docMatch[1]) }, "", path);
+    } else if (path === "/support") {
+      setView("support", true);
+      window.history.replaceState({ view: "support", docId: null }, "", path);
+    } else {
+      window.history.replaceState({ view: "main", docId: null }, "", "/");
+    }
+
+    return () => window.removeEventListener("popstate", onPopState);
+  }, [loadDoc, setView]);
 
   return (
     <div

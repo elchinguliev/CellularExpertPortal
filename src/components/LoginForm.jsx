@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import ceLogoIcon from '../assets/ce-logo-icon.png';
+import ceLogoFull from '../assets/ce-logo-full.png';
 
 const labelSt = {display:'block',fontSize:10,color:'var(--text-dim)',fontFamily:'var(--font-mono)',letterSpacing:'.12em',textTransform:'uppercase',marginBottom:5};
 const inpSt   = {width:'100%',padding:'10px 13px',border:'1px solid var(--border)',borderRadius:9,fontSize:13,color:'var(--text-bright)',background:'var(--bg)',outline:'none',boxSizing:'border-box',fontFamily:'var(--font)',transition:'border-color .15s, box-shadow .15s'};
@@ -20,13 +20,10 @@ function FocusInput(props) {
 const Logo = () => (
   <div style={{textAlign:'center',marginBottom:26}}>
     <img
-      src={ceLogoIcon}
+      src={ceLogoFull}
       alt="Cellular Expert"
-      style={{width:48,height:48,borderRadius:14,objectFit:'contain',marginBottom:14,display:'inline-block'}}
+      style={{height:54,objectFit:'contain',marginBottom:10,display:'inline-block'}}
     />
- <div style={{fontFamily:'var(--font-display)',fontSize:20,fontWeight:800,color:'#3949ce',letterSpacing:'.01em',lineHeight:1.1,marginBottom:4}}>
-      CELLULAR EXPERT
-    </div>
     <div style={{fontSize:12,color:'var(--text-dim)'}}>Support Portal — Sign in to continue</div>
   </div>
 );

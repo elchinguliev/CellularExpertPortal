@@ -12,7 +12,7 @@ import ReplyBox from "./ReplyBox";
 import ChatComposer from "./ChatComposer";
 import { StableInput, StableTextarea } from "./StableInput";
 import SupportRequestForm from "./SupportRequestForm";
-import ceLogoIcon from "../assets/ce-logo-icon.png";
+import ceLogoFull from "../assets/ce-logo-full.png";
 
 // Every request needs to carry the session cookie (credentials: 'include')
 // for the server to know who's logged in — a plain fetch() wouldn't send it.
@@ -704,31 +704,11 @@ export default function SupportPortal({ onViewDocs }) {
             marginBottom: 2,
           }}
         >
-          <div
-            style={{
-              width: 22,
-              height: 22,
-              borderRadius: 6,
-              overflow: "hidden",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              flexShrink: 0,
-            }}
-          >
-            <img src={ceLogoIcon} alt="" style={{ width: "100%", height: "100%", objectFit: "contain" }} />
-          </div>
-          <div
-            style={{
-              fontFamily: "var(--font-display)",
-              fontSize: 14,
-              fontWeight: 700,
-              color: "var(--text-bright)",
-              letterSpacing: ".04em",
-            }}
-          >
-            Support
-          </div>
+          <img
+            src={ceLogoFull}
+            alt="Cellular Expert"
+            style={{ height: 24, objectFit: "contain", display: "block" }}
+          />
         </div>
         <div
           style={{
