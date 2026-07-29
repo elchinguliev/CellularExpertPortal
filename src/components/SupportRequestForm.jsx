@@ -26,8 +26,45 @@ export default function SupportRequestForm({ API_BASE, currentUser, prefillDescr
     setScreenshots(list);
   };
 
+  const removeScreenshot = (index) => {
+    setScreenshots((prev) => prev.filter((_, i) => i !== index));
+  };
+
+  // Catches the most common typo pattern: getting the provider name right
+  // but the domain ending wrong (gmail.co, gmail.cm, gmail.con, yahoo.co,
+  // mail.ru misspelled, etc.) — checked against the actual, correct domain
+  // for each well-known free-mail provider.
+  const KNOWN_PROVIDERS = {
+    gmail: 'gmail.com',
+    googlemail: 'googlemail.com',
+    yahoo: 'yahoo.com',
+    outlook: 'outlook.com',
+    hotmail: 'hotmail.com',
+    icloud: 'icloud.com',
+    mail: 'mail.ru',
+    yandex: 'yandex.ru',
+    protonmail: 'protonmail.com',
+    aol: 'aol.com',
+  };
+
+  const validateEmail = (value) => {
+    const trimmed = value.trim();
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(trimmed)) {
+      return 'Please enter a valid email address.';
+    }
+    const domain = trimmed.split('@')[1].toLowerCase();
+    const providerName = domain.split('.')[0];
+    const correctDomain = KNOWN_PROVIDERS[providerName];
+    if (correctDomain && domain !== correctDomain) {
+      return `Did you mean "${providerName}@${correctDomain.split('.').slice(-2).join('.')}"? "${domain}" isn't a real ${providerName} domain.`;
+    }
+    return '';
+  };
+
   const sendCode = async () => {
     if (!email || !fullName || !description) { setError('Email, full name, and description are required.'); return; }
+    const emailError = validateEmail(email);
+    if (emailError) { setError(emailError); return; }
     setBusy(true); setError('');
     try {
       const res = await fetch(`${API_BASE}/support/send-code`, {
@@ -117,7 +154,18 @@ export default function SupportRequestForm({ API_BASE, currentUser, prefillDescr
             <label style={labelSt}>Screenshots (optional, up to 5)</label>
             <input type="file" accept="image/*" multiple onChange={e => pickScreenshots(e.target.files)}
               style={{fontSize:11,color:'var(--text-dim)'}} />
-            {screenshots.length > 0 && <div style={{fontSize:10,color:'var(--text-dim)',marginTop:4}}>{screenshots.length} file(s) selected</div>}
+            {screenshots.length > 0 && (
+              <div style={{marginTop:6,display:'flex',flexDirection:'column',gap:4}}>
+                {screenshots.map((f, i) => (
+                  <div key={i} style={{display:'flex',alignItems:'center',justifyContent:'space-between',gap:8,padding:'5px 9px',background:'var(--bg2)',border:'1px solid var(--border)',borderRadius:6,fontSize:10.5,color:'var(--text-dim)'}}>
+                    <span style={{overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap'}}>{f.name}</span>
+                    <button type="button" onClick={() => removeScreenshot(i)}
+                      style={{flexShrink:0,width:18,height:18,borderRadius:'50%',border:'none',background:'#dc262620',color:'#dc2626',fontSize:11,lineHeight:'18px',cursor:'pointer',padding:0}}
+                      title="Remove">✕</button>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
           <div style={{display:'flex',gap:8}}>
             <button onClick={sendCode} disabled={busy} style={{padding:'8px 16px',borderRadius:8,border:'none',background:'var(--accent)',color:'#fff',fontSize:12,fontWeight:600,cursor:'pointer'}}>

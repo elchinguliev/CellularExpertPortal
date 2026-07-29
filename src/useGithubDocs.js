@@ -2,76 +2,74 @@ const API_BASE = 'http://localhost:4000/api';
 const SERVER_BASE = 'http://localhost:4000'; // used for /downloads/... static PDF files
 
 export const DOC_INDEX = [
-  { id:'ce-express-admin-guide', path:'docs/ce-express/user-guide/admin-guide-v7.2.md', title:'Administrator Guide v7.2', product:'CE Express', category:'Administrator Guide', order:1000 },
-  { id:'ce-express-tr-workspace', path:'docs/ce-express/training/01-creating-workspace.md', title:'01 — Creating Workspace', product:'CE Express', category:'Training', order:900 },
-  { id:'ce-express-tr-objects', path:'docs/ce-express/training/02-create-objects.md', title:'02 — Create Objects', product:'CE Express', category:'Training', order:901 },
-  { id:'ce-express-tr-los', path:'docs/ce-express/training/03-line-of-sight.md', title:'03 — Line of Sight', product:'CE Express', category:'Training', order:902 },
-  { id:'ce-express-tr-rf', path:'docs/ce-express/training/04-rf-prediction.md', title:'04 — RF Prediction', product:'CE Express', category:'Training', order:903 },
-  { id:'ce-express-tr-import', path:'docs/ce-express/training/05-import-data.md', title:'05 — Import Data', product:'CE Express', category:'Training', order:904 },
-  { id:'ce-express-tr-models', path:'docs/ce-express/training/06-prediction-models.md', title:'06 — Prediction Models', product:'CE Express', category:'Training', order:905 },
-  { id:'ce-express-tr-mw-eq', path:'docs/ce-express/training/07-mw-equipment.md', title:'07 — MW Equipment', product:'CE Express', category:'Training', order:906 },
-  { id:'ce-express-tr-mw-pred', path:'docs/ce-express/training/08-mw-prediction.md', title:'08 — MW Prediction', product:'CE Express', category:'Training', order:907 },
-  { id:'ce-express-tr-geodata', path:'docs/ce-express/training/09-preparing-geodata.md', title:'09 — Preparing Geodata', product:'CE Express', category:'Training', order:908 },
-  { id:'ce-pro-tr-install', path:'docs/ce-pro/training/00-installation.md', title:'00 — Installation', product:'CE Pro', category:'Training', order:1100 },
-  { id:'ce-pro-tr-data', path:'docs/ce-pro/training/01-data-types.md', title:'01 — Data Types', product:'CE Pro', category:'Training', order:1101 },
-  { id:'ce-pro-tr-arch', path:'docs/ce-pro/training/02-architecture.md', title:'02 — Architecture', product:'CE Pro', category:'Training', order:1102 },
-  { id:'ce-pro-tr-agenda', path:'docs/ce-pro/training/03-agenda.md', title:'03 — Agenda', product:'CE Pro', category:'Training', order:1103 },
-  { id:'ce-pro-tr-workspace', path:'docs/ce-pro/training/04-workspace.md', title:'04 — Workspace', product:'CE Pro', category:'Training', order:1104 },
-  { id:'ce-pro-tr-los', path:'docs/ce-pro/training/05-line-of-sight.md', title:'05 — Line of Sight', product:'CE Pro', category:'Training', order:1105 },
-  { id:'ce-pro-tr-objects', path:'docs/ce-pro/training/06-objects.md', title:'06 — Objects', product:'CE Pro', category:'Training', order:1106 },
-  { id:'ce-pro-tr-cell-pred', path:'docs/ce-pro/training/07-cell-prediction.md', title:'07 — Cell Prediction', product:'CE Pro', category:'Training', order:1107 },
-  { id:'ce-pro-tr-models', path:'docs/ce-pro/training/08-prediction-models.md', title:'08 — Prediction Models', product:'CE Pro', category:'Training', order:1108 },
-  { id:'ce-pro-tr-import', path:'docs/ce-pro/training/09-importing-data.md', title:'09 — Importing Data', product:'CE Pro', category:'Training', order:1109 },
-  { id:'ce-pro-tr-rl', path:'docs/ce-pro/training/10-rl-prediction.md', title:'10 — RL Prediction', product:'CE Pro', category:'Training', order:1110 },
+  { id:'ce-express-admin-guide', path:'docs/ce-express/user-guide/admin-guide-v7.2.md', title:'Administrator Guide', product:'CE Express', category:'Administrator Guide', order:1000 },
+  { id:'ce-express-tr-workspace', path:'docs/ce-express/training/01-creating-workspace.md', title:'— Creating Workspace', product:'CE Express', category:'Training', order:900 },
+  { id:'ce-express-tr-objects', path:'docs/ce-express/training/02-create-objects.md', title:'— Create Objects', product:'CE Express', category:'Training', order:901 },
+  { id:'ce-express-tr-los', path:'docs/ce-express/training/03-line-of-sight.md', title:'— Line of Sight', product:'CE Express', category:'Training', order:902 },
+  { id:'ce-express-tr-rf', path:'docs/ce-express/training/04-rf-prediction.md', title:'— RF Prediction', product:'CE Express', category:'Training', order:903 },
+  { id:'ce-express-tr-import', path:'docs/ce-express/training/05-import-data.md', title:'— Import Data', product:'CE Express', category:'Training', order:904 },
+  { id:'ce-express-tr-models', path:'docs/ce-express/training/06-prediction-models.md', title:'— Prediction Models', product:'CE Express', category:'Training', order:905 },
+  { id:'ce-express-tr-mw-eq', path:'docs/ce-express/training/07-mw-equipment.md', title:'— MW Equipment', product:'CE Express', category:'Training', order:906 },
+  { id:'ce-express-tr-mw-pred', path:'docs/ce-express/training/08-mw-prediction.md', title:'— MW Prediction', product:'CE Express', category:'Training', order:907 },
+  { id:'ce-express-tr-geodata', path:'docs/ce-express/training/09-preparing-geodata.md', title:'— Preparing Geodata', product:'CE Express', category:'Training', order:908 },
+  { id:'ce-pro-tr-install', path:'docs/ce-pro/training/00-installation.md', title:'— Installation', product:'CE Pro', category:'Training', order:1100 },
+  { id:'ce-pro-tr-data', path:'docs/ce-pro/training/01-data-types.md', title:'— Data Types', product:'CE Pro', category:'Training', order:1101 },
+  { id:'ce-pro-tr-arch', path:'docs/ce-pro/training/02-architecture.md', title:'— Architecture', product:'CE Pro', category:'Training', order:1102 },
+  { id:'ce-pro-tr-agenda', path:'docs/ce-pro/training/03-agenda.md', title:'— Agenda', product:'CE Pro', category:'Training', order:1103 },
+  { id:'ce-pro-tr-workspace', path:'docs/ce-pro/training/04-workspace.md', title:'— Workspace', product:'CE Pro', category:'Training', order:1104 },
+  { id:'ce-pro-tr-los', path:'docs/ce-pro/training/05-line-of-sight.md', title:'— Line of Sight', product:'CE Pro', category:'Training', order:1105 },
+  { id:'ce-pro-tr-objects', path:'docs/ce-pro/training/06-objects.md', title:'— Objects', product:'CE Pro', category:'Training', order:1106 },
+  { id:'ce-pro-tr-cell-pred', path:'docs/ce-pro/training/07-cell-prediction.md', title:'— Cell Prediction', product:'CE Pro', category:'Training', order:1107 },
+  { id:'ce-pro-tr-models', path:'docs/ce-pro/training/08-prediction-models.md', title:'— Prediction Models', product:'CE Pro', category:'Training', order:1108 },
+  { id:'ce-pro-tr-import', path:'docs/ce-pro/training/09-importing-data.md', title:'— Importing Data', product:'CE Pro', category:'Training', order:1109 },
+  { id:'ce-pro-tr-rl', path:'docs/ce-pro/training/10-rl-prediction.md', title:'— RL Prediction', product:'CE Pro', category:'Training', order:1110 },
   { id:'geodata-requirements', path:'docs/geodata/geodata-requirements.md', title:'Geodata Requirements', product:'Both', category:'Geodata Requirements', order:100 },
   { id:'geodata-network-objects', path:'docs/geodata/network-objects-requirements.md', title:'Network Object Requirements', product:'Both', category:'Network Object Requirements', order:200 },
   { id:'inventory3d-user-guide', path:'docs/inventory3d/user-guide.md', title:'Inventory3D User Guide v4.6', product:'Inventory3D', category:'User Guides', order:1 },
-  { id:'ce-express-v73-3-1-cellular-expert-express-tools', path:'docs/ce-express/user-guide/v73-sections/3-1-cellular-expert-express-tools.md', title:'3.1 Cellular Expert Express tools', product:'CE Express', category:'Express Tools', order:300 },
-  { id:'ce-express-v73-3-1-1-workspaces', path:'docs/ce-express/user-guide/v73-sections/3-1-1-workspaces.md', title:'3.1.1 Workspaces', product:'CE Express', category:'Express Tools', order:301 },
-  { id:'ce-express-v73-3-1-2-features', path:'docs/ce-express/user-guide/v73-sections/3-1-2-features.md', title:'3.1.2 Features', product:'CE Express', category:'Express Tools', order:302 },
-  { id:'ce-express-v73-3-1-3-networks', path:'docs/ce-express/user-guide/v73-sections/3-1-3-networks.md', title:'3.1.3 Networks', product:'CE Express', category:'Express Tools', order:303 },
-  { id:'ce-express-v73-3-1-4-layers', path:'docs/ce-express/user-guide/v73-sections/3-1-4-layers.md', title:'3.1.4 Layers', product:'CE Express', category:'Express Tools', order:304 },
-  { id:'ce-express-v73-3-1-5-prediction-history', path:'docs/ce-express/user-guide/v73-sections/3-1-5-prediction-history.md', title:'3.1.5 Prediction history', product:'CE Express', category:'Express Tools', order:305 },
-  { id:'ce-express-v73-3-1-6-antennas', path:'docs/ce-express/user-guide/v73-sections/3-1-6-antennas.md', title:'3.1.6 Antennas', product:'CE Express', category:'Express Tools', order:306 },
-  { id:'ce-express-v73-3-1-7-geodata-sets', path:'docs/ce-express/user-guide/v73-sections/3-1-7-geodata-sets.md', title:'3.1.7 Geodata sets', product:'CE Express', category:'Express Tools', order:307 },
-  { id:'ce-express-v73-3-1-8-feature-templates', path:'docs/ce-express/user-guide/v73-sections/3-1-8-feature-templates.md', title:'3.1.8 Feature templates', product:'CE Express', category:'Express Tools', order:308 },
-  { id:'ce-express-v73-3-1-9-prediction-models', path:'docs/ce-express/user-guide/v73-sections/3-1-9-prediction-models.md', title:'3.1.9 Prediction models', product:'CE Express', category:'Express Tools', order:309 },
-  { id:'ce-express-v73-3-1-10-settings', path:'docs/ce-express/user-guide/v73-sections/3-1-10-settings.md', title:'3.1.10 Settings', product:'CE Express', category:'Express Tools', order:310 },
-  { id:'ce-express-v73-3-1-11-identify', path:'docs/ce-express/user-guide/v73-sections/3-1-11-identify.md', title:'3.1.11 Identify', product:'CE Express', category:'Express Tools', order:311 },
-  { id:'ce-express-v73-3-1-12-measurement-tool', path:'docs/ce-express/user-guide/v73-sections/3-1-12-measurement-tool.md', title:'3.1.12 Measurement tool', product:'CE Express', category:'Express Tools', order:312 },
-  { id:'ce-express-v73-3-1-13-network-statistics', path:'docs/ce-express/user-guide/v73-sections/3-1-13-network-statistics.md', title:'3.1.13 Network statistics', product:'CE Express', category:'Express Tools', order:313 },
-  { id:'ce-express-v73-3-1-14-street-view', path:'docs/ce-express/user-guide/v73-sections/3-1-14-street-view.md', title:'3.1.14 Street view', product:'CE Express', category:'Express Tools', order:314 },
-  { id:'ce-express-v73-3-1-15-feature-report', path:'docs/ce-express/user-guide/v73-sections/3-1-15-feature-report.md', title:'3.1.15 Feature report', product:'CE Express', category:'Express Tools', order:315 },
-  { id:'ce-express-v73-3-1-16-profile', path:'docs/ce-express/user-guide/v73-sections/3-1-16-profile.md', title:'3.1.16 Profile', product:'CE Express', category:'Express Tools', order:316 },
-  { id:'ce-express-v73-3-1-17-quick-rf-prediction', path:'docs/ce-express/user-guide/v73-sections/3-1-17-quick-rf-prediction.md', title:'3.1.17 Quick RF Prediction', product:'CE Express', category:'Express Tools', order:317 },
-  { id:'ce-express-v73-3-1-18-rf-prediction', path:'docs/ce-express/user-guide/v73-sections/3-1-18-rf-prediction.md', title:'3.1.18 RF Prediction', product:'CE Express', category:'Express Tools', order:318 },
-  { id:'ce-express-v73-3-1-19-3d-rf-prediction', path:'docs/ce-express/user-guide/v73-sections/3-1-19-3d-rf-prediction.md', title:'3.1.19 3D RF Prediction', product:'CE Express', category:'Express Tools', order:319 },
-  { id:'ce-express-v73-3-1-20-visibility-prediction', path:'docs/ce-express/user-guide/v73-sections/3-1-20-visibility-prediction.md', title:'3.1.20 Visibility prediction', product:'CE Express', category:'Express Tools', order:320 },
-  { id:'ce-express-v73-3-1-21-antenna-visibility-prediction', path:'docs/ce-express/user-guide/v73-sections/3-1-21-antenna-visibility-prediction.md', title:'3.1.21 Antenna visibility prediction', product:'CE Express', category:'Express Tools', order:321 },
-  { id:'ce-express-v73-3-1-22-minimum-receiver-height', path:'docs/ce-express/user-guide/v73-sections/3-1-22-minimum-receiver-height.md', title:'3.1.22 Minimum receiver height', product:'CE Express', category:'Express Tools', order:322 },
-  { id:'ce-express-v73-3-1-23-quick-minimum-receiver-height', path:'docs/ce-express/user-guide/v73-sections/3-1-23-quick-minimum-receiver-height.md', title:'3.1.23 Quick minimum receiver height', product:'CE Express', category:'Express Tools', order:323 },
-  { id:'ce-express-v73-3-1-24-radar-prediction', path:'docs/ce-express/user-guide/v73-sections/3-1-24-radar-prediction.md', title:'3.1.24 Radar prediction', product:'CE Express', category:'Express Tools', order:324 },
-  { id:'ce-express-v73-3-1-25-network-availability', path:'docs/ce-express/user-guide/v73-sections/3-1-25-network-availability.md', title:'3.1.25 Network availability', product:'CE Express', category:'Express Tools', order:325 },
-  { id:'ce-express-v73-3-1-26-model-tuning', path:'docs/ce-express/user-guide/v73-sections/3-1-26-model-tuning.md', title:'3.1.26 Model Tuning', product:'CE Express', category:'Express Tools', order:326 },
-  { id:'ce-express-v73-3-1-27-optimal-placement', path:'docs/ce-express/user-guide/v73-sections/3-1-27-optimal-placement.md', title:'3.1.27 Optimal placement', product:'CE Express', category:'Express Tools', order:327 },
-  { id:'ce-express-v73-3-1-28-utilities', path:'docs/ce-express/user-guide/v73-sections/3-1-28-utilities.md', title:'3.1.28 Utilities', product:'CE Express', category:'Express Tools', order:328 },
-  { id:'ce-express-v73-3-1-29-points-to-dxf', path:'docs/ce-express/user-guide/v73-sections/3-1-29-points-to-dxf.md', title:'3.1.29 Points to DXF', product:'CE Express', category:'Express Tools', order:329 },
-  { id:'ce-express-v73-3-1-30-emf', path:'docs/ce-express/user-guide/v73-sections/3-1-30-emf.md', title:'3.1.30 EMF', product:'CE Express', category:'Express Tools', order:330 },
-  { id:'ce-express-v73-3-1-31-audibility', path:'docs/ce-express/user-guide/v73-sections/3-1-31-audibility.md', title:'3.1.31 Audibility', product:'CE Express', category:'Express Tools', order:331 },
-  { id:'ce-express-v73-3-1-32-lux-calculation', path:'docs/ce-express/user-guide/v73-sections/3-1-32-lux-calculation.md', title:'3.1.32 Lux calculation', product:'CE Express', category:'Express Tools', order:332 },
-  { id:'ce-express-v73-3-1-33-geoclimatic-data', path:'docs/ce-express/user-guide/v73-sections/3-1-33-geoclimatic-data.md', title:'3.1.33 Geoclimatic data', product:'CE Express', category:'Express Tools', order:333 },
-  { id:'ce-express-v73-3-1-34-spectrum-masks', path:'docs/ce-express/user-guide/v73-sections/3-1-34-spectrum-masks.md', title:'3.1.34 Spectrum masks', product:'CE Express', category:'Express Tools', order:334 },
-  { id:'ce-express-v73-3-1-35-radios', path:'docs/ce-express/user-guide/v73-sections/3-1-35-radios.md', title:'3.1.35 Radios', product:'CE Express', category:'Express Tools', order:335 },
-  { id:'ce-express-v73-3-1-36-frequency-plans', path:'docs/ce-express/user-guide/v73-sections/3-1-36-frequency-plans.md', title:'3.1.36 Frequency plans', product:'CE Express', category:'Express Tools', order:336 },
-  { id:'ce-express-v73-3-1-37-link-prediction', path:'docs/ce-express/user-guide/v73-sections/3-1-37-link-prediction.md', title:'3.1.37 Link prediction', product:'CE Express', category:'Express Tools', order:337 },
-  { id:'ce-express-v73-3-1-38-automatic-frequency-planning', path:'docs/ce-express/user-guide/v73-sections/3-1-38-automatic-frequency-planning.md', title:'3.1.38 Automatic frequency planning', product:'CE Express', category:'Express Tools', order:338 },
-  { id:'ce-express-v73-3-1-39-link-hcm-fs-prediction', path:'docs/ce-express/user-guide/v73-sections/3-1-39-link-hcm-fs-prediction.md', title:'3.1.39 Link HCM-FS prediction', product:'CE Express', category:'Express Tools', order:339 },
-  { id:'ce-express-v73-3-1-40-mesh-topology-builder', path:'docs/ce-express/user-guide/v73-sections/3-1-40-mesh-topology-builder.md', title:'3.1.40 Mesh topology builder', product:'CE Express', category:'Express Tools', order:340 },
-  { id:'ce-express-v73-3-1-41-mesh-connectivity', path:'docs/ce-express/user-guide/v73-sections/3-1-41-mesh-connectivity.md', title:'3.1.41 Mesh connectivity', product:'CE Express', category:'Express Tools', order:341 },
-  { id:'ce-express-v73-3-1-42-quick-mesh-connectivity', path:'docs/ce-express/user-guide/v73-sections/3-1-42-quick-mesh-connectivity.md', title:'3.1.42 Quick mesh connectivity', product:'CE Express', category:'Express Tools', order:342 },
-  { id:'ce-express-v73-3-1-43-quick-hcm-fs-prediction', path:'docs/ce-express/user-guide/v73-sections/3-1-43-quick-hcm-fs-prediction.md', title:'3.1.43 Quick HCM-FS prediction', product:'CE Express', category:'Express Tools', order:343 },
-  { id:'ce-express-v73-3-1-44-hcm-requests', path:'docs/ce-express/user-guide/v73-sections/3-1-44-hcm-requests.md', title:'3.1.44 HCM requests', product:'CE Express', category:'Express Tools', order:344 },
-  { id:'ce-express-admin-guide-only', path:'docs/ce-express/user-guide/admin-guide-only-v7.2.md', title:'Administrator Guide (Express Only) v7.2', product:'CE Express', category:'Administrator Guide', order:1001 },
+  { id:'ce-express-v73-3-1-1-workspaces', path:'docs/ce-express/user-guide/v73-sections/3-1-1-workspaces.md', title:'Workspaces', product:'CE Express', category:'Express Tools', order:301 },
+  { id:'ce-express-v73-3-1-2-features', path:'docs/ce-express/user-guide/v73-sections/3-1-2-features.md', title:'Features', product:'CE Express', category:'Express Tools', order:302 },
+  { id:'ce-express-v73-3-1-3-networks', path:'docs/ce-express/user-guide/v73-sections/3-1-3-networks.md', title:'Networks', product:'CE Express', category:'Express Tools', order:303 },
+  { id:'ce-express-v73-3-1-4-layers', path:'docs/ce-express/user-guide/v73-sections/3-1-4-layers.md', title:'Layers', product:'CE Express', category:'Express Tools', order:304 },
+  { id:'ce-express-v73-3-1-5-prediction-history', path:'docs/ce-express/user-guide/v73-sections/3-1-5-prediction-history.md', title:'Prediction history', product:'CE Express', category:'Express Tools', order:305 },
+  { id:'ce-express-v73-3-1-6-antennas', path:'docs/ce-express/user-guide/v73-sections/3-1-6-antennas.md', title:'Antennas', product:'CE Express', category:'Express Tools', order:306 },
+  { id:'ce-express-v73-3-1-7-geodata-sets', path:'docs/ce-express/user-guide/v73-sections/3-1-7-geodata-sets.md', title:'Geodata sets', product:'CE Express', category:'Express Tools', order:307 },
+  { id:'ce-express-v73-3-1-8-feature-templates', path:'docs/ce-express/user-guide/v73-sections/3-1-8-feature-templates.md', title:'Feature templates', product:'CE Express', category:'Express Tools', order:308 },
+  { id:'ce-express-v73-3-1-9-prediction-models', path:'docs/ce-express/user-guide/v73-sections/3-1-9-prediction-models.md', title:'Prediction models', product:'CE Express', category:'Express Tools', order:309 },
+  { id:'ce-express-v73-3-1-10-settings', path:'docs/ce-express/user-guide/v73-sections/3-1-10-settings.md', title:'Settings', product:'CE Express', category:'Express Tools', order:310 },
+  { id:'ce-express-v73-3-1-11-identify', path:'docs/ce-express/user-guide/v73-sections/3-1-11-identify.md', title:'Identify', product:'CE Express', category:'Express Tools', order:311 },
+  { id:'ce-express-v73-3-1-12-measurement-tool', path:'docs/ce-express/user-guide/v73-sections/3-1-12-measurement-tool.md', title:'Measurement tool', product:'CE Express', category:'Express Tools', order:312 },
+  { id:'ce-express-v73-3-1-13-network-statistics', path:'docs/ce-express/user-guide/v73-sections/3-1-13-network-statistics.md', title:'Network statistics', product:'CE Express', category:'Express Tools', order:313 },
+  { id:'ce-express-v73-3-1-14-street-view', path:'docs/ce-express/user-guide/v73-sections/3-1-14-street-view.md', title:'Street view', product:'CE Express', category:'Express Tools', order:314 },
+  { id:'ce-express-v73-3-1-15-feature-report', path:'docs/ce-express/user-guide/v73-sections/3-1-15-feature-report.md', title:'Feature report', product:'CE Express', category:'Express Tools', order:315 },
+  { id:'ce-express-v73-3-1-16-profile', path:'docs/ce-express/user-guide/v73-sections/3-1-16-profile.md', title:'Profile', product:'CE Express', category:'Express Tools', order:316 },
+  { id:'ce-express-v73-3-1-17-quick-rf-prediction', path:'docs/ce-express/user-guide/v73-sections/3-1-17-quick-rf-prediction.md', title:'Quick RF Prediction', product:'CE Express', category:'Express Tools', order:317 },
+  { id:'ce-express-v73-3-1-18-rf-prediction', path:'docs/ce-express/user-guide/v73-sections/3-1-18-rf-prediction.md', title:'RF Prediction', product:'CE Express', category:'Express Tools', order:318 },
+  { id:'ce-express-v73-3-1-19-3d-rf-prediction', path:'docs/ce-express/user-guide/v73-sections/3-1-19-3d-rf-prediction.md', title:'3D RF Prediction', product:'CE Express', category:'Express Tools', order:319 },
+  { id:'ce-express-v73-3-1-20-visibility-prediction', path:'docs/ce-express/user-guide/v73-sections/3-1-20-visibility-prediction.md', title:'Visibility prediction', product:'CE Express', category:'Express Tools', order:320 },
+  { id:'ce-express-v73-3-1-21-antenna-visibility-prediction', path:'docs/ce-express/user-guide/v73-sections/3-1-21-antenna-visibility-prediction.md', title:'Antenna visibility prediction', product:'CE Express', category:'Express Tools', order:321 },
+  { id:'ce-express-v73-3-1-22-minimum-receiver-height', path:'docs/ce-express/user-guide/v73-sections/3-1-22-minimum-receiver-height.md', title:'Minimum receiver height', product:'CE Express', category:'Express Tools', order:322 },
+  { id:'ce-express-v73-3-1-23-quick-minimum-receiver-height', path:'docs/ce-express/user-guide/v73-sections/3-1-23-quick-minimum-receiver-height.md', title:'Quick minimum receiver height', product:'CE Express', category:'Express Tools', order:323 },
+  { id:'ce-express-v73-3-1-24-radar-prediction', path:'docs/ce-express/user-guide/v73-sections/3-1-24-radar-prediction.md', title:'Radar prediction', product:'CE Express', category:'Express Tools', order:324 },
+  { id:'ce-express-v73-3-1-25-network-availability', path:'docs/ce-express/user-guide/v73-sections/3-1-25-network-availability.md', title:'Network availability', product:'CE Express', category:'Express Tools', order:325 },
+  { id:'ce-express-v73-3-1-26-model-tuning', path:'docs/ce-express/user-guide/v73-sections/3-1-26-model-tuning.md', title:'Model Tuning', product:'CE Express', category:'Express Tools', order:326 },
+  { id:'ce-express-v73-3-1-27-optimal-placement', path:'docs/ce-express/user-guide/v73-sections/3-1-27-optimal-placement.md', title:'Optimal placement', product:'CE Express', category:'Express Tools', order:327 },
+  { id:'ce-express-v73-3-1-28-utilities', path:'docs/ce-express/user-guide/v73-sections/3-1-28-utilities.md', title:'Utilities', product:'CE Express', category:'Express Tools', order:328 },
+  { id:'ce-express-v73-3-1-29-points-to-dxf', path:'docs/ce-express/user-guide/v73-sections/3-1-29-points-to-dxf.md', title:'Points to DXF', product:'CE Express', category:'Express Tools', order:329 },
+  { id:'ce-express-v73-3-1-30-emf', path:'docs/ce-express/user-guide/v73-sections/3-1-30-emf.md', title:'EMF', product:'CE Express', category:'Express Tools', order:330 },
+  { id:'ce-express-v73-3-1-31-audibility', path:'docs/ce-express/user-guide/v73-sections/3-1-31-audibility.md', title:'Audibility', product:'CE Express', category:'Express Tools', order:331 },
+  { id:'ce-express-v73-3-1-32-lux-calculation', path:'docs/ce-express/user-guide/v73-sections/3-1-32-lux-calculation.md', title:'Lux calculation', product:'CE Express', category:'Express Tools', order:332 },
+  { id:'ce-express-v73-3-1-33-geoclimatic-data', path:'docs/ce-express/user-guide/v73-sections/3-1-33-geoclimatic-data.md', title:'Geoclimatic data', product:'CE Express', category:'Express Tools', order:333 },
+  { id:'ce-express-v73-3-1-34-spectrum-masks', path:'docs/ce-express/user-guide/v73-sections/3-1-34-spectrum-masks.md', title:'Spectrum masks', product:'CE Express', category:'Express Tools', order:334 },
+  { id:'ce-express-v73-3-1-35-radios', path:'docs/ce-express/user-guide/v73-sections/3-1-35-radios.md', title:'Radios', product:'CE Express', category:'Express Tools', order:335 },
+  { id:'ce-express-v73-3-1-36-frequency-plans', path:'docs/ce-express/user-guide/v73-sections/3-1-36-frequency-plans.md', title:'Frequency plans', product:'CE Express', category:'Express Tools', order:336 },
+  { id:'ce-express-v73-3-1-37-link-prediction', path:'docs/ce-express/user-guide/v73-sections/3-1-37-link-prediction.md', title:'Link prediction', product:'CE Express', category:'Express Tools', order:337 },
+  { id:'ce-express-v73-3-1-38-automatic-frequency-planning', path:'docs/ce-express/user-guide/v73-sections/3-1-38-automatic-frequency-planning.md', title:'Automatic frequency planning', product:'CE Express', category:'Express Tools', order:338 },
+  { id:'ce-express-v73-3-1-39-link-hcm-fs-prediction', path:'docs/ce-express/user-guide/v73-sections/3-1-39-link-hcm-fs-prediction.md', title:'Link HCM-FS prediction', product:'CE Express', category:'Express Tools', order:339 },
+  { id:'ce-express-v73-3-1-40-mesh-topology-builder', path:'docs/ce-express/user-guide/v73-sections/3-1-40-mesh-topology-builder.md', title:'Mesh topology builder', product:'CE Express', category:'Express Tools', order:340 },
+  { id:'ce-express-v73-3-1-41-mesh-connectivity', path:'docs/ce-express/user-guide/v73-sections/3-1-41-mesh-connectivity.md', title:'Mesh connectivity', product:'CE Express', category:'Express Tools', order:341 },
+  { id:'ce-express-v73-3-1-42-quick-mesh-connectivity', path:'docs/ce-express/user-guide/v73-sections/3-1-42-quick-mesh-connectivity.md', title:'Quick mesh connectivity', product:'CE Express', category:'Express Tools', order:342 },
+  { id:'ce-express-v73-3-1-43-quick-hcm-fs-prediction', path:'docs/ce-express/user-guide/v73-sections/3-1-43-quick-hcm-fs-prediction.md', title:'Quick HCM-FS prediction', product:'CE Express', category:'Express Tools', order:343 },
+  { id:'ce-express-v73-3-1-44-hcm-requests', path:'docs/ce-express/user-guide/v73-sections/3-1-44-hcm-requests.md', title:'HCM requests', product:'CE Express', category:'Express Tools', order:344 },
   { id:'ce-express-overview-merged', path:'docs/ce-express/user-guide/sections/overview.md', title:'Overview / Getting Started', product:'CE Express', category:'Getting Started', order:100 },
   { id:'ce-express-map-view-overview', path:'docs/ce-express/user-guide/sections/map-view-overview.md', title:'Map View Overview', product:'CE Express', category:'Map View', order:200 },
   { id:'ce-express-map', path:'docs/ce-express/user-guide/sections/map.md', title:'Map', product:'CE Express', category:'Map View', order:201 },
@@ -101,7 +99,8 @@ export const DOC_INDEX = [
   { id:'ce-pro-emf-tools', path:'docs/ce-pro/emf-tools.md', title:'EMF Tools', product:'CE Pro', category:'EMF Tools', order:800 },
   { id:'ce-pro-about', path:'docs/ce-pro/about.md', title:'About', product:'CE Pro', category:'About', order:1200 },
   { id:'ce-pro-technical-support', path:'docs/ce-pro/technical-support.md', title:'Technical Support', product:'CE Pro', category:'Technical Support', order:1300 },
-  { id:'ce-express-user-guide', path:'docs/ce-express/user-guide/user-guide-v7.3.md', title:'User Guide v7.3 (Full)', product:'CE Express', category:'Full User Guide', order:1100 },
+  { id:'ce-pro-indoor-tools', path:'docs/ce-pro/indoor-tools.md', title:'Indoor Tools', product:'CE Pro', category:'Indoor Tools', order:900 },
+  { id:'ce-pro-sound-tools', path:'docs/ce-pro/sound-tools.md', title:'Sound Tools', product:'CE Pro', category:'Sound Tools', order:1000 },
 ];
 
 // Friendlier display names for known products. Anything not listed here
@@ -270,6 +269,15 @@ export function searchIndex(query) {
   const q = query.toLowerCase().trim();
   if (!q) return [];
   const words = q.split(/\s+/).filter(w => w.length > 1);
+
+  // "Does any actual word in this text start with the query?" — e.g. for
+  // query "log", the word "login" qualifies but "topology" does not, even
+  // though "topology" happens to contain the letters "l-o-g" in the middle
+  // of "topology". Matching whole words instead of arbitrary substrings
+  // avoids these false positives.
+  const wordStartsWith = (text, w) =>
+    text.split(/[^a-z0-9]+/).some((token) => token.startsWith(w));
+
   return DOC_INDEX
     .map(doc => {
       let score = 0;
@@ -280,26 +288,24 @@ export function searchIndex(query) {
       const content = cache[doc.id]?.content || '';
 
       words.forEach(w => {
-        // Exact or prefix matches are much stronger signals than "contains
-        // this substring anywhere" — especially important for short queries
-        // like "tr", where "training".startsWith("tr") should clearly beat
-        // "structure".includes("tr") deep inside some unrelated article.
-        if (category === w)              score += 30;
-        else if (category.startsWith(w)) score += 20;
-        else if (category.includes(w))   score += 4;
+        if (category === w)                    score += 30;
+        else if (category.startsWith(w))        score += 20;
+        else if (wordStartsWith(category, w))   score += 12;
+        else if (category.includes(w))          score += 2;
 
-        if (title.startsWith(w))    score += 18;
-        else if (title.includes(w)) score += 10;
+        if (title.startsWith(w))                score += 18;
+        else if (wordStartsWith(title, w))       score += 12;
+        else if (title.includes(w))              score += 3;
 
-        if (product === w)              score += 12;
-        else if (product.startsWith(w)) score += 8;
-        else if (product.includes(w))   score += 2;
+        if (product === w)                      score += 12;
+        else if (product.startsWith(w))         score += 8;
+        else if (wordStartsWith(product, w))     score += 5;
 
-        // Scanning full article content for a 2-3 letter substring produces
+        // Scanning full article content for a very short substring produces
         // mostly noise (e.g. "tr" inside "structure", "extract", "control").
-        // Only do content matching once the query is specific enough to mean
-        // something on its own.
-        if (content && w.length >= 4) {
+        // 3 letters is usually enough to mean something on its own (e.g.
+        // "log" as in "login") without being too noisy.
+        if (content && w.length >= 3) {
           const occurrences = content.toLowerCase().split(w).length - 1;
           if (occurrences > 0) {
             score += Math.min(occurrences, 5);

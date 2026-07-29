@@ -4,7 +4,6 @@ import {
   SUGGESTED,
   SEED_TICKETS,
   AGENTS,
-  SUPPORT_EMAIL,
 } from "../supportData";
 import { API_BASE } from "../useGithubDocs";
 import LoginForm from "./LoginForm";
@@ -341,7 +340,7 @@ export default function SupportPortal({ onViewDocs }) {
   ).length;
   const logActivity = (activityType, page, details = "") => {
     if (!currentUser) return;
-    apiFetch("http://localhost:8000/admin/log-activity", {
+    fetch("http://localhost:8000/admin/log-activity", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -512,7 +511,7 @@ export default function SupportPortal({ onViewDocs }) {
     setTyping(true);
 
     try {
-      const response = await apiFetch("http://127.0.0.1:8000/ask", {
+      const response = await fetch("http://127.0.0.1:8000/ask", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -1076,7 +1075,18 @@ export default function SupportPortal({ onViewDocs }) {
                           ✓ Yes, resolved — new topic
                         </button>
                         <button
-                          onClick={() => setTab("tickets")}
+                          onClick={() => {
+                            setTab("chat");
+                            setMessages((p) => [
+                              ...p,
+                              {
+                                from: "bot",
+                                time: now(),
+                                type: "text",
+                                text: "Sure — what else would you like to know?",
+                              },
+                            ]);
+                          }}
                           style={{
                             padding: "5px 11px",
                             background: "transparent",
@@ -1087,10 +1097,10 @@ export default function SupportPortal({ onViewDocs }) {
                             cursor: "pointer",
                           }}
                         >
-                          ◉ Open a ticket
+                          ◉ Still need help?
                         </button>
-                        <a
-                          href={`mailto:${SUPPORT_EMAIL}`}
+                        <button
+                          onClick={() => { setSupportFormPrefill(""); setShowSupportForm(true); }}
                           style={{
                             padding: "5px 11px",
                             background: "transparent",
@@ -1098,11 +1108,11 @@ export default function SupportPortal({ onViewDocs }) {
                             borderRadius: 7,
                             color: "var(--text-dim)",
                             fontSize: 11,
-                            textDecoration: "none",
+                            cursor: "pointer",
                           }}
                         >
                           ✉ Email support
-                        </a>
+                        </button>
                         <button
                           onClick={onViewDocs}
                           style={{
@@ -1237,7 +1247,18 @@ export default function SupportPortal({ onViewDocs }) {
                         ✓ Resolved — new topic
                       </button>
                       <button
-                        onClick={() => setTab("tickets")}
+                        onClick={() => {
+                          setTab("chat");
+                          setMessages((p) => [
+                            ...p,
+                            {
+                              from: "bot",
+                              time: now(),
+                              type: "text",
+                              text: "Sure — what else would you like to know?",
+                            },
+                          ]);
+                        }}
                         style={{
                           padding: "5px 11px",
                           background: "transparent",
@@ -1250,8 +1271,8 @@ export default function SupportPortal({ onViewDocs }) {
                       >
                         ◉ Still need help?
                       </button>
-                      <a
-                        href={`mailto:${SUPPORT_EMAIL}`}
+                      <button
+                        onClick={() => { setSupportFormPrefill(""); setShowSupportForm(true); }}
                         style={{
                           padding: "5px 11px",
                           background: "transparent",
@@ -1259,11 +1280,11 @@ export default function SupportPortal({ onViewDocs }) {
                           borderRadius: 7,
                           color: "var(--text-dim)",
                           fontSize: 11,
-                          textDecoration: "none",
+                          cursor: "pointer",
                         }}
                       >
                         ✉ Email support
-                      </a>
+                      </button>
                       <button
                         onClick={onViewDocs}
                         style={{
@@ -3018,7 +3039,7 @@ export default function SupportPortal({ onViewDocs }) {
     const [error, setError] = useState("");
 
     useEffect(() => {
-      apiFetch("http://localhost:8000/admin/ai-insights")
+      fetch("http://localhost:8000/admin/ai-insights")
         .then((response) => {
           if (!response.ok) {
             throw new Error("Failed to load AI insights");

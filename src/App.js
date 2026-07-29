@@ -230,7 +230,7 @@ function extractTOC(c) {
       const m = l.match(/^(#{2,4})\s(.+)/);
       return {
         level: m[1].length,
-        text: m[2],
+        text: m[2].replace(/^\d+(\.\d+)*\.?\s+/, ""), // strip PDF-style numbering for display only
         id: m[2]
           .toLowerCase()
           .replace(/[^a-z0-9\s]/g, "")
@@ -274,6 +274,14 @@ const ART_CSS = `
   @keyframes spin{to{transform:rotate(360deg)}}
   @keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
   @keyframes pulse{0%,100%{opacity:1}50%{opacity:0.5}}
+
+  @media print {
+    .no-print, nav, aside { display: none !important; }
+    body { background: #fff !important; }
+    .art { color: #000 !important; max-width: 100% !important; }
+    .art h1, .art h2, .art h3, .art h4 { color: #000 !important; }
+    .art p, .art li, .art td, .art th { color: #000 !important; }
+  }
 `;
 
 // ── CE Logo SVG ───────────────────────────────────────────────────────────────
@@ -391,7 +399,7 @@ background:
             style={{
               fontFamily: "var(--font-display)",
               fontWeight: 800,
-              fontSize: 20,
+              fontSize: 13,
               color: "#3949ce",
               letterSpacing: "0.01em",
               lineHeight: 1.05,
@@ -405,7 +413,7 @@ background:
 
       {view === "docs" && (
         <div style={{ flex: 1, maxWidth: 420 }}>
-          <SearchBar onSelectDoc={onDocsSelect} />
+          <SearchBar onSelectDoc={onDocsSelect} onSupportClick={() => setView("support")} />
         </div>
       )}
 
@@ -1324,7 +1332,11 @@ const DocsSidebar = React.memo(function DocsSidebar({ activeDocId, onSelect, nav
               : "1px solid transparent",
           }}
         >
-          🏠 <span>Documentation Home</span>
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}>
+            <path d="M3 9.5 12 3l9 6.5" />
+            <path d="M5 9.5V20a1 1 0 0 0 1 1h4v-6h4v6h4a1 1 0 0 0 1-1V9.5" />
+          </svg>
+          <span>Documentation Home</span>
         </div>
       </div>
       {Object.entries(nav).map(([section, cats]) => (
@@ -1410,6 +1422,34 @@ const DocsSidebar = React.memo(function DocsSidebar({ activeDocId, onSelect, nav
 
 const TOC = React.memo(function TOC({ toc }) {
   const [active, setActive] = useState("");
+
+  useEffect(() => {
+    if (!toc.length) return;
+    const headingEls = toc
+      .map((h) => document.getElementById(h.id))
+      .filter(Boolean);
+    if (!headingEls.length) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        // Pick the heading closest to the top of the viewport among the
+        // ones currently visible, so "active" tracks scroll position
+        // instead of only updating when the user clicks a link.
+        const visible = entries.filter((e) => e.isIntersecting);
+        if (visible.length > 0) {
+          const topMost = visible.reduce((a, b) =>
+            a.boundingClientRect.top < b.boundingClientRect.top ? a : b,
+          );
+          setActive(topMost.target.id);
+        }
+      },
+      { rootMargin: "-96px 0px -70% 0px", threshold: 0 },
+    );
+
+    headingEls.forEach((el) => observer.observe(el));
+    return () => observer.disconnect();
+  }, [toc]);
+
   if (!toc.length) return null;
   return (
     <aside
@@ -1936,6 +1976,28 @@ const DocArticle = React.memo(function DocArticle({ doc, onSelect }) {
             ⬇ Download PDF
           </a>
         )}
+        <button
+          onClick={() => window.print()}
+          className="no-print"
+          style={{
+            display: "inline-flex",
+            alignItems: "center",
+            gap: 8,
+            padding: "8px 14px",
+            borderRadius: 8,
+            fontSize: 12,
+            fontWeight: 600,
+            color: "var(--text)",
+            background: "var(--bg2)",
+            border: "1px solid var(--border)",
+            marginBottom: 16,
+            marginLeft: doc.pdf_path ? 8 : 10,
+            cursor: "pointer",
+            fontFamily: "var(--font-mono)",
+          }}
+        >
+          🖶 Print / Save as PDF
+        </button>
         <div
           className="art"
           dangerouslySetInnerHTML={{
@@ -2392,7 +2454,7 @@ export default function App() {
     return () => document.removeEventListener("click", h);
   }, []);
 
-  const loadDoc = useCallback(async (id) => {
+  const loadDoc = useCallback(async (id, anchorId) => {
     if (!id) {
       setDoc(null);
       setActiveDocId(null);
@@ -2406,6 +2468,13 @@ export default function App() {
     const result = await fetchDoc(id);
     setDoc(result);
     setLoading(false);
+    if (anchorId) {
+      // Wait a tick for the article HTML to actually be in the DOM before
+      // trying to scroll to a heading inside it.
+      setTimeout(() => {
+        document.getElementById(anchorId)?.scrollIntoView({ behavior: "smooth", block: "start" });
+      }, 80);
+    }
   }, []);
 
   return (

@@ -1,10 +1,9 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { searchIndex, searchAPI } from '../useGithubDocs';
 
-const SUPPORT_EMAIL = 'support@cellular-expert.com';
 const PC = {'CE Express':'#0077cc','CE Pro':'#059669','Both':'#d97706','Training':'#7c3aed','Inventory3D':'#0ea5e9'};
 
-export default function SearchBar({ onSelectDoc }) {
+export default function SearchBar({ onSelectDoc, onSupportClick }) {
   const [q,        setQ]        = useState('');
   const [results,  setResults]  = useState([]);
   const [showDrop, setShowDrop] = useState(false);
@@ -28,8 +27,19 @@ export default function SearchBar({ onSelectDoc }) {
     // the more relevant local ranking.
     if (query.length < 4) return;
     let cancelled = false;
+    const localResults = searchIndex(q);
     searchAPI(q).then(apiResults => {
-      if (!cancelled && apiResults.length > 0) setResults(apiResults);
+      if (cancelled || apiResults.length === 0) return;
+      // The backend only knows about whole documents, not headings — carry
+      // over any heading-level match we already found locally so clicking
+      // a result still jumps straight to the right section.
+      const merged = apiResults.map(r => {
+        const local = localResults.find(l => l.id === r.id);
+        return local?.matchedHeadingId
+          ? { ...r, matchedHeadingId: local.matchedHeadingId, matchedHeadingText: local.matchedHeadingText }
+          : r;
+      });
+      setResults(merged);
     });
     return () => { cancelled = true; };
   }, [q]);
@@ -60,7 +70,7 @@ export default function SearchBar({ onSelectDoc }) {
         <div style={{position:'absolute',top:'100%',left:0,right:0,background:'var(--bg2)',border:'1px solid var(--border)',borderRadius:10,marginTop:6,boxShadow:'var(--shadow-lg)',zIndex:500,maxHeight:420,overflowY:'auto'}}>
           {results.length > 0 ? results.map(d => (
             <div key={d.id}
-              onClick={() => { onSelectDoc(d.id); setQ(''); setShowDrop(false); }}
+              onClick={() => { onSelectDoc(d.id, d.matchedHeadingId); setQ(''); setShowDrop(false); }}
               style={{padding:'11px 14px',cursor:'pointer',borderBottom:'1px solid var(--border)',transition:'background .1s'}}
               onMouseEnter={e => e.currentTarget.style.background='var(--bg3)'}
               onMouseLeave={e => e.currentTarget.style.background='transparent'}>
@@ -68,14 +78,23 @@ export default function SearchBar({ onSelectDoc }) {
                 <span style={{fontSize:13.5,fontWeight:600,color:'var(--text-bright)'}}>{d.title}</span>
                 <span style={{fontSize:9,fontWeight:600,color:PC[d.product]||'var(--text-dim)',background:`${PC[d.product]||'#888'}18`,border:`1px solid ${PC[d.product]||'#888'}40`,padding:'1px 6px',borderRadius:10,fontFamily:'var(--font-mono)'}}>{d.product}</span>
               </div>
-              <div style={{fontSize:11,color:'var(--text-dim)',marginBottom:d.snippet?4:0}}>{d.category}</div>
+              <div style={{fontSize:11,color:'var(--text-dim)',marginBottom:(d.snippet||d.matchedHeadingText)?4:0}}>{d.category}</div>
+              {d.matchedHeadingText && (
+                <div style={{fontSize:11,color:'var(--accent)',fontWeight:600,marginBottom:d.snippet?4:0}}>→ {d.matchedHeadingText}</div>
+              )}
               {d.snippet && (
                 <div style={{fontSize:11.5,color:'var(--text)',lineHeight:1.5,fontStyle:'italic'}}>{d.snippet}</div>
               )}
             </div>
           )) : (
             <div style={{padding:16,textAlign:'center',fontSize:13,color:'var(--text-dim)'}}>
-              No results — <a href={`mailto:${SUPPORT_EMAIL}`} style={{color:'var(--accent)'}}>contact support</a>
+              No results —{' '}
+              <span
+                onClick={() => { onSupportClick && onSupportClick(); setQ(''); setShowDrop(false); }}
+                style={{color:'var(--accent)',cursor:'pointer',fontWeight:600}}
+              >
+                ask the AI assistant
+              </span>
             </div>
           )}
         </div>
