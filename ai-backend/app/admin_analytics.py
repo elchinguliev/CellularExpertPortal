@@ -1,16 +1,20 @@
+import os
 import psycopg2
 from psycopg2.extras import RealDictCursor
 from decimal import Decimal
 from datetime import datetime
+from dotenv import load_dotenv
 
+load_dotenv()
 
 DB_CONFIG = {
-    "host": "localhost",
-    "port": 5432,
-    "dbname": "cellular_expert_docs",
-    "user": "postgres",
-    "password": "cellular123",
+    "host": os.getenv("DB_HOST", "localhost"),
+    "port": int(os.getenv("DB_PORT", "5432")),
+    "dbname": os.getenv("DB_NAME", "cellular_expert_docs"),
+    "user": os.getenv("DB_USER", "postgres"),
+    "password": os.getenv("DB_PASSWORD", "cellular123"),
 }
+DB_SCHEMA = os.getenv("DB_SCHEMA", "public")
 
 
 def make_json_safe(value):
@@ -50,6 +54,7 @@ def get_ai_insights():
 
     connection = psycopg2.connect(**DB_CONFIG)
     cursor = connection.cursor(cursor_factory=RealDictCursor)
+    cursor.execute(f"SET search_path TO {DB_SCHEMA};")
 
     cursor.execute("""
         SELECT
