@@ -12,17 +12,17 @@ export const DOC_INDEX = [
   { id:'ce-express-tr-mw-eq', path:'docs/ce-express/training/07-mw-equipment.md', title:'— MW Equipment', product:'CE Express', category:'Training', order:906 },
   { id:'ce-express-tr-mw-pred', path:'docs/ce-express/training/08-mw-prediction.md', title:'— MW Prediction', product:'CE Express', category:'Training', order:907 },
   { id:'ce-express-tr-geodata', path:'docs/ce-express/training/09-preparing-geodata.md', title:'— Preparing Geodata', product:'CE Express', category:'Training', order:908 },
-  { id:'ce-pro-tr-install', path:'docs/ce-pro/training/00-installation.md', title:'— Installation', product:'CE Pro', category:'Training', order:1100 },
-  { id:'ce-pro-tr-data', path:'docs/ce-pro/training/01-data-types.md', title:'— Data Types', product:'CE Pro', category:'Training', order:1101 },
-  { id:'ce-pro-tr-arch', path:'docs/ce-pro/training/02-architecture.md', title:'— Architecture', product:'CE Pro', category:'Training', order:1102 },
-  { id:'ce-pro-tr-agenda', path:'docs/ce-pro/training/03-agenda.md', title:'— Agenda', product:'CE Pro', category:'Training', order:1103 },
-  { id:'ce-pro-tr-workspace', path:'docs/ce-pro/training/04-workspace.md', title:'— Workspace', product:'CE Pro', category:'Training', order:1104 },
-  { id:'ce-pro-tr-los', path:'docs/ce-pro/training/05-line-of-sight.md', title:'— Line of Sight', product:'CE Pro', category:'Training', order:1105 },
-  { id:'ce-pro-tr-objects', path:'docs/ce-pro/training/06-objects.md', title:'— Objects', product:'CE Pro', category:'Training', order:1106 },
-  { id:'ce-pro-tr-cell-pred', path:'docs/ce-pro/training/07-cell-prediction.md', title:'— Cell Prediction', product:'CE Pro', category:'Training', order:1107 },
-  { id:'ce-pro-tr-models', path:'docs/ce-pro/training/08-prediction-models.md', title:'— Prediction Models', product:'CE Pro', category:'Training', order:1108 },
-  { id:'ce-pro-tr-import', path:'docs/ce-pro/training/09-importing-data.md', title:'— Importing Data', product:'CE Pro', category:'Training', order:1109 },
-  { id:'ce-pro-tr-rl', path:'docs/ce-pro/training/10-rl-prediction.md', title:'— RL Prediction', product:'CE Pro', category:'Training', order:1110 },
+  { id:'ce-pro-tr-install', path:'docs/ce-pro/training/pdf/0-installation.md', title:'— Installation', product:'CE Pro', category:'Training', order:1100 },
+  { id:'ce-pro-tr-data', path:'docs/ce-pro/training/pdf/00-data-types.md', title:'— Data Types', product:'CE Pro', category:'Training', order:1101 },
+  { id:'ce-pro-tr-arch', path:'docs/ce-pro/training/pdf/000-architecture.md', title:'— Architecture', product:'CE Pro', category:'Training', order:1102 },
+  { id:'ce-pro-tr-agenda', path:'docs/ce-pro/training/pdf/0000-agenda.md', title:'— Agenda', product:'CE Pro', category:'Training', order:1103 },
+  { id:'ce-pro-tr-workspace', path:'docs/ce-pro/training/doc/01-workspace.md', title:'— Workspace', product:'CE Pro', category:'Training', order:1104 },
+  { id:'ce-pro-tr-los', path:'docs/ce-pro/training/doc/02-line-of-sight.md', title:'— Line of Sight', product:'CE Pro', category:'Training', order:1105 },
+  { id:'ce-pro-tr-objects', path:'docs/ce-pro/training/doc/03-objects.md', title:'— Objects', product:'CE Pro', category:'Training', order:1106 },
+  { id:'ce-pro-tr-cell-pred', path:'docs/ce-pro/training/doc/04-cell-prediction.md', title:'— Cell Prediction', product:'CE Pro', category:'Training', order:1107 },
+  { id:'ce-pro-tr-models', path:'docs/ce-pro/training/doc/05-prediction-models.md', title:'— Prediction Models', product:'CE Pro', category:'Training', order:1108 },
+  { id:'ce-pro-tr-import', path:'docs/ce-pro/training/doc/06-importing-data.md', title:'— Importing Data', product:'CE Pro', category:'Training', order:1109 },
+  { id:'ce-pro-tr-rl', path:'docs/ce-pro/training/doc/07-rl-prediction.md', title:'— RL Prediction', product:'CE Pro', category:'Training', order:1110 },
   { id:'geodata-requirements', path:'docs/geodata/geodata-requirements.md', title:'Geodata Requirements', product:'Both', category:'Geodata Requirements', order:100 },
   { id:'geodata-network-objects', path:'docs/geodata/network-objects-requirements.md', title:'Network Object Requirements', product:'Both', category:'Network Object Requirements', order:200 },
   { id:'inventory3d-user-guide', path:'docs/inventory3d/user-guide.md', title:'Inventory3D User Guide v4.6', product:'Inventory3D', category:'User Guides', order:1 },
@@ -265,6 +265,24 @@ export async function searchAPI(query) {
 // Synchronous fallback search (used while the async API call is in flight,
 // or if the backend is briefly unreachable) — searches title/category/product
 // plus whatever is already cached locally.
+// Pulls out H2-H4 headings from a document's markdown content — same slug
+// algorithm used by the article renderer's h.id, so a match here can link
+// straight to that heading instead of just the top of the page.
+function extractHeadingsFromContent(content) {
+  if (!content) return [];
+  const headings = [];
+  content.split('\n').forEach((line) => {
+    const m = line.match(/^(#{2,4})\s(.+)/);
+    if (m) {
+      headings.push({
+        text: m[2].replace(/^\d+(\.\d+)*\.?\s+/, ''),
+        id: m[2].toLowerCase().replace(/[^a-z0-9\s]/g, '').trim().replace(/\s+/g, '-'),
+      });
+    }
+  });
+  return headings;
+}
+
 export function searchIndex(query) {
   const q = query.toLowerCase().trim();
   if (!q) return [];
@@ -282,10 +300,13 @@ export function searchIndex(query) {
     .map(doc => {
       let score = 0;
       let snippet = '';
+      let matchedHeadingId = null;
+      let matchedHeadingText = null;
       const title = doc.title.toLowerCase();
       const category = doc.category.toLowerCase();
       const product = doc.product.toLowerCase();
       const content = cache[doc.id]?.content || '';
+      const headings = content ? extractHeadingsFromContent(content) : [];
 
       words.forEach(w => {
         if (category === w)                    score += 30;
@@ -301,6 +322,20 @@ export function searchIndex(query) {
         else if (product.startsWith(w))         score += 8;
         else if (wordStartsWith(product, w))     score += 5;
 
+        // A query matching an actual sub-heading inside the article (e.g.
+        // searching "Prediction" and finding the "Prediction" section
+        // buried inside a longer page) is a very strong, specific signal —
+        // score it above generic body-text matches, and remember which
+        // heading matched so the result can link straight to it.
+        if (!matchedHeadingId) {
+          const hit = headings.find((h) => wordStartsWith(h.text.toLowerCase(), w));
+          if (hit) {
+            score += 22;
+            matchedHeadingId = hit.id;
+            matchedHeadingText = hit.text;
+          }
+        }
+
         // Scanning full article content for a very short substring produces
         // mostly noise (e.g. "tr" inside "structure", "extract", "control").
         // 3 letters is usually enough to mean something on its own (e.g.
@@ -313,7 +348,7 @@ export function searchIndex(query) {
           }
         }
       });
-      return { ...doc, score, snippet };
+      return { ...doc, score, snippet, matchedHeadingId, matchedHeadingText };
     })
     .filter(d => d.score > 0)
     .sort((a, b) => b.score - a.score)

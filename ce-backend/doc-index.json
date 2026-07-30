@@ -91,7 +91,7 @@
   },
   {
     "id": "ce-pro-tr-install",
-    "path": "docs/ce-pro/training/00-installation.md",
+    "path": "docs/ce-pro/training/pdf/0-installation.md",
     "title": "— Installation",
     "product": "CE Pro",
     "category": "Training",
@@ -100,7 +100,7 @@
   },
   {
     "id": "ce-pro-tr-data",
-    "path": "docs/ce-pro/training/01-data-types.md",
+    "path": "docs/ce-pro/training/pdf/00-data-types.md",
     "title": "— Data Types",
     "product": "CE Pro",
     "category": "Training",
@@ -109,7 +109,7 @@
   },
   {
     "id": "ce-pro-tr-arch",
-    "path": "docs/ce-pro/training/02-architecture.md",
+    "path": "docs/ce-pro/training/pdf/000-architecture.md",
     "title": "— Architecture",
     "product": "CE Pro",
     "category": "Training",
@@ -118,7 +118,7 @@
   },
   {
     "id": "ce-pro-tr-agenda",
-    "path": "docs/ce-pro/training/03-agenda.md",
+    "path": "docs/ce-pro/training/pdf/0000-agenda.md",
     "title": "— Agenda",
     "product": "CE Pro",
     "category": "Training",
@@ -127,7 +127,7 @@
   },
   {
     "id": "ce-pro-tr-workspace",
-    "path": "docs/ce-pro/training/04-workspace.md",
+    "path": "docs/ce-pro/training/doc/01-workspace.md",
     "title": "— Workspace",
     "product": "CE Pro",
     "category": "Training",
@@ -136,7 +136,7 @@
   },
   {
     "id": "ce-pro-tr-los",
-    "path": "docs/ce-pro/training/05-line-of-sight.md",
+    "path": "docs/ce-pro/training/doc/02-line-of-sight.md",
     "title": "— Line of Sight",
     "product": "CE Pro",
     "category": "Training",
@@ -145,7 +145,7 @@
   },
   {
     "id": "ce-pro-tr-objects",
-    "path": "docs/ce-pro/training/06-objects.md",
+    "path": "docs/ce-pro/training/doc/03-objects.md",
     "title": "— Objects",
     "product": "CE Pro",
     "category": "Training",
@@ -154,7 +154,7 @@
   },
   {
     "id": "ce-pro-tr-cell-pred",
-    "path": "docs/ce-pro/training/07-cell-prediction.md",
+    "path": "docs/ce-pro/training/doc/04-cell-prediction.md",
     "title": "— Cell Prediction",
     "product": "CE Pro",
     "category": "Training",
@@ -163,7 +163,7 @@
   },
   {
     "id": "ce-pro-tr-models",
-    "path": "docs/ce-pro/training/08-prediction-models.md",
+    "path": "docs/ce-pro/training/doc/05-prediction-models.md",
     "title": "— Prediction Models",
     "product": "CE Pro",
     "category": "Training",
@@ -172,7 +172,7 @@
   },
   {
     "id": "ce-pro-tr-import",
-    "path": "docs/ce-pro/training/09-importing-data.md",
+    "path": "docs/ce-pro/training/doc/06-importing-data.md",
     "title": "— Importing Data",
     "product": "CE Pro",
     "category": "Training",
@@ -181,7 +181,7 @@
   },
   {
     "id": "ce-pro-tr-rl",
-    "path": "docs/ce-pro/training/10-rl-prediction.md",
+    "path": "docs/ce-pro/training/doc/07-rl-prediction.md",
     "title": "— RL Prediction",
     "product": "CE Pro",
     "category": "Training",

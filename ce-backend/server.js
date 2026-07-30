@@ -18,7 +18,10 @@ const app = express();
 // credentials: true + an explicit origin (not "*") are both required for the
 // browser to actually send/accept the session cookie set below.
 app.use(cors({
-  origin: process.env.FRONTEND_ORIGIN || 'http://localhost:3000',
+  origin: [
+    'http://localhost:3000',
+    'http://10.8.0.11:3000'
+  ],
   credentials: true,
 }));
 app.use(express.json());

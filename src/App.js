@@ -6,6 +6,7 @@ import {
   SERVER_BASE,
   syncLiveDocs,
   getNav,
+  API_BASE,
 } from "./useGithubDocs";
 import SupportPortal from "./components/SupportPortal";
 import SearchBar from "./components/SearchBar";
@@ -313,9 +314,12 @@ const Navbar = React.memo(function Navbar({
   toggleDark,
   onDocsSelect,
   docsActive,
+  currentUser,
+  onLogout,
 }) {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [accountMenuOpen, setAccountMenuOpen] = useState(false);
   useEffect(() => {
     const h = () => setScrolled(window.scrollY > 20);
     window.addEventListener("scroll", h);
@@ -327,7 +331,6 @@ const Navbar = React.memo(function Navbar({
     { id: "products", label: "Products" },
     { id: "solutions", label: "Solutions" },
     { id: "docs", label: "Documentation" },
-    { id: "about", label: "About" },
     { id: "support", label: "Support" },
   ];
 
@@ -466,6 +469,132 @@ background:
           >
             {dark ? "☀️" : "🌙"}
           </button>
+        </li>
+        <li style={{ position: "relative" }}>
+          {currentUser ? (
+            <>
+              <button
+                onClick={() => setAccountMenuOpen((o) => !o)}
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 8,
+                  padding: "4px 10px 4px 4px",
+                  borderRadius: 20,
+                  border: "1px solid var(--border)",
+                  background: "transparent",
+                  cursor: "pointer",
+                  marginLeft: 4,
+                }}
+              >
+                <span
+                  style={{
+                    width: 26,
+                    height: 26,
+                    borderRadius: "50%",
+                    background: "linear-gradient(135deg, var(--accent), var(--accent2))",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    fontFamily: "var(--font-mono)",
+                    fontSize: 10,
+                    color: "#fff",
+                    fontWeight: 700,
+                    flexShrink: 0,
+                  }}
+                >
+                  {currentUser.avatar}
+                </span>
+                <span
+                  style={{
+                    fontSize: 12,
+                    color: "var(--text)",
+                    maxWidth: 100,
+                    overflow: "hidden",
+                    textOverflow: "ellipsis",
+                    whiteSpace: "nowrap",
+                  }}
+                >
+                  {currentUser.name}
+                </span>
+              </button>
+              {accountMenuOpen && (
+                <>
+                  <div
+                    onClick={() => setAccountMenuOpen(false)}
+                    style={{ position: "fixed", inset: 0, zIndex: 998 }}
+                  />
+                  <div
+                    style={{
+                      position: "absolute",
+                      right: 0,
+                      top: "calc(100% + 8px)",
+                      background: "var(--bg)",
+                      border: "1px solid var(--border)",
+                      borderRadius: 10,
+                      boxShadow: "0 12px 30px -8px rgba(0,0,0,0.25)",
+                      minWidth: 160,
+                      zIndex: 999,
+                      overflow: "hidden",
+                    }}
+                  >
+                    <button
+                      onClick={() => { setAccountMenuOpen(false); setView("support"); }}
+                      style={{
+                        display: "block",
+                        width: "100%",
+                        textAlign: "left",
+                        padding: "10px 14px",
+                        border: "none",
+                        background: "transparent",
+                        color: "var(--text)",
+                        fontSize: 12.5,
+                        cursor: "pointer",
+                      }}
+                    >
+                      ◎ Profile
+                    </button>
+                    <button
+                      onClick={() => { setAccountMenuOpen(false); onLogout(); }}
+                      style={{
+                        display: "block",
+                        width: "100%",
+                        textAlign: "left",
+                        padding: "10px 14px",
+                        border: "none",
+                        borderTop: "1px solid var(--border)",
+                        background: "transparent",
+                        color: "#dc2626",
+                        fontSize: 12.5,
+                        cursor: "pointer",
+                      }}
+                    >
+                      ⏻ Logout
+                    </button>
+                  </div>
+                </>
+              )}
+            </>
+          ) : (
+            <button
+              onClick={() => setView("support")}
+              style={{
+                padding: "7px 16px",
+                borderRadius: 8,
+                border: "none",
+                background: "var(--accent)",
+                color: "#fff",
+                fontFamily: "var(--font-mono)",
+                fontSize: 11,
+                letterSpacing: "0.06em",
+                textTransform: "uppercase",
+                cursor: "pointer",
+                marginLeft: 4,
+              }}
+            >
+              Sign In
+            </button>
+          )}
         </li>
       </ul>
     </nav>
@@ -2386,6 +2515,21 @@ export default function App() {
   const [activeDocId, setActiveDocId] = useState(null);
   const [doc, setDoc] = useState(null);
   const [loading, setLoading] = useState(false);
+
+  // Account state lives here (not inside SupportPortal) so the top navbar
+  // can show who's logged in too, instead of that info only existing deep
+  // inside the Support page.
+  const [currentUser, setCurrentUser] = useState(null);
+  useEffect(() => {
+    fetch(`${API_BASE}/auth/me`, { credentials: "include" })
+      .then((r) => (r.ok ? r.json() : null))
+      .then((u) => { if (u) setCurrentUser(u); })
+      .catch(() => {});
+  }, []);
+  const logout = useCallback(() => {
+    fetch(`${API_BASE}/auth/logout`, { method: "POST", credentials: "include" }).catch(() => {});
+    setCurrentUser(null);
+  }, []);
   const [navVersion, setNavVersion] = useState(0);
 
   // Documents created directly from the admin panel live only in Postgres —
@@ -2533,6 +2677,8 @@ export default function App() {
         toggleDark={toggleDark}
         onDocsSelect={loadDoc}
         docsActive={view === "docs"}
+        currentUser={currentUser}
+        onLogout={logout}
       />
 
       {/* MAIN SITE */}
@@ -2604,6 +2750,8 @@ export default function App() {
       {view === "support" && (
         <div style={{ marginTop: "var(--nav-h)", flex: 1, display: "flex" }}>
           <SupportPortal
+            currentUser={currentUser}
+            setCurrentUser={setCurrentUser}
             onViewDocs={() => {
               setView("docs");
               setActiveDocId(null);

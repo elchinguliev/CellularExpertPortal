@@ -12,7 +12,6 @@ import ReplyBox from "./ReplyBox";
 import ChatComposer from "./ChatComposer";
 import { StableInput, StableTextarea } from "./StableInput";
 import SupportRequestForm from "./SupportRequestForm";
-import ceLogoFull from "../assets/ce-logo-full.png";
 
 // Every request needs to carry the session cookie (credentials: 'include')
 // for the server to know who's logged in — a plain fetch() wouldn't send it.
@@ -72,8 +71,7 @@ const boldify = (text) =>
   );
 const cleanMarkdownLinks = (text = "") =>
   text.replace(/\[([^\]]+)\]\([^)]+\)/g, "$1");
-export default function SupportPortal({ onViewDocs }) {
-  const [currentUser, setCurrentUser] = useState(null);
+export default function SupportPortal({ onViewDocs, currentUser, setCurrentUser }) {
   const [users, setUsers] = useState([]);
   const [tickets, setTickets] = useState([]);
   const [selectedAdmTktId, setSelectedAdmTktId] = useState(null);
@@ -129,22 +127,17 @@ export default function SupportPortal({ onViewDocs }) {
 
   const isAdmin =
     currentUser?.role === "admin" || currentUser?.role === "agent";
-  // Restore a saved session on page load/refresh — ask the server (which
-  // verifies the httpOnly cookie) rather than trusting whatever role a
-  // tampered localStorage value might claim.
+  // Session restore now happens once in App.js (the parent) and is passed
+  // down via the currentUser/setCurrentUser props — this avoids restoring
+  // the session twice and keeps the account state in one place so the top
+  // navbar can show it too.
   useEffect(() => {
-    apiFetch(`${API_BASE}/auth/me`)
-      .then((r) => (r.ok ? r.json() : null))
-      .then((u) => {
-        if (u) {
-          setCurrentUser(u);
-          setTab(
-            u.role === "admin" || u.role === "agent" ? "adm-dashboard" : "chat",
-          );
-        }
-      })
-      .catch(() => {});
-  }, []);
+    if (currentUser) {
+      setTab(
+        currentUser.role === "admin" || currentUser.role === "agent" ? "adm-dashboard" : "chat",
+      );
+    }
+  }, [currentUser]);
 
   // Load the real user list for the admin "Users" tab
   useEffect(() => {
@@ -487,15 +480,6 @@ export default function SupportPortal({ onViewDocs }) {
     }
   };
 
-  const logout = () => {
-    logActivity("logout", "Support Portal", "User logged out");
-    apiFetch(`${API_BASE}/auth/logout`, { method: "POST" }).catch(() => {});
-    setCurrentUser(null);
-    setMessages([]);
-    setShowSug(true);
-    setTab("chat");
-  };
-
   const startNewConversation = () => {
     setMessages([]);
     setShowSug(true);
@@ -690,38 +674,6 @@ export default function SupportPortal({ onViewDocs }) {
         flexDirection: "column",
       }}
     >
-      <div
-        style={{
-          padding: "14px 14px 11px",
-          borderBottom: "1px solid var(--border)",
-        }}
-      >
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            gap: 7,
-            marginBottom: 2,
-          }}
-        >
-          <img
-            src={ceLogoFull}
-            alt="Cellular Expert"
-            style={{ height: 24, objectFit: "contain", display: "block" }}
-          />
-        </div>
-        <div
-          style={{
-            fontFamily: "var(--font-mono)",
-            fontSize: 9,
-            color: "var(--text-dim)",
-            letterSpacing: ".1em",
-            marginLeft: 29,
-          }}
-        >
-          Help Portal
-        </div>
-      </div>
       <nav
         style={{
           flex: 1,
@@ -794,74 +746,6 @@ export default function SupportPortal({ onViewDocs }) {
           </div>
         ))}
       </nav>
-      <div
-        style={{
-          padding: "11px 12px",
-          borderTop: "1px solid var(--border)",
-          display: "flex",
-          alignItems: "center",
-          gap: 9,
-        }}
-      >
-        <div
-          style={{
-            width: 30,
-            height: 30,
-            borderRadius: 9,
-            background:
-              "linear-gradient(135deg, var(--accent), var(--accent2))",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            fontFamily: "var(--font-mono)",
-            fontSize: 10,
-            color: "#fff",
-            fontWeight: 700,
-            flexShrink: 0,
-          }}
-        >
-          {currentUser?.avatar}
-        </div>
-        <div style={{ flex: 1, minWidth: 0 }}>
-          <div
-            style={{
-              fontSize: 11,
-              color: "var(--text-bright)",
-              fontWeight: 500,
-              overflow: "hidden",
-              textOverflow: "ellipsis",
-              whiteSpace: "nowrap",
-            }}
-          >
-            {currentUser?.name}
-          </div>
-          <div
-            style={{
-              fontFamily: "var(--font-mono)",
-              fontSize: 9,
-              color: "var(--text-dim)",
-              textTransform: "uppercase",
-              letterSpacing: ".08em",
-            }}
-          >
-            {currentUser?.role}
-          </div>
-        </div>
-        <button
-          onClick={logout}
-          title="Sign out"
-          style={{
-            background: "none",
-            border: "none",
-            color: "var(--text-dim)",
-            cursor: "pointer",
-            fontSize: 14,
-            padding: 2,
-          }}
-        >
-          ⏻
-        </button>
-      </div>
     </div>
   );
 
@@ -4527,18 +4411,41 @@ export default function SupportPortal({ onViewDocs }) {
           onVerifyResetCode={verifyResetCode}
         />
       ) : (
-        <>
-          <Sidebar />
+        <div style={{ flex: 1, display: "flex", flexDirection: "column", minHeight: 0 }}>
           <div
             style={{
-              flex: 1,
-              display: "flex",
-              flexDirection: "column",
-              overflow: "hidden",
-              minHeight: 0,
+              padding: "18px 24px",
+              borderBottom: "1px solid var(--border)",
+              background: "var(--bg2)",
             }}
           >
-            {renderTab()}
+            <div
+              style={{
+                fontFamily: "var(--font-display)",
+                fontSize: 20,
+                fontWeight: 700,
+                color: "var(--text-bright)",
+              }}
+            >
+              Support Center
+            </div>
+            <div style={{ fontSize: 12, color: "var(--text-dim)", marginTop: 2 }}>
+              Chat with our AI assistant, browse the FAQ, or manage your profile.
+            </div>
+          </div>
+          <div style={{ flex: 1, display: "flex", overflow: "hidden", minHeight: 0 }}>
+            <Sidebar />
+            <div
+              style={{
+                flex: 1,
+                display: "flex",
+                flexDirection: "column",
+                overflow: "hidden",
+                minHeight: 0,
+              }}
+            >
+              {renderTab()}
+            </div>
           </div>
           {showSupportForm && (
             <div
@@ -4574,7 +4481,7 @@ export default function SupportPortal({ onViewDocs }) {
               </div>
             </div>
           )}
-        </>
+        </div>
       )}
     </div>
   );
