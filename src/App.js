@@ -50,9 +50,88 @@ function inline(t = "") {
     .replace(/\*(.+?)\*/g, "<em>$1</em>")
     .replace(/`(.+?)`/g, "<code>$1</code>");
 }
+function normalizeBrokenTableRows(text = "") {
+  const input = String(text).split("\n");
+  const out = [];
+
+  const isPipeTableLine = (line = "") =>
+    line.includes("|") && line.trim().startsWith("|");
+
+  const getCells = (line = "") =>
+    line
+      .trim()
+      .split("|")
+      .filter((_, i, a) => i > 0 && i < a.length - 1);
+
+  const isFieldNameLine = (line = "") => {
+    const s = line.trim();
+
+    return (
+      /^[a-z][a-z0-9_]{2,80}$/.test(s) &&
+      !s.includes(" ") &&
+      !/[.,:;!?)]$/.test(s)
+    );
+  };
+
+  let canContinueTable = false;
+
+  for (let i = 0; i < input.length; i++) {
+    const line = input[i];
+    const trimmed = line.trim();
+
+    if (isPipeTableLine(line)) {
+      out.push(line);
+      canContinueTable = getCells(line).length >= 2;
+      continue;
+    }
+
+    if (canContinueTable && isFieldNameLine(line)) {
+      const field = trimmed;
+      const descLines = [];
+
+      i++;
+
+      while (i < input.length) {
+        const next = input[i];
+        const nt = next.trim();
+
+        if (
+          isPipeTableLine(next) ||
+          /^#{1,6}\s/.test(nt) ||
+          /^---+$/.test(nt)
+        ) {
+          i--;
+          break;
+        }
+
+        if (isFieldNameLine(next) && descLines.length > 0) {
+          i--;
+          break;
+        }
+
+        if (nt) {
+          descLines.push(nt.replace(/^\s*[-*]\s+/, "• "));
+        }
+
+        i++;
+      }
+
+      const description = descLines.join(" ").replace(/\s+/g, " ").trim();
+      out.push(`| ${field} | ${description} |`);
+      canContinueTable = true;
+      continue;
+    }
+
+    out.push(line);
+    if (trimmed === "") canContinueTable = false;
+  }
+
+  return out.join("\n");
+}
+
 function renderMD(text) {
   if (!text) return "";
-  const lines = text.split("\n");
+  const lines = normalizeBrokenTableRows(text).split("\n");
   let html = "",
     inCode = false,
     inTable = false,
