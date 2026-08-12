@@ -2,6 +2,33 @@ import React, { useState, useRef, useEffect } from 'react';
 import { searchIndex, searchAPI } from '../useGithubDocs';
 
 const PC = {'CE Express':'#0077cc','CE Pro':'#059669','Both':'#d97706','Training':'#7c3aed','Inventory3D':'#0ea5e9'};
+function cleanSearchSnippet(text = '') {
+  return String(text)
+    // remove markdown images, usually noisy in search previews
+    .replace(/!\[[^\]]*\]\([^)]+\)/g, ' ')
+    // convert markdown links to only visible label
+    .replace(/\[([^\]]+)\]\([^)]+\)/g, '$1')
+    // convert raw html links to only visible label
+    .replace(/<a\s+[^>]*>(.*?)<\/a>/gi, '$1')
+    // remove remaining html tags
+    .replace(/<[^>]+>/g, ' ')
+    // remove markdown heading/list/table symbols
+    .replace(/^#{1,6}\s*/gm, '')
+    .replace(/^\s*[-*]\s+/gm, '')
+    .replace(/\|/g, ' ')
+    // remove markdown emphasis/code markers
+    .replace(/[*_`~]/g, '')
+    // remove image/file noise
+    .replace(/\b[\w-]+\.(png|jpg|jpeg|gif|svg)\b/gi, ' ')
+    .replace(/\bguide-v[\w.%/-]+\b/gi, ' ')
+    // remove leftover image-url / markdown punctuation noise
+    .replace(/%[0-9a-f]{2}/gi, ' ')
+    .replace(/^[\s%()[\]{}.,;:+\-–—]+/g, '')
+    .replace(/\s+[%()[\]{}.,;:+\-–—]+\s+/g, ' ')
+    // normalize spaces
+    .replace(/\s+/g, ' ')
+    .trim();
+}
 
 export default function SearchBar({ onSelectDoc, onSupportClick }) {
   const [q,        setQ]        = useState('');
@@ -82,8 +109,8 @@ export default function SearchBar({ onSelectDoc, onSupportClick }) {
               {d.matchedHeadingText && (
                 <div style={{fontSize:11,color:'var(--accent)',fontWeight:600,marginBottom:d.snippet?4:0}}>→ {d.matchedHeadingText}</div>
               )}
-              {d.snippet && (
-                <div style={{fontSize:11.5,color:'var(--text)',lineHeight:1.5,fontStyle:'italic'}}>{d.snippet}</div>
+              {cleanSearchSnippet(d.snippet) && (
+                <div style={{fontSize:11.5,color:'var(--text)',lineHeight:1.5,fontStyle:'italic'}}>{cleanSearchSnippet(d.snippet)}</div>
               )}
             </div>
           )) : (
