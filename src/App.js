@@ -22,27 +22,33 @@ function useTheme() {
 }
 
 // ── Markdown renderer ─────────────────────────────────────────────────────────
-function esc(s) {
-  return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+function esc(s = "") {
+  return String(s)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;");
 }
-function inline(t) {
-  return t
+
+function inline(t = "") {
+  let text = String(t);
+
+  // Convert raw HTML links accidentally stored in documentation content
+  text = text.replace(
+    /<a\s+[^>]*href=["']([^"']+)["'][^>]*>(.*?)<\/a>/gi,
+    (_, href, label) => `[${label}](${href})`
+  );
+
+  text = esc(text);
+
+  return text
+    .replace(/!\[(.*?)\]\((.+?)\)/g, '<img src="$2" alt="$1" />')
+    .replace(/\[([^\]]+)\]\(#([^)]+)\)/g, '<a href="#" data-doc="$2" class="doc-lnk">$1 →</a>')
+    .replace(/\[([^\]]+)\]\(mailto:([^)]+)\)/g, '<a href="mailto:$2">$1</a>')
+    .replace(/\[([^\]]+)\]\((https?:\/\/[^)]+)\)/g, '<a href="$2" target="_blank" rel="noopener">$1</a>')
+    .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="#" data-doc="$2" class="doc-lnk">$1 →</a>')
     .replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>")
     .replace(/\*(.+?)\*/g, "<em>$1</em>")
-    .replace(/`(.+?)`/g, "<code>$1</code>")
-    .replace(
-      /!\[(.*?)\]\((.+?)\)/g,
-      '<img src="$2" alt="$1" loading="lazy" style="max-width:100%;border-radius:8px;border:1px solid var(--border);margin:14px 0;display:block;" onerror="this.style.display=\'none\'" />',
-    )
-    .replace(
-      /\[(.+?)\]\(#(.+?)\)/g,
-      '<a href="#" data-doc="$2" class="doc-lnk">$1 →</a>',
-    )
-    .replace(/\[(.+?)\]\(mailto:(.+?)\)/g, '<a href="mailto:$2">$1</a>')
-    .replace(
-      /\[(.+?)\]\((.+?)\)/g,
-      '<a href="$2" target="_blank" rel="noopener">$1</a>',
-    );
+    .replace(/`(.+?)`/g, "<code>$1</code>");
 }
 function renderMD(text) {
   if (!text) return "";
