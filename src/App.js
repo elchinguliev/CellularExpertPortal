@@ -50,6 +50,56 @@ function inline(t = "") {
     .replace(/\*(.+?)\*/g, "<em>$1</em>")
     .replace(/`(.+?)`/g, "<code>$1</code>");
 }
+function isMarkdownImageLine(line = "") {
+  const s = String(line).trim();
+
+  return /^!\[[^\]]*\]\\?\(.*\)$/.test(s);
+}
+
+function normalizeInterruptedImages(text = "") {
+  const lines = String(text).split("\n");
+  const out = [];
+
+  for (let i = 0; i < lines.length; i++) {
+    const line = lines[i];
+
+    if (!isMarkdownImageLine(line)) {
+      out.push(line);
+      continue;
+    }
+
+    const images = [];
+
+    while (
+      i < lines.length &&
+      (lines[i].trim() === "" || isMarkdownImageLine(lines[i]))
+    ) {
+      if (isMarkdownImageLine(lines[i])) images.push(lines[i]);
+      i++;
+    }
+
+    const prev = [...out].reverse().find((x) => x.trim() !== "") || "";
+    const next = lines[i] || "";
+
+    const imageInterruptedSentence =
+      prev.trim() &&
+      next.trim() &&
+      !/[.!?:;]$/.test(prev.trim()) &&
+      !/^#{1,6}\s/.test(next.trim()) &&
+      !/^\|/.test(next.trim());
+
+    if (imageInterruptedSentence) {
+      out.push(next);
+      out.push("");
+      out.push(...images);
+    } else {
+      out.push(...images);
+      if (next) out.push(next);
+    }
+  }
+
+  return out.join("\n");
+}
 function normalizeBrokenTableRows(text = "") {
   const input = String(text).split("\n");
   const out = [];
@@ -131,7 +181,7 @@ function normalizeBrokenTableRows(text = "") {
 
 function renderMD(text) {
   if (!text) return "";
-  const lines = normalizeBrokenTableRows(text).split("\n");
+  const lines = normalizeBrokenTableRows(normalizeInterruptedImages(text)).split("\n");
   let html = "",
     inCode = false,
     inTable = false,
