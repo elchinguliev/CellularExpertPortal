@@ -256,7 +256,7 @@ function renderMD(text) {
         .replace(/[^a-z0-9\s]/g, "")
         .trim()
         .replace(/\s+/g, "-");
-      const displayText = hm[2].replace(/^\d+(\.\d+)*\.?\s+/, "");
+      const displayText = hm[2].replace(/^\d+(?:\\?\.\d+)*\\?\.?\s+/, "");
       html += `<h${lvl} id="${id}">${inline(displayText)}</h${lvl}>`;
       continue;
     }
