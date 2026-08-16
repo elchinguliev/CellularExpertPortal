@@ -50,6 +50,46 @@ function inline(t = "") {
     .replace(/\*(.+?)\*/g, "<em>$1</em>")
     .replace(/`(.+?)`/g, "<code>$1</code>");
 }
+function normalizeDocumentLeftovers(text = "") {
+  const lines = String(text).split("\n");
+  const out = [];
+
+  for (let i = 0; i < lines.length; i++) {
+    const line = lines[i];
+    const trimmed = line.trim();
+
+    const isPageFooter =
+      /^(?:copyright\s*)?[©Â©]\s*cellular\s+expert\s*,?\s*20\d{2}\s+page\s*\\?\|\s*\d+$/i.test(trimmed) ||
+      /^page\s*\\?\|\s*\d+$/i.test(trimmed);
+
+    const isCopyrightBlockStart =
+      /^copyright\s*[©Â©]\s*20\d{2}\s+uab\s+cellular\s+expert/i.test(trimmed);
+
+    if (isPageFooter) {
+      continue;
+    }
+
+    if (isCopyrightBlockStart) {
+      while (
+        i < lines.length &&
+        lines[i].trim() !== "" &&
+        !/^#{1,6}\s/.test(lines[i].trim())
+      ) {
+        i++;
+      }
+
+      if (i < lines.length && /^#{1,6}\s/.test(lines[i].trim())) {
+        i--;
+      }
+
+      continue;
+    }
+
+    out.push(line);
+  }
+
+  return out.join("\n");
+}
 function isMarkdownImageLine(line = "") {
   const s = String(line).trim();
 
@@ -181,7 +221,9 @@ function normalizeBrokenTableRows(text = "") {
 
 function renderMD(text) {
   if (!text) return "";
-  const lines = normalizeBrokenTableRows(normalizeInterruptedImages(text)).split("\n");
+  const lines = normalizeBrokenTableRows(
+  normalizeInterruptedImages(normalizeDocumentLeftovers(text)),
+).split("\n");
   let html = "",
     inCode = false,
     inTable = false,
