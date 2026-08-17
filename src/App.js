@@ -302,6 +302,21 @@ function renderMD(text) {
       html += `<h${lvl} id="${id}">${inline(displayText)}</h${lvl}>`;
       continue;
     }
+    const numberedSection = line.match(/^\s*\d+(?:\\?\.\d+)+\\?\.?\s+(.+)/);
+    if (numberedSection) {
+      closeL();
+      closeBq();
+
+      const displayText = numberedSection[1].trim();
+      const id = displayText
+        .toLowerCase()
+        .replace(/[^a-z0-9\s]/g, "")
+        .trim()
+        .replace(/\s+/g, "-");
+
+      html += `<h3 id="${id}">${inline(displayText)}</h3>`;
+      continue;
+    }
     if (/^---+$/.test(line.trim())) {
       closeL();
       closeBq();
