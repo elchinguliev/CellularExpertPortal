@@ -341,14 +341,18 @@ function renderMD(text) {
       html += `<li>${inline(line.trim().slice(2))}</li>`;
       continue;
     }
-    if (/^\s*\d+\.\s/.test(line)) {
+    const orderedMatch = line.match(/^\s*(\d+)\.\s+(.+)/);
+    if (orderedMatch) {
+      const start = Number(orderedMatch[1]) || 1;
+
       if (!inList || lt !== "ol") {
         closeL();
-        html += "<ol>";
+        html += `<ol start="${start}">`;
         inList = true;
         lt = "ol";
       }
-      html += `<li>${inline(line.replace(/^\s*\d+\.\s/, "").trim())}</li>`;
+
+      html += `<li>${inline(orderedMatch[2].trim())}</li>`;
       continue;
     }
     if (line.trim() === "") {
