@@ -436,6 +436,8 @@ const ART_CSS = `
   .art .sp{height:6px}
   .art a{color:var(--accent);font-weight:500}
   .art a:hover{text-decoration:underline}
+  .art img{max-width:100%;height:auto;display:block;border-radius:8px;margin:12px 0}
+  .art p:has(img){margin:14px 0}
   .art strong{font-weight:600;color:var(--text-bright)}
   .art code{font-family:var(--font-mono);font-size:12px;background:var(--bg3);color:var(--accent);padding:2px 6px;border-radius:4px;border:1px solid var(--border)}
   .art pre{background:var(--bg3);color:var(--text-bright);padding:18px 20px;border-radius:10px;overflow-x:auto;margin:14px 0;font-size:12px;line-height:1.65;border:1px solid var(--border)}
