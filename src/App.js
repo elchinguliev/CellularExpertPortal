@@ -417,23 +417,63 @@ function injectImages(contentHtml, images) {
   return html;
 }
 function extractTOC(c) {
-  return (c || "")
-    .split("\n")
-    .filter((l) => /^#{2,4}\s/.test(l))
-    .map((l) => {
-      const m = l.match(/^(#{2,4})\s(.+)/);
-      return {
-        level: m[1].length,
-        text: m[2].replace(/^\d+(\.\d+)*\.?\s+/, ""), // strip PDF-style numbering for display only
-        id: m[2]
-          .toLowerCase()
-          .replace(/[^a-z0-9\s]/g, "")
-          .trim()
-          .replace(/\s+/g, "-"),
-      };
-    });
-}
+  const stripNumbering = (s = "") =>
+    String(s).replace(/^\d+(?:\\?\.\d+)*\\?\.?\s+/, "").trim();
 
+  const slug = (s = "") =>
+    String(s)
+      .toLowerCase()
+      .replace(/[^a-z0-9\s]/g, "")
+      .trim()
+      .replace(/\s+/g, "-");
+
+  const lines = normalizeDocumentLeftovers(c || "").split("\n");
+
+  const entries = lines
+    .map((l) => {
+      const line = l.trim();
+
+      const hm = line.match(/^(#{2,4})\s(.+)/);
+      if (hm) {
+        const text = stripNumbering(hm[2]);
+
+        return {
+          level: hm[1].length,
+          text,
+          id: slug(hm[2]),
+        };
+      }
+
+      const numberedSection = line.match(/^\s*\d+(?:\\?\.\d+)+\\?\.?\s+(.+)/);
+      if (numberedSection) {
+        const text = numberedSection[1].trim();
+
+        return {
+          level: 3,
+          text,
+          id: slug(text),
+        };
+      }
+
+      return null;
+    })
+    .filter(Boolean);
+
+  if (entries.length > 0) return entries;
+
+  const firstH1 = lines.find((l) => /^#\s+/.test(l.trim()));
+  if (!firstH1) return [];
+
+  const title = firstH1.trim().replace(/^#\s+/, "");
+
+  return [
+    {
+      level: 2,
+      text: stripNumbering(title),
+      id: slug(title),
+    },
+  ];
+}
 const PC = {
   "CE Express": ["#5b4feb", "rgba(91,79,235,0.1)"],
   "CE Pro": ["#e94fc9", "rgba(233,79,201,0.1)"],
