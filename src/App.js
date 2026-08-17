@@ -157,7 +157,7 @@ function normalizeBrokenTableRows(text = "") {
     const s = line.trim();
 
     return (
-      /^[a-z][a-z0-9_]{2,80}$/.test(s) &&
+      /^[a-z][a-z0-9_]{0,80}$/i.test(s) &&
       !s.includes(" ") &&
       !/[.,:;!?)]$/.test(s)
     );
