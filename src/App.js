@@ -2396,7 +2396,7 @@ const DocArticle = React.memo(function DocArticle({ doc, onSelect }) {
             fontFamily: "var(--font-mono)",
           }}
         >
-          <span>{doc.path}</span>
+          {/* source path hidden in public documentation view */}
         </div>
       </article>
       <TOC toc={toc} />
