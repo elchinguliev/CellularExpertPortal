@@ -42,6 +42,7 @@ function inline(t = "") {
 
   return text
     .replace(/!\[(.*?)\]\((.+?)\)/g, '<img src="$2" alt="$1" />')
+    .replace(/\[([^\]]+)\]\(#kw:[^)]+\)/g, "$1")
     .replace(/\[([^\]]+)\]\(#([^)]+)\)/g, '<a href="#" data-doc="$2" class="doc-lnk">$1 →</a>')
     .replace(/\[([^\]]+)\]\(mailto:([^)]+)\)/g, '<a href="mailto:$2">$1</a>')
     .replace(/\[([^\]]+)\]\((https?:\/\/[^)]+)\)/g, '<a href="$2" target="_blank" rel="noopener">$1</a>')
@@ -421,8 +422,13 @@ function injectImages(contentHtml, images) {
   return html;
 }
 function extractTOC(c) {
+  const stripMarkdownLinks = (s = "") =>
+    String(s)
+      .replace(/\[([^\]]+)\]\(#kw:[^)]+\)/g, "$1")
+      .replace(/\[([^\]]+)\]\([^)]+\)/g, "$1");
+
   const stripNumbering = (s = "") =>
-    String(s).replace(/^\d+(?:\\?\.\d+)*\\?\.?\s+/, "").trim();
+    stripMarkdownLinks(String(s).replace(/^\d+(?:\\?\.\d+)*\\?\.?\s+/, "").trim());
 
   const slug = (s = "") =>
     String(s)
