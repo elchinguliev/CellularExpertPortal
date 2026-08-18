@@ -632,12 +632,44 @@
     "order": 700
   },
   {
-    "id": "ce-express-exploring-data-merged",
-    "path": "docs/ce-express/user-guide/sections/exploring-data.md",
-    "title": "Exploring Data",
+    "id": "ce-express-v73-8-1-export-selected",
+    "path": "docs/ce-express/user-guide/v73-sections/8-1-export-selected.md",
+    "title": "Export selected",
     "product": "CE Express",
     "category": "Exploring Data",
-    "order": 800
+    "order": 801
+  },
+  {
+    "id": "ce-express-v73-8-2-pdf-report",
+    "path": "docs/ce-express/user-guide/v73-sections/8-2-pdf-report.md",
+    "title": "PDF Report",
+    "product": "CE Express",
+    "category": "Exploring Data",
+    "order": 802
+  },
+  {
+    "id": "ce-express-v73-8-3-file-browser",
+    "path": "docs/ce-express/user-guide/v73-sections/8-3-file-browser.md",
+    "title": "File browser",
+    "product": "CE Express",
+    "category": "Exploring Data",
+    "order": 803
+  },
+  {
+    "id": "ce-express-v73-8-4-quick-references",
+    "path": "docs/ce-express/user-guide/v73-sections/8-4-quick-references.md",
+    "title": "Quick references",
+    "product": "CE Express",
+    "category": "Exploring Data",
+    "order": 804
+  },
+  {
+    "id": "ce-express-v73-8-5-default-editing-and-manual-editing",
+    "path": "docs/ce-express/user-guide/v73-sections/8-5-default-editing-and-manual-editing.md",
+    "title": "Default editing and manual editing",
+    "product": "CE Express",
+    "category": "Exploring Data",
+    "order": 805
   },
   {
     "id": "ce-pro-overview",
