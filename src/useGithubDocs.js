@@ -224,7 +224,8 @@ export function preloadAllDocs() {
 export async function fetchDoc(docId) {
   const entry = DOC_INDEX.find(d => d.id === docId);
   if (!entry) return null;
-  if (cache[docId]) return cache[docId];
+  // Always fetch live documentation so DB/source fixes are visible immediately.
+  // if (cache[docId]) return cache[docId];
   try {
     const res = await fetch(`${API_BASE}/docs/${docId}`);
     if (!res.ok) throw new Error(`HTTP ${res.status}`);

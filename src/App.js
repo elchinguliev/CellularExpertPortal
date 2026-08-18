@@ -162,6 +162,91 @@ function normalizeInterruptedImages(text = "") {
 
   return out.join("\n");
 }
+function normalizeDatabaseStructureFieldTables(text = "") {
+  const lines = String(text).split("\n");
+
+  const isDatabaseStructureDoc = lines.some((line) =>
+    /^#\s+4\.[1-7]\s+/.test(line.trim())
+  );
+
+  if (!isDatabaseStructureDoc) return text;
+
+  const out = [];
+  const fieldRe = /^\*\*([^*]+)\*\*\s*$/;
+
+  const isStopLine = (line = "") => {
+    const t = line.trim();
+    return (
+      /^#{1,6}\s+/.test(t) ||
+      /^!\[[^\]]*\]\(.*\)$/.test(t) ||
+      /^\|/.test(t) ||
+      /^---+$/.test(t)
+    );
+  };
+
+  const cleanCell = (value = "") =>
+    String(value)
+      .replace(/\uFFFD/g, "-")
+      .replace(/•/g, "-")
+      .replace(/[��]/g, "-")
+      .replace(/\|/g, "\\|")
+      .replace(/\s+/g, " ")
+      .trim();
+
+  for (let i = 0; i < lines.length; i++) {
+    const start = lines[i].trim().match(fieldRe);
+
+    if (!start) {
+      out.push(lines[i]);
+      continue;
+    }
+
+    const rows = [];
+
+    while (i < lines.length) {
+      const fieldMatch = lines[i].trim().match(fieldRe);
+      if (!fieldMatch) break;
+
+      const field = fieldMatch[1].trim();
+      const descLines = [];
+      i++;
+
+      while (i < lines.length) {
+        const current = lines[i];
+        const trimmed = current.trim();
+
+        if (fieldRe.test(trimmed) || isStopLine(current)) break;
+
+        if (trimmed) {
+          descLines.push(trimmed.replace(/^\s*[-*]\s+/, "� "));
+        }
+
+        i++;
+      }
+
+      rows.push({
+        field,
+        description: descLines.join(" ").replace(/\s+/g, " ").trim(),
+      });
+
+      while (i < lines.length && lines[i].trim() === "") i++;
+
+      if (i >= lines.length || !fieldRe.test(lines[i].trim())) break;
+    }
+
+    out.push("| Parameter | Description |");
+    out.push("|---|---|");
+
+    rows.forEach((row) => {
+      out.push(`| ${cleanCell(row.field)} | ${cleanCell(row.description)} |`);
+    });
+
+    if (i < lines.length) i--;
+  }
+
+  return out.join("\n");
+}
+
 function normalizeBrokenTableRows(text = "") {
   const input = String(text).split("\n");
   const out = [];
@@ -222,7 +307,7 @@ function normalizeBrokenTableRows(text = "") {
         }
 
         if (nt) {
-          descLines.push(nt.replace(/^\s*[-*]\s+/, "• "));
+          descLines.push(nt.replace(/^\s*[-*]\s+/, "- "));
         }
 
         i++;
@@ -244,7 +329,9 @@ function normalizeBrokenTableRows(text = "") {
 function renderMD(text) {
   if (!text) return "";
   const lines = normalizeBrokenTableRows(
-    stripBrokenKeywordReferences(normalizeDocumentLeftovers(text)),
+    normalizeDatabaseStructureFieldTables(
+      stripBrokenKeywordReferences(normalizeDocumentLeftovers(text))
+    ),
   ).split("\n");
   let html = "",
     inCode = false,
@@ -3028,3 +3115,4 @@ export default function App() {
     </div>
   );
 }
+
