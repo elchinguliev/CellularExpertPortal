@@ -244,9 +244,7 @@ function normalizeBrokenTableRows(text = "") {
 function renderMD(text) {
   if (!text) return "";
   const lines = normalizeBrokenTableRows(
-    normalizeInterruptedImages(
-      stripBrokenKeywordReferences(normalizeDocumentLeftovers(text))
-    ),
+    stripBrokenKeywordReferences(normalizeDocumentLeftovers(text)),
   ).split("\n");
   let html = "",
     inCode = false,
