@@ -122,12 +122,17 @@ function normalizeInterruptedImages(text = "") {
     const prev = [...out].reverse().find((x) => x.trim() !== "") || "";
     const next = lines[i] || "";
 
+    const nextTrimmed = next.trim();
+
     const imageInterruptedSentence =
       prev.trim() &&
-      next.trim() &&
+      nextTrimmed &&
       !/[.!?:;]$/.test(prev.trim()) &&
-      !/^#{1,6}\s/.test(next.trim()) &&
-      !/^\|/.test(next.trim());
+      /^[a-z(]/.test(nextTrimmed) &&
+      !/^#{1,6}\s/.test(nextTrimmed) &&
+      !/^[-*+]\s/.test(nextTrimmed) &&
+      !/^\d+[.)]\s/.test(nextTrimmed) &&
+      !/^\|/.test(nextTrimmed);
 
     if (imageInterruptedSentence) {
       out.push(next);
