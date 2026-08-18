@@ -477,7 +477,7 @@ function extractTOC(c) {
 
       const numberedSection = line.match(/^\s*\d+(?:\\?\.\d+)+\\?\.?\s+(.+)/);
       if (numberedSection) {
-        const text = numberedSection[1].trim();
+        const text = stripNumbering(numberedSection[1]);
 
         return {
           level: 3,
