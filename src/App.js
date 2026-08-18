@@ -91,6 +91,22 @@ function normalizeDocumentLeftovers(text = "") {
 
   return out.join("\n");
 }
+function stripBrokenKeywordReferences(text = "") {
+  let out = String(text);
+
+  // Remove internal keyword/reference links that redirect nowhere.
+  // Examples:
+  // [antenna patterns](#kw:importing-antenna-patterns:ce-express-antenna)
+  // **[Line of Sight]**(#kw:running-a-profile:ce-express-profile)
+  out = out.replace(/\[([^\]\n]+)\]\(#kw:[^)\n]+\)/g, "$1");
+  out = out.replace(/\*\*\[([^\]\n]+)\]\*\*\(#kw:[^)\n]+\)/g, "**$1**");
+
+  // Handle common malformed nested reference links from generated docs.
+  out = out.replace(/\[([^\]\n]+)\]\(#kw:[^\n]*\[([^\]\n]+)\]\(#kw:[^)\n]+\)[^)\n]*\)/g, "$1 $2");
+
+  return out;
+}
+
 function isMarkdownImageLine(line = "") {
   const s = String(line).trim();
 
@@ -228,8 +244,10 @@ function normalizeBrokenTableRows(text = "") {
 function renderMD(text) {
   if (!text) return "";
   const lines = normalizeBrokenTableRows(
-  normalizeInterruptedImages(normalizeDocumentLeftovers(text)),
-).split("\n");
+    normalizeInterruptedImages(
+      stripBrokenKeywordReferences(normalizeDocumentLeftovers(text))
+    ),
+  ).split("\n");
   let html = "",
     inCode = false,
     inTable = false,
