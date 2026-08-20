@@ -1,0 +1,13 @@
+[
+  {
+    "chunk_id": "ce-express-v73-3-1-8-feature-templates_chunk_1",
+    "document_id": "ce-express-v73-3-1-8-feature-templates",
+    "document_title": "Feature templates",
+    "section_title": "3.1.8 Feature templates",
+    "product": "CE Express",
+    "version": "Unknown",
+    "category": "Express Tools",
+    "source_file": "docs/ce-express/user-guide/v73-sections/3-1-8-feature-templates.md",
+    "text": "Feature templates serve the purpose of allowing the user to quickly fill out feature parameters from pre-\nsaved data. In the case of feature creation, you can fill out the parameters by selecting a feature template\nin the add features tool. In the case of starting some calculations, you may pick a template from which\nmissing feature parameters will be filled during the calculation. The feature templates tool allows you to set\nup these templates before using them.\nAfter opening the tool, you get to choose which feature type you want to manage templates for.\n![Image p88](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-express%2Fuser-guide-v73%2Fp088-img1.png)\nAfter selecting the feature type, a list of existing feature templates is shown, click an existing feature template to edit it, or click new feature template to create a new one.\n![Image p88](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-express%2Fuser-guide-v73%2Fp088-img2.png)\nUpon hovering the mouse over a feature template, options for it appear.\n**Mark as favorite**\n![Image p089](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-express%2Fuser-guide-v73%2Fp089-img4.png)\n**Delete Feature template**\n![Image p089](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-express%2Fuser-guide-v73%2Fp089-img2.png)"
+  }
+]

@@ -1,0 +1,13 @@
+[
+  {
+    "chunk_id": "ce-express-v73-3-1-19-3d-rf-prediction_chunk_1",
+    "document_id": "ce-express-v73-3-1-19-3d-rf-prediction",
+    "document_title": "3D RF Prediction",
+    "section_title": "3.1.19 3D RF Prediction",
+    "product": "CE Express",
+    "version": "Unknown",
+    "category": "Express Tools",
+    "source_file": "docs/ce-express/user-guide/v73-sections/3-1-19-3d-rf-prediction.md",
+    "text": "Click this button ![icon](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-express%2Fuser-guide-v73%2Fp168-img1.png) to open 3D RF Prediction tool.\nThis tool allows to perform 3D predictions for cell objects selected on the map. Calculations can be\nperformed for more than one cell at the same time. Use the Features tool ![Image p168](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-express%2Fuser-guide-v73%2Fp168-img2.png) to select cells on the map.\n**Color bands\n**You can set custom colors for your polygon using color bands. After the calculation, you can still change the colors, but you cannot change the values.\n![Image p169](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-express%2Fuser-guide-v73%2Fp169-img1.png)\n**Resolution**\nPrediction raster cell size in meters.\n**Vertical resolution**\nVertical prediction step size in meters.\n**Min Z**\nLowest height level, in meters, at which the prediction is calculated.\n**Max Z**\nHighest height level, in meters, up to which the prediction is calculated.\n**Cell template**\nIf the cell is missing the required parameters, the parameters from the template will be used.\n**Repeater template**\nIf the repeater is missing the required parameters, the parameters from the template will be used."
+  }
+]

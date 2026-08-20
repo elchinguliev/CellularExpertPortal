@@ -1,0 +1,13 @@
+[
+  {
+    "chunk_id": "ce-express-v73-3-1-31-audibility_chunk_1",
+    "document_id": "ce-express-v73-3-1-31-audibility",
+    "document_title": "Audibility",
+    "section_title": "3.1.31 Audibility",
+    "product": "CE Express",
+    "version": "Unknown",
+    "category": "Express Tools",
+    "source_file": "docs/ce-express/user-guide/v73-sections/3-1-31-audibility.md",
+    "text": "Click this button ![icon](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-express%2Fuser-guide-v73%2Fp189-img2.png) to open Audibility tool.\n![Image p190](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-express%2Fuser-guide-v73%2Fp190-img1.png)\n**Calculation name**\nName of the calculation that will be displayed in Prediction history.\n**Resolution**\nPrediction raster cell size in meters.\n**Siren Template**\nOption to use the parameters from the template if the siren misses the required parameters.\n**Results:**\n- **Audibility, dB**. The siren sound prediction tool calculates the sound pressure level (SPL) at various locations around a siren using **ISO 9613-2** as the standard for sound propagation. The results are represented in **decibels (dB)**, showing how loud the siren is at different distances and conditions. Each location's sound pressure level is affected by several factors:\n1. **Distance from the Source (Siren)**\no SPL decreases as the distance from the siren increases due to geometrical spreading.\no The tool provides results that help visualize how sound intensity reduces at different\nlocations.\n2. **Obstacles and Terrain**\no Buildings, hills, and other obstacles can block or reflect sound, reducing the SPL.\no Flat, open areas will have a higher SPL compared to urban environments with multiple\nobstacles.\n3. **Atmospheric Conditions**\no Atmospheric factors like temperature, humidity, and wind influence sound propagation.\no These effects are taken into account according to ISO 9613-2.\n4. **Frequency-Dependent Attenuation**\no Higher frequencies (treble) attenuate faster than lower frequencies (bass).\no The tool might calculate the overall SPL or provide frequency-specific results.\n- The best server raster shows the identification of siren generating the strongest sound value at\neach pixel."
+  }
+]

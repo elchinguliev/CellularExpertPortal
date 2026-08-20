@@ -1,0 +1,57 @@
+[
+  {
+    "chunk_id": "ce-pro-dm-template-manager_chunk_1",
+    "document_id": "ce-pro-dm-template-manager",
+    "document_title": "Template Manager",
+    "section_title": "7.8 Template Manager",
+    "product": "CE Pro",
+    "version": "Unknown",
+    "category": "Data Management",
+    "source_file": "docs/ce-pro/data-management-template-manager.md",
+    "text": "Template Manager allows the user to edit current project templates residing in the various Template tables\n![Image p120](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-pro%2Frcp-guide%2Fp120-img1.png)\nof the default.gdb. The user may change the field values of the templates, create new or detele existing\ntemplates.\nTemplates are essential tools designed to streamline and simplify the configuration process by predefining\nparameters automatically. Their primary purpose is to save time and reduce the risk of human error during\nsetup, particularly in complex scenarios like wireless network configuration.\nHere’s why templates are beneficial:\n1. Automatic Parameter Filling: Templates automatically populate required parameters, eliminating\nthe need for users to input them one by one. This ensures consistency and speeds up the setup\nprocess, especially when working with large datasets or multiple network layers, such as cells,\nsites, or CPEs.\n2. Error Prevention: In cases where a parameter might be inadvertently missed during manual\nconfiguration, templates act as a safeguard. They ensure all necessary parameters are accounted\nfor, reducing the likelihood of incomplete or incorrect setups.\n3. Coverage Prediction Assurance: Templates are particularly valuable when performing tasks like\ncoverage predictions. If a parameter in the wireless network layer is forgotten or overlooked (e.g.,\nfor a cell, site, or CPE), the template provides a fallback, ensuring that the prediction can still be\nperformed accurately and without interruption.\nBy using templates, users can maintain efficiency, accuracy, and reliability in network planning and\nanalysis, even in \"just-in-case\" scenarios where manual inputs might fall short.\nThe templates are divided into categories:\n• Network Objects – edit and manage network objects (cells, sites, links, etc) templates. Templates\nare divided into different network layers, each network have unique template structure based on\navailable parameters in network layer.\n• Modulations – create modulation configurations that can be used for MW links > Radios.\n• Modulation Editor – create single modulations, which can be used in the Modulations tab."
+  },
+  {
+    "chunk_id": "ce-pro-dm-template-manager_chunk_2",
+    "document_id": "ce-pro-dm-template-manager",
+    "document_title": "Template Manager",
+    "section_title": "7.8.1 Edit Network Objects template",
+    "product": "CE Pro",
+    "version": "Unknown",
+    "category": "Data Management",
+    "source_file": "docs/ce-pro/data-management-template-manager.md",
+    "text": "Click the button to open the Template Manager dialogue. Select one of the opened templates to edit\n![Image p121](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-pro%2Frcp-guide%2Fp121-img1.png)\n![Image p121](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-pro%2Frcp-guide%2Fp121-img2.png)\nthem.\nSave Changes\nSaves the changes to the objects.\nDismiss\nCancels the changes to the objects and closes the dialogue."
+  },
+  {
+    "chunk_id": "ce-pro-dm-template-manager_chunk_3",
+    "document_id": "ce-pro-dm-template-manager",
+    "document_title": "Template Manager",
+    "section_title": "7.8.2 Manage Network Object Template",
+    "product": "CE Pro",
+    "version": "Unknown",
+    "category": "Data Management",
+    "source_file": "docs/ce-pro/data-management-template-manager.md",
+    "text": "7.8.2.1 Create New template\nRight-click on network layer for which you would like to create a new template.\nFill parameters for new template.\nPress Save Changes to create a new template and save its parameters. The created template will be added\n![Image p122](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-pro%2Frcp-guide%2Fp122-img1.png)\n![Image p122](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-pro%2Frcp-guide%2Fp122-img2.png)\nat the end of network template list.\n7.8.2.2 Duplicate or Delete existing template\nRight-click on a selected template to open the context menu with Duplicate and Delete options.\nDuplicate will create a new template with the same parameters, and add it at the end of network template\n![Image p123](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-pro%2Frcp-guide%2Fp123-img1.png)\n![Image p123](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-pro%2Frcp-guide%2Fp123-img2.png)\nlist.\nDelete will remove this selected template."
+  },
+  {
+    "chunk_id": "ce-pro-dm-template-manager_chunk_4",
+    "document_id": "ce-pro-dm-template-manager",
+    "document_title": "Template Manager",
+    "section_title": "7.8.3 Modulations",
+    "product": "CE Pro",
+    "version": "Unknown",
+    "category": "Data Management",
+    "source_file": "docs/ce-pro/data-management-template-manager.md",
+    "text": "The modulations are used in MW link calculations and specifically can be defined for Radios. Instead of\nspecifying Modulations one by one, the customer can create a set of them, and it is available in this tab.\n![Image p124](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-pro%2Frcp-guide%2Fp124-img1.png)\n![Image p124](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-pro%2Frcp-guide%2Fp124-img2.png)\nTo preview and edit the Modulations template, click on it in the table.\n(top right)\nA new modulation with default values can be initialized.\n![Image p125](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-pro%2Frcp-guide%2Fp125-img1.png)\n![Image p125](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-pro%2Frcp-guide%2Fp125-img2.png)\nX\nModulation can be removed.\nSave changes\nAll changes will be saved.\nDismiss\nRemove changes.\nTo create a new Modulation template, press button in the top right corner of the dialog to initialize a\n![Image p126](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-pro%2Frcp-guide%2Fp126-img1.png)\n![Image p126](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-pro%2Frcp-guide%2Fp126-img2.png)\n![Image p126](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-pro%2Frcp-guide%2Fp126-img3.png)\nnew template.\nTemplate name\nThe name of the modulation template.\n(under the template name field)\nAssign modulation to the template.\nUse the modulation drop-down list menu to apply and include the modulations.\nOnce the changes are made, click the Create button at the bottom of the window to create a new modulation\ntemplate."
+  },
+  {
+    "chunk_id": "ce-pro-dm-template-manager_chunk_5",
+    "document_id": "ce-pro-dm-template-manager",
+    "document_title": "Template Manager",
+    "section_title": "7.8.4 Modulation Editor",
+    "product": "CE Pro",
+    "version": "Unknown",
+    "category": "Data Management",
+    "source_file": "docs/ce-pro/data-management-template-manager.md",
+    "text": "The list of available modulations is taken from the Modulation Editor tab.\nTo add a new modulation, click the at the top right of the Modulation Editor window to initialize a new\n![Image p127](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-pro%2Frcp-guide%2Fp127-img1.png)\n![Image p127](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-pro%2Frcp-guide%2Fp127-img2.png)\n![Image p127](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-pro%2Frcp-guide%2Fp127-img3.png)\nmodulation with default values, and press the Create button at the bottom of the window. Alternatively, click\non an existing one to edit its parameters.\nCreate\nCreate a new modulation with the specified parameters.\nSave Changes\nApply changes to a currently selected modulation. The button is disabled if the modulation is not created.\nCancel\nDismiss changes made to the modulation."
+  }
+]

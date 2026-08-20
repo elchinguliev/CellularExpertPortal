@@ -1,0 +1,13 @@
+[
+  {
+    "chunk_id": "ce-express-v73-3-1-32-lux-calculation_chunk_1",
+    "document_id": "ce-express-v73-3-1-32-lux-calculation",
+    "document_title": "Lux calculation",
+    "section_title": "3.1.32 Lux calculation",
+    "product": "CE Express",
+    "version": "Unknown",
+    "category": "Express Tools",
+    "source_file": "docs/ce-express/user-guide/v73-sections/3-1-32-lux-calculation.md",
+    "text": "Click this button ![icon](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-express%2Fuser-guide-v73%2Fp191-img1.png) to open Lux calculation tool.\n![Image p191](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-express%2Fuser-guide-v73%2Fp191-img2.png)\n**Calculation name**\nName of the calculation that will be displayed in the Prediction history.\n**Resolution**\nPrediction raster cell size in meters.\n**Light template**\nOption to use the parameters from the template if the light misses the required parameters.\n**Results:**\n- Illuminance, centilux (lx * 100)"
+  }
+]

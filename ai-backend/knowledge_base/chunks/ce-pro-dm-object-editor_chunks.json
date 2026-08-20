@@ -1,0 +1,57 @@
+[
+  {
+    "chunk_id": "ce-pro-dm-object-editor_chunk_1",
+    "document_id": "ce-pro-dm-object-editor",
+    "document_title": "Object Editor",
+    "section_title": "Data Management — Object Editor",
+    "product": "CE Pro",
+    "version": "Unknown",
+    "category": "Data Management",
+    "source_file": "docs/ce-pro/data-management-object-editor.md",
+    "text": "> **Note:** \"Calculate Cells Area\" below is an RCP-only feature."
+  },
+  {
+    "chunk_id": "ce-pro-dm-object-editor_chunk_2",
+    "document_id": "ce-pro-dm-object-editor",
+    "document_title": "Object Editor",
+    "section_title": "7.3 Object Editor",
+    "product": "CE Pro",
+    "version": "Unknown",
+    "category": "Data Management",
+    "source_file": "docs/ce-pro/data-management-object-editor.md",
+    "text": "The Object Editor enables the user to make changes to a network object after it is created and placed on\nthe map.\nChoose the button to open the Object Editor dialogue.\nSelect objects by navigating to the ArcGIS Pro Edit → Selection section and choosing the Select tool. The\nselected objects will appear in the Object Editor in a tree hierarchy.\nTo edit one of the selected objects, left-click on that object and the corresponding editing menu will open\n![Image p79](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-pro%2Frcp-guide%2Fp079-img1.png)\n![Image p79](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-pro%2Frcp-guide%2Fp079-img2.png)\nbelow the list.\nDelete Object\nSelect and right-click any network object from the selection, then choose the Delete option from the popup.\nDuplicate Object\nSelect and right-click any object from the selection, then choose the Duplicate option from the popup. The\nduplicated object will retain all information from the original object including coordinates/meridians. If you\n![Image p80](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-pro%2Frcp-guide%2Fp080-img1.png)\n![Image p80](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-pro%2Frcp-guide%2Fp080-img2.png)\nwant to duplicate objects and change their coordinates/meridians at the same time, use the separate\nDuplicate Objects button from above the selection tree."
+  },
+  {
+    "chunk_id": "ce-pro-dm-object-editor_chunk_3",
+    "document_id": "ce-pro-dm-object-editor",
+    "document_title": "Object Editor",
+    "section_title": "7.3.1 Move Objects",
+    "product": "CE Pro",
+    "version": "Unknown",
+    "category": "Data Management",
+    "source_file": "docs/ce-pro/data-management-object-editor.md",
+    "text": "Choose the button to open the Object Editor dialogue. Select the desirable objects with the Select\ntool and press the Move Objects button in the Object Editor.\nThere are multiple ways to move objects:\n• If multiple objects are selected, the move objects display will show the geospatial properties of the\n![Image p81](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-pro%2Frcp-guide%2Fp081-img1.png)\ncenter point between the objects denoted as the “Cursor point”.\nThe \"Cursor Point\" functions as a reference marker depicted by a red dot on the map. This marker is\ncentrally located among the objects on the map and shows where the cursor was placed. You can adjust\nthe position of the Cursor Point either by entering new coordinates directly or by clicking “Select Point” and\n![Image p82](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-pro%2Frcp-guide%2Fp082-img1.png)\n![Image p82](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-pro%2Frcp-guide%2Fp082-img2.png)\nchoosing a different location on the map. When you move the Cursor Point, all the objects on the map will\nshift their position to maintain their relative distances from this central point.\n• If a single point object is selected or several objects at the same location, the move objects display will show the geospatial properties of these objects denoted as “Cursor Point”.\nIf a single point object is selected on the map, the \"Cursor Point\" serves as its positional anchor. Positioned\n![Image p83](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-pro%2Frcp-guide%2Fp083-img1.png)\nas a red dot, the Cursor Point represents the current coordinates of the selected object and shows where\nthe cursor was last placed. You can alter the location of the selected object by manually updating the Cursor\nPoint's coordinates or by clicking “Select Point” and choosing a new location on the map. Any movement\nof the Cursor Point will directly translate the selected object to the corresponding new location while keeping\nits spatial relationship with the Cursor Point consistent.\nSave Changes\nSaves the changes to the objects.\nDismiss\nCancels the changes to the objects and closes the dialogue."
+  },
+  {
+    "chunk_id": "ce-pro-dm-object-editor_chunk_4",
+    "document_id": "ce-pro-dm-object-editor",
+    "document_title": "Object Editor",
+    "section_title": "7.3.2 Duplicate Objects",
+    "product": "CE Pro",
+    "version": "Unknown",
+    "category": "Data Management",
+    "source_file": "docs/ce-pro/data-management-object-editor.md",
+    "text": "Choose the button to open the Object Editor dialogue. Select the object with the Select tool and\n![Image p84](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-pro%2Frcp-guide%2Fp084-img1.png)\n![Image p84](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-pro%2Frcp-guide%2Fp084-img2.png)\npress the Duplicate Objects button in the Object Editor dialogue.\nThere are multiple ways to duplicate objects:\n• If multiple objects are selected, the duplicate objects display will show the geospatial properties of\nthe center point between the objects denoted as the “Cursor point”.\nThe \"Cursor Point\" functions as a reference marker depicted by a red dot on the map. This marker is\ncentrally located among the objects on the map and shows where the cursor was placed. You can adjust\nthe position of the Cursor Point either by entering new coordinates directly or by clicking “Select Point” and\n![Image p85](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-pro%2Frcp-guide%2Fp085-img1.png)\nchoosing a different location on the map. When you move the Cursor Point, all the objects on the map will\nshift their position to maintain their relative distances from this central point.\n• If a single point object or several objects on the same location are selected, the duplicate objects\n![Image p86](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-pro%2Frcp-guide%2Fp086-img1.png)\n![Image p86](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-pro%2Frcp-guide%2Fp086-img2.png)\ndisplay will show the geospatial properties of that object denoted as “Cursor Point”.\nIf a single point object is selected on the map, the \"Cursor Point\" serves as its positional anchor. Positioned\n![Image p87](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-pro%2Frcp-guide%2Fp087-img1.png)\n![Image p87](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-pro%2Frcp-guide%2Fp087-img2.png)\nas a red dot, the Cursor Point represents the current coordinates of the selected object and also shows\nwhere the cursor was last placed. You can alter the location of the selected object by manually updating\nthe Cursor Point's coordinates or by clicking “Select Point” and choosing a new location on the map. Any\nmovement of the Cursor Point will directly translate the selected object to the corresponding new location\nwhile keeping its spatial relationship with the Cursor Point consistent.\nSave Changes\nDuplicates the objects.\nDismiss\nCancels the changes to the objects and closes the dialogue."
+  },
+  {
+    "chunk_id": "ce-pro-dm-object-editor_chunk_5",
+    "document_id": "ce-pro-dm-object-editor",
+    "document_title": "Object Editor",
+    "section_title": "7.4 Calculate Cells Area",
+    "product": "CE Pro",
+    "version": "Unknown",
+    "category": "Data Management",
+    "source_file": "docs/ce-pro/data-management-object-editor.md",
+    "text": "The Calculate Cells Area tool is designed to compute the service areas of selected cell sites within a given\nmap and display them as polygons in a new layer. By selecting one or more cells, users can initiate a\ncalculation that considers various parameters like cell azimuth, horizontal beamwidth, and antenna patterns\nto generate precise coverage polygons.\nChoose the button to open the Calculate Cells Area tool.\nSelect the cells which the calculations will be performed for, and press Run Calculation. The cell areas\nwill be drawn on the map, in a separate layer CE Cell Area Results. In the results group layer, the servitude\n![Image p88](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-pro%2Frcp-guide%2Fp088-img1.png)\n![Image p88](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-pro%2Frcp-guide%2Fp088-img2.png)\n![Image p88](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-pro%2Frcp-guide%2Fp088-img3.png)\npolygons can be toggled for each cell.\nThe polygons represent the cell area where the antenna’s horizontal pattern’s attenuation at each angle is\nlower than the threshold of 3.\nMaximum radius depends on defined Prediction Model, Radius value for the Cell object.\nUsing bigger radius:"
+  }
+]

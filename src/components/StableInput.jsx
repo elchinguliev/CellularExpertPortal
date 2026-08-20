@@ -1,7 +1,7 @@
 import React, { useRef, useEffect } from 'react';
 
 // StableInput - fokusunu itirmir, çünki ayrı komponentdir
-export const StableInput = React.memo(({ value, onChange, onKeyDown, placeholder, type='text', style={} }) => {
+export const StableInput = React.memo(({ value, onChange, onKeyDown, placeholder, type='text', readOnly=false, style={} }) => {
   return (
     <input
       type={type}
@@ -9,7 +9,8 @@ export const StableInput = React.memo(({ value, onChange, onKeyDown, placeholder
       onChange={e => onChange(e.target.value)}
       onKeyDown={onKeyDown}
       placeholder={placeholder}
-      style={style}
+      readOnly={readOnly}
+      style={{...style, ...(readOnly ? {background:'var(--bg3)', color:'var(--text-dim)', cursor:'not-allowed'} : {})}}
     />
   );
 });

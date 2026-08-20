@@ -2,122 +2,155 @@
   {
     "chunk_id": "ce-pro-tr-los_chunk_1",
     "document_id": "ce-pro-tr-los",
-    "document_title": "05 — Line of Sight",
-    "section_title": "05. Line of Sight (Profile)",
+    "document_title": "— Line of Sight",
+    "section_title": "Objective",
     "product": "CE Pro",
     "version": "Unknown",
     "category": "Training",
     "source_file": "docs/ce-pro/training/05-line-of-sight.md",
-    "text": "> **Version:** CE Pro v4.9\nLOS and profile results are displayed in the ArcGIS Pro map view. The map canvas shows the terrain cross-section and any obstruction points:\nThe **Contents** and **Catalog** panes show the DEM, clutter, and obstacle layers required for LOS calculation:\n---"
+    "text": "Explain and show the main parameters for Cell object and how they influence calculations.\nAt the end of exercise you will be able to:\n- Analyze line-of-sight visibility with profiling tool;\n- Perform visibility analysis with visibility tool."
   },
   {
     "chunk_id": "ce-pro-tr-los_chunk_2",
     "document_id": "ce-pro-tr-los",
-    "document_title": "05 — Line of Sight",
-    "section_title": "Geodata Layers Used",
+    "document_title": "— Line of Sight",
+    "section_title": "Initial data",
     "product": "CE Pro",
     "version": "Unknown",
     "category": "Training",
     "source_file": "docs/ce-pro/training/05-line-of-sight.md",
-    "text": "CE Pro uses three GIS data layers for precise RF propagation modelling:\n| Layer | Description |\n|-------|-------------|\n| **DTM / DEM** | Digital Terrain Model — ground elevation above sea level |\n| **Obstacles** | Buildings and structures above ground (principal impediments) |\n| **Clutter** | Vegetation, crops, gardens — partially penetrable by radio waves |\nTogether these layers form the **DSM (Digital Surface Model)**:\n```\nDSM = DTM + Obstacles (buildings/vegetation)\n```\n---"
+    "text": "Prepared project with:\n- Network objects.\n- Geodata.\n- Equipment and models.\n<img src=\"../../../assets/images/ce-pro/training-02/image1.png\" style=\"width:6.5in;height:3.37708in\" alt=\"A screenshot of a computer screen Description automatically generated\" />"
   },
   {
     "chunk_id": "ce-pro-tr-los_chunk_3",
     "document_id": "ce-pro-tr-los",
-    "document_title": "05 — Line of Sight",
-    "section_title": "Input Parameters",
+    "document_title": "— Line of Sight",
+    "section_title": "Profiling",
     "product": "CE Pro",
     "version": "Unknown",
     "category": "Training",
     "source_file": "docs/ce-pro/training/05-line-of-sight.md",
-    "text": "| Category | Parameter |\n|----------|-----------|\n| Geodata | Elevation, Buildings, Clutter |\n| RF | Frequency (MHz), Fresnel Zone (%), Earth radius factor |\n| Transmitter | Height (m), Power (dBm) |\n| Receiver | Height (m), Power (dBm) |"
+    "text": "Navigate to C:\\CE_Course\\LineOfSight\\Project and run Project.aprx file to open the prepared project for Profiling exercise.\nThe profile offers a detailed view of the topographical data between the transmitter and receiver, providing crucial insights into path loss at the receiver location, expected signal strength, angles, and other relevant information. This data is instrumental in making informed decisions regarding equipment, parameters and conditions of LOS, OLOS and NLOS. Additionally, Cellular Expert has incorporated advanced analyses such as antenna height optimization, what-if scenarios including the addition of obstacles, and reflection analysis. In this exercise, we will explore several of these functions in depth.\nFirst, we need to identify the transmitter location. The transmitter point on the profile can be selected directly on the map, or by entering the coordinates in the Profile dialog. Open Profile tool in CE RCP or CE RLP tabs, and locate the NBa 01 cell, move the mouse cursor over it, and you'll notice the mouse icon change as it snaps to the cell.\n<img src=\"../../../assets/images/ce-pro/training-02/image2.png\" style=\"width:3.5in;height:3.78in\" />\nClick on NBa 01 once and then define receiver point (please select receiver position by your own).\n<img src=\"../../../assets/images/ce-pro/training-02/image3.png\" style=\"width:6.5in;height:2.69583in\" alt=\"A screenshot of a map Description automatically generated\" />\nOnce receiver position is selected, the profile will be generated and visible in your project. You will get a detailed information about LOS, OLOS and NLOS conditions in map view and graph view.\n<img src=\"../../../assets/images/ce-pro/training-02/image4.png\" style=\"width:6.5in;height:2.96111in\" alt=\"A screenshot of a computer Description automatically generated\" />\n- Green color shows line of sight (LOS) condition.\n- Yellow color shows that the path is obstructed by clutter (OLOS).\n- Red color shows that the path is obstructed by elevation or buildings (NLOS).\nClick on Show Table option to preview calculations.\n<img src=\"../../../assets/images/ce-pro/training-02/image5.png\" style=\"width:1.73958in;height:1.83333in\" />\nIt will open additional view with the calculations of generated profile.\n<img src=\"../../../assets/images/ce-pro/training-02/image6.png\" style=\"width:2.32in;height:4.98in\" alt=\"A white paper with black text Description automatically generated\" />"
   },
   {
     "chunk_id": "ce-pro-tr-los_chunk_4",
     "document_id": "ce-pro-tr-los",
-    "document_title": "05 — Line of Sight",
-    "section_title": "Profile Calculation Results",
+    "document_title": "— Line of Sight",
+    "section_title": "Adjust Profile parameters",
     "product": "CE Pro",
     "version": "Unknown",
     "category": "Training",
     "source_file": "docs/ce-pro/training/05-line-of-sight.md",
-    "text": "**General Clearance:**\n| Output | Description |\n|--------|-------------|\n| Clearance | Distance (m) between LOS line and highest obstacle |\n| Clearance Percentage | Clearance as % of 1st Fresnel zone radius |\n| Clearance Distance | Horizontal distance to first obstruction |\n| Distance to NLOS | Distance at which path becomes NLOS |\n| Distance to OLOS | Distance at which path becomes OLOS |\n**Power Budget:**\n| Output | Description |\n|--------|-------------|\n| Downlink FS | Downlink received signal (Free Space) |\n| Uplink FS | Uplink received signal (Free Space) |\n| FWA Downlink RSL | Fixed Wireless Access downlink received signal level |\n| FWA Uplink RSL | Fixed Wireless Access uplink received signal level |\n**Path Loss Breakdown:**\n| Output | Description |\n|--------|-------------|\n| Total Path Loss | Sum of all loss components (dB) |\n| Model Loss | Loss from selected propagation model |\n| Diffraction Loss | Loss from obstacles per ITU-R P.526 |\n| Penetration Loss | Outdoor-to-indoor loss (3GPP TR 38.901) |\n| Receiver Clutter Loss | Loss due to clutter at receiver location |\n| Clutter Loss | General clutter loss from ITU-R P.2108 |\n**Angles:**\n- Elevation angle of the LOS path (degrees)\n---"
+    "text": "In a what-if scenario, we can modify the profile parameters. These parameters are automatically extracted from the snapped Cell object and populated in the Profile view, where they can be adjusted as needed. Once changes are made, the profile and all associated calculations will be automatically updated."
   },
   {
     "chunk_id": "ce-pro-tr-los_chunk_5",
     "document_id": "ce-pro-tr-los",
-    "document_title": "05 — Line of Sight",
-    "section_title": "Fresnel Zone Clearance",
+    "document_title": "— Line of Sight",
+    "section_title": "Power",
     "product": "CE Pro",
     "version": "Unknown",
     "category": "Training",
     "source_file": "docs/ce-pro/training/05-line-of-sight.md",
-    "text": "The Fresnel zone radius at distance d from transmitter:\n```\nr = sqrt(λ × d1 × d2 / (d1 + d2))\nwhere:\n  λ  = wavelength (m)\n  d1 = distance from Tx to obstacle (m)\n  d2 = distance from obstacle to Rx (m)\n```\nRecommended minimum clearance: **60% of 1st Fresnel zone radius** to avoid significant diffraction loss.\n---"
+    "text": "Change Power from 40 to 43 value and Downlink Field Strength and FWA downlink RSL will be recalculated automatically.\n<img src=\"../../../assets/images/ce-pro/training-02/image7.png\" style=\"width:5.67788in;height:0.44798in\" />\n<img src=\"../../../assets/images/ce-pro/training-02/image8.png\" style=\"width:2.72955in;height:1.06265in\" alt=\"A white background with black text Description automatically generated\" />"
   },
   {
     "chunk_id": "ce-pro-tr-los_chunk_6",
     "document_id": "ce-pro-tr-los",
-    "document_title": "05 — Line of Sight",
-    "section_title": "Input Parameters",
+    "document_title": "— Line of Sight",
+    "section_title": "Heights",
     "product": "CE Pro",
     "version": "Unknown",
     "category": "Training",
     "source_file": "docs/ce-pro/training/05-line-of-sight.md",
-    "text": "| Parameter | Description |\n|-----------|-------------|\n| Geodata | Elevation + Obstacles |\n| Frequency (MHz) | Used for Fresnel zone calculation |\n| Calculation radius (km) | Area around transmitter to analyse |\n| Earth radius factor | Accounts for atmospheric refraction (typically k = 4/3) |\n| Transmitter height (m) | Fixed antenna height |\n| Receiver height (m) | Height of mobile UE |"
+    "text": "Adjust the Receiver height value from 1.5 meters to any other value.\n<img src=\"../../../assets/images/ce-pro/training-02/image9.png\" style=\"width:1.84401in;height:1.52105in\" alt=\"A screenshot of a computer Description automatically generated\" />\nYou can do this either through the graphical interface or by simply dragging the receiver point up or down in the graph view. Observe how the profile is recalculated in the map view, including the changes in the line colors, graphical interface, and Path Loss calculations.\n<img src=\"../../../assets/images/ce-pro/training-02/image10.png\" style=\"width:6.5in;height:2.96944in\" alt=\"A screenshot of a computer Description automatically generated\" />"
   },
   {
     "chunk_id": "ce-pro-tr-los_chunk_7",
     "document_id": "ce-pro-tr-los",
-    "document_title": "05 — Line of Sight",
-    "section_title": "Visibility Result Layers",
+    "document_title": "— Line of Sight",
+    "section_title": "Frequency",
     "product": "CE Pro",
     "version": "Unknown",
     "category": "Training",
     "source_file": "docs/ce-pro/training/05-line-of-sight.md",
-    "text": "| Layer | Values | Description |\n|-------|--------|-------------|\n| Line of Sight | 0 / 1 | 0 = NLOS, 1 = LOS |\n| Required Height for LoS | meters | Minimum receiver height to achieve LOS |\n| Clearance | meters | Clearance distance at receiver point |\n**Example:** If Clearance = 6.5 m, the LOS line passes 6.5 m above the highest obstacle at that location.\n---"
+    "text": "Change Frequency value from 3500 to 700.\n<img src=\"../../../assets/images/ce-pro/training-02/image11.png\" style=\"width:5.84457in;height:0.47923in\" />\nPreview Path Loss calculations and how it affected its value.\n<img src=\"../../../assets/images/ce-pro/training-02/image12.png\" style=\"width:2.70871in;height:1.48979in\" alt=\"A white background with black text Description automatically generated\" />"
   },
   {
     "chunk_id": "ce-pro-tr-los_chunk_8",
     "document_id": "ce-pro-tr-los",
-    "document_title": "05 — Line of Sight",
-    "section_title": "Surface Models Compared",
+    "document_title": "— Line of Sight",
+    "section_title": "Profiling with fixed transmitter location",
     "product": "CE Pro",
     "version": "Unknown",
     "category": "Training",
     "source_file": "docs/ce-pro/training/05-line-of-sight.md",
-    "text": "```\nSurface grid     = DTM + Obstacles + Clutter (full DSM)\nElevation grid   = DTM only (bare earth)\nObstacles grid   = Buildings and structures only\n```\nVisual LOS check:\n```\nTx ─────────────── Rx    (LOS — no obstruction)\nTx ──── [building] ─ Rx  (NLOS — building blocks path)\nTx ──── [trees] ─── Rx   (OLOS — partially penetrable)\n```\n---"
+    "text": "Fixing the transmitter location allows for quicker profile drawing across multiple receiver positions. With the transmitter location fixed, there's no need to re-identify it each time a profile is drawn. Simply change the receiver position by clicking on the map.\nEnable Fixed Transmitter option.\n<img src=\"../../../assets/images/ce-pro/training-02/image13.png\" style=\"width:5.79247in;height:0.76052in\" alt=\"A white rectangular object with a black border Description automatically generated\" />\nTransmitter point is fixed, and the receiver point can be defined by click on the map.\n<img src=\"../../../assets/images/ce-pro/training-02/image14.png\" style=\"width:6.5in;height:1.80833in\" alt=\"A screenshot of a computer map Description automatically generated\" />"
   },
   {
     "chunk_id": "ce-pro-tr-los_chunk_9",
     "document_id": "ce-pro-tr-los",
-    "document_title": "05 — Line of Sight",
-    "section_title": "Dynamic Profile Mode",
+    "document_title": "— Line of Sight",
+    "section_title": "Dynamic profile",
     "product": "CE Pro",
     "version": "Unknown",
     "category": "Training",
     "source_file": "docs/ce-pro/training/05-line-of-sight.md",
-    "text": "- **Fix transmitter** — anchor one end of the profile at a fixed cell/antenna location\n- **Dynamic option** — move the receiver endpoint interactively on the map; profile updates in real time\n---"
+    "text": "Turn of Fixed Transmitter option.\nThere's no need to click on the map to set the receiver location. The profile is automatically redrawn based on the mouse's position on the map. However, this continuous redrawing with each mouse movement can be resource intensive for your workstation. Decide which method works best for you: the fixed transmitter tool or the dynamic profile.\nEnable Dynamic Profile option\n<img src=\"../../../assets/images/ce-pro/training-02/image15.png\" style=\"width:4.59439in;height:1.34394in\" alt=\"A screenshot of a computer Description automatically generated\" />\nThen move mouse coursor on the map and profile will be automatically drawn based on the receiver location.\n<img src=\"../../../assets/images/ce-pro/training-02/image16.png\" style=\"width:5.18in;height:2.5in\" alt=\"A map of a city Description automatically generated\" />\nUncheck Dynamic profile option."
   },
   {
     "chunk_id": "ce-pro-tr-los_chunk_10",
     "document_id": "ce-pro-tr-los",
-    "document_title": "05 — Line of Sight",
-    "section_title": "Profile Symbology",
+    "document_title": "— Line of Sight",
+    "section_title": "Reflections",
     "product": "CE Pro",
     "version": "Unknown",
     "category": "Training",
     "source_file": "docs/ce-pro/training/05-line-of-sight.md",
-    "text": "Define custom colours for each element displayed in the profile view:\n- Ground (DTM)\n- Buildings / Obstacles\n- Clutter / Vegetation\n- LOS line\n- Fresnel zone ellipse\n---"
+    "text": "Analyzing reflections in point-to-point communication, especially in the context of wireless technologies like 5G, is crucial for several reasons:\n- Reflections can either reinforce or interfere with the original signal. By analyzing reflections, engineers can predict signal strength variations caused by multipath propagation, ensuring the quality and reliability of the transmitted signal.\n- Reflections can cause interference, leading to signal degradation or loss. Understanding how reflections occur helps in designing systems that mitigate interference, improving the overall performance of point-to-point communication links.\n- Reflection analysis aids in determining optimal antenna placement and alignment. It helps in identifying potential reflection points, allowing engineers to position antennas to minimize signal interference from reflections and optimize the link's performance.\n- Reflection analysis helps in selecting appropriate frequencies and bandwidths for point-to-point links. By understanding the reflection characteristics at different frequencies, engineers can choose frequencies less prone to interference from reflections, optimizing link performance.\n- In urban settings with many obstacles, reflections become more complex and impactful. Analyzing reflections helps in planning point-to-point communication systems in such environments, where multiple surfaces can cause reflections affecting the signal quality.\nMake sure that your transmitter is NBa 01.\n<img src=\"../../../assets/images/ce-pro/training-02/image17.png\" style=\"width:5.69871in;height:0.47923in\" />\nDefine Receiver coordinates:\n- Latitude: 54.7260853\n- Longitude: 25.2339780\n- Height: 35\n<img src=\"../../../assets/images/ce-pro/training-02/image18.png\" style=\"width:5.91in;height:2.69in\" alt=\"A screenshot of a computer Description automatically generated\" />\nClick on Tools tab, expand Reflections option and enable Single Reflections.\n<img src=\"../../../assets/images/ce-pro/training-02/image19.png\" style=\"width:4.17588in;height:3.14167in\" alt=\"A screenshot of a computer Description automatically generated\" />\nProfile will be automatically updated with reflection line.\n<img src=\"../../../assets/images/ce-pro/training-02/image20.png\" style=\"width:6.5in;height:1.47431in\" alt=\"A screen shot of a graph Description automatically generated\" />\nAnd preview Reflection calculations:\n<img src=\"../../../assets/images/ce-pro/training-02/image21.png\" style=\"width:2.95875in;height:2.27115in\" alt=\"A white background with black text Description automatically generated\" />\nReview them, here is several explanations:\n- **Grazing angle** refers to an extremely shallow angle of incidence at which an electromagnetic wave or a signal approaches a surface or boundary. It's called \"grazing\" because the wavefront almost skims or grazes the surface rather than hitting it head-on.\n- **Terrain roughness** refers to the irregularity, unevenness, or variability of the Earth's surface features over a profile path. It encompasses a range of natural landscape elements, including hills, valleys, vegetation, buildings, and other obstructions or surface characteristics. It plays a significant role in determining how electromagnetic waves travel through or interact with the environment.\n- **Indination** typically refers to the angle of incidence or the angle at which an electromagnetic wave strikes a surface or interface during its propagation between two points.\nChange Transmitter or Receiver heights and preview how Receiver point and reflection calculations are changing.\n<img src=\"../../../assets/images/ce-pro/training-02/image22.png\" style=\"width:6.5in;height:1.46111in\" alt=\"A graph with colorful lines Description automatically generated\" />\nTurn off Single Reflection."
   },
   {
     "chunk_id": "ce-pro-tr-los_chunk_11",
     "document_id": "ce-pro-tr-los",
-    "document_title": "05 — Line of Sight",
-    "section_title": "3D Profile View",
+    "document_title": "— Line of Sight",
+    "section_title": "Adjust Geodata",
     "product": "CE Pro",
     "version": "Unknown",
     "category": "Training",
     "source_file": "docs/ce-pro/training/05-line-of-sight.md",
-    "text": "CE Pro can display the terrain profile in 3D, showing the transmitter, receiver, terrain, obstacles, and the LOS path in a three-dimensional view.\n---\n*Reference: CE Desktop Training — 2. Line of Sight (Profile)*\n*Contact: info@cellular-expert.com | +370 5 2150575*"
+    "text": "To quickly estimate how an obstacle might impact the path between the transmitter and receiver, you can use the Adjust tool. This allows you to modify the current elevation, or add and adjust buildings or clutter without altering the existing topographical data. This enables you to quickly preview general calculations, such as clearance, and assess the potential signal level at the receiver location.\nClick on Adjust option (near profile Results).\n<img src=\"../../../assets/images/ce-pro/training-02/image23.png\" style=\"width:2.4in;height:2.93in\" alt=\"A screenshot of a computer Description automatically generated\" />\nNext, click on the profile graph with the left mouse button and, while holding the button down, drag to select the area where a potential building might be located.\n<img src=\"../../../assets/images/ce-pro/training-02/image24.png\" style=\"width:3.36in;height:3.35in\" alt=\"A graph with different colored lines Description automatically generated\" />\nThen release mouse left button and the area will be selected, and on the right you will get elevation and clutter heights.\nSelect each row in the table (use CTRL or Shift buttons).\n<img src=\"../../../assets/images/ce-pro/training-02/image25.png\" style=\"width:2.38in;height:2.82in\" alt=\"A screenshot of a computer Description automatically generated\" />\nIf you modify any selected row, the same value will be applied to all other selected rows as well. Enter the value 55 for any row.\n<img src=\"../../../assets/images/ce-pro/training-02/image26.png\" style=\"width:2.34in;height:2.83in\" alt=\"A screenshot of a computer Description automatically generated\" />\nPress Update Values button, which will update Profile graph.\n<img src=\"../../../assets/images/ce-pro/training-02/image27.png\" style=\"width:6.5in;height:2.98333in\" alt=\"A screenshot of a computer Description automatically generated\" />"
+  },
+  {
+    "chunk_id": "ce-pro-tr-los_chunk_12",
+    "document_id": "ce-pro-tr-los",
+    "document_title": "— Line of Sight",
+    "section_title": "Report",
+    "product": "CE Pro",
+    "version": "Unknown",
+    "category": "Training",
+    "source_file": "docs/ce-pro/training/05-line-of-sight.md",
+    "text": "Click on Export tab in Profile.\n<img src=\"../../../assets/images/ce-pro/training-02/image28.png\" style=\"width:4.92in;height:2.45in\" alt=\"A screenshot of a login Description automatically generated\" />\nDefine:\n- Author: Student Name\n- Organization: Company Name\n- Report Name: NBa 01 Rx01\n- Profile Report File Path: C:\\CE_Course\\LineOfSight, and define name Report_NBa01\n<img src=\"../../../assets/images/ce-pro/training-02/image29.png\" style=\"width:4.86in;height:2.02in\" alt=\"A screenshot of a computer Description automatically generated\" />\nClick on Export Profile. The profile will be generated and opened for you automatically.\n<img src=\"../../../assets/images/ce-pro/training-02/image30.png\" style=\"width:6.5in;height:3.12153in\" alt=\"A screenshot of a computer Description automatically generated\" />"
+  },
+  {
+    "chunk_id": "ce-pro-tr-los_chunk_13",
+    "document_id": "ce-pro-tr-los",
+    "document_title": "— Line of Sight",
+    "section_title": "Symbology",
+    "product": "CE Pro",
+    "version": "Unknown",
+    "category": "Training",
+    "source_file": "docs/ce-pro/training/05-line-of-sight.md",
+    "text": "Back to ArcGIS Pro project and profile view.\nYou can click on any object symbology legend and change a color.\n<img src=\"../../../assets/images/ce-pro/training-02/image31.png\" style=\"width:2.07in;height:3.26in\" alt=\"A screenshot of a computer Description automatically generated\" />\nChange colors for several objects.\n<img src=\"../../../assets/images/ce-pro/training-02/image32.png\" style=\"width:6.5in;height:1.45833in\" alt=\"A white screen with colorful lines Description automatically generated\" />\nClose Profile tool."
+  },
+  {
+    "chunk_id": "ce-pro-tr-los_chunk_14",
+    "document_id": "ce-pro-tr-los",
+    "document_title": "— Line of Sight",
+    "section_title": "Visibility prediction",
+    "product": "CE Pro",
+    "version": "Unknown",
+    "category": "Training",
+    "source_file": "docs/ce-pro/training/05-line-of-sight.md",
+    "text": "Profile tool is dedicated to analyzing point-to-point conditions. Visibility predictions can calculate point-to-area predictions.\nVisibility prediction can be used:\n- For mmWave bands to ensure Visibility areas. These frequencies are more susceptible to obstacles like buildings, trees, and even atmospheric conditions. Visibility prediction helps anticipate how these obstacles might affect signal propagation.\n- Antenna Placement: Predicting visibility aids in optimal antenna placement. Placing antennas where there's a clear line of sight between the transmitter and receiver maximizes signal strength and quality.\n- Cost-Efficiency: Understanding visibility patterns helps in cost-effective network deployment. By placing antennas strategically based on visibility predictions, operators can reduce the number of required installations while ensuring optimal coverage.\n- 5G networks often utilize beamforming, where signals are concentrated and directed toward specific users. Line-of-sight (LOS) propagation is critical for beamforming to work effectively. Visibility prediction assists in determining the likelihood of LOS conditions between transmitters and receivers.\nFind cell name: NBa 02, and select it on the map.\n<img src=\"../../../assets/images/ce-pro/training-02/image33.png\" style=\"width:4.9in;height:4.43in\" alt=\"A map of a city Description automatically generated\" />\nSelect the object on the map and open Visibility prediction tool in CE RCP or CE RLP tabs.\n<img src=\"../../../assets/images/ce-pro/training-02/image34.png\" style=\"width:3.97in;height:3.27in\" alt=\"A screenshot of a computer Description automatically generated\" />\nDefine these parameters:\n- Resolution: 2\n- Max radius: 3\n- Receiver height: 1.5\n- Effective earth radius: 6400\n- Layer to calculate: Cells\n<img src=\"../../../assets/images/ce-pro/training-02/image35.png\" style=\"width:3.99in;height:3.38in\" alt=\"A screenshot of a computer Description automatically generated\" />\nPress Run Calculations. After calculations, Visibility results will be loaded to Contents and visible on the map.\n<img src=\"../../../assets/images/ce-pro/training-02/image36.png\" style=\"width:2.01in;height:4.13in\" alt=\"A screenshot of a computer Description automatically generated\" />\n**Minimum Receiver Height** – the receiver height in meters, which ensure visibility between transmitter and receiver.\n**Line of Sight** – Visibility condition, if value 1 – Visible, if value 0 – Not Visible.\n**Clearance** – Fresnel zone obstruction in meters, if value is negative – Fresnel zone is obstructed by X meters.\n**Best Server** – Cell Identification, which has highest Clearence value.\nPreview all results.\nOpen Profile tool, and draw a profile from NBa 02 Cell to receiver coordinates:\n- Latitude: 54.7248800\n- Longitude: 25.2387187\n<img src=\"../../../assets/images/ce-pro/training-02/image37.png\" style=\"width:6.5in;height:1.46528in\" alt=\"A screen shot of a graph Description automatically generated\" />\nThe receiver's height is determined using an elevation grid. In the context of Fixed Wireless Access, antennas are typically installed on building rooftops.\nOpen Workspace \\> Properties.\n<img src=\"../../../assets/images/ce-pro/training-02/image38.png\" style=\"width:1.07in;height:1.78in\" alt=\"A screenshot of a computer Description automatically generated\" />\nFind Receiver Height Reference option and change value to Clutter Height.\n<img src=\"../../../assets/images/ce-pro/training-02/image39.png\" style=\"width:2.66704in;height:0.7501in\" alt=\"A screenshot of a computer Description automatically generated\" />\nPress OK to close Parameters dialog.\nClick on Manual Profile again.\n<img src=\"../../../assets/images/ce-pro/training-02/image40.png\" style=\"width:6.5in;height:1.475in\" alt=\"A screen shot of a graph Description automatically generated\" />\nThe receiver point now is on top of the clutter, adjust receiver height for Line of Sight condition. Close Profile dialogs.\nOpen Visibility tool. Run Visibility calculations with the same parameters.\n<img src=\"../../../assets/images/ce-pro/training-02/image41.png\" style=\"width:3.58in;height:3.38in\" alt=\"A screenshot of a computer Description automatically generated\" />\nCompare newly loaded Visibility results with previous ones.\nLeave Line of Sight results active for both predictions.\n<img src=\"../../../assets/images/ce-pro/training-02/image42.png\" style=\"width:2.31in;height:2.93in\" alt=\"A screenshot of a computer Description automatically generated\" />\nSelect on 2<sup>nd</sup> result Line of Sight layer and choose Raster Layer tab in the top of the screen.\n<img src=\"../../../assets/images/ce-pro/training-02/image43.png\" style=\"width:2.93791in;height:0.63551in\" alt=\"A screenshot of a computer Description automatically generated\" />\nClick on Swipe tool, and click and hold left mouse button. Swipe on the map. You can also apply transparency value for both predicition layers. <img src=\"../../../assets/images/ce-pro/training-02/image44.png\" style=\"width:2.16697in;height:0.33338in\" />\n<img src=\"../../../assets/images/ce-pro/training-02/image45.png\" style=\"width:5.76in;height:6.33in\" alt=\"A map of a city Description automatically generated\" />"
   }
 ]

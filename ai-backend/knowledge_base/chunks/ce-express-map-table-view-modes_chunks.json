@@ -1,0 +1,57 @@
+[
+  {
+    "chunk_id": "ce-express-map-table-view-modes_chunk_1",
+    "document_id": "ce-express-map-table-view-modes",
+    "document_title": "Map / Table View Modes",
+    "section_title": "Map / Table View Modes",
+    "product": "CE Express",
+    "version": "Unknown",
+    "category": "Map View",
+    "source_file": "docs/ce-express/user-guide/sections/map-table-view-modes.md",
+    "text": "In this section, users can adjust the data view. For example, turn on the Map view, Table view, or turn on\nboth of them, etc."
+  },
+  {
+    "chunk_id": "ce-express-map-table-view-modes_chunk_2",
+    "document_id": "ce-express-map-table-view-modes",
+    "document_title": "Map / Table View Modes",
+    "section_title": "3.5.1 Map view",
+    "product": "CE Express",
+    "version": "Unknown",
+    "category": "Map View",
+    "source_file": "docs/ce-express/user-guide/sections/map-table-view-modes.md",
+    "text": "Map view widget.\n![Image p258](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-express%2Fuser-guide-v73%2Fp258-img1.png)\nTurns on the map view.\n![Image p258](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-express%2Fuser-guide-v73%2Fp258-img2.png)"
+  },
+  {
+    "chunk_id": "ce-express-map-table-view-modes_chunk_3",
+    "document_id": "ce-express-map-table-view-modes",
+    "document_title": "Map / Table View Modes",
+    "section_title": "3.5.2 Display data table full screen",
+    "product": "CE Express",
+    "version": "Unknown",
+    "category": "Map View",
+    "source_file": "docs/ce-express/user-guide/sections/map-table-view-modes.md",
+    "text": "Turns on the Network Data Management view in full screen.\n![Image p259](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-express%2Fuser-guide-v73%2Fp259-img1.png)\n![Image p259](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-express%2Fuser-guide-v73%2Fp259-img2.png)"
+  },
+  {
+    "chunk_id": "ce-express-map-table-view-modes_chunk_4",
+    "document_id": "ce-express-map-table-view-modes",
+    "document_title": "Map / Table View Modes",
+    "section_title": "3.5.3 Split window vertically",
+    "product": "CE Express",
+    "version": "Unknown",
+    "category": "Map View",
+    "source_file": "docs/ce-express/user-guide/sections/map-table-view-modes.md",
+    "text": "The screen can be divided into Map view and Table view. In the previous options, the tables were placed\non top of the Map view.\n![Image p259](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-express%2Fuser-guide-v73%2Fp259-img4.png) This means that the tables cover the widgets.\nUsers can adjust the Table and Map view proportions by using the slider function: Move the mouse cursor\n![Image p260](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-express%2Fuser-guide-v73%2Fp260-img1.png)\n![Image p260](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-express%2Fuser-guide-v73%2Fp260-img2.png)\non top of the blue line, click on it and change the proportions."
+  },
+  {
+    "chunk_id": "ce-express-map-table-view-modes_chunk_5",
+    "document_id": "ce-express-map-table-view-modes",
+    "document_title": "Map / Table View Modes",
+    "section_title": "3.5.4 Split window horizontally",
+    "product": "CE Express",
+    "version": "Unknown",
+    "category": "Map View",
+    "source_file": "docs/ce-express/user-guide/sections/map-table-view-modes.md",
+    "text": "The screen can be divided into Map view and Table view. In the previous options, the tables were placed\non top of the Map view. This means that the tables cover the widgets\n![Image p261](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-express%2Fuser-guide-v73%2Fp261-img4.png)\n![Image p261](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-express%2Fuser-guide-v73%2Fp261-img2.png)\nUsers can adjust the Table and Map view proportions by using the slider function: Move the mouse cursor\non top of the blue line, click on it and change the proportions.\n![Image p261](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-express%2Fuser-guide-v73%2Fp261-img3.png)"
+  }
+]

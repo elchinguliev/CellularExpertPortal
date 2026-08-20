@@ -1,0 +1,68 @@
+[
+  {
+    "chunk_id": "ce-pro-about_chunk_1",
+    "document_id": "ce-pro-about",
+    "document_title": "About",
+    "section_title": "About",
+    "product": "CE Pro",
+    "version": "Unknown",
+    "category": "About",
+    "source_file": "docs/ce-pro/about.md",
+    "text": "> **Note:** Shared across all CE Desktop Pro modules."
+  },
+  {
+    "chunk_id": "ce-pro-about_chunk_2",
+    "document_id": "ce-pro-about",
+    "document_title": "About",
+    "section_title": "10.1 License information",
+    "product": "CE Pro",
+    "version": "Unknown",
+    "category": "About",
+    "source_file": "docs/ce-pro/about.md",
+    "text": "Click the button to open the License Information dialogue.\nLicense information is a useful resource to see your current version of Cellular Expert for ArcGIS Pro, user\n![Image p217](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-pro%2Frcp-guide%2Fp217-img1.png)\n![Image p217](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-pro%2Frcp-guide%2Fp217-img2.png)\n![Image p217](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-pro%2Frcp-guide%2Fp217-img3.png)\nkey, currently active licenses, and their expiration dates. The license information window is also used when\na user is enabling the CE for ArcGIS Pro extension on their computer. For more information about license\nactivation see Activation."
+  },
+  {
+    "chunk_id": "ce-pro-about_chunk_3",
+    "document_id": "ce-pro-about",
+    "document_title": "About",
+    "section_title": "10.2.1 Documentation",
+    "product": "CE Pro",
+    "version": "Unknown",
+    "category": "About",
+    "source_file": "docs/ce-pro/about.md",
+    "text": "Click the button in the Help dropdown list to open the Documentation of CE for ArcGIS Pro.\nHere you will find extensive documentation of the add-on. Also, this should be the first place you check\nwhen trying to figure out a problem."
+  },
+  {
+    "chunk_id": "ce-pro-about_chunk_4",
+    "document_id": "ce-pro-about",
+    "document_title": "About",
+    "section_title": "10.2.2 What’s New",
+    "product": "CE Pro",
+    "version": "Unknown",
+    "category": "About",
+    "source_file": "docs/ce-pro/about.md",
+    "text": "Click the button in the Help dropdown list to open the What’s New document. This document\nis updated for each new release of Cellular Expert for ArcGIS Pro, and here you will find the changelog for\n![Image p218](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-pro%2Frcp-guide%2Fp218-img1.png)\n![Image p218](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-pro%2Frcp-guide%2Fp218-img2.png)\n![Image p218](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-pro%2Frcp-guide%2Fp218-img3.png)\nthe current installed version. This document serves as the introduction of added new features,\nenhancements, bug fixes, and other changes."
+  },
+  {
+    "chunk_id": "ce-pro-about_chunk_5",
+    "document_id": "ce-pro-about",
+    "document_title": "About",
+    "section_title": "10.2.3 Technical Support",
+    "product": "CE Pro",
+    "version": "Unknown",
+    "category": "About",
+    "source_file": "docs/ce-pro/about.md",
+    "text": "Click the button in the Help dropdown list to open the Technical Support page in your\ndefault Internet browser. In the Cellular Expert Support page, you can browse the Knowledge base for\ninstructions and solutions related to Cellular Expert for ArcGIS Pro, such as how to prepare geodata for a\nproject. Additionally, you can log in or sign up to submit a new support ticket."
+  },
+  {
+    "chunk_id": "ce-pro-about_chunk_6",
+    "document_id": "ce-pro-about",
+    "document_title": "About",
+    "section_title": "10.2.4 Error log",
+    "product": "CE Pro",
+    "version": "Unknown",
+    "category": "About",
+    "source_file": "docs/ce-pro/about.md",
+    "text": "Click the button in the Help dropdown list to open the Error Log dialogue.\nHere you will find information about errors that have occurred during certain processes of the CE for ArcGIS\nPro extension’s lifetime. These logs are crucial to improving the overall quality of the user experience. Thus,\n![Image p219](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-pro%2Frcp-guide%2Fp219-img1.png)\n![Image p219](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-pro%2Frcp-guide%2Fp219-img2.png)\n![Image p219](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-pro%2Frcp-guide%2Fp219-img3.png)\nwhen an error happens and you decide to contact a Cellular Expert, you will be asked to send these logs\nso that the problems you encounter can be patched as soon as possible.\nCopy\nCopy the necessary error information into your clipboard and send it to Cellular Expert.\nDelete All\nIf the error log ever gets too crowded, you can delete all errors from it."
+  }
+]

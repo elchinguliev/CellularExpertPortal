@@ -1,0 +1,13 @@
+[
+  {
+    "chunk_id": "ce-express-v73-3-1-20-visibility-prediction_chunk_1",
+    "document_id": "ce-express-v73-3-1-20-visibility-prediction",
+    "document_title": "Visibility prediction",
+    "section_title": "3.1.20 Visibility prediction",
+    "product": "CE Express",
+    "version": "Unknown",
+    "category": "Express Tools",
+    "source_file": "docs/ce-express/user-guide/v73-sections/3-1-20-visibility-prediction.md",
+    "text": "Click this button ![icon](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-express%2Fuser-guide-v73%2Fp170-img1.png) to open Visibility prediction tool.\nVisibility calculations refer to the determination of line-of-sight between transmitting and receiving antennas, assessing whether any obstructions might impede direct signal transmission.\n![Image p170](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-express%2Fuser-guide-v73%2Fp170-img2.png)\n**Calculation name**\nName of the calculation that will be displayed in the Prediction history.\n**Resolution**\nPrediction raster cell size in meters.\n**Max radius**\nMaximum calculation radius in kilometers.\n**Receiver height**\nReceiver height above the receiver reference height selected in the workspace settings.\n**Effective earth radius**\nEarth radius was used for the calculations.\n**Layer to calculate**\nAll selected layers on which predictions can be performed.\n**Template**\nA template which corresponds to the selected layers. When the layer changes the templates change as well.\nVisibility Prediction is a tool that calculates 4 different results:\n- Clearance, m – the distance from the profile that is covered or is not covered.\n- Line of Sight (LOS) – confirms whether visibility exists between the receiver and transmitter with\nthe provided receiver height.\n- Best Server – the same calculation as for RF Prediction."
+  }
+]

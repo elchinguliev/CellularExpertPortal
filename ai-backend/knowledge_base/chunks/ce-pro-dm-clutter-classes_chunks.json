@@ -1,0 +1,13 @@
+[
+  {
+    "chunk_id": "ce-pro-dm-clutter-classes_chunk_1",
+    "document_id": "ce-pro-dm-clutter-classes",
+    "document_title": "Clutter Classes",
+    "section_title": "7.5 Clutter Classes",
+    "product": "CE Pro",
+    "version": "Unknown",
+    "category": "Data Management",
+    "source_file": "docs/ce-pro/data-management-clutter-classes.md",
+    "text": "The Clutter Classes tool is designed to manage categories describing different types of environments in\ntelecommunication networks. It relies on the Clutter Classes raster used in the project. The raster values\n![Image p89](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-pro%2Frcp-guide%2Fp089-img1.png)\n![Image p89](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-pro%2Frcp-guide%2Fp089-img2.png)\n![Image p89](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-pro%2Frcp-guide%2Fp089-img3.png)\n![Image p89](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-pro%2Frcp-guide%2Fp089-img4.png)\nmust match the ID values in the Clutter Classes dialog. For example, if \"Trees\" has a value of 2 in the\nClutter Classes raster, this ID must be defined in the Clutter Classes tool. By default, ESRI’s Sentinel-2\nLand Use values are used after workspace creation: ESRI Sentinel-2 Land Cover\nHere is the table view of Clutter table, which comes with default database.\n![Image p90](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-pro%2Frcp-guide%2Fp090-img1.png)\n![Image p90](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-pro%2Frcp-guide%2Fp090-img2.png)\n![Image p90](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-pro%2Frcp-guide%2Fp090-img3.png)\nSentinel-2 clutter classes raster provides information about these classes:\nChoose the button to open the Clutter Classes dialogue.\nSelect one of the clutter classes to open their properties. Clutter class list can also be filtered by solid\n![Image p91](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-pro%2Frcp-guide%2Fp091-img1.png)\nobstacle and/or clutter obstacle categories.\nNew mapping between land use raster and clutter class data should be done in Clutter Classes dialog.\n![Image p92](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-pro%2Frcp-guide%2Fp092-img1.png)\n| Parameter | Description |\n|---|---|\n| Apply | Saves changes made to clutter classes. |\n| OK | Saves changes made to clutter classes and cloes the dialogue. |\n| Dismiss | Cancels clutter class changes and closes the dialogue. |"
+  }
+]

@@ -48,7 +48,7 @@ const VERSION_RE = /^v?\d+(\.\d+){0,2}$/i;
 
 export default function NewTicketForm({ onSubmit, onCancel, draft, currentUserName }) {
   const [title, setTitle] = useState(draft?.ticket_title || '');
-  const [prod, setProd] = useState(draft?.product || 'CE Pro');
+  const prod = 'Both';
 const DEFAULT_VERSIONS = { 'CE Pro': '4.9', 'CE Express': '7.3', 'Inventory3D': '4.6', 'Both': '' };
   const [version, setVersion] = useState(draft?.version || DEFAULT_VERSIONS[draft?.product || 'CE Pro'] || '');  const [cat, setCat] = useState(draft?.issue_type || 'Question');
   const [pri, setPri] = useState(
@@ -81,7 +81,11 @@ const [screenshot, setScreenshot] = useState(null);
 
   const pickScreenshot = (file) => {
     if (!file) return;
-    if (!file.type.startsWith('image/')) { setError('Please select an image file.'); return; }
+    const extension = file.name.split('.').pop().toLowerCase();
+    if (!['image/png', 'image/jpeg'].includes(file.type) || !['png', 'jpg', 'jpeg'].includes(extension)) {
+      setError('Only PNG, JPG, and JPEG screenshots are allowed.');
+      return;
+    }
     if (file.size > 8 * 1024 * 1024) { setError('Screenshot must be under 8MB.'); return; }
     setError('');
     setScreenshot(file);
@@ -183,16 +187,7 @@ const [screenshot, setScreenshot] = useState(null);
         />
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 9, marginBottom: 10 }}>
-        <div>
-          <label style={labelSt}>Product</label>
-          <select value={prod} onChange={e => setProd(e.target.value)} style={selSt}>
-            {['CE Pro', 'CE Express', 'Inventory3D', 'Both'].map(o => (
-              <option key={o}>{o}</option>
-            ))}
-          </select>
-        </div>
-
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 9, marginBottom: 10 }}>
         <div>
           <label style={labelSt}>Version *</label>
           <input
@@ -269,7 +264,7 @@ const [screenshot, setScreenshot] = useState(null);
           style={{ ...inpSt, resize: 'vertical', minHeight: 120, lineHeight: 1.5 }}
         />
         <div style={{ marginBottom: 12 }}>
-        <label style={labelSt}>Screenshot (optional)</label>
+        <label style={labelSt}>Screenshot (optional, PNG/JPG/JPEG)</label>
         {!screenshotPreview ? (
           <label style={{
             display: 'flex', alignItems: 'center', gap: 8,
@@ -277,7 +272,7 @@ const [screenshot, setScreenshot] = useState(null);
             fontSize: 12, color: 'var(--text-dim)', cursor: 'pointer'
           }}>
             📎 Attach a screenshot of the problem
-            <input type="file" accept="image/*" onChange={e => pickScreenshot(e.target.files?.[0])} style={{ display: 'none' }}/>
+            <input type="file" accept=".png,.jpg,.jpeg,image/png,image/jpeg" onChange={e => pickScreenshot(e.target.files?.[0])} style={{ display: 'none' }}/>
           </label>
         ) : (
           <div style={{ position: 'relative', display: 'inline-block' }}>

@@ -1,0 +1,112 @@
+[
+  {
+    "chunk_id": "ce-express-database-organization-merged_chunk_1",
+    "document_id": "ce-express-database-organization-merged",
+    "document_title": "Database Organization",
+    "section_title": "7.1.1 Organization of single and multiple tables",
+    "product": "CE Express",
+    "version": "Unknown",
+    "category": "Database Organization",
+    "source_file": "docs/ce-express/user-guide/sections/database-organization.md",
+    "text": "![Image p274](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-express%2Fuser-guide-v73%2Fp274-img1.png)\nThe number of records displayed per page can be set on the bottom left corner. Furthermore, you may\nscroll through the pages using the commands in the bottom middle and bottom right corner. The table name\n(here: cells), the total quantity of entries (here: 20607), and the quantity of currently selected entries (here:\n0) are shown on the top right corner. Note that the number of filtered records will be shown, if the user\napplies a filter:\n![Image p274](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-express%2Fuser-guide-v73%2Fp274-img3.png)"
+  },
+  {
+    "chunk_id": "ce-express-database-organization-merged_chunk_2",
+    "document_id": "ce-express-database-organization-merged",
+    "document_title": "Database Organization",
+    "section_title": "7.1.2 Organization of columns",
+    "product": "CE Express",
+    "version": "Unknown",
+    "category": "Database Organization",
+    "source_file": "docs/ce-express/user-guide/sections/database-organization.md",
+    "text": "The column order can be adjusted by clicking on ![icon](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-express%2Fuser-guide-v73%2Fp274-img5.png) in the top right corner.\n![Image p275](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-express%2Fuser-guide-v73%2Fp275-img1.png)\nA menu opens in which the position of the columns can be sorted by clicking the arrow symbols. Individual\ncolumns are switched visible/invisible by clicking on the eye symbols.\n![Image p275](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-express%2Fuser-guide-v73%2Fp275-img3.png)\nThe columns can be sorted alphabetically from A>Z or from Z>A using the up and down arrow symbols\nwithin the column headers:\n![Image p275](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-express%2Fuser-guide-v73%2Fp275-img4.png)"
+  },
+  {
+    "chunk_id": "ce-express-database-organization-merged_chunk_3",
+    "document_id": "ce-express-database-organization-merged",
+    "document_title": "Database Organization",
+    "section_title": "7.1.3 Navigation across tables",
+    "product": "CE Express",
+    "version": "Unknown",
+    "category": "Database Organization",
+    "source_file": "docs/ce-express/user-guide/sections/database-organization.md",
+    "text": "There are 2 ways to change from one table to another. Either click on the table name in the top right (here:\ncells) and a menu opens with all available tables.\n![Image p276](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-express%2Fuser-guide-v73%2Fp276-img1.png)"
+  },
+  {
+    "chunk_id": "ce-express-database-organization-merged_chunk_4",
+    "document_id": "ce-express-database-organization-merged",
+    "document_title": "Database Organization",
+    "section_title": "7.2 Filtering, sorting, editing, and linking database records",
+    "product": "CE Express",
+    "version": "Unknown",
+    "category": "Database Organization",
+    "source_file": "docs/ce-express/user-guide/sections/database-organization.md",
+    "text": "The database entries can be sorted according to their individual values. To do so, click on the column\nheader and a dropdown menu opens with the following functions: “Set selected”, “Add link”, ”Clear this\nfilter”, “Clear all filters”, “Set defaults” and “Set as default sort field”:\n![Image p276](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-express%2Fuser-guide-v73%2Fp276-img2.png)\nAlternatively, and more convenient for simple searches, columns can be filtered using the “quick filter” fields\nbelow the column names:\n![Image p277](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-express%2Fuser-guide-v73%2Fp277-img1.png)\nUsers can use star symbol “*” as wildcard. Possible filtering options:\n*- any non-null value\n!* - null value\n[text] - anything that contains the [text] value at the beginning. The same as [text]*\n[text]*\n*[text]\n[text]*[text]\n![text] - anything but the defined [text] value\n”[text]” - for exact match of value\nFiltering options for numeric values:\n=n - exact match of n\n<>n - anything else but n\n<n - less than n\n>n - greater than n\n<=n - less than or equal to n\n>=n - greater than or equal to n\nThe Filter function can be used on several columns simultaneously. The headers of columns with active\nFilter function are marked in pink color:\n![Image p278](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-express%2Fuser-guide-v73%2Fp278-img1.png)\nFilters can be cleared by clicking on Clear all filters."
+  },
+  {
+    "chunk_id": "ce-express-database-organization-merged_chunk_5",
+    "document_id": "ce-express-database-organization-merged",
+    "document_title": "Database Organization",
+    "section_title": "7.2.1 Set selected",
+    "product": "CE Express",
+    "version": "Unknown",
+    "category": "Database Organization",
+    "source_file": "docs/ce-express/user-guide/sections/database-organization.md",
+    "text": "This feature allows bulk editing of several records at once: Select the respective records, click on the column\nheader and choose “Set selected” from the dropdown menu. A dialog opens with a text field. Fill in the term\nyou want the selected database records to be changed to. Then click on “Change”. Synchronize the edited\nrecords with the database using the Synchronize changes Tool.\n1. Select the records\n![Image p278](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-express%2Fuser-guide-v73%2Fp278-img2.png)\n2. Click on the required column header (here:tilt) and choose Set selected\n![Image p278](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-express%2Fuser-guide-v73%2Fp278-img3.png)\n3. Define the new value and click Change\n![Image p279](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-express%2Fuser-guide-v73%2Fp279-img1.png)"
+  },
+  {
+    "chunk_id": "ce-express-database-organization-merged_chunk_6",
+    "document_id": "ce-express-database-organization-merged",
+    "document_title": "Database Organization",
+    "section_title": "7.2.2 Add link",
+    "product": "CE Express",
+    "version": "Unknown",
+    "category": "Database Organization",
+    "source_file": "docs/ce-express/user-guide/sections/database-organization.md",
+    "text": "Each database record may comprise reference links to other database records. This means that a link can\nbe added to reach another database record.\nSelect the respective record, click on the column header and choose “Add link” from the dropdown menu.\nIn the pop up window, click on Add new reference. A list of component types opens. Select the one you\nwant to link to. Choose the component and confirm the selection. A new link has been created.\n1. Select the record\n![Image p279](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-express%2Fuser-guide-v73%2Fp279-img2.png)\n2. Click on the required column header (here:miscloss) and choose Add link\n![Image p279](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-express%2Fuser-guide-v73%2Fp279-img3.png)\n3. Click on Add new reference ...\n![Image p280](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-express%2Fuser-guide-v73%2Fp280-img1.png)\n4. Select the type of component you want to link to (here: calculation tasks)\n![Image p280](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-express%2Fuser-guide-v73%2Fp280-img2.png)\n5. Choose the repeaters(s) you want to link to and confirm the selection with ![icon](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-express%2Fuser-guide-v73%2Fp280-img5.png) in\nthe top left corner\n![Image p280](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-express%2Fuser-guide-v73%2Fp280-img3.png)\n6. The link has been created\n![Image p280](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-express%2Fuser-guide-v73%2Fp280-img4.png)"
+  },
+  {
+    "chunk_id": "ce-express-database-organization-merged_chunk_7",
+    "document_id": "ce-express-database-organization-merged",
+    "document_title": "Database Organization",
+    "section_title": "7.3 Adding, viewing, downloading and deleting attachments",
+    "product": "CE Express",
+    "version": "Unknown",
+    "category": "Database Organization",
+    "source_file": "docs/ce-express/user-guide/sections/database-organization.md",
+    "text": "Each database entry can be connected with any type of attachment, for example, a picture or a text file.\nEntries with connected attachments have a blue check symbol next to the paper clip symbol in the column\n“Inc.”, while entries without attachment have only the paper clip.\n![Image p281](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-express%2Fuser-guide-v73%2Fp281-img1.png)\n**Adding attachments**\nTo connect a database entry with an attachment, click on the paper clip symbol in the column “Inc.”. A\ndialog opens that allows you to browse your computer for the attachment of your choice or to take a photo.\n![Image p282](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-express%2Fuser-guide-v73%2Fp282-img1.png)\n**Viewing, downloading and deleting attachments:**\nTo view the list of attachments connected to an entry, select the respective entry and click on ![icon](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-express%2Fuser-guide-v73%2Fp282-img2.png) in the\ntoolbar:\n![Image p282](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-express%2Fuser-guide-v73%2Fp282-img3.png)\n![Image p282](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-express%2Fuser-guide-v73%2Fp282-img4.png)\nIn the attachments the listed images are shown as thumbs. Select an attachment from the list and it opens\nin a separate browser tab.\nAnother way to view an attachment list is to move the pointer over the check symbol in the column “Inc.”\nand to click the right mouse button.\nThe selected attachments can also be downloaded.\nTo delete an attachment click on the red cross symbol."
+  },
+  {
+    "chunk_id": "ce-express-database-organization-merged_chunk_8",
+    "document_id": "ce-express-database-organization-merged",
+    "document_title": "Database Organization",
+    "section_title": "7.4 Sieve",
+    "product": "CE Express",
+    "version": "Unknown",
+    "category": "Database Organization",
+    "source_file": "docs/ce-express/user-guide/sections/database-organization.md",
+    "text": "It is possible to display only selected data from an open table. Click on the button ![icon](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-express%2Fuser-guide-v73%2Fp283-img1.png) in the toolbar.\n![Image p283](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-express%2Fuser-guide-v73%2Fp283-img3.png)\nAnd a dialog will open:\n![Image p283](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-express%2Fuser-guide-v73%2Fp283-img4.png)\nNote that by clicking “Add rule” you may sieve with two or more filter terms that are connected via the\noperation “OR”, not “AND”. Thus, the result of two filters will show all items that comprise either the first or\nthe second search term in their attributes.\nFor example, do you want to sieve the table asites for records starting with defined characters? Then the\nSieve tool will help.\n![Image p284](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-express%2Fuser-guide-v73%2Fp284-img1.png)\nClick Add rule in order to add another search term, or click Clear all to remove all active searches.\nTo start the sieve process, click OK.\n**Results**\n![Image p284](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-express%2Fuser-guide-v73%2Fp284-img2.png)"
+  },
+  {
+    "chunk_id": "ce-express-database-organization-merged_chunk_9",
+    "document_id": "ce-express-database-organization-merged",
+    "document_title": "Database Organization",
+    "section_title": "7.5 CE API",
+    "product": "CE Express",
+    "version": "Unknown",
+    "category": "Database Organization",
+    "source_file": "docs/ce-express/user-guide/sections/database-organization.md",
+    "text": "It is possible to call other tools configured by the administrator. For every table a different tool can be\nconfigured. To start tool selection, click on the button ![icon](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-express%2Fuser-guide-v73%2Fp284-img3.png) in the toolbar."
+  },
+  {
+    "chunk_id": "ce-express-database-organization-merged_chunk_10",
+    "document_id": "ce-express-database-organization-merged",
+    "document_title": "Database Organization",
+    "section_title": "7.6 Import CSV",
+    "product": "CE Express",
+    "version": "Unknown",
+    "category": "Database Organization",
+    "source_file": "docs/ce-express/user-guide/sections/database-organization.md",
+    "text": "This tool is integrated into the “CE API” tool. It is possible to import data from .csv files. Note(!): Consult\nwith the administrator before import.\n“Import CSV” opens a new window:\n![Image p285](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-express%2Fuser-guide-v73%2Fp285-img1.png)\nData can be imported either as a new table (level 0), or added as a child table to a parent table (level 1).\nWhen adding a new table, it is required to define the table name. When adding a child table to a parent\ntable, it is required to enter the parent table name.\nRequirements:\n1. The data in the CSV file should be separated by the symbol “;”\n2. Avoid space and special characters in the table name\n3. Level 0 table – CSV file must comprise a column object_id\n4. Level 1 table – CSV file must comprise a column object_id and a column parent_id, with the\nparent_id value equal to the object_id of the parent table\nWhen adding a child table to a parent table, choose the parent table from the dropdown menu:\n![Image p285](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-express%2Fuser-guide-v73%2Fp285-img2.png)\n**Partial Import**\nThe Partial Import feature allows to add records to an already existing table. If the box \"Partial import” is\nchecked, the new records will be added to the defined table:\n![Image p286](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-express%2Fuser-guide-v73%2Fp286-img1.png)"
+  }
+]

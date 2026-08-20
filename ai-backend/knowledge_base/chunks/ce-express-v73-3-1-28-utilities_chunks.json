@@ -1,0 +1,13 @@
+[
+  {
+    "chunk_id": "ce-express-v73-3-1-28-utilities_chunk_1",
+    "document_id": "ce-express-v73-3-1-28-utilities",
+    "document_title": "Utilities",
+    "section_title": "3.1.28 Utilities",
+    "product": "CE Express",
+    "version": "Unknown",
+    "category": "Express Tools",
+    "source_file": "docs/ce-express/user-guide/v73-sections/3-1-28-utilities.md",
+    "text": "Click this button ![icon](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-express%2Fuser-guide-v73%2Fp186-img1.png) to open Utilities tool.\n3.1.28.1 Beamwidth to HCM code\nUsed to generate HCM pattern codes from vertical & horizontal beamwidth values. Useful when you do not know the exact antenna model for your cells, and only have beam width values assigned to them. \nAfter uploading the CSV file you are prompted to assign the CSV fields to the required parameters:\n![Image p186](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-express%2Fuser-guide-v73%2Fp186-img2.png)\n3.1.28.2 Feature name to object ID\nUsed to extract feature object_id values given their names in the csv. Useful when you want to import features with object_id references to other already existing features. E.g.: assign cell_id field to measurements given cell_name.\n3.1.28.3 Assign antennas to cells by name\nTakes a .csv file with an antenna name field, and outputs the same file with antenna_id field added. Antenna_id values are filled by finding a matching antenna in the CE Express antenna database and assigning it’s ID to the row.\n3.1.28.4 SMADEF-XML to frequency plan CSV\nPulls allotment section of SMADEF-XML file and outputs a CSV with a frequency plan carrier list, that may be imported through the link frequency plans tool.\n3.1.28.5 Export features to KMZ\nExports selected or all features to a KMZ file."
+  }
+]

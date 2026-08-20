@@ -1,0 +1,13 @@
+[
+  {
+    "chunk_id": "ce-express-v73-3-1-38-automatic-frequency-planning_chunk_1",
+    "document_id": "ce-express-v73-3-1-38-automatic-frequency-planning",
+    "document_title": "Automatic frequency planning",
+    "section_title": "3.1.38 Automatic frequency planning",
+    "product": "CE Express",
+    "version": "Unknown",
+    "category": "Express Tools",
+    "source_file": "docs/ce-express/user-guide/v73-sections/3-1-38-automatic-frequency-planning.md",
+    "text": "Click this button ![icon](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-express%2Fuser-guide-v73%2Fp220-img2.png) to open Automatic frequency planning tool.\nThe automatic frequency planning tool for each selected link suggests the best channel from the chosen frequency plan and the selected channel list. It considers inter-link interference, evaluates signal-to- interference ratio (SIR) across available carriers, and aims to maximize link performance while minimizing co-channel interference. The tool accounts for duplex link pairing, node-layer priority, and site location constraints (e.g., neighboring links and links sharing the same site).\n![Image p221](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-express%2Fuser-guide-v73%2Fp221-img1.png)\n**Automatic frequency planning**\n**Calculation name**\nName of the calculation that will be displayed in Prediction history.\n**Link template**\nTemplate to be used for filling up missing parameters of the link.\n**Frequency plan**\n**Frequency plan**\nFrequency plan that is applied to the links.\n**Recalculate already planned frequencies**\nWhere applicable, the tool respects existing channel assignments. If frequency recalculation is explicitly enabled, i.e., the Recalculate already planned frequencies option is checked, the frequencies are reassigned for all links regardless of whether they have channel assignments.\nThe resulting plan includes the assigned frequency, polarization, best available modulation and SIR score.\n![Image p222](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-express%2Fuser-guide-v73%2Fp222-img1.png)\n**Assign channels**\nAssign suggested channel & polarization values to link objects."
+  }
+]

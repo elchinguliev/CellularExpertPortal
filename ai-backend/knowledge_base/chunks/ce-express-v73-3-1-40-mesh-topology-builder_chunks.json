@@ -1,0 +1,13 @@
+[
+  {
+    "chunk_id": "ce-express-v73-3-1-40-mesh-topology-builder_chunk_1",
+    "document_id": "ce-express-v73-3-1-40-mesh-topology-builder",
+    "document_title": "Mesh topology builder",
+    "section_title": "3.1.40 Mesh topology builder",
+    "product": "CE Express",
+    "version": "Unknown",
+    "category": "Express Tools",
+    "source_file": "docs/ce-express/user-guide/v73-sections/3-1-40-mesh-topology-builder.md",
+    "text": "The mesh topology builder tool optimizes the process of making a connection between 2 desired mesh nodes.\n![Image p225](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-express%2Fuser-guide-v73%2Fp225-img1.png)\nThe tool first analyzes the possible link between the 2 selected nodes, and if a direct connection is possible, it prompts you to create the link object between them.:\n![Image p225](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-express%2Fuser-guide-v73%2Fp225-img2.png)\nIf a direct connection is not possible, the tool will automatically run an optimal placement prediction between the 2 nodes and show you the resulting raster. You are then prompted to select a location for an intermediate mesh node with the help of the displayed optimal placement layer, and quick mesh connectivity lines for the location you choose. (SS)\n![Image p226](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-express%2Fuser-guide-v73%2Fp226-img1.png)\nOnce a new intermediate node location is chosen, you can click Place intermediate mesh node to create it, at which point a new process is started between the new node and the unconnected link from it. If all connections are possible, the tool prompts you to create links for the multi-node path, at which point the originally selected mesh nodes are connected through a series of intermediate mesh nodes.\n![Image p226](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-express%2Fuser-guide-v73%2Fp226-img2.png)"
+  }
+]

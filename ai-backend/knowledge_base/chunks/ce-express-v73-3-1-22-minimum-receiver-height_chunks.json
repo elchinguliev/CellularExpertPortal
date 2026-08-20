@@ -1,0 +1,13 @@
+[
+  {
+    "chunk_id": "ce-express-v73-3-1-22-minimum-receiver-height_chunk_1",
+    "document_id": "ce-express-v73-3-1-22-minimum-receiver-height",
+    "document_title": "Minimum receiver height",
+    "section_title": "3.1.22 Minimum receiver height",
+    "product": "CE Express",
+    "version": "Unknown",
+    "category": "Express Tools",
+    "source_file": "docs/ce-express/user-guide/v73-sections/3-1-22-minimum-receiver-height.md",
+    "text": "Click this button ![icon](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-express%2Fuser-guide-v73%2Fp172-img2.png) to open Minimum receiver height tool.\nCalculates the minimum receiver height required to satisfy LOS condition for selected features.\n![Image p173](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-express%2Fuser-guide-v73%2Fp173-img1.png)\n**Calculation settings**\n**Calculation name**\nName of the calculation that will be displayed in Prediction history.\n**Resolution**\nPrediction raster cell size in meters.\n**Max radius**\nMaximum calculation radius in kilometers.\n**Effective earth radius**\nEarth radius was used for the calculations.\n**Overlap priority**\nValue priority in places where multiple feature calculations overlap\n- Lowest (Reach at least 1) – minimum value will be used\n- Highest (Reach all) – maximum value will be used\n**Results:**\n- Minimum receiver height, m - minimum receiver height required to satisfy LOS condition\n  ![Image p174](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-express%2Fuser-guide-v73%2Fp174-img1.png)\n- Best Server – Object id of the feature which has the value priority in each pixel. E.g.: In the case of\n“lowest” priority setting, pixels have the object id of the feature which has the lowest available\nminimum receiver height (best visibility)."
+  }
+]

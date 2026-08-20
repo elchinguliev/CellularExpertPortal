@@ -2,144 +2,177 @@
   {
     "chunk_id": "ce-pro-tr-objects_chunk_1",
     "document_id": "ce-pro-tr-objects",
-    "document_title": "06 — Objects",
-    "section_title": "06. Creating Objects",
+    "document_title": "— Objects",
+    "section_title": "— Objects",
     "product": "CE Pro",
     "version": "Unknown",
     "category": "Training",
     "source_file": "docs/ce-pro/training/06-objects.md",
-    "text": "> **Version:** CE Pro v4.9\n> **Version:** CE Pro v4.9"
+    "text": "**3. Object Creation**"
   },
   {
     "chunk_id": "ce-pro-tr-objects_chunk_2",
     "document_id": "ce-pro-tr-objects",
-    "document_title": "06 — Objects",
-    "section_title": "Overview",
+    "document_title": "— Objects",
+    "section_title": "Objective",
     "product": "CE Pro",
     "version": "Unknown",
     "category": "Training",
     "source_file": "docs/ce-pro/training/06-objects.md",
-    "text": "CE Pro objects (Cells, Sites, Links, etc.) are stored as feature classes in the Workspace geodatabase. You can create them in three ways: import from file, create manually on the map, or duplicate existing objects.\n---"
+    "text": "Explain and show how to create objects from templates and edit them.\nAt the end of exercise you will be able to:\n- Create object templates.\n- Create objects from templates.\n- Move and duplicate objects\n- Edit objects’ parameters."
   },
   {
     "chunk_id": "ce-pro-tr-objects_chunk_3",
     "document_id": "ce-pro-tr-objects",
-    "document_title": "06 — Objects",
-    "section_title": "Methods for Creating Objects",
+    "document_title": "— Objects",
+    "section_title": "Initial data",
     "product": "CE Pro",
     "version": "Unknown",
     "category": "Training",
     "source_file": "docs/ce-pro/training/06-objects.md",
-    "text": "| Method | Best For |\n|---|---|\n| Import from text/CSV | Bulk creation from existing network data |\n| Add Object tool (manual) | One-off additions directly on the map |\n| Duplicate existing object | Copying an object with similar parameters |\n| Move existing object | Relocating a cell or site to a new position |\n---"
+    "text": "Prepared project with:\n- Geodata."
   },
   {
     "chunk_id": "ce-pro-tr-objects_chunk_4",
     "document_id": "ce-pro-tr-objects",
-    "document_title": "06 — Objects",
-    "section_title": "Step 1 — Define Location",
+    "document_title": "— Objects",
+    "section_title": "Create templates",
     "product": "CE Pro",
     "version": "Unknown",
     "category": "Training",
     "source_file": "docs/ce-pro/training/06-objects.md",
-    "text": "Choose one of these coordinate input methods:\n- **Projected coordinate system** — enter X and Y values in metres\n- **Geographic coordinate system** — enter Latitude and Longitude in decimal degrees\n- **Click on map** — click the desired point; coordinates are filled automatically\nIf placing by map click, also define the **Azimuth** (direction from north, 0–360°)."
+    "text": "Open ArcGIS Pro project named Project.aprx, from *C:\\CE_Course\\ObjectCreation\\Project* catalog.\n<img src=\"../../../assets/images/ce-pro/training-03/image1.png\" style=\"width:6.5in;height:3.49236in\" />\nOpen the *Template Manager* tool from the **CE RCP** toolbar to preview existing Cell templates. Templates help you quickly populate parameters, saving time compared to manual entry. The default workspace already includes several templates, which can be modified or deleted as needed. Templates can be used in several tools:\n- Add Object – fills all necessary parameters from template to new object.\n- Object Editor – changes existing parameters to new ones according to template.\n- Import Objects from File – imports parameters from the template if something is missing in text (CSV, XLSX) file.\n- Profile – takes a parameters from a template if Tx or Rx point is not snapped to Cell object.\n- RF Prediction – uses template parameters if something is missing in the object.\n- Link Prediction - uses template parameters if something is missing in the object.\n- Radar Prediciton - uses template parameters if something is missing in the object.\n- Visibility Prediction - uses template parameters if something is missing in the object.\n- Optimal Site Positions - uses template parameters if something is missing in the object.\n- Antenna Visibility - uses template parameters if something is missing in the object.\nYou can also create new templates and customize the parameters to fit your specific requirements.\nTo create your own template, right-click on Cell Templates and select *Create New*.\n<img src=\"../../../assets/images/ce-pro/training-03/image2.png\" style=\"width:2.78164in;height:0.58341in\" />\nCreate new templates based on the table below. After entering the parameters for each template, click *Save Changes*. Then, right-click on Cell Templates and select *Create New* to begin creating the next template.\n<table style=\"width:95%;\">\n<colgroup>\n<col style=\"width: 27%\" />\n<col style=\"width: 22%\" />\n<col style=\"width: 23%\" />\n<col style=\"width: 22%\" />\n</colgroup>\n<thead>\n<tr>\n<th style=\"text-align: center;\"><strong>Parameter</strong></th>\n<th colspan=\"3\" style=\"text-align: center;\"><strong>Value</strong></th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td>Cell Template Name</td>\n<td style=\"text-align: center;\">5G template 3500</td>\n<td style=\"text-align: center;\">5G template 900</td>\n<td style=\"text-align: center;\">TETRA</td>\n</tr>\n<tr>\n<td>Bandwidth</td>\n<td style=\"text-align: center;\">100</td>\n<td style=\"text-align: center;\">10</td>\n<td style=\"text-align: center;\">0.015</td>\n</tr>\n<tr>\n<td>Noise Figure</td>\n<td style=\"text-align: center;\">6</td>\n<td style=\"text-align: center;\">5</td>\n<td style=\"text-align: center;\">5</td>\n</tr>\n<tr>\n<td>Subcarrier Spacing</td>\n<td style=\"text-align: center;\">30</td>\n<td style=\"text-align: center;\">15</td>\n<td style=\"text-align: center;\">15</td>\n</tr>\n<tr>\n<td>TX MIMO</td>\n<td style=\"text-align: center;\">4</td>\n<td style=\"text-align: center;\">2</td>\n<td style=\"text-align: center;\">1</td>\n</tr>\n<tr>\n<td>RX MIMO</td>\n<td style=\"text-align: center;\">4</td>\n<td style=\"text-align: center;\">2</td>\n<td style=\"text-align: center;\">1</td>\n</tr>\n<tr>\n<td>Active Antenna Effect</td>\n<td style=\"text-align: center;\">0</td>\n<td style=\"text-align: center;\">0</td>\n<td style=\"text-align: center;\">0</td>\n</tr>\n<tr>\n<td>Cell Load</td>\n<td style=\"text-align: center;\">30</td>\n<td style=\"text-align: center;\">30</td>\n<td style=\"text-align: center;\">0</td>\n</tr>\n<tr>\n<td>Antenna ID</td>\n<td style=\"text-align: center;\">514</td>\n<td style=\"text-align: center;\">54</td>\n<td style=\"text-align: center;\">56</td>\n</tr>\n<tr>\n<td>Height</td>\n<td style=\"text-align: center;\">30</td>\n<td style=\"text-align: center;\">30</td>\n<td style=\"text-align: center;\">30</td>\n</tr>\n<tr>\n<td>Frequency</td>\n<td style=\"text-align: center;\">3500</td>\n<td style=\"text-align: center;\">900</td>\n<td style=\"text-align: center;\">390</td>\n</tr>\n<tr>\n<td>Prediction Model ID</td>\n<td style=\"text-align: center;\">3</td>\n<td style=\"text-align: center;\">3</td>\n<td style=\"text-align: center;\">3</td>\n</tr>\n<tr>\n<td>Prediction Model Configuration ID</td>\n<td style=\"text-align: center;\">4</td>\n<td style=\"text-align: center;\">5</td>\n<td style=\"text-align: center;\">11</td>\n</tr>\n<tr>\n<td>Technology</td>\n<td style=\"text-align: center;\">5G</td>\n<td style=\"text-align: center;\">5G</td>\n<td style=\"text-align: center;\">2G</td>\n</tr>\n<tr>\n<td>Frequency Group</td>\n<td style=\"text-align: center;\">3500</td>\n<td style=\"text-align: center;\">900</td>\n<td style=\"text-align: center;\">390</td>\n</tr>\n<tr>\n<td>Carriers</td>\n<td style=\"text-align: center;\">[]</td>\n<td style=\"text-align: center;\">[]</td>\n<td style=\"text-align: center;\">[]</td>\n</tr>\n<tr>\n<td>Downlink Duplex Factor</td>\n<td style=\"text-align: center;\">0.6</td>\n<td style=\"text-align: center;\">1</td>\n<td style=\"text-align: center;\">1</td>\n</tr>\n<tr>\n<td>Tilt</td>\n<td style=\"text-align: center;\">0</td>\n<td style=\"text-align: center;\">0</td>\n<td style=\"text-align: center;\">0</td>\n</tr>\n<tr>\n<td>Duplex Mode</td>\n<td style=\"text-align: center;\">TDD</td>\n<td style=\"text-align: center;\">FDD</td>\n<td style=\"text-align: center;\">FDD</td>\n</tr>\n<tr>\n<td>Power</td>\n<td style=\"text-align: center;\">40</td>\n<td style=\"text-align: center;\">40</td>\n<td style=\"text-align: center;\">43</td>\n</tr>\n<tr>\n<td>Misc Loss</td>\n<td style=\"text-align: center;\">0</td>\n<td style=\"text-align: center;\">0</td>\n<td style=\"text-align: center;\">0</td>\n</tr>\n<tr>\n<td>Electrical_tilt</td>\n<td style=\"text-align: center;\">0</td>\n<td style=\"text-align: center;\">0</td>\n<td style=\"text-align: center;\">0</td>\n</tr>\n</tbody>\n</table>"
   },
   {
     "chunk_id": "ce-pro-tr-objects_chunk_5",
     "document_id": "ce-pro-tr-objects",
-    "document_title": "06 — Objects",
-    "section_title": "Step 2 — Define Name",
+    "document_title": "— Objects",
+    "section_title": "Add objects",
     "product": "CE Pro",
     "version": "Unknown",
     "category": "Training",
     "source_file": "docs/ce-pro/training/06-objects.md",
-    "text": "The **Cell Name** must be unique within the project. It is also used as the Best Server identifier in prediction outputs."
+    "text": "Add objects tool helps to create objects manually."
   },
   {
     "chunk_id": "ce-pro-tr-objects_chunk_6",
     "document_id": "ce-pro-tr-objects",
-    "document_title": "06 — Objects",
-    "section_title": "Step 3 — Choose Template or Fill Parameters Manually",
+    "document_title": "— Objects",
+    "section_title": "Site object",
     "product": "CE Pro",
     "version": "Unknown",
     "category": "Training",
     "source_file": "docs/ce-pro/training/06-objects.md",
-    "text": "- **Template**: select a pre-configured template that auto-fills standard RF parameters (frequency, power, antenna, etc.)\n- **Manual**: fill in each parameter individually\n---"
+    "text": "Open *Add Object* <img src=\"../../../assets/images/ce-pro/training-03/image3.png\" style=\"width:0.28125in;height:0.41538in\" alt=\"A blue plus sign with black text Description automatically generated\" /> tool, expand the dropdown list menu, and choose Sites.\n<img src=\"../../../assets/images/ce-pro/training-03/image4.png\" style=\"width:3.30208in;height:1.4563in\" alt=\"A screenshot of a computer Description automatically generated\" />\nDefine:\n- Name: ST01\n- Latitude: 54.73962527\n- Longitude: 25.18876518\n- Height above ground, m: 55\n<img src=\"../../../assets/images/ce-pro/training-03/image5.png\" style=\"width:3.29167in;height:4.08462in\" alt=\"A screenshot of a computer Description automatically generated\" />\nPress Save Changes. Site object will be created in the project.\n<img src=\"../../../assets/images/ce-pro/training-03/image6.png\" style=\"width:5.66in;height:3.4in\" alt=\"A map of land with a white circle Description automatically generated\" />\nClick once on the map in any other location, coordinates will be changed according to map click.\n<img src=\"../../../assets/images/ce-pro/training-03/image7.png\" style=\"width:6.5in;height:3.00208in\" alt=\"A map of a neighborhood Description automatically generated\" />\nChange:\n- Name: ST02\n- Height above ground, m: 30\nPress Save Changes.\nClick on the location, which has a building. Height above ground value will be automatically filled based on building height on location.\n<img src=\"../../../assets/images/ce-pro/training-03/image8.png\" style=\"width:5.83in;height:3.43in\" alt=\"A screenshot of a computer Description automatically generated\" />\nChange Site Name to ST03 and press Save changes."
   },
   {
     "chunk_id": "ce-pro-tr-objects_chunk_7",
     "document_id": "ce-pro-tr-objects",
-    "document_title": "06 — Objects",
-    "section_title": "Templates",
+    "document_title": "— Objects",
+    "section_title": "Add Cell",
     "product": "CE Pro",
     "version": "Unknown",
     "category": "Training",
     "source_file": "docs/ce-pro/training/06-objects.md",
-    "text": "Templates speed up object creation by pre-populating common parameter sets.\n- Managed under **CE Desktop → Template Manager**\n- Can be stored in the workspace or in a shared table\n- Once applied, individual parameters can still be overridden per object\n---\nAfter creating objects, use the **Symbology** pane to style how sites and cells appear on the map:\n---"
+    "text": "Zoom back to first created Site object. Expand the dropdown list menu and choose Cells.\n<img src=\"../../../assets/images/ce-pro/training-03/image9.png\" style=\"width:4.82359in;height:1.28143in\" alt=\"A screenshot of a computer Description automatically generated\" />\nClick once on the Site object on the map.\n<img src=\"../../../assets/images/ce-pro/training-03/image10.png\" style=\"width:3.72in;height:2.06in\" alt=\"A map of land with a black circle Description automatically generated\" />\nClick second time to define Cell azimuth.\n<img src=\"../../../assets/images/ce-pro/training-03/image11.png\" style=\"width:3.69792in;height:2.41169in\" alt=\"A map of a video game Description automatically generated\" />\nThe New Cell will appear on the map.\nEnter parameters as defined below:\n- **Template**: TETRA 400MHz Sector\n- **Name**: CellA\n- **Azimuth**: 5\n- **Height above ground, m**: 55\n- **Prediction model**: CEC ITU-R: 15km radius\n<img src=\"../../../assets/images/ce-pro/training-03/image12.png\" style=\"width:3.4in;height:1.73in\" alt=\"A screenshot of a computer Description automatically generated\" />\nClick Save Changes.\nChange only the following parameters in the dialog and click Save Changes:\n- **Name**: CellB\n- **Azimuth**: 120\nChange only the following parameters in the dialog and click Save Changes:\n- **Name**: CellC\n- **Azimuth**: 240\nNow you should see three cells on the map.\n<img src=\"../../../assets/images/ce-pro/training-03/image13.png\" style=\"width:2.67746in;height:1.93777in\" alt=\"A map of a cell Description automatically generated\" />\nZoom to the Site, which was created on the building.\n<img src=\"../../../assets/images/ce-pro/training-03/image14.png\" style=\"width:5.19in;height:3.53in\" alt=\"A aerial view of a building Description automatically generated\" />\nCell objects do not require Site object. Create several Cell objects at the corner of the building.\n<img src=\"../../../assets/images/ce-pro/training-03/image15.png\" style=\"width:3.2192in;height:3.7401in\" alt=\"A map of a building Description automatically generated\" />\nIf Site object exist on this building, and you would like to assign it for the Cells. Select Site and Cells on the map using Select Feature tool.\nOpen Object Editor tool.\n<img src=\"../../../assets/images/ce-pro/training-03/image16.png\" style=\"width:3.11502in;height:1.92735in\" alt=\"A screenshot of a computer Description automatically generated\" />\nYou need to apply Site ID value for each Cell.\n<img src=\"../../../assets/images/ce-pro/training-03/image17.png\" style=\"width:1.82292in;height:0.46875in\" />\nDouble-click on the first Cell, and find Site ID parameter.\n<img src=\"../../../assets/images/ce-pro/training-03/image18.png\" style=\"width:4.62565in;height:0.63551in\" alt=\"A blue and white line Description automatically generated with medium confidence\" />\nChange it depending on Site Object ID in your project.\n<img src=\"../../../assets/images/ce-pro/training-03/image19.png\" style=\"width:2.89624in;height:0.55216in\" alt=\"A blue line on a white background Description automatically generated\" />\nPress Save Changes button.\nDo it for other Cells. Cells will go under Site object.\n<img src=\"../../../assets/images/ce-pro/training-03/image20.png\" style=\"width:3.07335in;height:1.87526in\" alt=\"A screenshot of a computer Description automatically generated\" />\nNote. You can apply the correct SiteID value in Add Cells tool too. If Cell is created on top of Site (snapped), then it will automatically take Site_ID value."
   },
   {
     "chunk_id": "ce-pro-tr-objects_chunk_8",
     "document_id": "ce-pro-tr-objects",
-    "document_title": "06 — Objects",
-    "section_title": "Creating a Cell — Key Parameters",
+    "document_title": "— Objects",
+    "section_title": "Move objects",
     "product": "CE Pro",
     "version": "Unknown",
     "category": "Training",
     "source_file": "docs/ce-pro/training/06-objects.md",
-    "text": "| Parameter | Field Name | Unit | Example |\n|---|---|---|---|\n| Cell name | cell_name | text | `5GCell_001` |\n| Site name | site_name | text | `Site_Vilnius_01` |\n| Latitude | latitude | decimal degrees | `54.6872` |\n| Longitude | longitude | decimal degrees | `25.2797` |\n| Height above ground | height | metres | `30` |\n| Azimuth | azimuth | degrees | `120` |\n| Mechanical tilt | tilt | degrees | `2` |\n| Frequency | frequency | MHz | `3500` |\n| Power | power | dBm | `40` |\n| Antenna gain | antenna_gain | dBi | `18.2` |\n| Misc. loss | misc_loss | dB | `1` |\n| Technology | technology | text | `5G` |\n> **Note:** RF prediction does **not** require a Site object — a Cell can exist independently. Sites are used for grouping and visual organisation.\n---"
+    "text": "Open *Object Editor* <img src=\"../../../assets/images/ce-pro/training-03/image21.png\" style=\"width:0.32582in;height:0.47822in\" /> tool. With *Select Features* button <img src=\"../../../assets/images/ce-pro/training-03/image22.png\" style=\"width:0.3166in;height:0.46686in\" /> select previously created site with 3 cells.\n<img src=\"../../../assets/images/ce-pro/training-03/image23.png\" style=\"width:6.5in;height:2.13472in\" alt=\"A screenshot of a computer Description automatically generated\" />\nPress the **Move Objects** button in the Object Editor dialog.\n<img src=\"../../../assets/images/ce-pro/training-03/image24.png\" style=\"width:2.82331in;height:0.44798in\" />\nDefine:\n- Latitude: 54.7389744\n- Longitude: 25.1917101\n- Height above ground, m: 60\n<img src=\"../../../assets/images/ce-pro/training-03/image25.png\" style=\"width:3.72917in;height:3.23257in\" alt=\"A screenshot of a computer Description automatically generated\" />\nPress Save Changes. Objects will be moved to another location based on defined coordinates.\nObjects can be moved based on selected location. Choose Select Point button <img src=\"../../../assets/images/ce-pro/training-03/image26.png\" style=\"width:1.57314in;height:0.37505in\" />\nClick on the map to define Site and Cells location.\n<img src=\"../../../assets/images/ce-pro/training-03/image27.png\" style=\"width:2.64583in;height:3.33091in\" alt=\"A map of a city Description automatically generated\" />\nPress Save changes to move the site object.\n<img src=\"../../../assets/images/ce-pro/training-03/image28.png\" style=\"width:3.60417in;height:3.1487in\" alt=\"A map of a cell Description automatically generated\" />"
   },
   {
     "chunk_id": "ce-pro-tr-objects_chunk_9",
     "document_id": "ce-pro-tr-objects",
-    "document_title": "06 — Objects",
-    "section_title": "Creating a Site",
+    "document_title": "— Objects",
+    "section_title": "Duplicate objects",
     "product": "CE Pro",
     "version": "Unknown",
     "category": "Training",
     "source_file": "docs/ce-pro/training/06-objects.md",
-    "text": "1. Click **Add Object → Site**\n2. Place the site on the map or enter coordinates\n3. Enter a unique **Site Name**\n4. Optionally link existing cells to this site via the **site_name** field on each cell\n---"
+    "text": "Click on Duplicate Objects option.\n<img src=\"../../../assets/images/ce-pro/training-03/image29.png\" style=\"width:2.04195in;height:0.2292in\" />\nThe objects can be duplicated in the same way as Moved. You can enter coordinates directly in the dialog, or use Select Point tool to define a location on the map.\n<img src=\"../../../assets/images/ce-pro/training-03/image30.png\" style=\"width:1.36477in;height:0.30213in\" />\nOnce it is selected, click on the map. The potential position and coordinates will be updated. Define Height above the ground, m: 50\nPres Save Changes\n<img src=\"../../../assets/images/ce-pro/training-03/image31.png\" style=\"width:5.125in;height:3.8237in\" alt=\"A map of a land with buildings and roads Description automatically generated\" />"
   },
   {
     "chunk_id": "ce-pro-tr-objects_chunk_10",
     "document_id": "ce-pro-tr-objects",
-    "document_title": "06 — Objects",
-    "section_title": "Creating a Link (Microwave / RL)",
+    "document_title": "— Objects",
+    "section_title": "Change object parameters",
     "product": "CE Pro",
     "version": "Unknown",
     "category": "Training",
     "source_file": "docs/ce-pro/training/06-objects.md",
-    "text": "1. Click **Add Object → Link**\n2. Click the **start point** (Tx site) on the map\n3. Click the **end point** (Rx site) on the map\n4. Enter link parameters: frequency, Tx power, antenna types, feeder losses\n5. Click **Create**\n---"
+    "text": "With Select tool select Duplicated Cells and Site.\n<img src=\"../../../assets/images/ce-pro/training-03/image32.png\" style=\"width:6.5in;height:2.83264in\" alt=\"A screenshot of a computer Description automatically generated\" />\nChange newly created objects’ parameters.\nDouble click on CellA – Copy object and define:\n- Name: CellA1\n- Azimuth: 20\n- Power 43\nPress Save Changes.\nDo it for other cells, and do not forget to press Save Changes when finishing to change a parameters for a object.\n- Name:\n  - CellB1\n  - CellC1\n- Azimuth:\n  - For CellB1: 135\n  - For CellC1: 270\n- Power: 43\nClose Object Editor tool."
   },
   {
     "chunk_id": "ce-pro-tr-objects_chunk_11",
     "document_id": "ce-pro-tr-objects",
-    "document_title": "06 — Objects",
-    "section_title": "Duplicating Objects",
+    "document_title": "— Objects",
+    "section_title": "Change parameters in Attribute table",
     "product": "CE Pro",
     "version": "Unknown",
     "category": "Training",
     "source_file": "docs/ce-pro/training/06-objects.md",
-    "text": "1. Select one or more objects on the map\n2. Right-click → **Duplicate**\n3. The duplicate is placed at the same location with all parameters copied\n4. Move it to the new position and update the name\n---"
+    "text": "Select all objects on the map and open Cells attribute table (right click on Cells \\> Attribute Table). Find Power field and right click on it, choose Calculate Field.\n<img src=\"../../../assets/images/ce-pro/training-03/image33.png\" style=\"width:2.7in;height:2.18in\" alt=\"A screenshot of a computer Description automatically generated\" />\nDefine value 45.\n<img src=\"../../../assets/images/ce-pro/training-03/image34.png\" style=\"width:4.09432in;height:0.52091in\" alt=\"A white rectangular object with a black stripe Description automatically generated\" />\nPress OK button to recalculate value.\nPreview Power parameter in Object Editor tool."
   },
   {
     "chunk_id": "ce-pro-tr-objects_chunk_12",
     "document_id": "ce-pro-tr-objects",
-    "document_title": "06 — Objects",
-    "section_title": "Moving Objects",
+    "document_title": "— Objects",
+    "section_title": "Add Microwave Link",
     "product": "CE Pro",
     "version": "Unknown",
     "category": "Training",
     "source_file": "docs/ce-pro/training/06-objects.md",
-    "text": "1. Select the object on the map\n2. Click **Move Object** in the CE toolbar, or drag the object directly\n3. The coordinates are updated automatically in the attribute table\n---"
+    "text": "Open Add Object tool and choose Link object in drop-down list menu.\n<img src=\"../../../assets/images/ce-pro/training-03/image35.png\" style=\"width:4.07292in;height:1.85221in\" alt=\"A screenshot of a computer Description automatically generated\" />\nClick once on ST01 site, it will be the transmitter (Site A).\n<img src=\"../../../assets/images/ce-pro/training-03/image36.png\" style=\"width:2.53125in;height:1.42198in\" alt=\"A map of a city Description automatically generated\" />\nClick second time on ST02 – it will be a receiver (Site B).\n<img src=\"../../../assets/images/ce-pro/training-03/image37.png\" style=\"width:5.56328in;height:2.06279in\" alt=\"A map of a city Description automatically generated\" />\nThe coordinates will be filled according snapped objects.\n<img src=\"../../../assets/images/ce-pro/training-03/image38.png\" style=\"width:2.76in;height:4.63in\" alt=\"A screenshot of a computer Description automatically generated\" />\nAdjust Height values.\nNote. A link can be created on empty locations and does not require Site object. For this case, Site will be created automatically.\nLink profile can be generated before creating a new link.\n<img src=\"../../../assets/images/ce-pro/training-03/image39.png\" style=\"width:3.19836in;height:0.50007in\" />\nIt would show detail view from Tx to Rx locations.\n<img src=\"../../../assets/images/ce-pro/training-03/image40.png\" style=\"width:6.5in;height:1.46319in\" alt=\"A screen shot of a graph Description automatically generated\" />\nClose Profile view."
   },
   {
     "chunk_id": "ce-pro-tr-objects_chunk_13",
     "document_id": "ce-pro-tr-objects",
-    "document_title": "06 — Objects",
-    "section_title": "Import from Text / CSV",
+    "document_title": "— Objects",
+    "section_title": "Frequency Plan",
     "product": "CE Pro",
     "version": "Unknown",
     "category": "Training",
     "source_file": "docs/ce-pro/training/06-objects.md",
-    "text": "For bulk import:\n1. Click **CE Desktop → Import → From Text**\n2. Select your CSV file (must include at minimum: cell_name, latitude, longitude)\n3. Map CSV columns to CE field names\n4. Click **Import**\nSee `C:\\CE_Course\\0. Descriptions\\2. Import.pdf` for the full field mapping reference.\n---\n**Exercise:** `C:\\CE_Course\\0. Descriptions\\3. Create Objects.pdf`\n**Contact:** info@cellular-expert.com | +370 5 2150575 | www.cellular-expert.com"
+    "text": "The frequency plan is used to define frequencies for new Microwave link. A set of available frequencies will be displayed based on selected frequency plan.\n<img src=\"../../../assets/images/ce-pro/training-03/image41.png\" style=\"width:3.57292in;height:3.37137in\" alt=\"A screenshot of a computer Description automatically generated\" />\nBefore it, define that Site A will use Lower frequencies.\n<img src=\"../../../assets/images/ce-pro/training-03/image42.png\" style=\"width:3.91721in;height:0.88554in\" alt=\"A screenshot of a computer Description automatically generated\" />\nSite B section will be changed automatically to Upper.\nThen if MW link will be Duplex or Simplex. If Duplex option is Yes, then it will be duplex link, of No – simplex. Leave value Yes.\nSelect carriers 1 and 3.\n<img src=\"../../../assets/images/ce-pro/training-03/image43.png\" style=\"width:4.1985in;height:1.57314in\" alt=\"A screenshot of a computer Description automatically generated\" />\nChange Power for Carrier 3 to 20.\n<img src=\"../../../assets/images/ce-pro/training-03/image44.png\" style=\"width:3.92763in;height:1.29185in\" alt=\"A screenshot of a computer Description automatically generated\" />"
+  },
+  {
+    "chunk_id": "ce-pro-tr-objects_chunk_14",
+    "document_id": "ce-pro-tr-objects",
+    "document_title": "— Objects",
+    "section_title": "Antenna",
+    "product": "CE Pro",
+    "version": "Unknown",
+    "category": "Training",
+    "source_file": "docs/ce-pro/training/06-objects.md",
+    "text": "Parabolic antennas can be defined for Tx and Rx. Preview selected antenna with option View Antenna.\n<img src=\"../../../assets/images/ce-pro/training-03/image45.png\" style=\"width:6.5in;height:2.97847in\" alt=\"A screenshot of a computer Description automatically generated\" />\nClose Antenna Viewer dialog."
+  },
+  {
+    "chunk_id": "ce-pro-tr-objects_chunk_15",
+    "document_id": "ce-pro-tr-objects",
+    "document_title": "— Objects",
+    "section_title": "Equipment",
+    "product": "CE Pro",
+    "version": "Unknown",
+    "category": "Training",
+    "source_file": "docs/ce-pro/training/06-objects.md",
+    "text": "Radio parameters such as bandwidth, power and modulations are defined here. Leave default radio."
+  },
+  {
+    "chunk_id": "ce-pro-tr-objects_chunk_16",
+    "document_id": "ce-pro-tr-objects",
+    "document_title": "— Objects",
+    "section_title": "Name",
+    "product": "CE Pro",
+    "version": "Unknown",
+    "category": "Training",
+    "source_file": "docs/ce-pro/training/06-objects.md",
+    "text": "Define Link name:\n<img src=\"../../../assets/images/ce-pro/training-03/image46.png\" style=\"width:4.15683in;height:0.50007in\" />\nPress Save Changes and new Link object will be created in the project.\n<img src=\"../../../assets/images/ce-pro/training-03/image47.png\" style=\"width:6.5in;height:1.42847in\" alt=\"A map of a city Description automatically generated\" />"
   }
 ]

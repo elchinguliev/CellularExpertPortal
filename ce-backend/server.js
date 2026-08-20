@@ -77,6 +77,14 @@ function requireAdmin(req, res, next) {
   next();
 }
 
+function blockDocumentationEditing(req, res) {
+  return res.status(404).json({ error: 'Documentation editing is disabled.' });
+}
+
+function blockProductAccessChanges(req, res) {
+  return res.status(404).json({ error: 'Product access changes are disabled.' });
+}
+
 // Serves everything under ce-backend/public/downloads at:
 //   http://localhost:4000/downloads/<product>/<...>/<file>.pdf
 // Used by the frontend "Download PDF" button (doc.pdf_path).
@@ -181,7 +189,7 @@ app.get('/api/search', async (req, res) => {
 });
 
 // ── Add/update an image for a doc (used by an admin tool later) ──────────────
-app.post('/api/docs/:docId/images', async (req, res) => {
+app.post('/api/docs/:docId/images', blockDocumentationEditing, async (req, res) => {
   try {
     const { docId } = req.params;
     const { image_url, caption, section_anchor, display_order } = req.body;
@@ -199,7 +207,7 @@ app.post('/api/docs/:docId/images', async (req, res) => {
 // ── Register a new account ───────────────────────────────────────────────────
 app.post('/api/auth/register', async (req, res) => {
   try {
-    const { name, email, password, company, product } = req.body;
+    const { name, email, password, company } = req.body;
     if (!name || !email || !password) {
       return res.status(400).json({ error: 'Name, email, and password are required' });
     }
@@ -292,12 +300,47 @@ app.get('/api/auth/users', requireAdmin, async (req, res) => {
   }
 });
 
+// Create a user from the admin Users panel.
+app.post('/api/auth/users', requireAdmin, async (req, res) => {
+  try {
+    const { name, email, password, company, role } = req.body;
+    const normalizedEmail = String(email || '').trim().toLowerCase();
+    const allowedRoles = ['user', 'admin'];
+
+    if (!name || !normalizedEmail || !password || !company) {
+      return res.status(400).json({ error: 'Name, email, password, and company are required' });
+    }
+    if (String(password).length < 6) {
+      return res.status(400).json({ error: 'Password must be at least 6 characters' });
+    }
+    if (!allowedRoles.includes(role)) {
+      return res.status(400).json({ error: 'Invalid user role' });
+    }
+    const hash = await bcrypt.hash(password, 10);
+    const cleanName = String(name).trim();
+    const avatar = cleanName.split(/\s+/).map((word) => word[0]).join('').slice(0, 2).toUpperCase();
+    const { rows } = await pool.query(
+      `INSERT INTO users (name, email, password_hash, company, product, role, avatar)
+       VALUES ($1, $2, $3, $4, $5, $6, $7)
+       RETURNING id, name, email, company, product, role, avatar, created_at`,
+      [cleanName, normalizedEmail, hash, String(company).trim(), 'Both', role, avatar]
+    );
+
+    res.status(201).json({ ...rows[0], ticket_count: 0 });
+  } catch (err) {
+    if (err.code === '23505') {
+      return res.status(409).json({ error: 'A user with this email already exists' });
+    }
+    res.status(500).json({ error: err.message });
+  }
+});
+
 // ── Change a user's role (admin) ─────────────────────────────────────────────
 app.put('/api/auth/users/:id/role', requireAdmin, async (req, res) => {
   try {
     const { id } = req.params;
     const { role } = req.body;
-    if (!['user', 'agent', 'admin'].includes(role)) {
+    if (!['user', 'admin'].includes(role)) {
       return res.status(400).json({ error: 'role must be user, agent, or admin' });
     }
     const { rows } = await pool.query(
@@ -314,7 +357,7 @@ app.put('/api/auth/users/:id/role', requireAdmin, async (req, res) => {
 });
 
 // ── Change a user's product (admin) ──────────────────────────────────────────
-app.put('/api/auth/users/:id/product', requireAdmin, async (req, res) => {
+app.put('/api/auth/users/:id/product', blockProductAccessChanges, async (req, res) => {
   try {
     const { id } = req.params;
     const { product } = req.body;
@@ -332,7 +375,7 @@ app.put('/api/auth/users/:id/product', requireAdmin, async (req, res) => {
 });
 
 // ── Update a document (admin CRUD) ───────────────────────────────────────────
-app.put('/api/docs/:docId', requireAdmin, async (req, res) => {
+app.put('/api/docs/:docId', blockDocumentationEditing, async (req, res) => {
   try {
     const { docId } = req.params;
     const { title, product, category, content } = req.body;
@@ -355,7 +398,7 @@ app.put('/api/docs/:docId', requireAdmin, async (req, res) => {
 });
 
 // ── Delete a document (admin CRUD) ───────────────────────────────────────────
-app.delete('/api/docs/:docId', requireAdmin, async (req, res) => {
+app.delete('/api/docs/:docId', blockDocumentationEditing, async (req, res) => {
   try {
     const { docId } = req.params;
     const { rowCount } = await pool.query(`DELETE FROM documents WHERE doc_id = $1`, [docId]);
@@ -367,7 +410,7 @@ app.delete('/api/docs/:docId', requireAdmin, async (req, res) => {
 });
 
 // ── Create a new document (admin CRUD) ───────────────────────────────────────
-app.post('/api/docs', requireAdmin, async (req, res) => {
+app.post('/api/docs', blockDocumentationEditing, async (req, res) => {
   try {
     const { doc_id, title, product, category, content, github_path } = req.body;
     if (!doc_id || !title || !product || !category) {
@@ -404,7 +447,7 @@ const upload = multer({
 });
 
 // ── Upload a new image/icon for a document (admin CRUD) ──────────────────────
-app.post('/api/docs/:docId/images/upload', requireAdmin, upload.single('image'), async (req, res) => {
+app.post('/api/docs/:docId/images/upload', blockDocumentationEditing, upload.single('image'), async (req, res) => {
   try {
     const { docId } = req.params;
     const { caption, section_anchor, display_order } = req.body;
@@ -424,7 +467,7 @@ app.post('/api/docs/:docId/images/upload', requireAdmin, upload.single('image'),
 });
 
 // ── Delete an image (admin CRUD) ──────────────────────────────────────────────
-app.delete('/api/docs/:docId/images/:imageId', requireAdmin, async (req, res) => {
+app.delete('/api/docs/:docId/images/:imageId', blockDocumentationEditing, async (req, res) => {
   try {
     const { imageId } = req.params;
     const { rowCount } = await pool.query(`DELETE FROM document_images WHERE id = $1`, [imageId]);
@@ -732,7 +775,7 @@ app.post('/api/auth/register/send-code', async (req, res) => {
     const hash = await bcrypt.hash(password, 10);
     const avatar = name.trim().split(/\s+/).map(w => w[0]).join('').slice(0, 2).toUpperCase();
     const code = generateCode();
-    const payload = { name, email: email.toLowerCase(), password_hash: hash, company: company || null, product: product || 'CE Express', avatar };
+    const payload = { name, email: email.toLowerCase(), password_hash: hash, company: company || null, product: 'Both', avatar };
 
     await pool.query(
       `INSERT INTO verification_codes (email, code, purpose, payload, expires_at)

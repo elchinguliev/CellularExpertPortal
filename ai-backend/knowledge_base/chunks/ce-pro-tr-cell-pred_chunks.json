@@ -2,89 +2,111 @@
   {
     "chunk_id": "ce-pro-tr-cell-pred_chunk_1",
     "document_id": "ce-pro-tr-cell-pred",
-    "document_title": "07 — Cell Prediction",
-    "section_title": "07. Cell Prediction",
+    "document_title": "— Cell Prediction",
+    "section_title": "— Cell Prediction",
     "product": "CE Pro",
     "version": "Unknown",
     "category": "Training",
     "source_file": "docs/ce-pro/training/07-cell-prediction.md",
-    "text": "> **Version:** CE Pro v4.9\nCell prediction results are displayed as coverage rasters in the ArcGIS Pro map view:\nConfigure prediction parameters in the CE Pro pane before running:\n---"
+    "text": "**4. Cell Prediction Exercise**"
   },
   {
     "chunk_id": "ce-pro-tr-cell-pred_chunk_2",
     "document_id": "ce-pro-tr-cell-pred",
-    "document_title": "07 — Cell Prediction",
-    "section_title": "Cell Structure",
+    "document_title": "— Cell Prediction",
+    "section_title": "Objective",
     "product": "CE Pro",
     "version": "Unknown",
     "category": "Training",
     "source_file": "docs/ce-pro/training/07-cell-prediction.md",
-    "text": "Each cell in CE Pro has two categories of parameters:\n**Physical parameters:**\n- Coordinates (X/Y or Latitude/Longitude)\n- Height (above ground)\n- Azimuth (direction)\n**Logical parameters:**\n- Power (dBm or EIRP)\n- Bandwidth (MHz)\n- Frequency (MHz)\n- Technology (2G/3G/4G/5G)\n---"
+    "text": "Explain and show the main parameters for Cell object and how they influence calculations.\nAt the end of exercise you will be able to:\n- Get familiar with main parameters of the cell.\n- How geodata is included in the predictions.\n- Manage and edit data."
   },
   {
     "chunk_id": "ce-pro-tr-cell-pred_chunk_3",
     "document_id": "ce-pro-tr-cell-pred",
-    "document_title": "07 — Cell Prediction",
-    "section_title": "Cell Coordinates",
+    "document_title": "— Cell Prediction",
+    "section_title": "Initial data",
     "product": "CE Pro",
     "version": "Unknown",
     "category": "Training",
     "source_file": "docs/ce-pro/training/07-cell-prediction.md",
-    "text": "CE Pro supports two coordinate systems:\n| System | Fields | Notes |\n|--------|--------|-------|\n| Projected (CRS) | X, Y | Meters in project CRS |\n| Geographic (WGS 1984) | Longitude, Latitude | Decimal degrees |\n| Z — total height above sea level | | Calculated from site height + cell height |\n> **Note:** Cell name is a unique parameter per project. Best Server prediction also uses the cell name as identifier.\n---"
+    "text": "Prepared project with:\n- Network objects.\n- Geodata.\n- Equipment and models.\n<img src=\"../../../assets/images/ce-pro/training-04/image1.png\" style=\"width:6.5in;height:3.48542in\" alt=\"A screenshot of a map Description automatically generated\" />"
   },
   {
     "chunk_id": "ce-pro-tr-cell-pred_chunk_4",
     "document_id": "ce-pro-tr-cell-pred",
-    "document_title": "07 — Cell Prediction",
-    "section_title": "Cell Parameters Reference",
+    "document_title": "— Cell Prediction",
+    "section_title": "Network object parameters",
     "product": "CE Pro",
     "version": "Unknown",
     "category": "Training",
     "source_file": "docs/ce-pro/training/07-cell-prediction.md",
-    "text": "| CE Field | Units | Example | Description |\n|----------|-------|---------|-------------|\n| `cell_name` | text | `5G cell XXYY` | Unique cell identifier |\n| `site_name` | text | `Site 55 ID` | Parent site identifier |\n| `latitude` | decimal degrees | `49.9993` | Y coordinate in WGS 1984 |\n| `longitude` | decimal degrees | `33.6573` | X coordinate in WGS 1984 |\n| `height` | meters | `40` | Cell height above ground |\n| `azimuth` | degrees (0–360) | `50` | Cell direction from north |\n| `tilt` | degrees | `1` | Mechanical tilt angle |\n| `frequency` | MHz | `3500` | Carrier frequency |\n| `power` | dBm | `40` | Cell transmit power (or EIRP) |\n| `antenna_gain` | dBi | `18.2` | Gain of assigned antenna |\n| `misc_loss` | dB | `1` | Total cell miscellaneous loss |\n| `bandwidth` | MHz | `0.015` | Cell bandwidth (required for 3G/4G/5G) |\n| `subcarrier_spacing` | kHz | `15` | Subcarrier spacing (required for 5G) |\n| `tx_mimo` | number | `4` | Transmitter MIMO config (1/2/4/8/16/32/64) |\n| `rx_mimo` | number | `4` | Receiver MIMO config (1/2/4/8/16/32/64) |\n| `cell_load` | % (0–100) | `30` | Real-time cell load for broadband calculations |\n| `technology` | text | `2G` | Cell technology: 2G, 3G, 4G, or 5G |\n| `antenna_id` | number | `1` | ID of assigned antenna pattern |"
+    "text": "Open ArcGIS Pro project from C:\\CE_Course\\CellPrediction\\Project catalog, name Project.aprx.\nTo perform a Cell prediction, the tool retrieves the necessary parameters from the database to calculate signal strength and other prediction layers. Locate Cell NBa 02 using the cell name parameter and select it on the map. Then, open the Object Editor tool. <img src=\"../../../assets/images/ce-pro/training-04/image3c.png\" style=\"width:0.29071in;height:0.49421in\" />\n<img src=\"../../../assets/images/ce-pro/training-04/image3.png\" style=\"width:6.5in;height:1.96875in\" alt=\"A screenshot of a computer screen Description automatically generated\" />\nDouble-click on the cell object in Object Editor to display its parameters. Preview them one by one to get better understanding of available parameters in Cellular Expert.\n<img src=\"../../../assets/images/ce-pro/training-04/image4.png\" style=\"width:2.85079in;height:4.27012in\" alt=\"A screenshot of a computer Description automatically generated\" /> <img src=\"../../../assets/images/ce-pro/training-04/image5.png\" style=\"width:2.86458in;height:4.28161in\" alt=\"A screenshot of a computer Description automatically generated\" />\nClose Object Editor tool."
   },
   {
     "chunk_id": "ce-pro-tr-cell-pred_chunk_5",
     "document_id": "ce-pro-tr-cell-pred",
-    "document_title": "07 — Cell Prediction",
-    "section_title": "Power vs EIRP",
+    "document_title": "— Cell Prediction",
+    "section_title": "Cell Area Predictions",
     "product": "CE Pro",
     "version": "Unknown",
     "category": "Training",
     "source_file": "docs/ce-pro/training/07-cell-prediction.md",
-    "text": "- If workspace parameter **Calculate EIRP = Yes**: enter cell transmit power — EIRP is calculated from power + antenna gain − misc loss\n- If workspace parameter **Calculate EIRP = No**: `power` field represents EIRP directly\n---"
+    "text": "To estimate expected cell coverage without topographical data, we can use Calculate Cells Area tool. It will take several parameters from Cell object:\n- Prediction model radius.\n- Antenna 3dB level patterns.\nIt helps very quickly estimate antenna or antennas coverage without topographical data.\nMake sure that NBa 02 cell is selected and Calculate Cell Area tool.\n<img src=\"../../../assets/images/ce-pro/training-04/image6.png\" style=\"width:4.49021in;height:1.15641in\" alt=\"A white rectangular object with a black border Description automatically generated\" />\nPress Run Calculations and the tool will provide you a feature class layer in the map view.\n<img src=\"../../../assets/images/ce-pro/training-04/image7.png\" style=\"width:5.91in;height:3.7in\" alt=\"A screenshot of a computer Description automatically generated\" />\nClose Calculate Cell Area tool and disable NBa 02 Servitude results in the Contents.\n<img src=\"../../../assets/images/ce-pro/training-04/image8.png\" style=\"width:4.1985in;height:0.77094in\" alt=\"A blue rectangle with a white background Description automatically generated\" />"
   },
   {
     "chunk_id": "ce-pro-tr-cell-pred_chunk_6",
     "document_id": "ce-pro-tr-cell-pred",
-    "document_title": "07 — Cell Prediction",
-    "section_title": "RF Prediction Output Structure",
+    "document_title": "— Cell Prediction",
+    "section_title": "Quick prediction",
     "product": "CE Pro",
     "version": "Unknown",
     "category": "Training",
     "source_file": "docs/ce-pro/training/07-cell-prediction.md",
-    "text": "CE Pro stores prediction results in a defined folder structure within the project:\n```\nProject/\n├── Predictions/      — prediction configuration files\n├── Results/          — output raster layers (coverage maps)\n├── Temp/             — temporary calculation files\n```\n---"
+    "text": "The tool allows for calculations without altering any parameters in the database and is designed specifically for evaluating \"what if\" scenarios. The prediction output is a signal strength raster in dBm, which considers all necessary parameters such as cell properties, antenna specifications, the prediction model, and topographical data.\nOpen Quick Prediction tool. Move mouse cursor on top of selected Cell and click on it to snap it.\n<img src=\"../../../assets/images/ce-pro/training-04/image9.png\" style=\"width:2.6in;height:1.85in\" alt=\"A screenshot of a video game map Description automatically generated\" />\nCoordinates and other parameters will be taken from snapped Cell.\n<img src=\"../../../assets/images/ce-pro/training-04/image10.png\" style=\"width:3.19in;height:2.43in\" alt=\"A screenshot of a cell phone Description automatically generated\" />\nChange resolution from 10 to 2, run predictions and preview results.\n<img src=\"../../../assets/images/ce-pro/training-04/image11.png\" style=\"width:6.5in;height:3.35764in\" alt=\"A map with colorful spots Description automatically generated with medium confidence\" />Change Azimuth from 357 to 50 in Quick prediction tool and run predictions.\nCompare predictions.\n<img src=\"../../../assets/images/ce-pro/training-04/image12.png\" style=\"width:6.5in;height:3.40069in\" alt=\"A map with colorful spots Description automatically generated with medium confidence\" />Run several more predictions by changing the parameter. Change parameters one by one and run RF predictions for each new parameter defined in the table below.\n| **Parameter name**  |                         **Value** |\n|---------------------|----------------------------------:|\n| Height above ground |                                35 |\n| Downtilt            |                                 2 |\n| Tx MIMO             |                                 8 |\n| Power               |                                45 |\n| Antenna             | ObjectID: 451, Alpha Wireless Ltd |\n| Frequency           |                              1800 |"
   },
   {
     "chunk_id": "ce-pro-tr-cell-pred_chunk_7",
     "document_id": "ce-pro-tr-cell-pred",
-    "document_title": "07 — Cell Prediction",
-    "section_title": "Running a Cell Prediction",
+    "document_title": "— Cell Prediction",
+    "section_title": "RF Prediction",
     "product": "CE Pro",
     "version": "Unknown",
     "category": "Training",
     "source_file": "docs/ce-pro/training/07-cell-prediction.md",
-    "text": "1. Open the **CE Desktop** tab in the ArcGIS Pro ribbon\n2. Select one or more cells on the map\n3. Click **RF Prediction** and choose prediction type:\n   - **Signal Level** (dBm) — received signal power at UE\n   - **Best Server** — which cell provides strongest signal per pixel\n   - **SINR** — Signal to Interference + Noise Ratio\n   - **Throughput** (Mbps) — estimated data rate\n4. Set radius (km), resolution (m), and prediction model\n5. Click **Run** — results appear as raster layers in the Contents pane\n---"
+    "text": "The RF Prediction tool is designed to simultaneously calculate multiple cells and provide overall coverage for all selected objects. It also performs additional calculations, including best server, interference, and throughput analyses.\nSelect NBe 02 cell on the map.\n<img src=\"../../../assets/images/ce-pro/training-04/image13.png\" style=\"width:4.71in;height:3.38in\" alt=\"A map of a city Description automatically generated\" />\nOpen RF Prediction tool and run calculations with the same parameters as defined in the picture below.\n<img src=\"../../../assets/images/ce-pro/training-04/image14.png\" style=\"width:3.93in;height:2.82in\" alt=\"A screenshot of a computer Description automatically generated\" />\nPreview results are loaded in the Contents and visible on the map. The meaning of each prediction rasters will be covered in 5G Prediction exercise.\n<img src=\"../../../assets/images/ce-pro/training-04/image15.png\" style=\"width:1.82in;height:3.11in\" alt=\"A screenshot of a computer Description automatically generated\" />\nTurn off Best Server 1, so only Field Strength 1 raster will be visible on the map.\n<img src=\"../../../assets/images/ce-pro/training-04/image16.png\" style=\"width:6.5in;height:3.69583in\" alt=\"A screenshot of a computer screen Description automatically generated\" />\nRight click on Field Strength 1 raster and choose Symbology. Define colors and thresholds the same as in the picture below:\n<img src=\"../../../assets/images/ce-pro/training-04/image17.png\" style=\"width:3.89in;height:2.17in\" alt=\"A screenshot of a computer Description automatically generated\" />\nThen leave Field Strength 1 selected in Contents\n<img src=\"../../../assets/images/ce-pro/training-04/image18.png\" style=\"width:1.7815in;height:0.56258in\" alt=\"A blue rectangle with black text Description automatically generated\" />\nOpen Raster Layer, and change Transparency to 50.\n<img src=\"../../../assets/images/ce-pro/training-04/image19.png\" style=\"width:2.13572in;height:0.35422in\" />\nField Strength raster looks like this one.\n<img src=\"../../../assets/images/ce-pro/training-04/image20.png\" style=\"width:6.5in;height:3.16389in\" alt=\"A screenshot of a computer screen Description automatically generated\" />\nClose Symbology tool.\nBlue, yellow color shows lower signal strength values. Open Profile tool and do a profile from NBe 02 Cell to these areas. Use fixed transmitter option to quickly change the receiver point.\n<img src=\"../../../assets/images/ce-pro/training-04/image21.png\" style=\"width:6.5in;height:2.97639in\" alt=\"A screenshot of a computer Description automatically generated\" />\nClose Profile windows."
   },
   {
     "chunk_id": "ce-pro-tr-cell-pred_chunk_8",
     "document_id": "ce-pro-tr-cell-pred",
-    "document_title": "07 — Cell Prediction",
-    "section_title": "Prediction Types Explained",
+    "document_title": "— Cell Prediction",
+    "section_title": "Antenna",
     "product": "CE Pro",
     "version": "Unknown",
     "category": "Training",
     "source_file": "docs/ce-pro/training/07-cell-prediction.md",
-    "text": "| Type | Unit | Use Case |\n|------|------|----------|\n| Signal Level | dBm | Coverage threshold mapping |\n| Best Server | cell name | Frequency planning, handover zones |\n| SINR | dB | Interference analysis |\n| Throughput | Mbps | Capacity and QoS planning |\n---\n*Reference: CE Desktop Training — 4. Cell Prediction*\n*Contact: info@cellular-expert.com | +370 5 2150575*"
+    "text": "To include different parameters in RF Predictions, you'll need to update those parameters for the cell in the database. This can be done using the dedicated graphical interface, Object Editor, or by directly modifying the parameter in the table.\nTurn off prediction results. Open Object Editor for the same selected Cell. Double click on NBe 02 cell.\n<img src=\"../../../assets/images/ce-pro/training-04/image22.png\" style=\"width:3.92in;height:1.14in\" alt=\"A screenshot of a computer Description automatically generated\" />\nFind antenna parameters. Click on Model field to filter the antennas.\n<img src=\"../../../assets/images/ce-pro/training-04/image23.png\" style=\"width:3.91in;height:0.93in\" alt=\"A screenshot of a computer Description automatically generated\" />\nHere type Telrad and it will automatically provide the list with defined letters.\n<img src=\"../../../assets/images/ce-pro/training-04/image24.png\" style=\"width:4.29227in;height:1.13558in\" alt=\"A screenshot of a computer Description automatically generated\" />\nDouble click on Telrad_3GHz_panel_antenna antenna to define it for the cell.\n<img src=\"../../../assets/images/ce-pro/training-04/image25.png\" style=\"width:4.13599in;height:1.04181in\" alt=\"A screen shot of a computer Description automatically generated\" />\nBefore defining the antenna, you can press View Antenna button <img src=\"../../../assets/images/ce-pro/training-04/image26.png\" style=\"width:1.04181in;height:0.30213in\" /> to open Antenna Viewer dialog. It will open the assigned antenna pattern visualization, you can also find and preview another antennas here.\n<img src=\"../../../assets/images/ce-pro/training-04/image27.png\" style=\"width:6.5in;height:1.34792in\" alt=\"A screen shot of a screen Description automatically generated\" />\nClose Antenna Viewer dialog, and press Save Changes button.\nRun RF Predictions with the same settings.\n<img src=\"../../../assets/images/ce-pro/training-04/image28.png\" style=\"width:3.92in;height:2.83in\" alt=\"A screenshot of a computer Description automatically generated\" />\nTurn off newly loaded Best Server 1 layer, and right click on newly loaded Field Strength 1 layer and choose Symbology.\nExpand Options and choose Import from layer.\n<img src=\"../../../assets/images/ce-pro/training-04/image29.png\" style=\"width:3.89in;height:1.18in\" alt=\"A screenshot of a computer Description automatically generated\" />\nFor Symbology layer choose firstly calculated Field Strength layer.\n<img src=\"../../../assets/images/ce-pro/training-04/image30.png\" style=\"width:3.91in;height:4.63in\" alt=\"A screenshot of a computer Description automatically generated\" />\nRun symbology conversion. It will apply the same symbology as a first field strength layer.\nCompare both results."
+  },
+  {
+    "chunk_id": "ce-pro-tr-cell-pred_chunk_9",
+    "document_id": "ce-pro-tr-cell-pred",
+    "document_title": "— Cell Prediction",
+    "section_title": "Compare predictions",
+    "product": "CE Pro",
+    "version": "Unknown",
+    "category": "Training",
+    "source_file": "docs/ce-pro/training/07-cell-prediction.md",
+    "text": "To compare predictions, users can utilize the functionality created by CE or use GIS tools, such as Raster Calculator.\nTurn off newly calculated prediction layers, open View \\> Geoprocessing, and in search line type: Raster Calculator\n<img src=\"../../../assets/images/ce-pro/training-04/image31.png\" style=\"width:3.93in;height:2.2in\" />\nOpen Raster Calculator (Spatial Analyst Tools), and define the formula:\n\"CE Prediction 2: CE Calculation\\5G\\3500\\Field Strength 1\" - \"CE Prediction 1: CE Calculation\\5G\\3500\\Field Strength 1\"\nOutput path: C:\\CE_Course\\CellPrediction\\Calculations\\Difference.tif\n<img src=\"../../../assets/images/ce-pro/training-04/image32.png\" style=\"width:4.79in;height:3.35in\" alt=\"A screenshot of a computer Description automatically generated\" />\nPreview results, if a value is:\n- Positive – the second prediction signal strength value with Telrad antenna is higher.\n- Negative - the second prediction signal strength value with Telrad antenna is lower.\nClose Geoprocessing window."
+  },
+  {
+    "chunk_id": "ce-pro-tr-cell-pred_chunk_10",
+    "document_id": "ce-pro-tr-cell-pred",
+    "document_title": "— Cell Prediction",
+    "section_title": "Cell Statistic",
+    "product": "CE Pro",
+    "version": "Unknown",
+    "category": "Training",
+    "source_file": "docs/ce-pro/training/07-cell-prediction.md",
+    "text": "Cellular Expert includes its own statistics tools that use polygons to determine overall coverage and coverage for each polygon segment. Coverage analysis by polygon is covered in a separate exercise. Here, we will focus on analyzing coverage for individual points and how to obtain the signal value for each point.\nZoom to s3 site object, which contains three cells: NBc 01, NBc 02 and NBc 03.\n<img src=\"../../../assets/images/ce-pro/training-04/image33.png\" style=\"width:4.33in;height:3.45in\" alt=\"A map of a green area Description automatically generated\" />\nOpen Map \\> Add Data and navigate to C:\\CE_Course\\CellPrediction\\Shape.gdb, select Address_points and click OK to add it to the map.\n<img src=\"../../../assets/images/ce-pro/training-04/image34.png\" style=\"width:5.76in;height:3.5in\" alt=\"A map of land with many small green and blue dots Description automatically generated\" />\nSelect NBc 01, NBc 02 and NBc 03 on the map, and run RF Prediction with these settings:\n<img src=\"../../../assets/images/ce-pro/training-04/image35.png\" style=\"width:4.83in;height:2.98in\" alt=\"A screenshot of a computer Description automatically generated\" />\nPreview loaded results especially Field Strength 1 and Best Server 1 rasters.\nOpen Geoprocessing tool, in Search line type Extract Multi Values, and open Extract Multi Values to Points tool.\n<img src=\"../../../assets/images/ce-pro/training-04/image36.png\" style=\"width:4.83in;height:1.42in\" alt=\"A screenshot of a computer Description automatically generated\" />\nDefine:\n- Input point features: Address_points\n- Input rasters: Currently calculated Field Strength 1, Best Server 1, Field Strength 2, and Best Server 2 rasters.\n<img src=\"../../../assets/images/ce-pro/training-04/image37.png\" style=\"width:4.8in;height:2.84in\" alt=\"A screenshot of a computer Description automatically generated\" />\nPress Run.\nTurn off prediction layers, then right click on Address_points layer and click on Attribute Table.\n<img src=\"../../../assets/images/ce-pro/training-04/image38.png\" style=\"width:3.6in;height:2.52in\" alt=\"A screenshot of a computer Description automatically generated\" />\nScroll right in the opened table, and preview newly generated values.\n<img src=\"../../../assets/images/ce-pro/training-04/image39.png\" style=\"width:1.31268in;height:2.47951in\" alt=\"A screenshot of a white grid with numbers Description automatically generated\" />\nClick on Select By Attribute, and in the opened tool define as in the picture below.\n<img src=\"../../../assets/images/ce-pro/training-04/image35.png\" style=\"width:3.12071in;height:1.01929in\" /><img src=\"../../../assets/images/ce-pro/training-04/image36.png\" style=\"width:3.04218in;height:1.69521in\" alt=\"A screenshot of a computer Description automatically generated\" />\nPress Apply button. The tool will select all points with FS1 value greated than -120dBm.\nRight click on FS1 field and choose <img src=\"../../../assets/images/ce-pro/training-04/image37.png\" style=\"width:1.27083in;height:0.19792in\" />\n<img src=\"../../../assets/images/ce-pro/training-04/image41.png\" style=\"width:6.5in;height:3.57708in\" alt=\"A screenshot of a computer Description automatically generated\" />\nGo back to table view, and open Select By Attribute tool again. Define parameters as defined in the picture below.\n<img src=\"../../../assets/images/ce-pro/training-04/image42.png\" style=\"width:4.63in;height:1.51in\" alt=\"A screenshot of a computer Description automatically generated\" />\nPress OK, the tool will select anly these points which is operated by Cell ID 7 (Cell Name NBc 01), and FS1 value is greater than -120dBm.\nStatistics will be updated too.\n<img src=\"../../../assets/images/ce-pro/training-04/image43.png\" style=\"width:6.5in;height:2.39236in\" alt=\"A screenshot of a computer Description automatically generated\" />\nClose the table.\nPoints can be symbolized based on field strength values. Right click on Address_points layer and choose Symbology, here define these settings:\nUniques values.\n<img src=\"../../../assets/images/ce-pro/training-04/image44.png\" style=\"width:4.78in;height:1.88in\" alt=\"A screenshot of a computer Description automatically generated\" />\nField 1: BS1\n<img src=\"../../../assets/images/ce-pro/training-04/image45.png\" style=\"width:3.33in;height:3.35in\" alt=\"A screenshot of a computer Description automatically generated\" />\nPreview points on the map.\n<img src=\"../../../assets/images/ce-pro/training-04/image38.png\" style=\"width:5.39074in;height:4.18507in\" alt=\"A map of a city Description automatically generated\" />\nThen choose Gradeuated Colors.\n<img src=\"../../../assets/images/ce-pro/training-04/image39.png\" style=\"width:4.78in;height:2.04in\" alt=\"A screenshot of a computer Description automatically generated\" />\n| Field: FS1 | Classes: 4 |\n|----|----|\n| <img src=\"../../../assets/images/ce-pro/training-04/image3d.png\" style=\"width:2.65476in;height:1.30208in\" /> | <img src=\"../../../assets/images/ce-pro/training-04/image3e.png\" style=\"width:2.75149in;height:0.74914in\" /> |\nDefine color range:\n<img src=\"../../../assets/images/ce-pro/training-04/image50.png\" style=\"width:5.94875in;height:2.22948in\" alt=\"A screenshot of a computer Description automatically generated\" />\nPreview on the map.\n<img src=\"../../../assets/images/ce-pro/training-04/image51.png\" style=\"width:6.5in;height:3.55556in\" />"
   }
 ]

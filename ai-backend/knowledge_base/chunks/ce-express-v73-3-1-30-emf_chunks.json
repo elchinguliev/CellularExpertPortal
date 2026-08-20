@@ -1,0 +1,13 @@
+[
+  {
+    "chunk_id": "ce-express-v73-3-1-30-emf_chunk_1",
+    "document_id": "ce-express-v73-3-1-30-emf",
+    "document_title": "EMF",
+    "section_title": "3.1.30 EMF",
+    "product": "CE Express",
+    "version": "Unknown",
+    "category": "Express Tools",
+    "source_file": "docs/ce-express/user-guide/v73-sections/3-1-30-emf.md",
+    "text": "Click this button ![icon](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-express%2Fuser-guide-v73%2Fp188-img2.png) to open EMF tool.\nUsed for calculating the electromagnetic field, or non-ionising radiation for regulatory purposes.\n![Image p189](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-express%2Fuser-guide-v73%2Fp189-img1.png)\n**Calculation name**\nName of the calculation that will be displayed in the Prediction history.\n**Resolution**\nPrediction raster cell size in meters.\n**Cell template**\nIf the cell is missing the required parameters, the parameters from the template will be used.\n**Reflection factor**\n• No reflection – ground reflections aren’t considered\n• Realistic reflection – reflection coefficient of 2.56\n• Full reflection - reflection coefficient of 4\n**Receiver height**\nReceiver height above the receiver reference height selected in the workspace settings.\n**Results:**\n- EMF Limit usage, % - weighted percentage of frequency band regulatory EMF limit.\n- EMF, W/m2 – EMF value in mW/m2\n- EMF, mV/m – EMF value in mV/m"
+  }
+]

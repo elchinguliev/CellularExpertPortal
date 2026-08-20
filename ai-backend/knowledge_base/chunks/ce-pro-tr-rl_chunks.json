@@ -2,133 +2,122 @@
   {
     "chunk_id": "ce-pro-tr-rl_chunk_1",
     "document_id": "ce-pro-tr-rl",
-    "document_title": "10 — RL Prediction",
-    "section_title": "10. RL / Microwave Link Prediction",
+    "document_title": "— RL Prediction",
+    "section_title": "— RL Prediction",
     "product": "CE Pro",
     "version": "Unknown",
     "category": "Training",
     "source_file": "docs/ce-pro/training/10-rl-prediction.md",
-    "text": "> **Version:** CE Pro v4.9"
+    "text": "**7. RL Introduction**"
   },
   {
     "chunk_id": "ce-pro-tr-rl_chunk_2",
     "document_id": "ce-pro-tr-rl",
-    "document_title": "10 — RL Prediction",
-    "section_title": "Overview",
+    "document_title": "— RL Prediction",
+    "section_title": "Objective",
     "product": "CE Pro",
     "version": "Unknown",
     "category": "Training",
     "source_file": "docs/ce-pro/training/10-rl-prediction.md",
-    "text": "RL and MW link paths and prediction results are displayed on the active map view:\nFor RL planning, arrange your ArcGIS Pro panes to keep the map, Contents, and CE Pro pane all visible at once:\n---\nCE Pro includes a full **Radio Link (RL) / Microwave planning** module for fixed point-to-point links. It covers power budget calculation, interference analysis, and geoclimatic availability.\n---"
+    "text": "This tutorial will show you how to add new MW links, manage and do predictions.\nAt the end of the exercise you will be able to:\n- Create and import MW equipment.\n- Create MW links in the project.\n- Do MW Predictions."
   },
   {
     "chunk_id": "ce-pro-tr-rl_chunk_3",
     "document_id": "ce-pro-tr-rl",
-    "document_title": "10 — RL Prediction",
-    "section_title": "Equipment Library",
+    "document_title": "— RL Prediction",
+    "section_title": "Initial data",
     "product": "CE Pro",
     "version": "Unknown",
     "category": "Training",
     "source_file": "docs/ce-pro/training/10-rl-prediction.md",
-    "text": "Before planning links, set up the equipment library:\n| Library Item | Description |\n|---|---|\n| **Antennas → Parabolic** | Parabolic dish antenna patterns |\n| **Radio Models** | Tx/Rx equipment specs (power, sensitivity, modulations) |\n| **Frequency Plans** | Channel plans and duplex spacing |\n| **Spectrum Mask** | Out-of-band emission masks for interference checks |\n---"
+    "text": "Prepared project with:\n- Network objects.\n- Geodata.\n- Equipment and models.\n<img src=\"../../../assets/images/ce-pro/training-07/image1.png\" style=\"width:6.5in;height:3.37361in\" alt=\"A screenshot of a computer Description automatically generated\" />"
   },
   {
     "chunk_id": "ce-pro-tr-rl_chunk_4",
     "document_id": "ce-pro-tr-rl",
-    "document_title": "10 — RL Prediction",
-    "section_title": "Transmission Network",
+    "document_title": "— RL Prediction",
+    "section_title": "Manage MW equipment",
     "product": "CE Pro",
     "version": "Unknown",
     "category": "Training",
     "source_file": "docs/ce-pro/training/10-rl-prediction.md",
-    "text": "A transmission network in CE Pro is a collection of microwave links connecting sites. Links are drawn on the map between two site objects.\n---"
+    "text": "Navigate to C:\\CE_Course\\RL_Prediction\\Project and run Project.aprx file to open the prepared project for RL Introduction exercise.\nMicrowave links involve additional equipment settings compared to point-to-area predictions. These settings include frequency plans, radio equipment, and parabolic antennas, which are used for predicting power budget, interference, or availability. In this section, we will cover how to create and, if necessary, import this data into the project."
   },
   {
     "chunk_id": "ce-pro-tr-rl_chunk_5",
     "document_id": "ce-pro-tr-rl",
-    "document_title": "10 — RL Prediction",
-    "section_title": "Microwave Link Planning",
+    "document_title": "— RL Prediction",
+    "section_title": "Parabolic antennas",
     "product": "CE Pro",
     "version": "Unknown",
     "category": "Training",
     "source_file": "docs/ce-pro/training/10-rl-prediction.md",
-    "text": "Each link provides the following analysis:"
+    "text": "Open Antenna Viewer in CE RLP tab, and change antenna type from Sector to Parabolic.\n<img src=\"../../../assets/images/ce-pro/training-07/image2.png\" style=\"width:4.17in;height:0.98in\" alt=\"A screenshot of a computer Description automatically generated\" />\nAll parabolic antennas will be displayed.\n<img src=\"../../../assets/images/ce-pro/training-07/image3.png\" style=\"width:6.5in;height:1.72708in\" alt=\"A graph showing a line Description automatically generated with medium confidence\" />\nClose Antenna Viewer tool. To import a new parabolic antenna, open Import/Export Antenna Files tool. Select Parabolic (NSMA Format).\n<img src=\"../../../assets/images/ce-pro/training-07/image4.png\" style=\"width:4.02in;height:1.33in\" alt=\"A screenshot of a computer Description automatically generated\" />\nClick on Select Antenna Model Files\n<img src=\"../../../assets/images/ce-pro/training-07/image5.png\" style=\"width:4.92777in;height:0.29171in\" />\nBrowse to C:\\CE_Course\\RL_Prediction\\Equipment, select Antenna10GHz.txt file and press OK button. It will appear in Import/Export Antenna Files dialog.\n<img src=\"../../../assets/images/ce-pro/training-07/image6.png\" style=\"width:4.05in;height:1.45in\" alt=\"A screenshot of a computer Description automatically generated\" />\nSelect Check box near the antenna and press Import Antennas button.\n<img src=\"../../../assets/images/ce-pro/training-07/image7.png\" style=\"width:4in;height:2.08in\" alt=\"A screenshot of a computer Description automatically generated\" />\nAntenna will be imported successfully, you can go back you Antenna Viewer dialog and preview it.\n<img src=\"../../../assets/images/ce-pro/training-07/image8.png\" style=\"width:6.5in;height:2.29236in\" alt=\"A screen shot of a graph Description automatically generated\" />\nClose Antenna Viewer and Import tools."
   },
   {
     "chunk_id": "ce-pro-tr-rl_chunk_6",
     "document_id": "ce-pro-tr-rl",
-    "document_title": "10 — RL Prediction",
-    "section_title": "Power Budget",
+    "document_title": "— RL Prediction",
+    "section_title": "Radios",
     "product": "CE Pro",
     "version": "Unknown",
     "category": "Training",
     "source_file": "docs/ce-pro/training/10-rl-prediction.md",
-    "text": "The received signal level (RSL) at each end of the link:\n```\nRSL = Tx Power + Tx Antenna Gain – Feeder Loss(Tx)\n      – Free Space Path Loss\n      – Atmospheric Absorption\n      – Feeder Loss(Rx) + Rx Antenna Gain\n```\nKey indicators shown in the power budget panel:\n| Indicator | Description |\n|-----------|-------------|\n| RSL (dBm) | Received Signal Level at each end |\n| Threshold (dBm) | Minimum RSL for given modulation / BER |\n| Fade Margin (dB) | RSL – Threshold (higher = better reliability) |\n| EIRP (dBm) | Effective Isotropic Radiated Power |"
+    "text": "This equipment category encompasses details about radio transceivers utilized in microwave links. It comprises information on transmitter power, receiver sensitivity, noise figure, nonlinearity characteristics, and maximum data capacity.\nOpen Radios tool in CE RLP tab and preview available Radio within default CE workspace.\n<img src=\"../../../assets/images/ce-pro/training-07/image9.png\" style=\"width:2.47917in;height:3.79516in\" alt=\"A screenshot of a computer Description automatically generated\" />\nIt has parameter section, and Modulations section.\n<img src=\"../../../assets/images/ce-pro/training-07/image10.png\" style=\"width:2.55208in;height:2.60452in\" alt=\"A screenshot of a computer Description automatically generated\" />\nClick on Add button in top right corner of the dialog.\n<img src=\"../../../assets/images/ce-pro/training-07/image11.png\" style=\"width:0.36463in;height:0.28129in\" />\nDefine the same parameters as defined below:\n- Model: RL Radio\n- Manufacture: CE\n- Frequency From, MHz: 9500\n- Frequency To, MHz: 10500\n- Bandwidth, MHz: 10\n- MTBF, h: 300000\n- MTTR, h: 24\n- Bit Rate, kbps: 2048\n- Block Size, bits: 2048\n- Burst Errors: 1\n- Dispersive Fade Margin, dB: 50\n- BER 10-3 Threshold, dBm: -76\n- BER 10-6 Threshold, dBm: -72\n- Noise Figure, dB: 5\n- Residual BER: 1E-12\n- IIP2, dBm: 30\n- IIP3, dBm: 29\n- XPIF, dB: 20\n- Power, dBm: 20\n- Power Low, dBm: 10\n- Power High, dBm: 26\n- Automatic Transfer Power Control Range, dB: 20\n<img src=\"../../../assets/images/ce-pro/training-07/image12.png\" style=\"width:2.27083in;height:4.97735in\" alt=\"A screenshot of a computer Description automatically generated\" /><img src=\"../../../assets/images/ce-pro/training-07/image13.png\" style=\"width:2.73958in;height:4.94993in\" alt=\"A screenshot of a computer Description automatically generated\" />\nClick on Modulations tab, and include these modulations:\n<img src=\"../../../assets/images/ce-pro/training-07/image14.png\" style=\"width:3.65676in;height:1.82317in\" alt=\"A screenshot of a computer Description automatically generated\" />\nYou can do it simply selecting modulation from the list and press + button to add it for the radio.\nEach modulation has its own default parameters.\n<img src=\"../../../assets/images/ce-pro/training-07/image15.png\" style=\"width:2.8in;height:3.85in\" alt=\"A screenshot of a computer Description automatically generated\" />\nLeave default parameters and press Create button. The new radio will be added in the list.\n<img src=\"../../../assets/images/ce-pro/training-07/image16.png\" style=\"width:2.91in;height:1.63in\" alt=\"A screenshot of a computer Description automatically generated\" />\nClose Radios tool."
   },
   {
     "chunk_id": "ce-pro-tr-rl_chunk_7",
     "document_id": "ce-pro-tr-rl",
-    "document_title": "10 — RL Prediction",
-    "section_title": "Free Space Path Loss",
+    "document_title": "— RL Prediction",
+    "section_title": "Frequency plans",
     "product": "CE Pro",
     "version": "Unknown",
     "category": "Training",
     "source_file": "docs/ce-pro/training/10-rl-prediction.md",
-    "text": "```\nFSL (dB) = 20×log(d) + 20×log(f) + 92.45\nwhere:\n  d = distance in km\n  f = frequency in GHz\n```"
+    "text": "Frequency planning is important for microwave link design, optimizing spectrum use, and preventing interference. By strategically allocating frequency bands, it enhances efficiency, complies with regulations, and coordinates with other services. This planning considers propagation characteristics and facilitates scalability, ensuring optimal performance for microwave links in various environments and supporting future technology upgrades.\nFrequency plans can be imported from a text file, or created manually."
   },
   {
     "chunk_id": "ce-pro-tr-rl_chunk_8",
     "document_id": "ce-pro-tr-rl",
-    "document_title": "10 — RL Prediction",
-    "section_title": "Path Loss Profile",
+    "document_title": "— RL Prediction",
+    "section_title": "Create manually",
     "product": "CE Pro",
     "version": "Unknown",
     "category": "Training",
     "source_file": "docs/ce-pro/training/10-rl-prediction.md",
-    "text": "Graphical view showing:\n- Terrain cross-section between two link ends\n- LOS line and Fresnel zone clearance\n- Obstacle heights and clearance margins\n---"
+    "text": "Open Frequency Plans tool in CE RLP tab.\n<img src=\"../../../assets/images/ce-pro/training-07/image17.png\" style=\"width:6.5in;height:1.32431in\" alt=\"A white screen with a black text Description automatically generated with medium confidence\" />\nClick on Add section and define:\n- Frequency Plan Name: FP 10MHz 8 Carriers\n- Low Frequency, MHz: 9800\n- Carrier Spacing, MHz: 50\n- Duplex Spacing, MHz: 300\n- Carriers: 8\nHigh Frequency, MHz will be filled automatically.\n<img src=\"../../../assets/images/ce-pro/training-07/image18.png\" style=\"width:6.5in;height:1.59861in\" alt=\"A graph with blue bars Description automatically generated with medium confidence\" />\nPress Add Frequency Plan button.\nThe new frequency plan will appear in the main dialog.\n<img src=\"../../../assets/images/ce-pro/training-07/image19.png\" style=\"width:6.5in;height:1.59653in\" alt=\"A graph with blue bars Description automatically generated with medium confidence\" />"
   },
   {
     "chunk_id": "ce-pro-tr-rl_chunk_9",
     "document_id": "ce-pro-tr-rl",
-    "document_title": "10 — RL Prediction",
-    "section_title": "Geoclimatic Data",
+    "document_title": "— RL Prediction",
+    "section_title": "Import",
     "product": "CE Pro",
     "version": "Unknown",
     "category": "Training",
     "source_file": "docs/ce-pro/training/10-rl-prediction.md",
-    "text": "CE Pro uses geoclimatic data per **ITU-R P.530** to calculate:\n| Parameter | Description |\n|-----------|-------------|\n| Rain attenuation | Rain fade probability (ITU-R P.838) |\n| Multipath fading | Flat/dispersive fade probability |\n| Availability | % annual availability based on fade margin |\n| Outage seconds | Expected downtime per year |\n---"
+    "text": "Click on Import option, and then on Select Data Files.\n<img src=\"../../../assets/images/ce-pro/training-07/image20.png\" style=\"width:5.02in;height:1.43in\" alt=\"A screenshot of a computer Description automatically generated\" />\nNavigate to C:\\CE_Course\\RL_Prediction\\Equipment\\FrequencyPlans, select all files and press OK button.\n<img src=\"../../../assets/images/ce-pro/training-07/image21.png\" style=\"width:4.68in;height:4.33in\" alt=\"A screenshot of a computer program Description automatically generated\" />\nFrequency Plans will be added to the preview.\n<img src=\"../../../assets/images/ce-pro/training-07/image22.png\" style=\"width:6.5in;height:1.60833in\" alt=\"A graph showing a number of blue and grey bars Description automatically generated with medium confidence\" />\nPress Import button and they will be imported to the database.\n<img src=\"../../../assets/images/ce-pro/training-07/image23.png\" style=\"width:6.5in;height:1.60556in\" alt=\"A graph of blue and black vertical lines Description automatically generated with medium confidence\" />\nClose Frequency Plans dialog."
   },
   {
     "chunk_id": "ce-pro-tr-rl_chunk_10",
     "document_id": "ce-pro-tr-rl",
-    "document_title": "10 — RL Prediction",
-    "section_title": "Interference Analysis",
+    "document_title": "— RL Prediction",
+    "section_title": "Add Links",
     "product": "CE Pro",
     "version": "Unknown",
     "category": "Training",
     "source_file": "docs/ce-pro/training/10-rl-prediction.md",
-    "text": "For each link, CE Pro calculates:\n| Analysis | Description |\n|----------|-------------|\n| **Interference From** | Signals from other links interfering into this receiver |\n| **Interference To** | This link's signal interfering into other receivers |\nThe interfering link view shows:\n- Interfering link drawn on the map\n- Carrier-to-Interference ratio (C/I)\n- Power budget at the interfered receiver\n- Path loss and profile of the interference path\n- Spectrum mask overlap check\n---"
+    "text": "The link objects can be imported or created manually using Add functionality. Open Add Object tool and select Link option from drop-down menu list.\n<img src=\"../../../assets/images/ce-pro/training-07/image24.png\" style=\"width:3.36505in;height:2.0107in\" alt=\"A screenshot of a computer Description automatically generated\" />\nClick once on T1 site and second time to D1 site.\nIt will fill general parameters automatically.\n<img src=\"../../../assets/images/ce-pro/training-07/image25.png\" style=\"width:6.5in;height:4.10417in\" />\nHeight, azimuth and other parameters are calculated automatically, leave them as it is.\nDefine parameters are defined below:\n- Name: MW001\n- Radio Model: 2. RL Radio\n<img src=\"../../../assets/images/ce-pro/training-07/image26.png\" style=\"width:4.18808in;height:0.84387in\" alt=\"A screenshot of a computer Description automatically generated\" />\n- Frequency Plan: FP 10MHz 8 Carriers\n<img src=\"../../../assets/images/ce-pro/training-07/image27.png\" style=\"width:4.02139in;height:1.69815in\" alt=\"A screenshot of a computer Description automatically generated\" />\n- Carriers: 1 and 3 (1’ and 3’ will be automatically assigned).\n<img src=\"../../../assets/images/ce-pro/training-07/image28.png\" style=\"width:3.21in;height:1.28in\" alt=\"A screenshot of a computer Description automatically generated\" />\n- Go to Antenna section and change antenna to Antenna 10MHz\n<img src=\"../../../assets/images/ce-pro/training-07/image29.png\" style=\"width:3.49in;height:3.34in\" alt=\"A screenshot of a computer Description automatically generated\" />\nPress Save Changes button.\nDo not close the dialog, create new links and define parameters:\n- Between D1 and E2\n  - Name: MW002\n  - SiteA: Lower\n> <img src=\"../../../assets/images/ce-pro/training-07/image30.png\" style=\"width:4.06307in;height:0.37505in\" />\n- Carriers: 2 and 4\n> <img src=\"../../../assets/images/ce-pro/training-07/image31.png\" style=\"width:3.94847in;height:1.52105in\" alt=\"A screenshot of a computer Description automatically generated\" />\n- Leave other parameters as it is.\nPress Save Changes\n- Between E6 and M77\n  - Name: MW003\n  - SiteA: Lower\n> <img src=\"../../../assets/images/ce-pro/training-07/image30.png\" style=\"width:4.06307in;height:0.37505in\" />\n- Carriers: 1 and 4\n> <img src=\"../../../assets/images/ce-pro/training-07/image32.png\" style=\"width:4.04223in;height:1.6669in\" alt=\"A screenshot of a computer Description automatically generated\" />\n- Leave other parameters as it is.\nPress Save Changes\n<img src=\"../../../assets/images/ce-pro/training-07/image33.png\" style=\"width:6.5in;height:3.63472in\" alt=\"A screenshot of a computer screen Description automatically generated\" />"
   },
   {
     "chunk_id": "ce-pro-tr-rl_chunk_11",
     "document_id": "ce-pro-tr-rl",
-    "document_title": "10 — RL Prediction",
-    "section_title": "Modulation Adaptive Thresholds",
+    "document_title": "— RL Prediction",
+    "section_title": "RL Predictions",
     "product": "CE Pro",
     "version": "Unknown",
     "category": "Training",
     "source_file": "docs/ce-pro/training/10-rl-prediction.md",
-    "text": "Modern microwave radios support adaptive modulation (AM). The radio model defines RSL thresholds for each modulation:\n| Modulation | Typical RSL Threshold |\n|-----------|----------------------|\n| QPSK | −90 dBm |\n| 16QAM | −84 dBm |\n| 64QAM | −78 dBm |\n| 256QAM | −72 dBm |\n| 1024QAM | −65 dBm |\n*(Exact values depend on radio model and bandwidth)*\n---"
-  },
-  {
-    "chunk_id": "ce-pro-tr-rl_chunk_12",
-    "document_id": "ce-pro-tr-rl",
-    "document_title": "10 — RL Prediction",
-    "section_title": "Antenna Selection",
-    "product": "CE Pro",
-    "version": "Unknown",
-    "category": "Training",
-    "source_file": "docs/ce-pro/training/10-rl-prediction.md",
-    "text": "Parabolic dish antennas are characterised by:\n| Parameter | Description |\n|-----------|-------------|\n| Diameter (m) | Dish size — affects gain and beamwidth |\n| Gain (dBi) | Antenna gain at centre frequency |\n| Beamwidth (°) | 3 dB beamwidth in azimuth and elevation |\n| Front-to-Back ratio (dB) | Rejection of rear interference |\n| Cross-polarisation (dB) | Isolation between polarisations |\n---\n*Reference: CE Desktop Training — 7. RL Introduction*\n*Contact: info@cellular-expert.com | +370 5 2150575*"
+    "text": "The predictions are working between selected links and provides all necessary information about power budget, interference or availability.\nSelect all links on the map and open Link Prediction tool. Before launching the predictions, enable Calculate Interference option.\n<img src=\"../../../assets/images/ce-pro/training-07/image34.png\" style=\"width:5.08in;height:3.08in\" alt=\"A screenshot of a computer Description automatically generated\" />\nPress Run button and wait will prediction are completed and results loaded into your project.\n<img src=\"../../../assets/images/ce-pro/training-07/image35.png\" style=\"width:6.5in;height:3.38542in\" alt=\"A screenshot of a computer Description automatically generated\" />\nThe primary results are Power Budget and Profile between Tx and Rx. On the left, select another link and results will be updated accordingly.\n<img src=\"../../../assets/images/ce-pro/training-07/image36.png\" style=\"width:6.5in;height:1.33472in\" alt=\"A screen shot of a computer Description automatically generated\" />\nSelected Link can have several carriers, to preview the results expand Carrier option.\n<img src=\"../../../assets/images/ce-pro/training-07/image37.png\" style=\"width:2.7608in;height:1.08348in\" alt=\"A screenshot of a computer Description automatically generated\" />\nClick on Interference tab to display interfering links and interfered links information.\n<img src=\"../../../assets/images/ce-pro/training-07/image38.png\" style=\"width:6.5in;height:1.31319in\" alt=\"A screenshot of a computer Description automatically generated\" />\nTotal Interference is shown in Power Budget section.\n<img src=\"../../../assets/images/ce-pro/training-07/image39.png\" style=\"width:2.08in;height:4.11in\" alt=\"A screenshot of a computer Description automatically generated\" />\nInterference link predictions can be previewed too. Click on Interfering Link in top left corner and it will display selected interfering link Power Budget, Path Loss and draw a line on the map.\n<img src=\"../../../assets/images/ce-pro/training-07/image40.png\" style=\"width:6.5in;height:3.37569in\" alt=\"A screenshot of a computer Description automatically generated\" />\nGo back to Links section, sekect MW003 from M77 to E6.\n<img src=\"../../../assets/images/ce-pro/training-07/image41.png\" style=\"width:2.67746in;height:1.95861in\" alt=\"A screenshot of a computer Description automatically generated\" />\nIt has carrier 1’ where interference comes from MW001 Site T1:\n- Interference, dBm: -181.6 dBm\n- FML, dB: 2.36E 10-8\n<img src=\"../../../assets/images/ce-pro/training-07/image42.png\" style=\"width:6.5in;height:0.32153in\" />\nClose Link Prediction results, select MW001 link on the map and open Object Editor. Double click on the link.\n<img src=\"../../../assets/images/ce-pro/training-07/image43.png\" style=\"width:4.38603in;height:1.79192in\" alt=\"A screenshot of a computer Description automatically generated\" />\nFind Frequency Plan table, select Upper and change carrier 1’ polarization to Vertical.\n<img src=\"../../../assets/images/ce-pro/training-07/image44.png\" style=\"width:4.45896in;height:1.54188in\" alt=\"A screenshot of a computer Description automatically generated\" />\nSave Changes.\nSelect all links on the map, open Link Prediction tool again and run predictions.\nAfter predictions are done, open MW003 (B-A) interference predictions and preview how Interference From is changed for MW001 link, Site S1."
   }
 ]

@@ -1,0 +1,57 @@
+[
+  {
+    "chunk_id": "ce-express-v73-3-1-6-antennas_chunk_1",
+    "document_id": "ce-express-v73-3-1-6-antennas",
+    "document_title": "Antennas",
+    "section_title": "3.1.6 Antennas",
+    "product": "CE Express",
+    "version": "Unknown",
+    "category": "Express Tools",
+    "source_file": "docs/ce-express/user-guide/v73-sections/3-1-6-antennas.md",
+    "text": "Click this button ![icon](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-express%2Fuser-guide-v73%2Fp075-img2.png) to open Antennas tool.\nPreview the list of available antennas in the project. The antennas are used for point-to-area calculations.\n![Image p076](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-express%2Fuser-guide-v73%2Fp076-img1.png)\n**Search**\nInitiates the search procedure in the antennas list.\n**Delete antenna**\nDelete antenna using *Delete* button.\n![Image p076](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-express%2Fuser-guide-v73%2Fp076-img2.png)\nClick on an antenna to preview the [antenna patterns](#kw:importing-antenna-patterns:ce-express-antenna).\n![Image p077](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-express%2Fuser-guide-v73%2Fp077-img1.png)\n**Adjust vertical pattern**\nIn the case where you have an electrically tilted vertical [antenna pattern](#kw:managing-the-antenna-library:ce-express-antenna) imported, you might want to tilt it\nback so it is essentially a 0 tilt [antenna pattern](#kw:managing-the-antenna-library:ce-express-antenna) (recommended if you use electrical tilt field in cell attributes).\nYou may use the adjust vertical pattern tool to do this. Find the center of the main lobe of the vertical\n[antenna pattern](#kw:managing-the-antenna-library:ce-express-antenna) using the \"main lobe center\" slider, then click accept.\n![Image p077](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-express%2Fuser-guide-v73%2Fp077-img2.png)"
+  },
+  {
+    "chunk_id": "ce-express-v73-3-1-6-antennas_chunk_2",
+    "document_id": "ce-express-v73-3-1-6-antennas",
+    "document_title": "Antennas",
+    "section_title": "3.1.6.1 Import Antennas",
+    "product": "CE Express",
+    "version": "Unknown",
+    "category": "Express Tools",
+    "source_file": "docs/ce-express/user-guide/v73-sections/3-1-6-antennas.md",
+    "text": "To import new antennas, click the *New Antenna* button\n![Image p078](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-express%2Fuser-guide-v73%2Fp078-img1.png)\nand then select *Import Files*.\n![Image p078](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-express%2Fuser-guide-v73%2Fp078-img2.png)\n![Image p078](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-express%2Fuser-guide-v73%2Fp078-img3.png)\nTo start the import procedure, select or drag and drop the antenna pattern file. Planet format antenna\npattern files are supported. Here is an example:\n![Image p078](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-express%2Fuser-guide-v73%2Fp078-img4.png)"
+  },
+  {
+    "chunk_id": "ce-express-v73-3-1-6-antennas_chunk_3",
+    "document_id": "ce-express-v73-3-1-6-antennas",
+    "document_title": "Antennas",
+    "section_title": "3.1.6.2 Import HCM code file",
+    "product": "CE Express",
+    "version": "Unknown",
+    "category": "Express Tools",
+    "source_file": "docs/ce-express/user-guide/v73-sections/3-1-6-antennas.md",
+    "text": "To import HCM code patterns as antennas, you may use this import option. The required file is a CSV with\n3 fields, antenna gain, horizontal HCM code and vertical HCM code. These are then combined and imported\nas antenna patterns under the HCM manufacturer group. Multiple lines are allowed.\nCSV file example:\n![Image p079](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-express%2Fuser-guide-v73%2Fp079-img1.png)\nAfter file upload, you are prompted to assign which CSV field corresponds to the required parameters:\n![Image p079](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-express%2Fuser-guide-v73%2Fp079-img2.png)"
+  },
+  {
+    "chunk_id": "ce-express-v73-3-1-6-antennas_chunk_4",
+    "document_id": "ce-express-v73-3-1-6-antennas",
+    "document_title": "Antennas",
+    "section_title": "3.1.6.3 Import cell array antenna",
+    "product": "CE Express",
+    "version": "Unknown",
+    "category": "Express Tools",
+    "source_file": "docs/ce-express/user-guide/v73-sections/3-1-6-antennas.md",
+    "text": "If you have separate pattern files for a multibeam antenna, you may use this import option to combine them\ninto a single cell array antenna pattern.\n![Image p080](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-express%2Fuser-guide-v73%2Fp080-img1.png)\n**Antenna parameters**\n**Manufacturer**\nAntenna manufacturer.\n**Model**\nAntenna name.\n**Frequency**\nAntenna frequency value in MHz.\n**Gain**\nAntenna gain value in dBi.\n![Image p081](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-express%2Fuser-guide-v73%2Fp081-img1.png)"
+  },
+  {
+    "chunk_id": "ce-express-v73-3-1-6-antennas_chunk_5",
+    "document_id": "ce-express-v73-3-1-6-antennas",
+    "document_title": "Antennas",
+    "section_title": "3.1.6.4 Create manually",
+    "product": "CE Express",
+    "version": "Unknown",
+    "category": "Express Tools",
+    "source_file": "docs/ce-express/user-guide/v73-sections/3-1-6-antennas.md",
+    "text": "To manually create an antenna, click the *New Antenna* button\n![Image p081](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-express%2Fuser-guide-v73%2Fp081-img2.png)\nand then select *Create Manually*.\n![Image p081](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-express%2Fuser-guide-v73%2Fp081-img3.png)\n![Image p082](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-express%2Fuser-guide-v73%2Fp082-img1.png)\n**Antenna parameters**\n**Manufacturer**\nAntenna manufacturer (company or entity).\n**Model**\nAntenna name.\n**Frequency**\nAntenna frequency value in MHz.\n**Gain**\nAntenna gain value in dBi.\n**Max attenuation**\nAttenuation value assigned to the attenuated parts of the antenna pattern.\n**Horizontal pattern**\n**Beamwidth**\nAntenna's horizontal beamwidth value in degrees. Used for generating the antenna pattern.\n**Smoothing degree count**\nTransition width between attenuated and non-attenuated parts of the antenna pattern in degrees. The attenuation values are linearly interpolated between 0 and the max attenuation value within this transition range.\n**Vertical pattern**\n**Beamwidth**\nAntenna's vertical beamwidth value in degrees. Used for generating the antenna pattern.\n**Smoothing degree count**\nTransition width between attenuated and non-attenuated parts of the antenna pattern in degrees. The attenuation values are linearly interpolated between 0 and the max attenuation value within this transition range.\n**Vertical pattern**\n**Beamwidth**\nAntenna’s vertical beamwidth value in degrees. Used for generating the antenna pattern.\n**Smoothing degree count**\nTransition width between attenuated and non-attenuated parts of the antenna pattern in degrees. The attenuation values are linearly interpolated between 0 and the max attenuation value within this transition range.\n**Angle offset**\nTransition width between attenuated and non-attenuated parts of the antenna pattern in degrees. The attenuation values are linearly interpolated between 0 and the max attenuation value within this transition range.\n**Mirror pattern**\nAbility to mirror the vertical attenuation pattern.\n**Pattern preview**\n![Image p083](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-express%2Fuser-guide-v73%2Fp083-img1.png)"
+  }
+]

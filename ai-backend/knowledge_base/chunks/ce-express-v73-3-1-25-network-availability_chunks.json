@@ -1,0 +1,13 @@
+[
+  {
+    "chunk_id": "ce-express-v73-3-1-25-network-availability_chunk_1",
+    "document_id": "ce-express-v73-3-1-25-network-availability",
+    "document_title": "Network availability",
+    "section_title": "3.1.25 Network availability",
+    "product": "CE Express",
+    "version": "Unknown",
+    "category": "Express Tools",
+    "source_file": "docs/ce-express/user-guide/v73-sections/3-1-25-network-availability.md",
+    "text": "Click this button ![icon](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-express%2Fuser-guide-v73%2Fp177-img1.png) to open Network availability tool.\nThis tool is designed to check if coverage exists at a chosen location. Define the exact coordinates in the dialog or click on the map to fill the coordinate fields automatically and the tool automatically provides the information about possible networks at this location.\n![Image p177](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-express%2Fuser-guide-v73%2Fp177-img2.png)\nThe location can be defined manually in the X/Y fields or by clicking on the map. As a result, detailed information about possible connections is displayed:\n- Cell name – cell identification.\n- Signal strength – signal value in dBm.\n- Azimuth – direction from Receiver to Transmitter.\n- Distance – distance between Transmitter and Receiver.\n- CPE count – cpe count in a cell.\n- CPE throughput – total cpe throughput in a cell.\n- Calculate profile – option to open a detailed profile between Transmitter and Receiver.\nIn addition, the lines between Transmitter and Receiver are displayed on the map.\n![Image p178](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-express%2Fuser-guide-v73%2Fp178-img1.png)\nThe lines on the map can be visualized in different ways. Move the mouse cursor on the calculate profile button in tabular view.\n![Image p178](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-express%2Fuser-guide-v73%2Fp178-img2.png)\nThen the appropriate line will be visualized differently.\n![Image p179](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-express%2Fuser-guide-v73%2Fp179-img1.png)\nIt is possible to draw a profile from the provided results. Press the Calculate profile button to open the profile.\n![Image p179](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-express%2Fuser-guide-v73%2Fp179-img2.png)"
+  }
+]

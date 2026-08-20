@@ -1,0 +1,57 @@
+[
+  {
+    "chunk_id": "ce-express-overview-merged_chunk_1",
+    "document_id": "ce-express-overview-merged",
+    "document_title": "Overview / Getting Started",
+    "section_title": "CE Express — Overview / Getting Started",
+    "product": "CE Express",
+    "version": "Unknown",
+    "category": "Getting Started",
+    "source_file": "docs/ce-express/user-guide/sections/overview.md",
+    "text": "In this User Guide, we introduce the Cellular Expert Express application. Express is the merged Inventory\n3D and Cellular Expert Express solution in one product. Inventory 3D is responsible for [data management](#kw:31-data-management-tools:inventory3d-user-guide).\nFrom a desktop, laptop, or tablet computer with internet access, the Webapp connects to a database\nlocated on a server and enables the user to edit database records, sites, and objects, draw diagrams and\nlocate the assets on an integrated map. Inventory3D integrates data derived from various sources, such as\nsensors, Google Sheets, maps, and changes in database entries are synchronized with the server database\ncontent, keeping the database constantly up to date.\nCellular Expert Express is a telecommunication network planning, optimization, and data management\nsolution built on Esri ArcGIS Enterprise, the most advanced GIS platform. We continually expand the\nfunctionality of Cellular Expert Express, but it is not intended to mimic and match Cellular Expert Desktop\none hundred percent. The idea is to have a simplified task-oriented user interface to gather and share the\ndata across the company. This means that the solution is dedicated across the organization and to fit\nvarious tasks and workflows.\nThe Cellular Expert Express application is a versatile tool for inventory planning, design, space, and assets\nmanagement. It consists of several building blocks that together provide a customized and tailored solution\nfor a specific need. Take inventory management: Error-prone databases which contain faulty inventory lists\ncan be deleterious, especially in large industrial environments. Thus, it is essential that upon inventory\nchanging databases are regularly updated.\n---\nAbout Cellular Expert\nCellular Expert UAB (CE) developed ultra-fast wave\npropagation, communication systems deployment planning\nand radio/optical visibility calculation software for ESRI’s\nArcGIS mapping environment, which is widely used within\nTelecom, Defense, IoT, and other companies and\norganizations.\nCE’s communication network planning, network asset\nmanagement, operational support software and customer-\ntailored solutions enhance the intelligence and business\nefficiency of more than 170 communication network\ncompanies, regulators, and defense organizations in more\nthan 50 countries.\nCopyright © 2025 UAB CELLULAR EXPERT. All rights\nreserved. Cellular Expert and Cellular Expert logo are\nregistered trademarks, @cellular-expert.com and\nwww.cellular-expert.com are service marks of UAB\nCELLULAR EXPERT in Lithuania and some other countries."
+  },
+  {
+    "chunk_id": "ce-express-overview-merged_chunk_2",
+    "document_id": "ce-express-overview-merged",
+    "document_title": "Overview / Getting Started",
+    "section_title": "2 CE Express application",
+    "product": "CE Express",
+    "version": "Unknown",
+    "category": "Getting Started",
+    "source_file": "docs/ce-express/user-guide/sections/overview.md",
+    "text": "To access the Cellular Expert Express web application, type its URL in the address field of a web browser.\nYou can use any web browser, however, we recommend the up-to-date Google Chrome web browser.\nThe URL depends on the installation and initial configuration:\n  1. Web address, as an example: https://<yourdomain>/ceexp\n  2. An address can be configured by the administrator.\nPlease note that for security reasons the application uses only HTTPS."
+  },
+  {
+    "chunk_id": "ce-express-overview-merged_chunk_3",
+    "document_id": "ce-express-overview-merged",
+    "document_title": "Overview / Getting Started",
+    "section_title": "2.1 Log in to the Express Network Data Management application",
+    "product": "CE Express",
+    "version": "Unknown",
+    "category": "Getting Started",
+    "source_file": "docs/ce-express/user-guide/sections/overview.md",
+    "text": "Users can log in with the organization account of ArcGIS Enterprise or Cellular Expert Express and are identified by a Username and a Password.\n![Image p8](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-express%2Fuser-guide-v73%2Fp008-img1.png)\nUse the Login as ArcGIS button to log in with an ArcGIS Enterprise account. It will allow to access the Network Data Management view for database management and the [Map view](#kw:switching-between-views:ce-express-login) for analysis, calculations, etc.\n![Image p8](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-express%2Fuser-guide-v73%2Fp008-img2.png)\nUse log in with Express account to login with a Cellular Expert Express account. It will allow to access only the Network Data Management view. To reach Map view you will be able to log in with an ArcGIS Enterprise account later.\n![Image p9](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-express%2Fuser-guide-v73%2Fp009-img1.png)\nFor the option Login with ArcGIS an ArcGIS Portal account is required and the user gains access to the application map widgets. The second option, Login with Express account, enables only access to view and manage tables, data and so on.\nRegistered users may change their Cellular Expert password any time by clicking Reset password.\n![Image p9](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-express%2Fuser-guide-v73%2Fp009-img2.png)\nNote: before using the Reset Password feature the server should be configured as a mail server and have the possibility to send email. The Cellular Expert Express Network Data Management view opens.\nTo recover an ArcGIS Enterprise account, use the Forgot password button.\n![Image p10](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-express%2Fuser-guide-v73%2Fp010-img1.png)"
+  },
+  {
+    "chunk_id": "ce-express-overview-merged_chunk_4",
+    "document_id": "ce-express-overview-merged",
+    "document_title": "Overview / Getting Started",
+    "section_title": "2.2 Open the Express Map view",
+    "product": "CE Express",
+    "version": "Unknown",
+    "category": "Getting Started",
+    "source_file": "docs/ce-express/user-guide/sections/overview.md",
+    "text": "In the Network Data Management view the map and the database are connected. Features, described in the tables, are displayed on the map. Select a workspace.\n![Image p10](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-express%2Fuser-guide-v73%2Fp010-img2.png)\nMap view and features are visible only for the selected workspace.\n![Image p11](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-express%2Fuser-guide-v73%2Fp011-img1.png)"
+  },
+  {
+    "chunk_id": "ce-express-overview-merged_chunk_5",
+    "document_id": "ce-express-overview-merged",
+    "document_title": "Overview / Getting Started",
+    "section_title": "2.3 Log out",
+    "product": "CE Express",
+    "version": "Unknown",
+    "category": "Getting Started",
+    "source_file": "docs/ce-express/user-guide/sections/overview.md",
+    "text": "To exit the Express Network Data Management application, click on the User menu button at the top right corner. And click on the Logout button.\n![Image p11](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-express%2Fuser-guide-v73%2Fp011-img2.png)\n![Image p11](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-express%2Fuser-guide-v73%2Fp011-img3.png)"
+  }
+]

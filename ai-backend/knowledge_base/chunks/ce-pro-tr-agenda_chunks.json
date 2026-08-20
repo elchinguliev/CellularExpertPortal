@@ -2,12 +2,45 @@
   {
     "chunk_id": "ce-pro-tr-agenda_chunk_1",
     "document_id": "ce-pro-tr-agenda",
-    "document_title": "03 — Agenda",
-    "section_title": "03. Agenda",
+    "document_title": "— Agenda",
+    "section_title": "Time scheduler",
     "product": "CE Pro",
     "version": "Unknown",
     "category": "Training",
     "source_file": "docs/ce-pro/training/03-agenda.md",
-    "text": "> **Version:** CE Pro v4.9\nTime scheduler\nACTION TIME\n7th Thursday\n❑\nTrainings 10.00 -11.30\n8th Friday\n❑\nBreak 11.30-11.40\nTrainings 11.40-12.50\nBreak 12.50-13.00\nTrainings 13.00-14.00\n---\nExercises for CE Desktop\nDAY 1 DAY 2\n1 0. Introduction slides 4. Cell Prediction\n2 1. Creating Workspace 5. Prediction [Models](#kw:31-models:ce-express-tr-models)\n3 2. [Line of Sight](#kw:running-a-profile:ce-express-profile) 6. Importing Network\n4 3. Create Objects 7. Site Positioning\n---\nCourse Materials\n❑\nExercise projects:\nC:\\CE_COURSE\n❑\nExercise descriptions\nC:\\CE_COURSE\\0.Descriptions\n---\nToday\n1. Introduction:\n➢ Architecture\n➢ Data requirements\n2. Exercises\n➢ Creating Workspace\n➢ [Line of Sight](#kw:running-a-profile:ce-express-profile)\n➢ Creating Objects\n---"
+    "text": "ACTION      TIME\n❑ 7th Thursday   Trainings        10.00 -11.30\nth ❑ 8 Friday       Break            11.30-11.40\nTrainings        11.40-12.50\nBreak            12.50-13.00\nTrainings        13.00-14.00\n![Slide 2](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-pro%2Ftraining-pdf-0000-agenda%2Fpage-2.png)"
+  },
+  {
+    "chunk_id": "ce-pro-tr-agenda_chunk_2",
+    "document_id": "ce-pro-tr-agenda",
+    "document_title": "— Agenda",
+    "section_title": "Exercises for CE Desktop",
+    "product": "CE Pro",
+    "version": "Unknown",
+    "category": "Training",
+    "source_file": "docs/ce-pro/training/03-agenda.md",
+    "text": "DAY 1                    DAY 2\n1    0. Introduction slides    4. Cell Prediction\n2   1. Creating Workspace     5. Prediction Models\n3       2. Line of Sight      6. Importing Network\n4     3. Create Objects        7. Site Positioning\n![Slide 3](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-pro%2Ftraining-pdf-0000-agenda%2Fpage-3.png)"
+  },
+  {
+    "chunk_id": "ce-pro-tr-agenda_chunk_3",
+    "document_id": "ce-pro-tr-agenda",
+    "document_title": "— Agenda",
+    "section_title": "Course Materials",
+    "product": "CE Pro",
+    "version": "Unknown",
+    "category": "Training",
+    "source_file": "docs/ce-pro/training/03-agenda.md",
+    "text": "❑ Exercise projects: C:\\CE_COURSE\n❑ Exercise descriptions C:\\CE_COURSE\\0.Descriptions"
+  },
+  {
+    "chunk_id": "ce-pro-tr-agenda_chunk_4",
+    "document_id": "ce-pro-tr-agenda",
+    "document_title": "— Agenda",
+    "section_title": "Today",
+    "product": "CE Pro",
+    "version": "Unknown",
+    "category": "Training",
+    "source_file": "docs/ce-pro/training/03-agenda.md",
+    "text": "1. Introduction: ➢ Architecture ➢ Data requirements\n2. Exercises ➢ Creating Workspace ➢ Line of Sight ➢ Creating Objects"
   }
 ]

@@ -1,0 +1,57 @@
+[
+  {
+    "chunk_id": "ce-express-exploring-data-merged_chunk_1",
+    "document_id": "ce-express-exploring-data-merged",
+    "document_title": "Exploring Data",
+    "section_title": "8.1 Export selected",
+    "product": "CE Express",
+    "version": "Unknown",
+    "category": "Exploring Data",
+    "source_file": "docs/ce-express/user-guide/sections/exploring-data.md",
+    "text": "Data subsets can be exported as .xls or .csv files. Select the database records of choice, then click Export\nSelected ![icon](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-express%2Fuser-guide-v73%2Fp286-img2.png) button:\nA popup window opens.\n![Image p286](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-express%2Fuser-guide-v73%2Fp286-img3.png)\nClick on the links to choose between .xls or.csv file formats:\nNote that hidden columns are not exported."
+  },
+  {
+    "chunk_id": "ce-express-exploring-data-merged_chunk_2",
+    "document_id": "ce-express-exploring-data-merged",
+    "document_title": "Exploring Data",
+    "section_title": "8.2 PDF report",
+    "product": "CE Express",
+    "version": "Unknown",
+    "category": "Exploring Data",
+    "source_file": "docs/ce-express/user-guide/sections/exploring-data.md",
+    "text": "A PDF report summarizes information associated with one or more objects. For generating a report, first\nselect the objects of choice. Then open the Import Export menu with ![icon](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-express%2Fuser-guide-v73%2Fp286-img4.png) and choose “Generate report as\nPDF”\nA new dialog appears. Open the PDF report by clicking “here”:\nNote that the administrator has to prepare the template for the PDF report. Please inform the administrator\n![Image p287](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-express%2Fuser-guide-v73%2Fp287-img1.png)\n![Image p287](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-express%2Fuser-guide-v73%2Fp287-img2.png)\n![Image p287](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-express%2Fuser-guide-v73%2Fp287-img3.png)\n![Image p287](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-express%2Fuser-guide-v73%2Fp287-img4.png)\nin case of problems with generating PDF reports."
+  },
+  {
+    "chunk_id": "ce-express-exploring-data-merged_chunk_3",
+    "document_id": "ce-express-exploring-data-merged",
+    "document_title": "Exploring Data",
+    "section_title": "8.3 File browser",
+    "product": "CE Express",
+    "version": "Unknown",
+    "category": "Exploring Data",
+    "source_file": "docs/ce-express/user-guide/sections/exploring-data.md",
+    "text": "Open the Data Export menu with and choose “File Browser”:\nView attached files, download or delete files:\nImages are shown as thumbs. Note that it is possible to rotate the images.\nFile Browser Toolbar:\nOpen the Data View Panel\nGo one step back\nSelect / unselect all files and folders\nDownload selected files\n![Image p288](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-express%2Fuser-guide-v73%2Fp288-img1.png)\n![Image p288](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-express%2Fuser-guide-v73%2Fp288-img2.png)\n![Image p288](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-express%2Fuser-guide-v73%2Fp288-img3.png)\n![Image p288](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-express%2Fuser-guide-v73%2Fp288-img4.png)\n![Image p288](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-express%2Fuser-guide-v73%2Fp288-img5.png)\nDelete selected files\nRestore selected files\nWhen an image is deleted, said image is marked as strikethrough on the File Server:\nYou can restore the image by selecting the strikethrough object and clicking :\n![Image p289](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-express%2Fuser-guide-v73%2Fp289-img1.png)\n![Image p289](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-express%2Fuser-guide-v73%2Fp289-img2.png)\n![Image p289](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-express%2Fuser-guide-v73%2Fp289-img3.png)\n![Image p289](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-express%2Fuser-guide-v73%2Fp289-img4.png)"
+  },
+  {
+    "chunk_id": "ce-express-exploring-data-merged_chunk_4",
+    "document_id": "ce-express-exploring-data-merged",
+    "document_title": "Exploring Data",
+    "section_title": "8.4 Quick references",
+    "product": "CE Express",
+    "version": "Unknown",
+    "category": "Exploring Data",
+    "source_file": "docs/ce-express/user-guide/sections/exploring-data.md",
+    "text": "Quick references are defined by the administrator and allow users to open a reference object in a separate\nbrowser tab. If Quick references are enabled, the respective column is marked with “*”, for example “siteid”:\n![Image p290](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-express%2Fuser-guide-v73%2Fp290-img1.png)\n![Image p290](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-express%2Fuser-guide-v73%2Fp290-img2.png)\n![Image p290](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-express%2Fuser-guide-v73%2Fp290-img3.png)\nTo open a reference link, select it in edit mode (right click on it) and click “here” in the opened dialog.\nThe referenced object is opened in a separate browser tab."
+  },
+  {
+    "chunk_id": "ce-express-exploring-data-merged_chunk_5",
+    "document_id": "ce-express-exploring-data-merged",
+    "document_title": "Exploring Data",
+    "section_title": "8.5 Default editing and manual editing",
+    "product": "CE Express",
+    "version": "Unknown",
+    "category": "Exploring Data",
+    "source_file": "docs/ce-express/user-guide/sections/exploring-data.md",
+    "text": "If the administrator has defined default values (Administrator Guide: \"Set Defaults\"), editing column\ninformation may include selecting values from a drop-down menu. If the menu does not comprise the\ndesired value, users may manually edit the information or clear the value:"
+  }
+]

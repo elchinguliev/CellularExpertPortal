@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { StableInput, StableTextarea } from './StableInput';
 
 const labelSt = {display:'block',fontSize:10,color:'var(--text-dim)',fontFamily:'var(--font-mono)',letterSpacing:'.12em',textTransform:'uppercase',marginBottom:5};
@@ -9,20 +9,33 @@ export default function SupportRequestForm({ API_BASE, currentUser, prefillDescr
   const [email, setEmail] = useState(currentUser?.email || '');
   const [company, setCompany] = useState(currentUser?.company || '');
   const [fullName, setFullName] = useState(currentUser?.name || '');
-  const [product, setProduct] = useState(currentUser?.product || 'CE Express');
+  const [product, setProduct] = useState('CE Pro');
   const [description, setDescription] = useState(prefillDescription || '');
   const [screenshots, setScreenshots] = useState([]);
+  const [screenshotPreviews, setScreenshotPreviews] = useState([]);
   const [code, setCode] = useState('');
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState('');
+  const [screenshotError, setScreenshotError] = useState('');
+
+  useEffect(() => {
+    const previews = screenshots.map((file) => URL.createObjectURL(file));
+    setScreenshotPreviews(previews);
+    return () => previews.forEach((preview) => URL.revokeObjectURL(preview));
+  }, [screenshots]);
 
   const pickScreenshots = (files) => {
     const list = Array.from(files || []).slice(0, 5);
     for (const f of list) {
-      if (!f.type.startsWith('image/')) { setError('Only image files are allowed.'); return; }
-      if (f.size > 8 * 1024 * 1024) { setError('Each screenshot must be under 8MB.'); return; }
+      const extension = f.name.split('.').pop().toLowerCase();
+      if (!['image/png', 'image/jpeg'].includes(f.type) || !['png', 'jpg', 'jpeg'].includes(extension)) {
+        setScreenshotError('Only PNG, JPG, and JPEG screenshots are allowed.');
+        return;
+      }
+      if (f.size > 8 * 1024 * 1024) { setScreenshotError('Each screenshot must be under 8MB.'); return; }
     }
     setError('');
+    setScreenshotError('');
     setScreenshots(list);
   };
 
@@ -130,11 +143,11 @@ export default function SupportRequestForm({ API_BASE, currentUser, prefillDescr
         <>
           <div style={{marginBottom:10}}>
             <label style={labelSt}>Email</label>
-            <StableInput value={email} onChange={setEmail} style={inpSt} placeholder="you@company.com" />
+            <StableInput value={email} onChange={setEmail} readOnly={Boolean(currentUser)} style={inpSt} placeholder="you@company.com" />
           </div>
           <div style={{marginBottom:10}}>
             <label style={labelSt}>Company</label>
-            <StableInput value={company} onChange={setCompany} style={inpSt} placeholder="Your company" />
+            <StableInput value={company} onChange={setCompany} readOnly={Boolean(currentUser)} style={inpSt} placeholder="Your company" />
           </div>
           <div style={{marginBottom:10}}>
             <label style={labelSt}>Full Name</label>
@@ -143,7 +156,7 @@ export default function SupportRequestForm({ API_BASE, currentUser, prefillDescr
           <div style={{marginBottom:10}}>
             <label style={labelSt}>Product</label>
             <select value={product} onChange={e => setProduct(e.target.value)} style={{...inpSt, cursor:'pointer'}}>
-              {['CE Express','CE Pro','Inventory3D','Geodata'].map(p => <option key={p}>{p}</option>)}
+              {['CE Pro','CE Express','Inventory3D','Geodata','Other'].map(p => <option key={p}>{p}</option>)}
             </select>
           </div>
           <div style={{marginBottom:10}}>
@@ -151,17 +164,29 @@ export default function SupportRequestForm({ API_BASE, currentUser, prefillDescr
             <StableTextarea rows={5} value={description} onChange={setDescription} style={{...inpSt, resize:'vertical', lineHeight:1.5}} placeholder="Describe your issue in detail..." />
           </div>
           <div style={{marginBottom:14}}>
-            <label style={labelSt}>Screenshots (optional, up to 5)</label>
-            <input type="file" accept="image/*" multiple onChange={e => pickScreenshots(e.target.files)}
-              style={{fontSize:11,color:'var(--text-dim)'}} />
+            <label style={labelSt}>Screenshots (optional, PNG/JPG/JPEG, up to 5)</label>
+            <input id="support-screenshot-input" type="file" accept=".png,.jpg,.jpeg,image/png,image/jpeg" multiple onChange={e => pickScreenshots(e.target.files)}
+              style={{position:'absolute',width:1,height:1,opacity:0,pointerEvents:'none'}} />
+            <div style={{display:'flex',alignItems:'center',gap:9,flexWrap:'wrap'}}>
+              <label htmlFor="support-screenshot-input" style={{display:'inline-flex',alignItems:'center',gap:7,padding:'8px 12px',border:'1px solid var(--accent)',borderRadius:8,background:'var(--accent-l)',color:'var(--accent)',fontSize:11,fontWeight:700,cursor:'pointer'}}>
+                <span style={{fontSize:14}}>＋</span> Choose screenshots
+              </label>
+              <span style={{fontSize:10,color:'var(--text-dim)'}}>
+                {screenshots.length ? `${screenshots.length} selected` : 'PNG, JPG, or JPEG · max 8 MB each'}
+              </span>
+            </div>
+            {screenshotError && <div style={{marginTop:7,color:'#dc2626',fontSize:11}}>{screenshotError}</div>}
             {screenshots.length > 0 && (
-              <div style={{marginTop:6,display:'flex',flexDirection:'column',gap:4}}>
+              <div style={{marginTop:9,display:'grid',gridTemplateColumns:'repeat(auto-fill,minmax(150px,1fr))',gap:8}}>
                 {screenshots.map((f, i) => (
-                  <div key={i} style={{display:'flex',alignItems:'center',justifyContent:'space-between',gap:8,padding:'5px 9px',background:'var(--bg2)',border:'1px solid var(--border)',borderRadius:6,fontSize:10.5,color:'var(--text-dim)'}}>
-                    <span style={{overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap'}}>{f.name}</span>
-                    <button type="button" onClick={() => removeScreenshot(i)}
-                      style={{flexShrink:0,width:18,height:18,borderRadius:'50%',border:'none',background:'#dc262620',color:'#dc2626',fontSize:11,lineHeight:'18px',cursor:'pointer',padding:0}}
-                      title="Remove">✕</button>
+                  <div key={`${f.name}-${i}`} style={{position:'relative',overflow:'hidden',background:'var(--bg)',border:'1px solid var(--border)',borderRadius:8}}>
+                    <img src={screenshotPreviews[i]} alt={`Screenshot preview ${i + 1}`} style={{display:'block',width:'100%',height:92,objectFit:'cover'}} />
+                    <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',gap:6,padding:'6px 7px',fontSize:10,color:'var(--text-dim)'}}>
+                      <span style={{overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap'}} title={f.name}>{f.name}</span>
+                      <button type="button" onClick={() => removeScreenshot(i)}
+                        style={{flexShrink:0,width:20,height:20,borderRadius:'50%',border:'none',background:'#dc262620',color:'#dc2626',fontSize:11,lineHeight:'20px',cursor:'pointer',padding:0}}
+                        title="Remove">✕</button>
+                    </div>
                   </div>
                 ))}
               </div>

@@ -1,0 +1,13 @@
+[
+  {
+    "chunk_id": "ce-express-v73-3-1-12-measurement-tool_chunk_1",
+    "document_id": "ce-express-v73-3-1-12-measurement-tool",
+    "document_title": "Measurement tool",
+    "section_title": "3.1.12 Measurement tool",
+    "product": "CE Express",
+    "version": "Unknown",
+    "category": "Express Tools",
+    "source_file": "docs/ce-express/user-guide/v73-sections/3-1-12-measurement-tool.md",
+    "text": "Click this button ![icon](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-express%2Fuser-guide-v73%2Fp126-img3.png) to open Measurement tool tool.\nThe Measurement Tool allows users to calculate spatial properties. It provides three measurement modes: Distance, Area, and Offset.\n![Image p127](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-express%2Fuser-guide-v73%2Fp127-img1.png)\n3.1.12.1 Distance\nMeasure the distance between two or more points.\n![Image p127](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-express%2Fuser-guide-v73%2Fp127-img2.png)\nClick once to finish line segment. Double click to finish drawing.\n**Segment lengths**\n**Total distance**\nTotal length of all line segments.\n**Segment X**\nShows the length of the line segment.\n**Angles**\n**Segment 1 → 2**\nAngles between line segments.\n3.1.12.2 Area\nCalculates the surface area and perimeter of the area.\n![Image p128](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-express%2Fuser-guide-v73%2Fp128-img1.png)\n**Area**\nTotal enclosed surface.\n**Perimeter**\nTotal boundary length.\n3.1.12.3 Offset\nHelps find the shortest distance from a line to a point on the map.\n![Image p129](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-express%2Fuser-guide-v73%2Fp129-img1.png)\nClick once to start drawing the reference line, then once again – to finish. Then, click on the map to select the offset point, towards which you would like the find the distance.\n**Distance from segment**\nDistance from the line segment to the offset point.\n3.1.12.4 Point\n![Image p129](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-express%2Fuser-guide-v73%2Fp129-img2.png)\n**Coordinates**\nTo display the coordinates, click on your desired location on the map."
+  }
+]

@@ -1,0 +1,101 @@
+[
+  {
+    "chunk_id": "ce-express-v73-3-1-4-layers_chunk_1",
+    "document_id": "ce-express-v73-3-1-4-layers",
+    "document_title": "Layers",
+    "section_title": "3.1.4 Layers",
+    "product": "CE Express",
+    "version": "Unknown",
+    "category": "Express Tools",
+    "source_file": "docs/ce-express/user-guide/v73-sections/3-1-4-layers.md",
+    "text": "Click this button ![icon](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-express%2Fuser-guide-v73%2Fp059-img1.png) to open Layers tool.\nManages the visualization of features and calculation results in the Map view. Displays and manages all\nlayers in the workspace, grouped into categories such as Features, Geodata, Prediction results, and\nOther. Each layer can be shown, hidden, or reordered.\n![Image p059](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-express%2Fuser-guide-v73%2Fp059-img2.png)\nYou can reorder the entire group or toggle its visibility to show or hide all layers within it at once.\n![Image p060](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-express%2Fuser-guide-v73%2Fp060-img1.png)\nLayers can also be organized by dragging them into existing groups or dropping them into **New layer group** to create a custom group.\n![Image p060](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-express%2Fuser-guide-v73%2Fp060-img2.png)"
+  },
+  {
+    "chunk_id": "ce-express-v73-3-1-4-layers_chunk_2",
+    "document_id": "ce-express-v73-3-1-4-layers",
+    "document_title": "Layers",
+    "section_title": "3.1.4.1 Add layer",
+    "product": "CE Express",
+    "version": "Unknown",
+    "category": "Express Tools",
+    "source_file": "docs/ce-express/user-guide/v73-sections/3-1-4-layers.md",
+    "text": "Layers added from this panel are visible only to you. Other users who open the same workspace will not\nsee these layers unless they also add them manually.\n![Image p061](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-express%2Fuser-guide-v73%2Fp061-img1.png)\n**From URL / Portal ItemID**\nAllows you to add a layer directly by entering its URL or Portal Item ID, then selecting Add.\n**Search criteria**\n**My organization**\nLimits search results to layers shared within your organization.\n**Owned by me**\nShows only layers you own.\n**Sort by**\nDetermines the order of search results (e.g., by view count or date)."
+  },
+  {
+    "chunk_id": "ce-express-v73-3-1-4-layers_chunk_3",
+    "document_id": "ce-express-v73-3-1-4-layers",
+    "document_title": "Layers",
+    "section_title": "3.1.4.2 Features",
+    "product": "CE Express",
+    "version": "Unknown",
+    "category": "Express Tools",
+    "source_file": "docs/ce-express/user-guide/v73-sections/3-1-4-layers.md",
+    "text": "![Image p062](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-express%2Fuser-guide-v73%2Fp062-img1.png)\n**Rearrange layers**\nAllows you to reorder layers by dragging.\n![Image p062](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-express%2Fuser-guide-v73%2Fp062-img2.png)\n**Turn on/off the layer**\nTurn on or off a layer in the Map view\n- The layer is visible - ![icon](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-express%2Fuser-guide-v73%2Fp062-img3.png)\n- The layer is not visible - ![icon](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-express%2Fuser-guide-v73%2Fp062-img4.png)\n**Layer symbol**\nPreview layer symbol. Click on it to edit the symbol.\n![Image p063](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-express%2Fuser-guide-v73%2Fp063-img1.png)\n**Expand layer**\nPreviews and manages the layer opacity and map scale ![icon](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-express%2Fuser-guide-v73%2Fp063-img2.png).\n![Image p063](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-express%2Fuser-guide-v73%2Fp063-img3.png)"
+  },
+  {
+    "chunk_id": "ce-express-v73-3-1-4-layers_chunk_4",
+    "document_id": "ce-express-v73-3-1-4-layers",
+    "document_title": "Layers",
+    "section_title": "3.1.4.2.1 Edit symbolization",
+    "product": "CE Express",
+    "version": "Unknown",
+    "category": "Express Tools",
+    "source_file": "docs/ce-express/user-guide/v73-sections/3-1-4-layers.md",
+    "text": "Click on the layer symbol to edit it. A new dialog opens on the right side.\n![Image p064](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-express%2Fuser-guide-v73%2Fp064-img1.png)\nIn layer symbolization it is possible to change:\n- Shape.\n  - If a path is selected in shape, svg path can be changed.\n- Size.\n- Color.\n- Turn on and off outline.\n- Outline color.\n- Turn on and off offset.\n- X/Y offset.\n![Image p065](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-express%2Fuser-guide-v73%2Fp065-img1.png)\nThere is an option to use 3d symbol. The following parameters can be changed in the 3d symbol:\n- Shape\n- Color\n- Width\n- Height\n- Tilt\nVisual variables can be added for each layer. Add visual variables to a layer using the *Add visual variable* dropdown.\n![Image p065](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-express%2Fuser-guide-v73%2Fp065-img2.png)\nChoose a visual variable. The choices are:\n- Color.\n- Size.\n- Rotation.\n- Opacity.\n![Image p066](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-express%2Fuser-guide-v73%2Fp066-img1.png)\n**Accept**\nSaves all changes.\n**Cancel**\nDiscards all changes and closes the dialog."
+  },
+  {
+    "chunk_id": "ce-express-v73-3-1-4-layers_chunk_5",
+    "document_id": "ce-express-v73-3-1-4-layers",
+    "document_title": "Layers",
+    "section_title": "3.1.4.3 Prediction results",
+    "product": "CE Express",
+    "version": "Unknown",
+    "category": "Express Tools",
+    "source_file": "docs/ce-express/user-guide/v73-sections/3-1-4-layers.md",
+    "text": "The prediction rasters calculated in Cellular Expert Express and loaded in the map view will appear in the\nLayers tool.\n![Image p067](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-express%2Fuser-guide-v73%2Fp067-img1.png)\n**Rearrange layers**\nAllows you to reorder layers by dragging.\n![Image p067](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-express%2Fuser-guide-v73%2Fp067-img2.png)\n**Turn on/off the layer**\nTurn on or off a layer in the Map view\n- The layer is visible - ![icon](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-express%2Fuser-guide-v73%2Fp067-img3.png)\n- The layer is not visible - ![icon](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-express%2Fuser-guide-v73%2Fp067-img4.png)\n**Expand layer**\nExpand the layer so you can see and edit the symbology.\nFor these types of layers, the visualization can be edited in the following ways:\n- Add threshold using *Add color band* button ![icon](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-express%2Fuser-guide-v73%2Fp068-img1.png)\n- Adjust threshold value ![icon](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-express%2Fuser-guide-v73%2Fp068-img2.png)\n- Adjust color band ![icon](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-express%2Fuser-guide-v73%2Fp068-img3.png)\n- Adjust color opacity ![icon](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-express%2Fuser-guide-v73%2Fp068-img4.png)\n- Delete threshold using *Delete band* button\n![Image p068](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-express%2Fuser-guide-v73%2Fp068-img5.png)\nUpon hovering the mouse over a prediction result item, options for it appear.\n![Image p068](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-express%2Fuser-guide-v73%2Fp068-img6.png)\n**Rename layer**\n![Image p069](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-express%2Fuser-guide-v73%2Fp069-img1.png)\n**Publish to portal**\n![Image p069](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-express%2Fuser-guide-v73%2Fp069-img2.png)\n**Zoom to layer**\n![Image p069](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-express%2Fuser-guide-v73%2Fp069-img3.png)\n**Compare**\n[Compare](#kw:98-compare-predictions:ce-pro-rcp)\n![Image p069](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-express%2Fuser-guide-v73%2Fp069-img4.png)\n**Remove layer**\n![Image p069](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-express%2Fuser-guide-v73%2Fp069-img5.png)"
+  },
+  {
+    "chunk_id": "ce-express-v73-3-1-4-layers_chunk_6",
+    "document_id": "ce-express-v73-3-1-4-layers",
+    "document_title": "Layers",
+    "section_title": "3.1.4.3.1 Presets",
+    "product": "CE Express",
+    "version": "Unknown",
+    "category": "Express Tools",
+    "source_file": "docs/ce-express/user-guide/v73-sections/3-1-4-layers.md",
+    "text": "It is possible to create symbology presets. This means that when a prediction raster is loaded, a symbology\npreset can be used:\n![Image p070](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-express%2Fuser-guide-v73%2Fp070-img1.png)\nTo create a preset, first define the bands and colors, then press *New color band preset* button.\n![Image p070](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-express%2Fuser-guide-v73%2Fp070-img2.png)\nDefine a preset name.\n![Image p070](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-express%2Fuser-guide-v73%2Fp070-img3.png)\nA new preset will be created.\n![Image p070](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-express%2Fuser-guide-v73%2Fp070-img4.png)\nThe defined preset will be applied the next time when the raster will be loaded.\n**Apply**\nApplies a preset symbology for the current prediction raster layer."
+  },
+  {
+    "chunk_id": "ce-express-v73-3-1-4-layers_chunk_7",
+    "document_id": "ce-express-v73-3-1-4-layers",
+    "document_title": "Layers",
+    "section_title": "3.1.4.3.2 Swipe",
+    "product": "CE Express",
+    "version": "Unknown",
+    "category": "Express Tools",
+    "source_file": "docs/ce-express/user-guide/v73-sections/3-1-4-layers.md",
+    "text": "The Swipe widget enables you to easily [compare](#kw:98-compare-predictions:ce-pro-rcp) the content of different layers in a map. Mouse over the\nlayers you want to compare and press the compare button.\n![Image p070](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-express%2Fuser-guide-v73%2Fp070-img5.png)\nWhen the first ![icon](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-express%2Fuser-guide-v73%2Fp070-img6.png) and second ![icon](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-express%2Fuser-guide-v73%2Fp070-img7.png) layers are selected for comparison, a swipe widget will appear on\nthe map. Slide the swipe tool to compare different layers.\n![Image p071](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-express%2Fuser-guide-v73%2Fp071-img1.png)"
+  },
+  {
+    "chunk_id": "ce-express-v73-3-1-4-layers_chunk_8",
+    "document_id": "ce-express-v73-3-1-4-layers",
+    "document_title": "Layers",
+    "section_title": "3.1.4.3.3 Publish to portal",
+    "product": "CE Express",
+    "version": "Unknown",
+    "category": "Express Tools",
+    "source_file": "docs/ce-express/user-guide/v73-sections/3-1-4-layers.md",
+    "text": "Raster prediction results may be individually published to portal by using the publish to portal button.\nUpon clicking this button, publishing settings will appear:\n![Image p071](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-express%2Fuser-guide-v73%2Fp071-img2.png)\nSet up the publishing options and click OK to start the publishing process."
+  },
+  {
+    "chunk_id": "ce-express-v73-3-1-4-layers_chunk_9",
+    "document_id": "ce-express-v73-3-1-4-layers",
+    "document_title": "Layers",
+    "section_title": "3.1.4.4 Geodata",
+    "product": "CE Express",
+    "version": "Unknown",
+    "category": "Express Tools",
+    "source_file": "docs/ce-express/user-guide/v73-sections/3-1-4-layers.md",
+    "text": "This section appears when enabled in the settings.\n![Image p072](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-express%2Fuser-guide-v73%2Fp072-img1.png)\nSection contains geodata raster layers from the geodata set assigned to the current workspace.\n![Image p072](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-express%2Fuser-guide-v73%2Fp072-img2.png)\n- **Elevation:**\n![Image p072](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-express%2Fuser-guide-v73%2Fp072-img3.png)\n- **Clutter height:**\n![Image p073](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-express%2Fuser-guide-v73%2Fp073-img1.png)\n- **[Clutter classes](#kw:clutter-classification-values:ce-express-geodata):**\n![Image p073](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-express%2Fuser-guide-v73%2Fp073-img2.png)"
+  }
+]

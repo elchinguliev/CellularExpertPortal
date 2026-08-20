@@ -1,0 +1,13 @@
+[
+  {
+    "chunk_id": "ce-express-v73-3-1-29-points-to-dxf_chunk_1",
+    "document_id": "ce-express-v73-3-1-29-points-to-dxf",
+    "document_title": "Points to DXF",
+    "section_title": "3.1.29 Points to DXF",
+    "product": "CE Express",
+    "version": "Unknown",
+    "category": "Express Tools",
+    "source_file": "docs/ce-express/user-guide/v73-sections/3-1-29-points-to-dxf.md",
+    "text": "Click this button ![Image p187](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-express%2Fuser-guide-v73%2Fp187-img1.png) to open Points to DXF tool.\nAllows for easy reference point transfer between the CE Express interface and CAD applications.\n![Image p187](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-express%2Fuser-guide-v73%2Fp187-img2.png)\n**DXF options**\n**Marker**\nType of marker to draw\n**Marker radius**\nSize of marker\n**Label**\nDraw number labels next to the points\n**Label line**\nDraw line from the labels to the points\n**Label offset**\nHow far to place the labels from the points\n**Point options**\n**Layer name**\nOutput points are placed into different layers. New points are placed into this layer upon map click. Point layer may be changed after the fact within the line for each point in the UI.\n![Image p188](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-express%2Fuser-guide-v73%2Fp188-img1.png)"
+  }
+]

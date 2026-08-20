@@ -2,100 +2,45 @@
   {
     "chunk_id": "ce-pro-tr-install_chunk_1",
     "document_id": "ce-pro-tr-install",
-    "document_title": "00 — Installation",
-    "section_title": "00. Software Installation",
+    "document_title": "— Installation",
+    "section_title": "The sequency of events",
     "product": "CE Pro",
     "version": "Unknown",
     "category": "Training",
     "source_file": "docs/ce-pro/training/00-installation.md",
-    "text": "> **Version:** CE Pro v4.9\n> **Version:** CE Pro v4.9"
+    "text": "- Installation         • CE upgrade 1. ArcGIS Pro          1. Delete Cellular Expert 2. Cellular Expert     2. Install Cellular Expert\n- Uninstallation       • ArcGIS upgrade 1. Cellular Expert     1. Run ArcGIS Pro upgrade (Cellular Expert 2. ArcGIS Pro              uninstallation is not required)"
   },
   {
     "chunk_id": "ce-pro-tr-install_chunk_2",
     "document_id": "ce-pro-tr-install",
-    "document_title": "00 — Installation",
-    "section_title": "Prerequisites",
+    "document_title": "— Installation",
+    "section_title": "Installation (requires administration rights)",
     "product": "CE Pro",
     "version": "Unknown",
     "category": "Training",
     "source_file": "docs/ce-pro/training/00-installation.md",
-    "text": "Before installing Cellular Expert, ensure the following are in place:\n| Requirement | Details |\n|---|---|\n| ArcGIS Pro | Version 3.0 or later |\n| Operating System | Windows 10 / Windows 11 (64-bit) |\n| RAM | Minimum 16 GB (32 GB recommended) |\n| Disk Space | Minimum 10 GB free |\n| Administrator Rights | Required for installation |\n---"
+    "text": "![Slide 3](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-pro%2Ftraining-pdf-0-installation%2Fpage-3.png)"
   },
   {
     "chunk_id": "ce-pro-tr-install_chunk_3",
     "document_id": "ce-pro-tr-install",
-    "document_title": "00 — Installation",
-    "section_title": "Installation Order",
+    "document_title": "— Installation",
+    "section_title": "Activation",
     "product": "CE Pro",
     "version": "Unknown",
     "category": "Training",
     "source_file": "docs/ce-pro/training/00-installation.md",
-    "text": "Always install in this sequence — installing CE before ArcGIS Pro will fail:\n1. **ArcGIS Pro** — install and activate with your Esri licence\n2. **Cellular Expert** — run the CE installer (`.msi`) as Administrator\n---"
+    "text": "- Open empty ArcGIS Pro project\n- Open Settings > Licensing\n- Enable Cellular Expert extension\n- Send User key\n![Slide 4](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-pro%2Ftraining-pdf-0-installation%2Fpage-4.png)"
   },
   {
     "chunk_id": "ce-pro-tr-install_chunk_4",
     "document_id": "ce-pro-tr-install",
-    "document_title": "00 — Installation",
-    "section_title": "Installing Cellular Expert",
+    "document_title": "— Installation",
+    "section_title": "License information",
     "product": "CE Pro",
     "version": "Unknown",
     "category": "Training",
     "source_file": "docs/ce-pro/training/00-installation.md",
-    "text": "1. Right-click the CE installer and select **Run as administrator**\n2. Accept the licence agreement\n3. Choose the installation directory (default: `C:\\Program Files\\CellularExpert`)\n4. Click **Install** and wait for completion\n5. Click **Finish**\n---"
-  },
-  {
-    "chunk_id": "ce-pro-tr-install_chunk_5",
-    "document_id": "ce-pro-tr-install",
-    "document_title": "00 — Installation",
-    "section_title": "Activating the Licence",
-    "product": "CE Pro",
-    "version": "Unknown",
-    "category": "Training",
-    "source_file": "docs/ce-pro/training/00-installation.md",
-    "text": "When you first open ArcGIS Pro, you will be prompted to sign in:\nYou can also sign in from within an open project using the sign-in menu in the top bar:\n1. Open **ArcGIS Pro** and create or open a project with a Map view\n2. Go to **Settings → Licensing → Configure your licensing options**\n3. Locate **Cellular Expert** in the extension list\n4. Toggle it **On**\n5. Copy your **User Key** from the CE licence portal and paste it when prompted\n6. Click **Activate**\nThe CE tab will appear in the ArcGIS Pro ribbon once activation succeeds.\n---"
-  },
-  {
-    "chunk_id": "ce-pro-tr-install_chunk_6",
-    "document_id": "ce-pro-tr-install",
-    "document_title": "00 — Installation",
-    "section_title": "Upgrading Cellular Expert",
-    "product": "CE Pro",
-    "version": "Unknown",
-    "category": "Training",
-    "source_file": "docs/ce-pro/training/00-installation.md",
-    "text": "When upgrading to a new CE version:\n1. **Delete** the existing Cellular Expert installation via Windows **Add or Remove Programs**\n2. Run the new CE installer as Administrator\n3. Re-activate the licence if prompted (your key remains valid)\n> **Note:** Do not uninstall ArcGIS Pro during a CE upgrade."
-  },
-  {
-    "chunk_id": "ce-pro-tr-install_chunk_7",
-    "document_id": "ce-pro-tr-install",
-    "document_title": "00 — Installation",
-    "section_title": "Upgrading ArcGIS Pro",
-    "product": "CE Pro",
-    "version": "Unknown",
-    "category": "Training",
-    "source_file": "docs/ce-pro/training/00-installation.md",
-    "text": "When upgrading ArcGIS Pro to a newer version:\n1. Run the ArcGIS Pro upgrade installer — CE does **not** need to be removed first\n2. After the ArcGIS upgrade, open ArcGIS Pro and verify the CE tab is still visible\n3. If CE tab is missing, repair the CE installation via **Add or Remove Programs → Cellular Expert → Change**\n---"
-  },
-  {
-    "chunk_id": "ce-pro-tr-install_chunk_8",
-    "document_id": "ce-pro-tr-install",
-    "document_title": "00 — Installation",
-    "section_title": "Uninstalling",
-    "product": "CE Pro",
-    "version": "Unknown",
-    "category": "Training",
-    "source_file": "docs/ce-pro/training/00-installation.md",
-    "text": "To fully remove the software:\n1. Open **Add or Remove Programs**\n2. Uninstall **Cellular Expert** first\n3. Then uninstall **ArcGIS Pro** if required\n---"
-  },
-  {
-    "chunk_id": "ce-pro-tr-install_chunk_9",
-    "document_id": "ce-pro-tr-install",
-    "document_title": "00 — Installation",
-    "section_title": "Troubleshooting",
-    "product": "CE Pro",
-    "version": "Unknown",
-    "category": "Training",
-    "source_file": "docs/ce-pro/training/00-installation.md",
-    "text": "| Problem | Solution |\n|---|---|\n| CE tab not visible after install | Add a Map or Scene to the project; CE tabs only appear with an active map |\n| Licence activation fails | Check internet connectivity; contact info@cellular-expert.com for a new key |\n| Installer blocked by Windows | Right-click → Run as administrator |\n| Workspace not found after upgrade | Use **Workspace → Upgrade** to update the database schema |\n---\n**Contact:** info@cellular-expert.com | +370 5 2150575 | www.cellular-expert.com"
+    "text": "- Open ArcGIS Pro\n- Add New Map to enable CE tabs\n- License information\n![Slide 5](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-pro%2Ftraining-pdf-0-installation%2Fpage-5.png)"
   }
 ]

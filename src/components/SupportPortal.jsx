@@ -14,7 +14,6 @@ import { StableInput, StableTextarea } from "./StableInput";
 import SupportRequestForm from "./SupportRequestForm";
 
 // Every request needs to carry the session cookie (credentials: 'include')
-// for the server to know who's logged in — a plain fetch() wouldn't send it.
 const apiFetch = (url, options = {}) =>
   window.fetch(url, { ...options, credentials: "include" });
 
@@ -28,7 +27,6 @@ const SC = {
 const PRIC = {
   Critical: "#dc2626",
   High: "#d97706",
-  Normal: "var(--accent)",
   Low: "#6b7280",
 };
 const PC = {
@@ -96,6 +94,16 @@ export default function SupportPortal({ onViewDocs, currentUser, setCurrentUser 
   const [admTimeFilter, setAdmTimeFilter] = useState("all"); // 'all' | '6h' | '24h' | '1m' | 'custom'
   const [admCustomFrom, setAdmCustomFrom] = useState("");
   const [admCustomTo, setAdmCustomTo] = useState("");
+  const [showCreateUser, setShowCreateUser] = useState(false);
+  const [newUser, setNewUser] = useState({
+    name: "",
+    email: "",
+    password: "",
+    company: "",
+    role: "user",
+  });
+  const [newUserError, setNewUserError] = useState("");
+  const [newUserSaving, setNewUserSaving] = useState(false);
 
   // Admin — Documentation CRUD state
   const [docsList, setDocsList] = useState([]);
@@ -124,9 +132,9 @@ export default function SupportPortal({ onViewDocs, currentUser, setCurrentUser 
   const [faqError, setFaqError] = useState("");
   const [showSupportForm, setShowSupportForm] = useState(false);
   const [supportFormPrefill, setSupportFormPrefill] = useState("");
+  const [contactFormKey, setContactFormKey] = useState(0);
 
-  const isAdmin =
-    currentUser?.role === "admin" || currentUser?.role === "agent";
+  const isAdmin = currentUser?.role === "admin";
   // Session restore now happens once in App.js (the parent) and is passed
   // down via the currentUser/setCurrentUser props — this avoids restoring
   // the session twice and keeps the account state in one place so the top
@@ -134,7 +142,7 @@ export default function SupportPortal({ onViewDocs, currentUser, setCurrentUser 
   useEffect(() => {
     if (currentUser) {
       setTab(
-        currentUser.role === "admin" || currentUser.role === "agent" ? "adm-dashboard" : "chat",
+        currentUser.role === "admin" ? "adm-users" : "chat",
       );
     }
   }, [currentUser]);
@@ -386,8 +394,8 @@ export default function SupportPortal({ onViewDocs, currentUser, setCurrentUser 
       setCurrentUser(data);
       logActivity("login", "Support Portal", "User logged in");
       setTab(
-        data.role === "admin" || data.role === "agent"
-          ? "adm-dashboard"
+        data.role === "admin"
+          ? "adm-users"
           : "chat",
       );
       return { ok: true };
@@ -686,16 +694,18 @@ export default function SupportPortal({ onViewDocs, currentUser, setCurrentUser 
       >
         {(isAdmin
           ? [
-              { id: "adm-dashboard", icon: "◈", label: "Dashboard" },
+              // Future admin sections: keep the implementations below, but hide
+              // them until those workflows are ready for production.
+              // { id: "adm-dashboard", icon: "◈", label: "Dashboard" },
               // {id:'adm-tickets',  icon:'◉',label:'All Tickets'},
-              { id: "adm-agents", icon: "◐", label: "Agent Stats" },
-              { id: "adm-ai-insights", icon: "✦", label: "AI Insights" },
+              // { id: "adm-agents", icon: "◐", label: "Agent Stats" },
+              // { id: "adm-ai-insights", icon: "✦", label: "AI Insights" },
               { id: "adm-users", icon: "◎", label: "Users" },
               { id: "adm-faq", icon: "✦", label: "FAQ" },
-              { id: "adm-docs", icon: "▤", label: "Documentation" },
+              // { id: "adm-docs", icon: "▤", label: "Documentation" },
             ]
           : [
-              { id: "chat", icon: "◈", label: "Support Chat" },
+              { id: "chat", icon: "✉", label: "Contact Support" },
               { id: "faq", icon: "✦", label: "FAQ" },
               { id: "docs-link", icon: "▤", label: "Documentation" },
               { id: "profile", icon: "◎", label: "Profile" },
@@ -749,7 +759,57 @@ export default function SupportPortal({ onViewDocs, currentUser, setCurrentUser 
     </div>
   );
 
-  // ── Chat Tab ──────────────────────────────────────────────────────────────
+  // ── Contact Support Tab ──────────────────────────────────────────────────
+  const ContactSupportTab = () => (
+    <div
+      style={{
+        flex: 1,
+        overflowY: "auto",
+        padding: 14,
+      }}
+    >
+      <div
+        style={{
+          maxWidth: 720,
+          margin: "0 auto",
+          background: "var(--bg2)",
+          border: "1px solid var(--border)",
+          borderRadius: 12,
+          boxShadow: "var(--shadow)",
+        }}
+      >
+        <div
+          style={{
+            padding: "16px 16px 4px",
+            color: "var(--text-bright)",
+            fontSize: 16,
+            fontWeight: 700,
+          }}
+        >
+          Contact Support
+        </div>
+        <div
+          style={{
+            padding: "0 16px",
+            color: "var(--text-dim)",
+            fontSize: 12,
+          }}
+        >
+          Choose your product, describe your question, and attach screenshots if needed.
+        </div>
+        <SupportRequestForm
+          key={contactFormKey}
+          API_BASE={API_BASE}
+          currentUser={currentUser}
+          prefillDescription=""
+          onClose={() => setContactFormKey((value) => value + 1)}
+          onSubmitted={() => {}}
+        />
+      </div>
+    </div>
+  );
+
+  // ── Legacy Chat Tab (kept for a possible future chatbot) ─────────────────
   const ChatTab = () => (
     <div
       style={{
@@ -2416,15 +2476,34 @@ export default function SupportPortal({ onViewDocs, currentUser, setCurrentUser 
     }
   };
 
-  const changeUserProduct = async (id, product) => {
-    const res = await apiFetch(`${API_BASE}/auth/users/${id}/product`, {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ product }),
-    });
-    if (res.ok) {
-      const updated = await res.json();
-      setUsers((p) => p.map((u) => (u.id === id ? updated : u)));
+  const createUser = async (event) => {
+    event.preventDefault();
+    setNewUserError("");
+    setNewUserSaving(true);
+    try {
+      const res = await apiFetch(`${API_BASE}/auth/users`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(newUser),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        setNewUserError(data.error || "Could not create user.");
+        return;
+      }
+      setUsers((previous) => [data, ...previous]);
+      setNewUser({
+        name: "",
+        email: "",
+        password: "",
+        company: "",
+        role: "user",
+      });
+      setShowCreateUser(false);
+    } catch {
+      setNewUserError("Could not reach the server.");
+    } finally {
+      setNewUserSaving(false);
     }
   };
 
@@ -2766,14 +2845,150 @@ export default function SupportPortal({ onViewDocs, currentUser, setCurrentUser 
     <div style={{ flex: 1, overflowY: "auto", padding: 14 }}>
       <div
         style={{
-          fontWeight: 700,
-          color: "var(--text-bright)",
-          fontSize: 12,
-          marginBottom: 9,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          gap: 10,
+          marginBottom: 10,
         }}
       >
-        All Users ({users.length})
+        <div
+          style={{
+            fontWeight: 700,
+            color: "var(--text-bright)",
+            fontSize: 12,
+          }}
+        >
+          All Users ({users.length})
+        </div>
+        <button
+          type="button"
+          onClick={() => {
+            setNewUserError("");
+            setShowCreateUser((open) => !open);
+          }}
+          style={{
+            padding: "7px 12px",
+            background: "var(--accent)",
+            border: "none",
+            borderRadius: 7,
+            color: "#fff",
+            fontSize: 10,
+            fontWeight: 700,
+            cursor: "pointer",
+            fontFamily: "var(--font-mono)",
+          }}
+        >
+          {showCreateUser ? "CANCEL" : "+ NEW USER"}
+        </button>
       </div>
+
+      {showCreateUser && (
+        <form
+          onSubmit={createUser}
+          style={{
+            background: "var(--bg2)",
+            border: "1px solid var(--accent)",
+            borderRadius: 10,
+            padding: 12,
+            marginBottom: 12,
+          }}
+        >
+          <div
+            style={{
+              fontSize: 11,
+              fontWeight: 700,
+              color: "var(--text-bright)",
+              marginBottom: 10,
+            }}
+          >
+            Create user and choose access
+          </div>
+          {newUserError && (
+            <div
+              style={{
+                color: "#dc2626",
+                fontSize: 11,
+                marginBottom: 9,
+              }}
+            >
+              {newUserError}
+            </div>
+          )}
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(2, minmax(0, 1fr))",
+              gap: 8,
+            }}
+          >
+            {["name", "email", "password", "company"].map((field) => (
+              <input
+                key={field}
+                required
+                type={field === "password" ? "password" : field === "email" ? "email" : "text"}
+                minLength={field === "password" ? 6 : undefined}
+                placeholder={field[0].toUpperCase() + field.slice(1)}
+                value={newUser[field]}
+                onChange={(event) =>
+                  setNewUser((previous) => ({
+                    ...previous,
+                    [field]: event.target.value,
+                  }))
+                }
+                style={{
+                  width: "100%",
+                  boxSizing: "border-box",
+                  padding: "8px 10px",
+                  border: "1px solid var(--border)",
+                  borderRadius: 7,
+                  background: "var(--bg)",
+                  color: "var(--text-bright)",
+                  fontSize: 11,
+                  outline: "none",
+                }}
+              />
+            ))}
+            <select
+              value={newUser.role}
+              onChange={(event) =>
+                setNewUser((previous) => ({ ...previous, role: event.target.value }))
+              }
+              style={{
+                padding: "8px 10px",
+                border: "1px solid var(--border)",
+                borderRadius: 7,
+                background: "var(--bg)",
+                color: "var(--text-bright)",
+                fontSize: 11,
+              }}
+            >
+              {["user", "admin"].map((role) => (
+                <option key={role} value={role}>{role}</option>
+              ))}
+            </select>
+          </div>
+          <button
+            type="submit"
+            disabled={newUserSaving}
+            style={{
+              marginTop: 9,
+              padding: "8px 14px",
+              background: "var(--accent)",
+              border: "none",
+              borderRadius: 7,
+              color: "#fff",
+              fontSize: 10,
+              fontWeight: 700,
+              cursor: newUserSaving ? "default" : "pointer",
+              opacity: newUserSaving ? 0.7 : 1,
+              fontFamily: "var(--font-mono)",
+            }}
+          >
+            {newUserSaving ? "CREATING..." : "CREATE USER"}
+          </button>
+        </form>
+      )}
       {users.map((u) => (
         <div
           key={u.id}
@@ -2847,27 +3062,6 @@ export default function SupportPortal({ onViewDocs, currentUser, setCurrentUser 
           </span>
 
           <select
-            value={u.product || ""}
-            onChange={(e) => changeUserProduct(u.id, e.target.value)}
-            style={{
-              padding: "4px 8px",
-              border: "1px solid var(--border)",
-              borderRadius: 7,
-              fontSize: 10,
-              color: "var(--text-bright)",
-              background: "var(--bg)",
-              outline: "none",
-              cursor: "pointer",
-            }}
-          >
-            {["CE Express", "CE Pro", "Both", "Training"].map((p) => (
-              <option key={p} value={p}>
-                {p}
-              </option>
-            ))}
-          </select>
-
-          <select
             value={u.role}
             onChange={(e) => changeUserRole(u.id, e.target.value)}
             style={{
@@ -2878,16 +3072,14 @@ export default function SupportPortal({ onViewDocs, currentUser, setCurrentUser 
               color:
                 u.role === "admin"
                   ? "#7c3aed"
-                  : u.role === "agent"
-                    ? "var(--accent2)"
-                    : "var(--accent)",
+                  : "var(--accent)",
               background: "var(--bg)",
               outline: "none",
               cursor: "pointer",
               fontWeight: 600,
             }}
           >
-            {["user", "agent", "admin"].map((r) => (
+            {["user", "admin"].map((r) => (
               <option key={r} value={r}>
                 {r}
               </option>
@@ -4373,7 +4565,7 @@ export default function SupportPortal({ onViewDocs, currentUser, setCurrentUser 
   const renderTab = () => {
     switch (tab) {
       case "chat":
-        return <ChatTab />;
+        return <ContactSupportTab />;
       case "tickets":
         return <TicketsTab />;
       case "profile":
@@ -4390,8 +4582,6 @@ export default function SupportPortal({ onViewDocs, currentUser, setCurrentUser 
         return <AdminUsers />;
       case "adm-faq":
         return AdminFaq();
-      case "adm-docs":
-        return AdminDocs();
       case "adm-ai-insights":
         return <AdminAIInsights />;
       default:
@@ -4430,7 +4620,7 @@ export default function SupportPortal({ onViewDocs, currentUser, setCurrentUser 
               Support Center
             </div>
             <div style={{ fontSize: 12, color: "var(--text-dim)", marginTop: 2 }}>
-              Chat with our AI assistant, browse the FAQ, or manage your profile.
+              Contact support, browse the FAQ, or manage your profile.
             </div>
           </div>
           <div style={{ flex: 1, display: "flex", overflow: "hidden", minHeight: 0 }}>

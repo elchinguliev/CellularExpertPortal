@@ -1,0 +1,123 @@
+[
+  {
+    "chunk_id": "ce-pro-overview_chunk_1",
+    "document_id": "ce-pro-overview",
+    "document_title": "Overview / Getting Started",
+    "section_title": "CE Desktop Pro — Overview / Getting Started",
+    "product": "CE Pro",
+    "version": "Unknown",
+    "category": "Getting Started",
+    "source_file": "docs/ce-pro/overview.md",
+    "text": "> **Note:** Applies to: RCP, RLP, EMF, Indoor, and Sound."
+  },
+  {
+    "chunk_id": "ce-pro-overview_chunk_2",
+    "document_id": "ce-pro-overview",
+    "document_title": "Overview / Getting Started",
+    "section_title": "1. Software Purpose and Functionality",
+    "product": "CE Pro",
+    "version": "Unknown",
+    "category": "Getting Started",
+    "source_file": "docs/ce-pro/overview.md",
+    "text": "CE Pro runs as an extension inside ArcGIS Pro. For an efficient CE Pro workspace, arrange your panes so the map, Contents, and CE Pro tools are all visible at once:\nCellular Expert Desktop for ArcGIS Pro (CE Pro) is a professional radio coverage planning software tool\ndesigned on top of the Esri ArcGIS Pro environment. The CE Pro is a highly versatile and functional tool,\ncovering the network design functionality needs of most professional radio communication planners and\ndevelopers. It could support network planning and optimization for the entire range of wireless technologies\nin frequencies from 10 kHz to 350 GHz.\nThe key features and benefits of utilizing Cellular Expert software are as follows:\n1. CE Pro is a purpose-built extension of ESRI software, a world-renowned standard in GIS\nenvironments. This means that along with wireless network planning and optimization, it gives\nusers various value-added GIS/mapping functionalities to manage, visualize feature classes or\nroasters, create reports, and graphs, or automate workflows,\n2. CE Pro is made of several processing engines and functional modules and therefore may be\neasily configured for various business functions: network planning, network engineering,\ntechnology information support to sales and marketing, network assets management, and\nnetwork operational maintenance and supervision,\n3. CE Pro is maintained and constantly developed by a dedicated agile team of software\ndevelopers and radio planners, allowing attentive responsiveness to customer needs and\ndeveloping custom-tailored solutions.\nCE Pro performs mobile network coverage analysis based on:\n1. Site and cell level details of radio equipment complement, specifications, cell and component\ncarriers configuration,\n2. Subscriber characteristics – geographic distribution density, generated traffic to estimate\nnetwork/cell loading,\n3. DTM, buildings, and clutter-based deterministic point-to-area radio wave propagation\nmodeling.\nCE Pro allows the user to input and use a broad variety of GIS and network data to support the simulations,\nas the overall quality of coverage calculations is dependent on the completeness and detail of technical\nnetwork data and the resolution and quality of the GIS data. CE Pro can efficiently simulate wide area\nnetwork coverage using the GIS data with a resolution of down to sub-meter.\nCalculated results of coverage predictions could be presented as coverage raster maps.\nCE Pro is capable of modeling various wireless technologies: cellular (2G/3G/4G/5G), PMR/PAMR\n(TETRA, APCO, others), FWA/BWA, IoT (LoRa/SigFox, others), as well as fixed microwave links.\nTherefore, it may be used as a radio planning tool in various industries: Mobile Operators, Integrated\nTelecom Companies, Wireless Internet Service providers, Regulatory authorities, Utilities, Broadband\nInfrastructure providers, Defense organizations, as well as any other users of radiocommunication systems.\nIn the following, we summarize the key functionalities of the tool.\nData Management\nThe tool allows the importation, storage, and management of detailed technical data on network nodes,\nsuch as sites, cells, RF transmitters, and antennas.\nSignal Strength Prediction\nThe tool contains several in-built path loss prediction models that allow the user to easily start simulations\nbased on the evaluation of the most essential pathloss contributing factors. The following two models\nconstitute the starting set:\n• Free space – typically used for modeling short-range mobile communications, fixed links, or other\nradiocommunications applications with prevalent Line-of-Sight conditions on propagation paths,\n• UniMacro – a proprietary universal model for wide area mobile communication systems that flexibly\naccounts for a variety of propagation paths as determined for each specific reception point based\non terrain and clutter data vs. configuration of the modeled system.\nFurther details on path loss models and their configuration options are provided in the relevant section of\nthis manual.\nModel Tuning\nThe tool provides an automated method for fine-tuning propagation model parameters to fit the specific\nscenario and type of area of network deployment based on analyzing real field strength measurement\nresults.\nRadio Coverage Calculation for Different Mobile Technologies\nRadio coverage calculation is assisted in the tool by the possibility to use pre-loaded cell configuration\ntemplates that are tailored to typical technical parameters of base stations in different Radio Access\nTechnologies. Accordingly, the model settings and outputs will be adjusted to suit the scenario pertinent to\nthat technology, i.e.:\n• 2G – radio coverage is calculated in dBm as receive power level of narrow-band (200 kHz) signal,\n• 3G – radio coverage is calculated in dBm as the receive power level of a single broadband (3.85\nMHz) carrier,\n• 4G/5G – radio coverage is calculated in dBm as the equivalent RSRP of a single sub-carrier\ncomponent in the complex OFDM broadband signal.\n• Wi-Fi - wireless communication technology based on the IEEE 802.11 standards, used for setting\nup local area networks (WLANs) and providing internet access in various settings without requiring\ncable connections.\nProfile Analysis\nThe tool provides powerful GIS analytical features to analyze the terrain and clutter on the fixed link path,\nsuch as allowing to estimate of the Fresnel zone clearance condition, Power Budget, Path loss and Angles\nbetween Tx and Rx."
+  },
+  {
+    "chunk_id": "ce-pro-overview_chunk_3",
+    "document_id": "ce-pro-overview",
+    "document_title": "Overview / Getting Started",
+    "section_title": "2. System requirements",
+    "product": "CE Pro",
+    "version": "Unknown",
+    "category": "Getting Started",
+    "source_file": "docs/ce-pro/overview.md",
+    "text": "This chapter will guide you through the minimal hardware and software requirements.\nNote: requirements can vary significantly, depending on the acceptable calculation time and task\ncomplexity."
+  },
+  {
+    "chunk_id": "ce-pro-overview_chunk_4",
+    "document_id": "ce-pro-overview",
+    "document_title": "Overview / Getting Started",
+    "section_title": "2.1 Minimal Requirements for Hardware",
+    "product": "CE Pro",
+    "version": "Unknown",
+    "category": "Getting Started",
+    "source_file": "docs/ce-pro/overview.md",
+    "text": "Processor (CPU):\n• Minimum: 8 cores, hyperthreaded\n• Recommended: 16 cores\n(Optional) Requirements for GPU-accelerated calculations\n• GPU – any NVIDIA GPU with CUDA capabilities (https://developer.nvidia.com/cuda-gpus)\n• Driver version: 456.38 or later\n• CUDA Toolkit 11.0 or later\nMemory/RAM:\n• Minimum: 16 GB\n• Recommended: 32 GB\nStorage:\n• Minimum: 500 GB of free space\n• Recommended: 2TB or more of free space on a solid-state drive (SSD)"
+  },
+  {
+    "chunk_id": "ce-pro-overview_chunk_5",
+    "document_id": "ce-pro-overview",
+    "document_title": "Overview / Getting Started",
+    "section_title": "2.2 Minimal Requirements for Software",
+    "product": "CE Pro",
+    "version": "Unknown",
+    "category": "Getting Started",
+    "source_file": "docs/ce-pro/overview.md",
+    "text": "Cellular Expert runs on Microsoft Windows 10 or higher operating system.\nIt requires:\n• Microsoft .NET 8.0:\nDownload .NET 8.0 Desktop Runtime (v8.0.0) - Windows x64 Installer\n• Microsoft Visual C++ Redistributable packages 2015-2022:\nhttps://aka.ms/vs/17/release/vc_redist.x64.exe\n• .NET support for ArcGIS libraries\n• ArcGIS Pro from version 3.3.x"
+  },
+  {
+    "chunk_id": "ce-pro-overview_chunk_6",
+    "document_id": "ce-pro-overview",
+    "document_title": "Overview / Getting Started",
+    "section_title": "3. License types",
+    "product": "CE Pro",
+    "version": "Unknown",
+    "category": "Getting Started",
+    "source_file": "docs/ce-pro/overview.md",
+    "text": "Only a Single Use Cellular Expert license is available. The license type is annual and dedicated to one\nworkstation connected with ArcGIS Online, which is used for ArcGIS Pro."
+  },
+  {
+    "chunk_id": "ce-pro-overview_chunk_7",
+    "document_id": "ce-pro-overview",
+    "document_title": "Overview / Getting Started",
+    "section_title": "3.1 Single-User Environment",
+    "product": "CE Pro",
+    "version": "Unknown",
+    "category": "Getting Started",
+    "source_file": "docs/ce-pro/overview.md",
+    "text": "For the Single-User configuration of Cellular Expert, all information about radio network objects is stored in\na personal geodatabase (GDB format) or locally on the disc (calculation results, raster data in GeoTIFF\nformat, etc.).\nGeographical data can be stored:\n• Locally on a disc\nAn ArcGIS Pro license and an active ArcGIS Named User or ArcGIS Pro Standalone are required to operate\nin the Single-User environment."
+  },
+  {
+    "chunk_id": "ce-pro-overview_chunk_8",
+    "document_id": "ce-pro-overview",
+    "document_title": "Overview / Getting Started",
+    "section_title": "4. Getting Started",
+    "product": "CE Pro",
+    "version": "Unknown",
+    "category": "Getting Started",
+    "source_file": "docs/ce-pro/overview.md",
+    "text": "Welcome to Cellular Expert.\nThis chapter will guide you through project creation and analysis. It includes the installation and preparation\nof the Cellular Expert extension, as well as using it for the first time and creating a project.\nNote: the tools are not explained in this chapter. They are referenced in other chapters of this guide."
+  },
+  {
+    "chunk_id": "ce-pro-overview_chunk_9",
+    "document_id": "ce-pro-overview",
+    "document_title": "Overview / Getting Started",
+    "section_title": "4.1 Installation",
+    "product": "CE Pro",
+    "version": "Unknown",
+    "category": "Getting Started",
+    "source_file": "docs/ce-pro/overview.md",
+    "text": "• If applicable, uninstall the previous version of Cellular Expert for ArcGIS Pro\n• Make sure that .NET 8.0 is installed\n• Make sure that ArcGIS Pro 3.3.x is installed\n• Run the ceProSetup.msi file to install the new version of Cellular Expert for ArcGIS Pro\n• After successful installation, open Task Manager > Services, and run CE_Pro_Prediction_Service"
+  },
+  {
+    "chunk_id": "ce-pro-overview_chunk_10",
+    "document_id": "ce-pro-overview",
+    "document_title": "Overview / Getting Started",
+    "section_title": "4.2 Activation",
+    "product": "CE Pro",
+    "version": "Unknown",
+    "category": "Getting Started",
+    "source_file": "docs/ce-pro/overview.md",
+    "text": "This step is required for new users. If the Cellular Expert for ArcGIS Pro license has already been activated,\nplease skip this step.\nYou can activate the license in two ways:\nFirst way:\n1. Open ArcGIS Pro and select Settings\n2. Navigate to Licensing → External Extensions\n3. Find the Cellular Expert entry in the extensions table\n4. Click the checkmark in the Enabled field. The License Activation dialog will appear\n5. Copy the User Key and send it to support@cellular-expert.com. You will be provided with a\nLicense Activation Key which must be entered into the same dialogue\n6. Press Activate License and the license will be activated, enabling the acquired versions of the\nadd-on\nSecond way:\n1. Create an empty ArcGIS Pro project\n2. Navigate to Insert and select New Map. After the map insertion, the Cellular Expert tabs will be\nenabled\n3. Navigate to any of the Cellular Expert tabs and select License Information in the About section.\n4. Copy the User Key and send it to support@cellular-expert.com. You will be provided with a\nLicense Activation Key which must be entered into the same dialogue\n5. Press Activate License and the license will be activated, enabling the acquired versions of the\nadd-on\nIf you want to check the expiration date of the license you can:\n1. Open ArcGIS Pro and start/open a project with an active map\n2. Navigate to the Cellular Expert tab\n3. Select License Information in the About section\nIf you encounter any problems or want additional details about the license, please contact Cellular Expert\nat support@cellular-expert.com. For more information, see the chapter Technical Support."
+  },
+  {
+    "chunk_id": "ce-pro-overview_chunk_11",
+    "document_id": "ce-pro-overview",
+    "document_title": "Overview / Getting Started",
+    "section_title": "4.3 Tools",
+    "product": "CE Pro",
+    "version": "Unknown",
+    "category": "Getting Started",
+    "source_file": "docs/ce-pro/overview.md",
+    "text": "The Cellular Expert tools are in the Cellular Expert add-on. They appear automatically after installation of\n![Image p11](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-pro%2Frcp-guide%2Fp011-img1.png)\n![Image p11](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-pro%2Frcp-guide%2Fp011-img2.png)\n![Image p11](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-pro%2Frcp-guide%2Fp011-img3.png)\n![Image p11](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-pro%2Frcp-guide%2Fp011-img4.png)\nCE for ArcGIS Pro and will be found in the menu ribbon.\nThere are 5 types of licenses and therefore 5 different tabs with various tool configurations:\n• RCP\n• RLP\n• EMF\n• Sound\n• Indoor\nThis User Guide describes RCP tools.\n![Image p12](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-pro%2Frcp-guide%2Fp012-img1.png)\n![Image p12](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-pro%2Frcp-guide%2Fp012-img2.png)\n![Image p12](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-pro%2Frcp-guide%2Fp012-img3.png)\n![Image p12](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-pro%2Frcp-guide%2Fp012-img4.png)\n![Image p12](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-pro%2Frcp-guide%2Fp012-img5.png)\n![Image p12](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-pro%2Frcp-guide%2Fp012-img6.png)\n![Image p12](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-pro%2Frcp-guide%2Fp012-img7.png)"
+  }
+]

@@ -1,0 +1,123 @@
+[
+  {
+    "chunk_id": "ce-pro-rlp-radio-links_chunk_1",
+    "document_id": "ce-pro-rlp-radio-links",
+    "document_title": "Radio Links",
+    "section_title": "11.1 Geoclimatic Data",
+    "product": "CE Pro",
+    "version": "Unknown",
+    "category": "RLP Tools",
+    "source_file": "docs/ce-pro/rlp-radio-links.md",
+    "text": "Click the button to open the Geoclimatic Data dialogue.\nGeoclimatic Data is a tool that lets you adjust the geoclimatic settings that will be used in certain calculations\n![Image p172](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-pro%2Frlp-guide%2Fp172-img1.png)\n![Image p172](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-pro%2Frlp-guide%2Fp172-img2.png)\n(e.g. Link Prediction).\nSave Changes\nSave changes to the settings.\n![Image p173](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-pro%2Frlp-guide%2Fp173-img1.png)"
+  },
+  {
+    "chunk_id": "ce-pro-rlp-radio-links_chunk_2",
+    "document_id": "ce-pro-rlp-radio-links",
+    "document_title": "Radio Links",
+    "section_title": "11.1.1 Gaseous Absorption",
+    "product": "CE Pro",
+    "version": "Unknown",
+    "category": "RLP Tools",
+    "source_file": "docs/ce-pro/rlp-radio-links.md",
+    "text": "Gaseous absorption pages define values for dry air pressure and water vapour density. These values can\nbe obtained from predefined geoclimatic data maps.\nWater vapour density data according to ITU-R P.836-3. It is used in gaseous absorption evaluation.\n| Parameter | Description |\n|---|---|\n| Dry Air Pressure | The atmospheric pressure contributed by air that contains no water vapor, typically measured in hectopascals (hPa). |\n| Water Vapour Density | The mass of water vapor present in a unit volume of air, typically measured in grams per cubic meter (g/m³). |\n| Water Vapour Density Data | A dropdown menu that allows the user to select the source or type of data used to determine water vapor density. |\n| Water Vapour Density Data | A dropdown menu to select the specific field or parameter from the chosen data source that provides the water vapor density information. |\n| Use Geoclimatic Data | Enable/Disable this Geoclimatic data |\n| Absorption Spectrum | A button that lets you see the visual representation of the absorption spectrum. |\n| Parameter | Description |\n|---|---|\n| Linear/Logarithmic | Specifies how the axes values are calculated and displayed on the plot. Logarithmic is calculated as log . 10 |\n| Frequency From/To | The frequency range of the absorption spectrum. |\n| Path Length | The length of the spectrum. 11.1.2 Temperature Annual mean surface temperature at 2m above the surface of the Earth according to ITU-R P.1510. The data is used to evaluate the thermal noise of a receiver. |\n| Annual Temperature | Annual Temperature expressed in Kelvins. |\n| Annual Temperature Data | A dropdown menu allowing the user to select the dataset from which the annual temperature data should be sourced. |\n| Annual Temperature Field | A dropdown menu to select the specific data field within the chosen dataset that contains the annual temperature information. |\n| Use Geoclimatic Data | Enable/Disable this Geoclimatic data. |"
+  },
+  {
+    "chunk_id": "ce-pro-rlp-radio-links_chunk_3",
+    "document_id": "ce-pro-rlp-radio-links",
+    "document_title": "Radio Links",
+    "section_title": "11.1.3 Multipath Fading",
+    "product": "CE Pro",
+    "version": "Unknown",
+    "category": "RLP Tools",
+    "source_file": "docs/ce-pro/rlp-radio-links.md",
+    "text": "The Multipath Fading page defines refractivity data and calculation parameters for ITU and Vigants-Barnett\nmethods.\nWorst month-to-annual statistics conversion can be performed according to ITU-R P. 530 or ITU-R P. 841\nmethods.\nRefractivity gradient data is based on ITU-R P.453-9. Refractivity gradient data is used for multipath fading\n![Image p176](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-pro%2Frlp-guide%2Fp176-img1.png)\nanalysis.\n| Parameter | Description |\n|---|---|\n| ITU Method | Enable/Disable the ITU Method |\n| ITU-R P.530 version | A checkbox indicating the use of the International Telecommunication Union's method for calculations, with a dropdown to select the ITU-R P.530 version. |\n| Use Geoclimatic Data | Enable/Disable this Geoclimatic data. |\nRefractivity Gradient Data / Field\nRefractivity gradient data: DNDZ\nRefractivity gradient field: DN01; DN10; DN50; DN90; DN99, KF01...KF99\n• DNx - refractivity gradient not exceeded for x% of the average year in the lowest 65 m of\natmosphere. DN01 is the parameter referred to as dN1 in ITU-R P.530.\n• KFx - Effective Earth radius not exceeded for x% of the average year in the lowest 65 m of\natmosphere. KFx is provided only for map preview and cannot be used in the Geoclimatic Data\nsettings dialog.\nGeoclimatic Factor (Define)\nA field to input or calculate a factor used in propagation modeling, affecting the prediction of multipath\nfading.\nGeoclimactic Factor (Calculate)\nCalculate the geoclimactic factor used in propagation modeling, affecting the prediction of multipath fading.\n• Approximation of terrain roughness - Options to select how terrain roughness is modeled in the\ncalculations - as a constant value or as a linear approximation.\n• Percentage of time that refractivity gradient in the lowest 100 m is less than 100 units/km -\nAn input field for the percentage of time when the refractivity gradient at low altitudes meets a\nspecific threshold.\n• Co, dB / Lat, dB / Lon, dB - Fields to input correction values in decibels for specific geographic\ncoordinates, possibly related to the orientation or position of the transmitter/receiver.\n| Parameter | Description |\n|---|---|\n| Percentage of Time / Design | Radio buttons to choose the granularity of the time percentage for which the calculations are relevant, and the level of detail required for planning. |\n| Use Viggants-Barnett Method | Enabled/Disabled Viggants-Barnett Method. |\n| Geoclimatic Factor (Propagation Conditions) | A checkbox to select this specific method for calculations, with radio buttons to choose a geoclimatic factor indicating propagation conditions. |\n| Worst-month-to-annual statistics conversion | A section to select the ITU recommendation (either ITU-R P.530 or ITU-R P.841) for converting worst- month statistics to annual statistics. |\nInterf. correction factor for multipath and focusing effects\nInput for the percentage of time to apply an interference correction factor to account for multipath and\nfocusing effects."
+  },
+  {
+    "chunk_id": "ce-pro-rlp-radio-links_chunk_4",
+    "document_id": "ce-pro-rlp-radio-links",
+    "document_title": "Radio Links",
+    "section_title": "11.1.4 Rain Fading",
+    "product": "CE Pro",
+    "version": "Unknown",
+    "category": "RLP Tools",
+    "source_file": "docs/ce-pro/rlp-radio-links.md",
+    "text": "The rain fading page defines rain regions (ITU and Crane) for rain rate statistics and calculation methods\n(ITU and Crane). The rain rate exceedance parameter for 0.01% of the time can be set manually or\nautomatically according to the rain zone.\nRain rate data based on ITU-R P.837-4. This data is used to evaluate rain fading.\nRain Zone\nElections to categorize the geographic location by ITU rain zone standards, which are used to estimate rain\nattenuation in different regions.\nGeoclimatic data - ESA rain rate data / ESA rain rate\nOptions to select the dataset (such as \"ESARAIN_V5\") and the specific field within that dataset (like \"MT\")\nfor rain rate data, used for calculating rain attenuation.\nFading method - ITU method / ITU-R P.530 version\nA checkbox to select the ITU method for rain fading calculations and a dropdown to choose the version of\nthe ITU-R P.530 recommendation being applied.\nRain rate exceeded for 0.01% of the time (mm/h)\nOptions to use either default or custom values for the rain rate that is exceeded for 0.01% of the time, which\n![Image p178](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-pro%2Frlp-guide%2Fp178-img1.png)\nis a measure used to predict rain fading in telecommunications.\nCrane\nThis is a model selection option related to the Crane model for calculating rain attenuation.\nEnd-to-end reliability method - Multi-hop / Two-way\nSelection options for the method of calculating the reliability of a signal in a communication path that may\ninvolve multiple hops or two-way transmission."
+  },
+  {
+    "chunk_id": "ce-pro-rlp-radio-links_chunk_5",
+    "document_id": "ce-pro-rlp-radio-links",
+    "document_title": "Radio Links",
+    "section_title": "11.1.5 Statistics",
+    "product": "CE Pro",
+    "version": "Unknown",
+    "category": "RLP Tools",
+    "source_file": "docs/ce-pro/rlp-radio-links.md",
+    "text": "These settings are used to handle statistical conversions for telecommunication planning, ensuring that\nsystems are designed to cope with the worst-case scenarios based on historical data and predictive models.\n| Parameter | Description |\n|---|---|\n| Conversion factor - Define / Calculate | Options to either define a fixed conversion factor or to calculate it based on additional inputs. |\n| Q1 (1...12) | An input field likely used to define a conversion factor or another parameter for a specific month or set of months. |\n| Beta | An input field for the beta parameter, which may be part of the statistical model or conversion formula within the ITU-R P.841 recommendation. |\n![Image p179](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-pro%2Frlp-guide%2Fp179-img1.png)\nthe ITU-R P.841 recommendation."
+  },
+  {
+    "chunk_id": "ce-pro-rlp-radio-links_chunk_6",
+    "document_id": "ce-pro-rlp-radio-links",
+    "document_title": "Radio Links",
+    "section_title": "11.2 Link Prediction",
+    "product": "CE Pro",
+    "version": "Unknown",
+    "category": "RLP Tools",
+    "source_file": "docs/ce-pro/rlp-radio-links.md",
+    "text": "Click the button to open the Link Prediction dialogue.\nLink Predictions is a tool specific to CE for ArcGIS Pro RLP license. The tool enables you to calculate Link\n![Image p180](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-pro%2Frlp-guide%2Fp180-img1.png)\n![Image p180](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-pro%2Frlp-guide%2Fp180-img2.png)\npredictions."
+  },
+  {
+    "chunk_id": "ce-pro-rlp-radio-links_chunk_7",
+    "document_id": "ce-pro-rlp-radio-links",
+    "document_title": "Radio Links",
+    "section_title": "11.2.1 Calculation",
+    "product": "CE Pro",
+    "version": "Unknown",
+    "category": "RLP Tools",
+    "source_file": "docs/ce-pro/rlp-radio-links.md",
+    "text": "The Calculation tab is found on the Link Prediction dockpane. Here you can see the selected number of\ncarriers as well as some other parameters.\nCalculation Name\nLink Prediction identification.\nLink Template\nThe template will fill all empty or not specified fields with default values that are not necessary for\npredictions.\nCalculate Interference\nIf checked will calculate the interference of multiple links. If enabled, also allows to specify a certain radius\n![Image p181](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-pro%2Frlp-guide%2Fp181-img1.png)\n![Image p181](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-pro%2Frlp-guide%2Fp181-img2.png)\nfrom either link endpoint. Points outside this range will not be included in the calculation, speeding up the\ncalculation process. If the radius is not specified, all links will be used in the calculations.\nThe “From-To links” dropdown settings allows the selection of links used for interference calculations. The\navailable options are “Selected-selected” (default option), “Selected-all”, and “All-all”. When the “All-all”\noption is selected, it is not necessary to manually select all links on the map to perform the prediction\ncalculations.\n11.2.1.1 Links\nAfter calculations, a new dockpane will open. In the Links tab. You will be able to view Power Budget,\nPath Loss, Interference, and Performance calculation results.\nThe Link Profile behaves in virtually the same way as a regular profile (you cannot adjust Link Profile data).\nRead more in Profile.\nThis section of the results contains Power Budget and Path Loss results. Select different carriers to view\nthe results for each one of them.\nPower Budget - the calculation of the balance between transmitted power, power losses in the system,\nand receiver sensitivity in a communication system.\nPath Loss - the reduction in signal strength as it travels from the transmitter to the receiver.\nThis section of the results contains the Profile Plot, Interference, and Performance results. Select\ndifferent carriers to view the results for each one of them.\nInterference - the undesired impact of one signal on another, leading to potential signal degradation.\nPerformance - assessments of key metrics like data rate, error rates, and signal-to-noise ratio, crucial for\n![Image p182](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-pro%2Frlp-guide%2Fp182-img1.png)\n![Image p182](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-pro%2Frlp-guide%2Fp182-img2.png)\n![Image p182](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-pro%2Frlp-guide%2Fp182-img3.png)\n![Image p182](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-pro%2Frlp-guide%2Fp182-img4.png)\nevaluating and optimizing a communication system's efficiency.\nSelect different links to see these results for them.\n11.2.1.2 Interfering Links\nNavigate to the Interfering Links tab on the Link Prediction result dockpane.\nIn this tab, you will be able to view interference Power Budget, Path Loss, Profile, and Spectrum Mask\n![Image p183](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-pro%2Frlp-guide%2Fp183-img1.png)\n![Image p183](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-pro%2Frlp-guide%2Fp183-img2.png)\nresults in an unordered fashion.\nIn this section, you can view Power Budget and Path Loss results. Change the selected site pair to see\ndifferent results for each one of them\nPower Budget - the calculation of the balance between transmitted power, power losses in the system,\nand receiver sensitivity in a communication system.\nPath Loss - the reduction in signal strength as it travels from the transmitter to the receiver.\nIn this section, you can view Profile Plot and Spectrum Mask results. Change the selected site pair to see\n![Image p184](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-pro%2Frlp-guide%2Fp184-img1.png)\n![Image p184](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-pro%2Frlp-guide%2Fp184-img2.png)\n![Image p184](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-pro%2Frlp-guide%2Fp184-img3.png)\n![Image p184](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-pro%2Frlp-guide%2Fp184-img4.png)\ndifferent results for each one of them\nSpectrum Mask - the method used to assess the usage efficiency of a frequency spectrum in a\ntelecommunications system, involving the measurement of how much and how effectively different\nfrequencies are being utilized.\nTx, Rx, Common\nRemove/Add certain parameters from the plot"
+  },
+  {
+    "chunk_id": "ce-pro-rlp-radio-links_chunk_8",
+    "document_id": "ce-pro-rlp-radio-links",
+    "document_title": "Radio Links",
+    "section_title": "11.2.2 Reflections",
+    "product": "CE Pro",
+    "version": "Unknown",
+    "category": "RLP Tools",
+    "source_file": "docs/ce-pro/rlp-radio-links.md",
+    "text": "Reflections are calculated in the same way as a regular Profile. Read more in Tools."
+  },
+  {
+    "chunk_id": "ce-pro-rlp-radio-links_chunk_9",
+    "document_id": "ce-pro-rlp-radio-links",
+    "document_title": "Radio Links",
+    "section_title": "11.2.3 Export (Link Prediction Report)",
+    "product": "CE Pro",
+    "version": "Unknown",
+    "category": "RLP Tools",
+    "source_file": "docs/ce-pro/rlp-radio-links.md",
+    "text": "The calculation results can be automatically transferred into a Link Prediction Report. This report will\nshow profile, prediction parameter and results, performance and propagation reliability. The report can be\n![Image p185](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-pro%2Frlp-guide%2Fp185-img1.png)\n![Image p185](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-pro%2Frlp-guide%2Fp185-img2.png)\nexported in PDF format. The Link Prediction Report can also be saved to Docs Manager by selecting Save\nresult to Docs Manager."
+  },
+  {
+    "chunk_id": "ce-pro-rlp-radio-links_chunk_10",
+    "document_id": "ce-pro-rlp-radio-links",
+    "document_title": "Radio Links",
+    "section_title": "11.2.4 Options",
+    "product": "CE Pro",
+    "version": "Unknown",
+    "category": "RLP Tools",
+    "source_file": "docs/ce-pro/rlp-radio-links.md",
+    "text": "The Options tab is found on the Link Prediction dockpane. Here you will see additional parameters that\ncan be changed in accordance with your prediction needs.\n| Parameter | Description |\n|---|---|\n| Include Field Margin in Power Budget | If checked, it will take into account the specified field margin for Power Budget calculations. |\n| Field Margin | Extra signal strength beyond the minimum required, providing a buffer for reliable communication against unforeseen signal losses or variations. |\n| Thermal Fade Margin Prediction | The threshold below which thermal fade will not be calculated. |\nCalculate attenuation due to clouds and fog\nEnabled/Disable this option.\nAnnual Statistics\nThe annual chance of reduced water in %.\nMonthly Statistics\nMonthly chance of reduced water in %.\nFor Month\nSpecify which month has the monthly statistic.\nCalculate Tropospheric Scatter\nEnable/Disable this option.\nTime Percentage\nTime Percentage in %.\nNo Interference Link Below Power\nThe power threshold below which no interference for links will be calculated.\nExclude Interference Links from Analysis Below Power\nThe power threshold below which no links with lesser interference will be included in the analysis\nTx/Rx Filter Discrimination\nThe ability of filters in a duplex system to effectively separate and prevent interference between Tx and Rx\n![Image p186](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-pro%2Frlp-guide%2Fp186-img1.png)\n![Image p186](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-pro%2Frlp-guide%2Fp186-img2.png)\n![Image p186](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-pro%2Frlp-guide%2Fp186-img3.png)\nfrequencies. No dBm greater than this will be accounted for in the calculation.\n| Parameter | Description |\n|---|---|\n| Parameter | The specific telecommunication performance metric being evaluated. |\n| Fading | The type of signal disruption being accounted for in the metric. |\n| Method | The standard used to calculate the performance metric. |\n| Statistics Annual | A selection indicating if the metric is calculated based on yearly data. |\n| Statistics Worst-month | A selection indicating if the metric is calculated based on the data from the month with the poorest performance. |\nperformance."
+  },
+  {
+    "chunk_id": "ce-pro-rlp-radio-links_chunk_11",
+    "document_id": "ce-pro-rlp-radio-links",
+    "document_title": "Radio Links",
+    "section_title": "11.3 Automatic Frequency Planning",
+    "product": "CE Pro",
+    "version": "Unknown",
+    "category": "RLP Tools",
+    "source_file": "docs/ce-pro/rlp-radio-links.md",
+    "text": "Click the button to open the Automatic Frequency Planning tool.\nThe tool suggests the best channel for each selected link based on the chosen frequency plan and channel\nlist. It accounts for inter-link interference, evaluates the signal-to-interference ratio (SIR) across available\ncarriers, and aims to maximize link performance while minimizing co-channel interference. The tool\naccounts for duplex link pairing, node-layer priority, and site location constraints (e.g., neighboring links and\n![Image p187](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-pro%2Frlp-guide%2Fp187-img1.png)\n![Image p187](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-pro%2Frlp-guide%2Fp187-img2.png)\nlinks sharing the same site). If automatic frequency planning is done with links created from Mesh Nodes,\nthe tool avoids polarization conflicts by switching between horizontal and vertical polarizations for\nneighboring links sharing the same channel.\nThe planning results include the link names, carrier IDs, assigned frequencies, best available modulation,\npolarization, SIR score (in dB), and identifying color. The results are visualized on the map, as well as on\nthe Automatic Frequency Planning Results table. The recommended carriers can be assigned for the links\nand later used in Link Prediction calculations.\nRecalculate already planned frequencies\nWhere applicable, the tool respects existing channel assignments. If frequency recalculation is explicitly\n![Image p188](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-pro%2Frlp-guide%2Fp188-img1.png)\n![Image p188](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-pro%2Frlp-guide%2Fp188-img2.png)\n![Image p188](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-pro%2Frlp-guide%2Fp188-img3.png)\nenabled, i.e., the Recalculate already planned frequencies option is checked, the frequencies are\nreassigned for all links regardless of whether they have channel assignments.\nRun\nRun the automatic frequency planning tool."
+  }
+]

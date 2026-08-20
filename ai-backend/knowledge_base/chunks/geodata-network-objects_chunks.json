@@ -6,74 +6,52 @@
     "section_title": "Requirements for CE Network Objects",
     "product": "Both",
     "version": "Unknown",
-    "category": "Geodata",
+    "category": "Network Object Requirements",
     "source_file": "docs/geodata/network-objects-requirements.md",
-    "text": "> **Version:** CE Pro v4.9 / CE Express v7.2\nCellular Expert Network Requirements\nTable of Contents\n1. Primary Data Structure 3"
+    "text": "> **Version:** CE Pro v4.9 / CE Express v7.2\nCellular Expert Network Requirements\n1. Primary Data Structure"
   },
   {
     "chunk_id": "geodata-network-objects_chunk_2",
     "document_id": "geodata-network-objects",
     "document_title": "Network Object Requirements",
-    "section_title": "1.2 Import from Organization’s Portal 3",
+    "section_title": "1.1 Import from CSV file",
     "product": "Both",
     "version": "Unknown",
-    "category": "Geodata",
+    "category": "Network Object Requirements",
     "source_file": "docs/geodata/network-objects-requirements.md",
-    "text": "2. Cells 3"
+    "text": "First row represents field name, and 2nd, 3rd, 4th, etc represents value.\nField names are not crucial, as CE includes a mapping function to align external database fields with the\nCE database structure."
   },
   {
     "chunk_id": "geodata-network-objects_chunk_3",
     "document_id": "geodata-network-objects",
     "document_title": "Network Object Requirements",
-    "section_title": "2.2 Optional information 3",
+    "section_title": "1.2 Import from Organization’s Portal",
     "product": "Both",
     "version": "Unknown",
-    "category": "Geodata",
+    "category": "Network Object Requirements",
     "source_file": "docs/geodata/network-objects-requirements.md",
-    "text": "2.2.1 Height 3\n2.2.2 Azimuth 4\n2.2.3 Mechanical tilt 4\n2.2.4 Frequency 4\n2.2.5 Power 4\n2.2.6 Antenna gain 4\n2.2.7 Losses 4\n2.2.8 Bandwidth 4\n2.2.9 Subcarrier spacing 4\n2.2.10 TX MIMO 5\n2.2.11 RX MIMO 5\n2.2.12 Technology 5\n2.2.13 Antenna name 5\n2.2.14 Site (Tower) identification 6\n3. Sites (optional) 7\nConfidential ©Cellular Expert, 2024 Page | 2\n---\nCellular Expert Network Requirements\n1. Primary Data Structure"
+    "text": "The point layer shared on the Organization’s ArcGIS Enterpris Portal or ArcGIS Online can be imported\ninto the CE Database. Field names are not crucial, as CE includes a mapping function to align external\ndatabase fields with the CE database structure.\n2. Cells"
   },
   {
     "chunk_id": "geodata-network-objects_chunk_4",
     "document_id": "geodata-network-objects",
     "document_title": "Network Object Requirements",
-    "section_title": "1.1 Import from CSV file",
+    "section_title": "2.1 Minimum requirements",
     "product": "Both",
     "version": "Unknown",
-    "category": "Geodata",
+    "category": "Network Object Requirements",
     "source_file": "docs/geodata/network-objects-requirements.md",
-    "text": "First row represents field name, and 2nd, 3rd, 4th, etc represents value.\nField names are not crucial, as CE includes a mapping function to align external database fields with the\nCE database structure."
+    "text": "Value CE Field Units Example Description\nLatitude y Degrees 49.9993 Y point coordinate in Decimal degrees\nand in WGS 1984 geographical\ncoordinate system.\nLongitude x Degrees 33.6573 X point coordinate in Decimal degrees\nand in WGS 1984 geographical\ncoordinate system.\nUnique cell_name [text] 5G cell XXYY Represents cell identification, usually\n![Image p3](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fgeodata%2Fnetwork-objects-requirements%2Fp003-img1.png)\nidentification name."
   },
   {
     "chunk_id": "geodata-network-objects_chunk_5",
     "document_id": "geodata-network-objects",
     "document_title": "Network Object Requirements",
-    "section_title": "1.2 Import from Organization’s Portal",
-    "product": "Both",
-    "version": "Unknown",
-    "category": "Geodata",
-    "source_file": "docs/geodata/network-objects-requirements.md",
-    "text": "The point layer shared on the Organization’s ArcGIS Enterpris Portal or ArcGIS Online can be imported\ninto the CE Database. Field names are not crucial, as CE includes a mapping function to align external\ndatabase fields with the CE database structure.\n2. Cells"
-  },
-  {
-    "chunk_id": "geodata-network-objects_chunk_6",
-    "document_id": "geodata-network-objects",
-    "document_title": "Network Object Requirements",
-    "section_title": "2.1 Minimum requirements",
-    "product": "Both",
-    "version": "Unknown",
-    "category": "Geodata",
-    "source_file": "docs/geodata/network-objects-requirements.md",
-    "text": "Value CE Field Units Example Description\nLatitude y Degrees 49.9993 Y point coordinate in Decimal degrees\nand in WGS 1984 geographical\ncoordinate system.\nLongitude x Degrees 33.6573 X point coordinate in Decimal degrees\nand in WGS 1984 geographical\ncoordinate system.\nUnique cell_name [text] 5G cell XXYY Represents cell identification, usually\nidentification name."
-  },
-  {
-    "chunk_id": "geodata-network-objects_chunk_7",
-    "document_id": "geodata-network-objects",
-    "document_title": "Network Object Requirements",
     "section_title": "2.2 Optional information",
     "product": "Both",
     "version": "Unknown",
-    "category": "Geodata",
+    "category": "Network Object Requirements",
     "source_file": "docs/geodata/network-objects-requirements.md",
-    "text": "2.2.1 Height\nAntenna (cell) height in meters above ground level. If the Mobile Operator cannot provide this information,\na default value can be applied based on land use types. For example, in rural areas where towers are\nConfidential ©Cellular Expert, 2024 Page | 3\n---\nCellular Expert Network Requirements\ncommonly used, the height might be set to 60 meters.\n2.2.2 Azimuth\nAntenna (cell) direction relative to true north, with values ranging from 0 to 359 degrees. If the Mobile\nOperator cannot provide the cell azimuth value, the following can be applied:\n- Set the value to 0 and designate the antenna type as Omnidirectional.\n- Automatically assign azimuth values based on the number of antennas on the tower. For example,\nif there are 3 antennas, the azimuths would be 0, 120, and 240 degrees.\n2.2.3 Mechanical tilt\nAntenna (cell) vertical direction.\nIf Mobile Operator cannot provide Cell tilt value then we can use value – 0.\n2.2.4 Frequency\nCell frequency value in MHz.\nIf the frequency is missing, it can be determined based on the following:\n- The operator's technology.\n- The frequency bands associated with this technology and operator.\n2.2.5 Power\nCell power in dBm.\n2.2.6 Antenna gain\nAntenna gain in dBi, which is taken automatically from defined antenna for Cell.\n2.2.7 Losses\nMiscellaneous losses in dB, which shows total losses for cables, feeders, etc.\n2.2.8 Bandwidth\nCell bandwidth value in MHz. Especially required for 3G, 4G, and 5G technologies.\nIf Mobile Operators cannot provide this parameter, then we can apply default value based on technology\nand frequency band.\n2.2.9 Subcarrier spacing\nEspecially required for 5G, while 4G uses constant value – 15. Units are in kHz.\nIf Mobile Operators cannot provide this parameter for 5G technology, then we can apply default value based\non frequency band.\nConfidential ©Cellular Expert, 2024 Page | 4\n---\nCellular Expert Network Requirements\n2.2.10 TX MIMO\nTransmitter MIMO configuration, with possible values of 1, 2, 4, 8, 16, 32, 64.\nIf Mobile Operators cannot provide this parameter, a default value of 1 is typically used.\n2.2.11 RX MIMO\nReceiver MIMO configuration, with possible values of 1, 2, 4, 8, 16, 32, 64.\nIf Mobile Operators cannot provide this parameter, a default value of 1 is typically used.\n2.2.12 Technology\nAntenna (cell) technology, with possible values including 2G, 3G, 4G, 5G, and WiFi. If the Mobile Operator\ncannot provide this parameter, we can:\n- Estimate the technology based on the frequency.\n- Default to 2G if only Signal Strength calculation is needed.\n2.2.13 Antenna name\nThe antenna should be imported into the database, with its ID assigned to each Cell object.\nIf Mobile Operators cannot provide specific antenna names and patterns, a worst-case scenario can be\napplied using typical antennas generated according to 3GPP standards.\nTypical 65deg Horizontal and 7deg vertical antenna\nTypical 90deg Horizontal and 10deg vertical antenna\nConfidential ©Cellular Expert, 2024 Page | 5\n---\nCellular Expert Network Requirements\nTypical Omni 360deg antenna\n2.2.13.1 [Antenna pattern](#kw:managing-the-antenna-library:ce-express-antenna) file structure\nThe text file in Planet format represents:\n- Main antenna parameters, such as name, gain value.\n- Horizontal pattern.\n- Vertical pattern.\nSuch files can be imported into Cellular Expert database.\n2.2.14 Site (Tower) identification\nRepresents the Site (Tower) name in text format. This information enables the automatic creation of Site\nobjects along with Cell objects. If the information is missing, it will be skipped.\nConfidential ©Cellular Expert, 2024 Page | 6\n---\nCellular Expert Network Requirements\n3. Sites (optional)\nSites as an object can be imported and visualized in the project.\nValue CE Field Units Example Description\nLatitude latitude Degrees 49.9993 Y point coordinate in Decimal degrees\nand in WGS 1984 geographical\ncoordinate system.\nLongitude longitude Degrees 33.6573 X point coordinate in Decimal degrees\nand in WGS 1984 geographical\ncoordinate system.\nSite identification site_name [text] Site 55 ID Represents site identification, usually\nname.\nConfidential ©Cellular Expert, 2024 Page | 7\n---"
+    "text": "2.2.1 Height\nAntenna (cell) height in meters above ground level. If the Mobile Operator cannot provide this information,\na default value can be applied based on land use types. For example, in rural areas where towers are commonly used, the height might be set to 60 meters.\n2.2.2 Azimuth\nAntenna (cell) direction relative to true north, with values ranging from 0 to 359 degrees. If the Mobile\nOperator cannot provide the cell azimuth value, the following can be applied:\n- Set the value to 0 and designate the antenna type as Omnidirectional.\n- Automatically assign azimuth values based on the number of antennas on the tower. For example,\nif there are 3 antennas, the azimuths would be 0, 120, and 240 degrees.\n2.2.3 Mechanical tilt\nAntenna (cell) vertical direction.\nIf Mobile Operator cannot provide Cell tilt value then we can use value – 0.\n2.2.4 Frequency\nCell frequency value in MHz.\nIf the frequency is missing, it can be determined based on the following:\n- The operator's technology.\n- The frequency bands associated with this technology and operator.\n2.2.5 Power\nCell power in dBm.\n2.2.6 Antenna gain\nAntenna gain in dBi, which is taken automatically from defined antenna for Cell.\n2.2.7 Losses\nMiscellaneous losses in dB, which shows total losses for cables, feeders, etc.\n2.2.8 Bandwidth\nCell bandwidth value in MHz. Especially required for 3G, 4G, and 5G technologies.\nIf Mobile Operators cannot provide this parameter, then we can apply default value based on technology\nand frequency band.\n2.2.9 Subcarrier spacing\nEspecially required for 5G, while 4G uses constant value – 15. Units are in kHz.\nIf Mobile Operators cannot provide this parameter for 5G technology, then we can apply default value based\non frequency band.\n2.2.10 TX MIMO\nTransmitter MIMO configuration, with possible values of 1, 2, 4, 8, 16, 32, 64.\nIf Mobile Operators cannot provide this parameter, a default value of 1 is typically used.\n2.2.11 RX MIMO\nReceiver MIMO configuration, with possible values of 1, 2, 4, 8, 16, 32, 64.\nIf Mobile Operators cannot provide this parameter, a default value of 1 is typically used.\n2.2.12 Technology\nAntenna (cell) technology, with possible values including 2G, 3G, 4G, 5G, and WiFi. If the Mobile Operator\n![Image p5](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fgeodata%2Fnetwork-objects-requirements%2Fp005-img1.png)\n![Image p5](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fgeodata%2Fnetwork-objects-requirements%2Fp005-img2.png)\ncannot provide this parameter, we can:\n- Estimate the technology based on the frequency.\n- Default to 2G if only Signal Strength calculation is needed.\n2.2.13 Antenna name\nThe antenna should be imported into the database, with its ID assigned to each Cell object.\nIf Mobile Operators cannot provide specific antenna names and patterns, a worst-case scenario can be\napplied using typical antennas generated according to 3GPP standards.\nTypical 65deg Horizontal and 7deg vertical antenna\nTypical 90deg Horizontal and 10deg vertical antenna\nTypical Omni 360deg antenna\n2.2.13.1 [Antenna pattern](#kw:managing-the-antenna-library:ce-express-antenna) file structure\nThe text file in Planet format represents:\n- Main antenna parameters, such as name, gain value.\n- Horizontal pattern.\n- Vertical pattern.\nSuch files can be imported into Cellular Expert database.\n2.2.14 Site (Tower) identification\nRepresents the Site (Tower) name in text format. This information enables the automatic creation of Site\n![Image p6](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fgeodata%2Fnetwork-objects-requirements%2Fp006-img1.png)\n![Image p6](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fgeodata%2Fnetwork-objects-requirements%2Fp006-img2.png)\nobjects along with Cell objects. If the information is missing, it will be skipped.\n3. Sites (optional)\nSites as an object can be imported and visualized in the project.\nValue CE Field Units Example Description\nLatitude latitude Degrees 49.9993 Y point coordinate in Decimal degrees\nand in WGS 1984 geographical\ncoordinate system.\nLongitude longitude Degrees 33.6573 X point coordinate in Decimal degrees\nand in WGS 1984 geographical\ncoordinate system.\nSite identification site_name [text] Site 55 ID Represents site identification, usually\nname."
   }
 ]

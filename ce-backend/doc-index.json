@@ -640,62 +640,6 @@
     "order": 400
   },
   {
-    "id": "ce-express-v73-4-1-sites",
-    "path": "docs/ce-express/user-guide/v73-sections/4-1-sites.md",
-    "title": "Sites",
-    "product": "CE Express",
-    "category": "Database Structure",
-    "order": 401
-  },
-  {
-    "id": "ce-express-v73-4-2-cells",
-    "path": "docs/ce-express/user-guide/v73-sections/4-2-cells.md",
-    "title": "Cells",
-    "product": "CE Express",
-    "category": "Database Structure",
-    "order": 402
-  },
-  {
-    "id": "ce-express-v73-4-3-repeaters",
-    "path": "docs/ce-express/user-guide/v73-sections/4-3-repeaters.md",
-    "title": "Repeaters",
-    "product": "CE Express",
-    "category": "Database Structure",
-    "order": 403
-  },
-  {
-    "id": "ce-express-v73-4-4-radars",
-    "path": "docs/ce-express/user-guide/v73-sections/4-4-radars.md",
-    "title": "Radars",
-    "product": "CE Express",
-    "category": "Database Structure",
-    "order": 404
-  },
-  {
-    "id": "ce-express-v73-4-5-cpe",
-    "path": "docs/ce-express/user-guide/v73-sections/4-5-cpe.md",
-    "title": "CPE",
-    "product": "CE Express",
-    "category": "Database Structure",
-    "order": 405
-  },
-  {
-    "id": "ce-express-v73-4-6-measurements",
-    "path": "docs/ce-express/user-guide/v73-sections/4-6-measurements.md",
-    "title": "Measurements",
-    "product": "CE Express",
-    "category": "Database Structure",
-    "order": 406
-  },
-  {
-    "id": "ce-express-v73-4-7-workspace",
-    "path": "docs/ce-express/user-guide/v73-sections/4-7-workspace.md",
-    "title": "Workspace",
-    "product": "CE Express",
-    "category": "Database Structure",
-    "order": 407
-  },
-  {
     "id": "ce-express-api-merged",
     "path": "docs/ce-express/user-guide/sections/ce-express-api.md",
     "title": "CE Express API",
@@ -758,6 +702,14 @@
     "product": "CE Express",
     "category": "Exploring Data",
     "order": 805
+  },
+  {
+    "id": "ce-express-v73-8-6-test-if-it-works",
+    "path": "docs/ce-express/user-guide/v73-sections/8-6-test-if-it-works.md",
+    "title": "Test if it works",
+    "product": "CE Express",
+    "category": "Exploring Data",
+    "order": 806
   },
   {
     "id": "ce-pro-overview",

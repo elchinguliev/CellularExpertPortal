@@ -2,12 +2,199 @@
   {
     "chunk_id": "ce-pro-tr-arch_chunk_1",
     "document_id": "ce-pro-tr-arch",
-    "document_title": "02 — Architecture",
-    "section_title": "02. Architecture",
+    "document_title": "— Architecture",
+    "section_title": "CE Products and Solutions",
     "product": "CE Pro",
     "version": "Unknown",
     "category": "Training",
     "source_file": "docs/ce-pro/training/02-architecture.md",
-    "text": "> **Version:** CE Pro v4.9\nCE Products and Solutions\nCE Desktop CE Express\nFor ArcGIS Pro For ArcGIS Enterprise\n- Desktop, Single Use Radio Planning system • Web-based Radio Planning system\n- Wireless planning tools, together with • Server-based, Multi User system\nArcGIS Pro functionality • Includes CE Inventory3D\n- Can be used as a client of CE Express system • Dashboard of Network Coverage Statistics\nCE Customized solutions\nArcGIS CE COTS\n---\nCE Pro\n---\nCE Pro runs inside ArcGIS Pro. The image below shows a typical project with map view, Contents pane, and Catalog pane — the core layout you will use throughout all CE Pro work:\nCE Pro tools appear as contextual tabs in the ArcGIS Pro ribbon:\n---\nCellular Expert for ArcGIS Pro Architecture\nCellular Expert for ArcGIS Pro\nRCP | RLP | EMF\nBasic or higher license\nArcGIS Pro 3.1 and\nabove\nAdditional extensions are not\nrequired\nLocal Database All files are saved in local disk\n---\nCellular Expert for ArcGIS Pro\nLicense Structure\n- RCP – Radio Coverage Prediction\n- RLP – Radio Link Prediction\n- EMF – Electromagnetic Field\n---\nGeospatial Information\n✓ Field measurements\n✓ Network coverage\n✓ Network data\n✓ Demography\n✓ Land cover / use\n✓ Obstacles\n✓ Elevation\n✓ Surface\n---\nProject files\nProject > Save Project/Save Project As\n---\nCellular Expert Project Structure\n- Predictions\n- Results\n- SystemFiles\n- Temp\n- VolatileResults\n- VolatileTemp\n- Workspace.gdb\n---\nWorkspace database files\n---\nEnvironment\n- Geographic data\n- Cellular Expert Workspace\n- Results\n---\nCellular Expert Workspace\n---\nInside Workspace\n➢ Network Data\n➢ Equipment Data\n➢ Modelling Settings\n---\nNetwork Data Structure\nRF prediction does not require Site\nobject. Cells can be created\nCell – logical\nwithout Site object.\ninformation\nCells\nabout sector:\nCell still has SiteID value, which\na set of channels can be define in the attributes.\nSiteID is used for Carrier\nAggregation.\nSite and Cell is connected through\nSite – location point with\nSiteID value.\nunique identifier:\nSite Base station SiteID must be Integer.\nSite name is defined for Site object.\nCells\n---\nCell\n➢ 800 MHz\n➢ 1800 MHz\n➢ 2100 MHz\n---\nSite\n---\nAntenna\n---\nCE Path Loss [models](#kw:31-models:ce-express-tr-models) (10kHz - 350 GHz)\n1. CEC ITU-R Model (100MHz – 6GHz) is a combination model intended for use in a variety of different radiocommunication systems which is derived explicitly\nfrom ITU-R path loss modelling methods as follows:\na. Receive antenna in LOS condition – path loss calculated as FSL based on Recommendation ITU-R P.525 (ref URL);\nb. Receive antenna in OLOS condition – total path loss modelled as a combination of basic FSL calculated based on Recommendation ITU-R P.525 (ref\nURL) and [clutter](#kw:clutter-classification-values:ce-express-geodata) loss calculated based on Recommendation ITU-R P.2108 (ref URL);\nc. Receive antenna in NLOS condition – path loss as a combination of basic FSL calculated based on Recommendation ITU-R P.525 (ref URL), additional\nlosses due to diffraction calculated based on Recommendation ITU-R P.526 (ref URL) and the [clutter](#kw:clutter-classification-values:ce-express-geodata) losses calculated based on Rec. ITU-R P.2108\n(ref URL).\n2. ITU-R P.452 Model (6GHz – 50GHz) is provided as a universally applicable model with very wide frequency range from 0.1-50 GHz. Its implementation is\nbased on the methodology described in the Recommendation ITU-R P.452 (ref URL). This model does not provide for definition of OLOS visibility condition;\ninstead it considers [clutter](#kw:clutter-classification-values:ce-express-geodata) as part of general obstacles category and accordingly distinguishes only two radio visibility cases:\na. Receive antenna in LOS condition – path loss modelled based on FSL principle;\nb. Receive antenna in NLOS condition – total path loss modelled using a combination of basic transmission losses and losses due to diffraction.\n3. LOS ITU-R P.525 Model (6GHz – 100GHz) is the FSL path loss calculated based on method in Recommendation ITU-R P.525 (ref URL). As such it could be\nused for modelling of radio links where LOS is considered a necessary condition, e.g., for Fixed (Point-to-Point) Links or Mobile Systems in [mmWave](#kw:56-step-8-losonly-prediction-for-mmwave:ce-express-tr-[models](#kw:31-models:ce-express-tr-models)) bands.\n4. UniMacro Model (400MHz – 3GHz) is the CE’s proprietary combination model developed over the years of practical experience with the operational planning\nof cellular mobile networks in the frequency ranges from 400-2600 MHz. It had been fine tuned to produce coverage predictions that are most closely aligned\nwith what could be expected to be experienced by the actual mobile network users in the field. The model will model different path losses depending on radio\nvisibility conditions as follows:\na. Receive antenna in LOS condition – path loss modelled based on FSL principle;\nb. Receive antenna in OLOS condition – path loss modelled using Extended Hata (Open Area) model with additional clutter loss calculated based on\nRecommendation ITU-R P.2108 (ref URL);\nc. Receive antenna in NLOS condition – path loss modelled using Extended Hata model with additional losses due to diffraction calculated based on\nRecommendation ITU-R P.526 (ref URL) as well as clutter losses based on Rec. ITU-R P.2108 (ref URL).\n5. ITU-R P.368 Model (10kHz – 30MHz)\n---\nCE prediction models\n---\nOther\n---"
+    "text": "CE Desktop                                       CE Express For ArcGIS Pro                                For ArcGIS Enterprise\n- Desktop, Single Use Radio Planning system       • Web-based Radio Planning system\n- Wireless planning tools, together with          • Server-based, Multi User system ArcGIS Pro functionality                        • Includes CE Inventory3D\n- Can be used as a client of CE Express system    • Dashboard of Network Coverage Statistics\nCE Customized solutions\nArcGIS            CE COTS\n![Slide 2](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-pro%2Ftraining-pdf-000-architecture%2Fpage-02.png)"
+  },
+  {
+    "chunk_id": "ce-pro-tr-arch_chunk_2",
+    "document_id": "ce-pro-tr-arch",
+    "document_title": "— Architecture",
+    "section_title": "CE Pro",
+    "product": "CE Pro",
+    "version": "Unknown",
+    "category": "Training",
+    "source_file": "docs/ce-pro/training/02-architecture.md",
+    "text": "![Slide 3](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-pro%2Ftraining-pdf-000-architecture%2Fpage-03.png)"
+  },
+  {
+    "chunk_id": "ce-pro-tr-arch_chunk_3",
+    "document_id": "ce-pro-tr-arch",
+    "document_title": "— Architecture",
+    "section_title": "Cellular Expert for ArcGIS Pro Architecture",
+    "product": "CE Pro",
+    "version": "Unknown",
+    "category": "Training",
+    "source_file": "docs/ce-pro/training/02-architecture.md",
+    "text": "Cellular Expert for ArcGIS Pro RCP | RLP | EMF\nBasic or higher license ArcGIS Pro 3.1 and above Additional extensions are not required\nLocal Database         All files are saved in local disk\n![Slide 4](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-pro%2Ftraining-pdf-000-architecture%2Fpage-04.png)"
+  },
+  {
+    "chunk_id": "ce-pro-tr-arch_chunk_4",
+    "document_id": "ce-pro-tr-arch",
+    "document_title": "— Architecture",
+    "section_title": "Cellular Expert for ArcGIS Pro",
+    "product": "CE Pro",
+    "version": "Unknown",
+    "category": "Training",
+    "source_file": "docs/ce-pro/training/02-architecture.md",
+    "text": "License Structure\n- RCP – Radio Coverage Prediction\n- RLP – Radio Link Prediction\n- EMF – Electromagnetic Field\n![Slide 5](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-pro%2Ftraining-pdf-000-architecture%2Fpage-05.png)"
+  },
+  {
+    "chunk_id": "ce-pro-tr-arch_chunk_5",
+    "document_id": "ce-pro-tr-arch",
+    "document_title": "— Architecture",
+    "section_title": "Geospatial Information",
+    "product": "CE Pro",
+    "version": "Unknown",
+    "category": "Training",
+    "source_file": "docs/ce-pro/training/02-architecture.md",
+    "text": "✓   Field measurements ✓   Network coverage ✓   Network data ✓   Demography ✓   Land cover / use ✓   Obstacles ✓   Elevation ✓   Surface\n![Slide 6](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-pro%2Ftraining-pdf-000-architecture%2Fpage-06.png)"
+  },
+  {
+    "chunk_id": "ce-pro-tr-arch_chunk_6",
+    "document_id": "ce-pro-tr-arch",
+    "document_title": "— Architecture",
+    "section_title": "Project files",
+    "product": "CE Pro",
+    "version": "Unknown",
+    "category": "Training",
+    "source_file": "docs/ce-pro/training/02-architecture.md",
+    "text": "Project > Save Project/Save Project As\n![Slide 7](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-pro%2Ftraining-pdf-000-architecture%2Fpage-07.png)"
+  },
+  {
+    "chunk_id": "ce-pro-tr-arch_chunk_7",
+    "document_id": "ce-pro-tr-arch",
+    "document_title": "— Architecture",
+    "section_title": "Cellular Expert Project Structure",
+    "product": "CE Pro",
+    "version": "Unknown",
+    "category": "Training",
+    "source_file": "docs/ce-pro/training/02-architecture.md",
+    "text": "- Predictions\n- Results\n- SystemFiles\n- Temp\n- VolatileResults\n- VolatileTemp\n- Workspace.gdb\n![Slide 8](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-pro%2Ftraining-pdf-000-architecture%2Fpage-08.png)"
+  },
+  {
+    "chunk_id": "ce-pro-tr-arch_chunk_8",
+    "document_id": "ce-pro-tr-arch",
+    "document_title": "— Architecture",
+    "section_title": "Workspace database files",
+    "product": "CE Pro",
+    "version": "Unknown",
+    "category": "Training",
+    "source_file": "docs/ce-pro/training/02-architecture.md",
+    "text": "![Slide 9](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-pro%2Ftraining-pdf-000-architecture%2Fpage-09.png)"
+  },
+  {
+    "chunk_id": "ce-pro-tr-arch_chunk_9",
+    "document_id": "ce-pro-tr-arch",
+    "document_title": "— Architecture",
+    "section_title": "Environment",
+    "product": "CE Pro",
+    "version": "Unknown",
+    "category": "Training",
+    "source_file": "docs/ce-pro/training/02-architecture.md",
+    "text": "- Geographic data\n- Cellular Expert Workspace\n- Results\n![Slide 10](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-pro%2Ftraining-pdf-000-architecture%2Fpage-10.png)"
+  },
+  {
+    "chunk_id": "ce-pro-tr-arch_chunk_10",
+    "document_id": "ce-pro-tr-arch",
+    "document_title": "— Architecture",
+    "section_title": "Cellular Expert Workspace",
+    "product": "CE Pro",
+    "version": "Unknown",
+    "category": "Training",
+    "source_file": "docs/ce-pro/training/02-architecture.md",
+    "text": "![Slide 11](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-pro%2Ftraining-pdf-000-architecture%2Fpage-11.png)"
+  },
+  {
+    "chunk_id": "ce-pro-tr-arch_chunk_11",
+    "document_id": "ce-pro-tr-arch",
+    "document_title": "— Architecture",
+    "section_title": "Inside Workspace",
+    "product": "CE Pro",
+    "version": "Unknown",
+    "category": "Training",
+    "source_file": "docs/ce-pro/training/02-architecture.md",
+    "text": "➢ Network Data ➢ Equipment Data ➢ Modelling Settings"
+  },
+  {
+    "chunk_id": "ce-pro-tr-arch_chunk_12",
+    "document_id": "ce-pro-tr-arch",
+    "document_title": "— Architecture",
+    "section_title": "Network Data Structure",
+    "product": "CE Pro",
+    "version": "Unknown",
+    "category": "Training",
+    "source_file": "docs/ce-pro/training/02-architecture.md",
+    "text": "RF prediction does not require Site Cell – logical               object. Cells can be created information                  without Site object. Cells           about sector:                Cell still has SiteID value, which a set of channels            can be define in the attributes. SiteID is used for Carrier Aggregation.\nSite and Cell is connected through Site – location point with   SiteID value. unique identifier: Site             Base station                 SiteID must be Integer. Site name is defined for Site object.\nCells\n![Slide 13](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-pro%2Ftraining-pdf-000-architecture%2Fpage-13.png)"
+  },
+  {
+    "chunk_id": "ce-pro-tr-arch_chunk_13",
+    "document_id": "ce-pro-tr-arch",
+    "document_title": "— Architecture",
+    "section_title": "Cell",
+    "product": "CE Pro",
+    "version": "Unknown",
+    "category": "Training",
+    "source_file": "docs/ce-pro/training/02-architecture.md",
+    "text": "➢ 800 MHz ➢ 1800 MHz ➢ 2100 MHz\n![Slide 14](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-pro%2Ftraining-pdf-000-architecture%2Fpage-14.png)"
+  },
+  {
+    "chunk_id": "ce-pro-tr-arch_chunk_14",
+    "document_id": "ce-pro-tr-arch",
+    "document_title": "— Architecture",
+    "section_title": "Site",
+    "product": "CE Pro",
+    "version": "Unknown",
+    "category": "Training",
+    "source_file": "docs/ce-pro/training/02-architecture.md",
+    "text": "![Slide 15](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-pro%2Ftraining-pdf-000-architecture%2Fpage-15.png)"
+  },
+  {
+    "chunk_id": "ce-pro-tr-arch_chunk_15",
+    "document_id": "ce-pro-tr-arch",
+    "document_title": "— Architecture",
+    "section_title": "Antenna",
+    "product": "CE Pro",
+    "version": "Unknown",
+    "category": "Training",
+    "source_file": "docs/ce-pro/training/02-architecture.md",
+    "text": "![Slide 16](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-pro%2Ftraining-pdf-000-architecture%2Fpage-16.png)"
+  },
+  {
+    "chunk_id": "ce-pro-tr-arch_chunk_16",
+    "document_id": "ce-pro-tr-arch",
+    "document_title": "— Architecture",
+    "section_title": "CE Path Loss models (10kHz - 350 GHz)",
+    "product": "CE Pro",
+    "version": "Unknown",
+    "category": "Training",
+    "source_file": "docs/ce-pro/training/02-architecture.md",
+    "text": "1.   CEC ITU-R Model (100MHz – 6GHz) is a combination model intended for use in a variety of different radiocommunication systems which is derived explicitly from ITU-R path loss modelling methods as follows: a. Receive antenna in LOS condition – path loss calculated as FSL based on Recommendation ITU-R P.525 (ref URL); b. Receive antenna in OLOS condition – total path loss modelled as a combination of basic FSL calculated based on Recommendation ITU-R P.525 (ref URL) and clutter loss calculated based on Recommendation ITU-R P.2108 (ref URL); c. Receive antenna in NLOS condition – path loss as a combination of basic FSL calculated based on Recommendation ITU-R P.525 (ref URL), additional losses due to diffraction calculated based on Recommendation ITU-R P.526 (ref URL) and the clutter losses calculated based on Rec. ITU-R P.2108 (ref URL). 2.   ITU-R P.452 Model (6GHz – 50GHz) is provided as a universally applicable model with very wide frequency range from 0.1-50 GHz. Its implementation is based on the methodology described in the Recommendation ITU-R P.452 (ref URL). This model does not provide for definition of OLOS visibility condition; instead it considers clutter as part of general obstacles category and accordingly distinguishes only two radio visibility cases: a. Receive antenna in LOS condition – path loss modelled based on FSL principle; b. Receive antenna in NLOS condition – total path loss modelled using a combination of basic transmission losses and losses due to diffraction. 3.   LOS ITU-R P.525 Model (6GHz – 100GHz) is the FSL path loss calculated based on method in Recommendation ITU-R P.525 (ref URL). As such it could be used for modelling of radio links where LOS is considered a necessary condition, e.g., for Fixed (Point-to-Point) Links or Mobile Systems in mmWave bands. 4.   UniMacro Model (400MHz – 3GHz) is the CE’s proprietary combination model developed over the years of practical experience with the operational planning of cellular mobile networks in the frequency ranges from 400-2600 MHz. It had been fine tuned to produce coverage predictions that are most closely aligned with what could be expected to be experienced by the actual mobile network users in the field. The model will model different path losses depending on radio visibility conditions as follows: a. Receive antenna in LOS condition – path loss modelled based on FSL principle; b. Receive antenna in OLOS condition – path loss modelled using Extended Hata (Open Area) model with additional clutter loss calculated based on Recommendation ITU-R P.2108 (ref URL); c. Receive antenna in NLOS condition – path loss modelled using Extended Hata model with additional losses due to diffraction calculated based on Recommendation ITU-R P.526 (ref URL) as well as clutter losses based on Rec. ITU-R P.2108 (ref URL). 5.   ITU-R P.368 Model (10kHz – 30MHz)\n![Slide 17](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-pro%2Ftraining-pdf-000-architecture%2Fpage-17.png)"
+  },
+  {
+    "chunk_id": "ce-pro-tr-arch_chunk_17",
+    "document_id": "ce-pro-tr-arch",
+    "document_title": "— Architecture",
+    "section_title": "CE prediction models",
+    "product": "CE Pro",
+    "version": "Unknown",
+    "category": "Training",
+    "source_file": "docs/ce-pro/training/02-architecture.md",
+    "text": "![Slide 18](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-pro%2Ftraining-pdf-000-architecture%2Fpage-18.png)"
+  },
+  {
+    "chunk_id": "ce-pro-tr-arch_chunk_18",
+    "document_id": "ce-pro-tr-arch",
+    "document_title": "— Architecture",
+    "section_title": "Other",
+    "product": "CE Pro",
+    "version": "Unknown",
+    "category": "Training",
+    "source_file": "docs/ce-pro/training/02-architecture.md",
+    "text": "![Slide 19](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-pro%2Ftraining-pdf-000-architecture%2Fpage-19.png)"
   }
 ]

@@ -1,0 +1,13 @@
+[
+  {
+    "chunk_id": "ce-express-v73-3-1-11-identify_chunk_1",
+    "document_id": "ce-express-v73-3-1-11-identify",
+    "document_title": "Identify",
+    "section_title": "3.1.11 Identify",
+    "product": "CE Express",
+    "version": "Unknown",
+    "category": "Express Tools",
+    "source_file": "docs/ce-express/user-guide/v73-sections/3-1-11-identify.md",
+    "text": "Click this button ![icon](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-express%2Fuser-guide-v73%2Fp124-img1.png) to open [Identify tool](#kw:310-step-10-using-the-identify-tool:ce-express-tr-workspace).\nShows the signal values at an exact location for loaded predictions in the Map view. The dialog is empty if there are no loaded prediction rasters in the Layers tool.\n![Image p125](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-express%2Fuser-guide-v73%2Fp125-img1.png)\nNo layers to show\nIf the Layer tool has loaded prediction rasters,\n![Image p125](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-express%2Fuser-guide-v73%2Fp125-img2.png)\nthis will be shown in the [Identify tool](#kw:310-step-10-using-the-identify-tool:ce-express-tr-workspace).\n![Image p125](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-express%2Fuser-guide-v73%2Fp125-img3.png)\nClick on the map to preview the signal value.\n![Image p126](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-express%2Fuser-guide-v73%2Fp126-img1.png)\n**Identify settings**\n**Real time**\nWhen enabled – you do not need to click on the map to identify the value of the raster, the value is automatically updated as you hover over different pixels of the calculation result.\n**Coordinates**\nTo display the coordinates, click on your desired location on the map.\n![Image p126](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-express%2Fuser-guide-v73%2Fp126-img2.png)"
+  }
+]

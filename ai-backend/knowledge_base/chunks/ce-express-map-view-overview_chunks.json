@@ -1,0 +1,35 @@
+[
+  {
+    "chunk_id": "ce-express-map-view-overview_chunk_1",
+    "document_id": "ce-express-map-view-overview",
+    "document_title": "Map View Overview",
+    "section_title": "Map View Overview",
+    "product": "CE Express",
+    "version": "Unknown",
+    "category": "Map View",
+    "source_file": "docs/ce-express/user-guide/sections/map-view-overview.md",
+    "text": "The Map view has a predefined layout divided into:\n1. Inventory3D window layout, settings, user\n2. Data management and visualization tools\n3. Map view, graphical data management\n4. Table view, attribute data management\n5. Data analysis tools and calculation results\n6. Calculation result graphs and tables, additional analysis tools\n![Image p12](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-express%2Fuser-guide-v73%2Fp012-img3.png)"
+  },
+  {
+    "chunk_id": "ce-express-map-view-overview_chunk_2",
+    "document_id": "ce-express-map-view-overview",
+    "document_title": "Map View Overview",
+    "section_title": "3.3 Data management and visualization section",
+    "product": "CE Express",
+    "version": "Unknown",
+    "category": "Map View",
+    "source_file": "docs/ce-express/user-guide/sections/map-view-overview.md",
+    "text": "Available tools for this section:\n- Workspace\n- Features\n- Networks\n- Layers\n- Prediction history\n- Antennas\nThe dialogs are pinned and can not be moved to another location. If one tool is active and visible in the\nwindow and a second one is turned on, the first tool is closed and the new one is opened."
+  },
+  {
+    "chunk_id": "ce-express-map-view-overview_chunk_3",
+    "document_id": "ce-express-map-view-overview",
+    "document_title": "Map View Overview",
+    "section_title": "3.4 Calculation section",
+    "product": "CE Express",
+    "version": "Unknown",
+    "category": "Map View",
+    "source_file": "docs/ce-express/user-guide/sections/map-view-overview.md",
+    "text": "Available tools for this section:\n- Settings\n- Identify\n- Measurement tools\n- Statistics\n- Profile\n- Quick RF prediction\n- RF Prediction\n- Visibility prediction\n- Antenna visibility prediction\n- Radar prediction\n- Link prediction\n- Network availability\n- Model tuning\n- Optimal placement\n- EMF\nThe dialogs are pinned and can not be moved to another location. If one tool is active and visible in the\nwindow and a second one is turned on, the first tool is closed and the new one is opened.\nThere are additional tools that open on the right side and can be accessed from the Features tool:\n- Move\n- Duplicate\n- Delete\n- Import\n- Add"
+  }
+]

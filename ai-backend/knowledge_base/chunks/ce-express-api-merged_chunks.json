@@ -1,0 +1,13 @@
+[
+  {
+    "chunk_id": "ce-express-api-merged_chunk_1",
+    "document_id": "ce-express-api-merged",
+    "document_title": "CE Express API",
+    "section_title": "CE Express API",
+    "product": "CE Express",
+    "version": "Unknown",
+    "category": "CE Express API",
+    "source_file": "docs/ce-express/user-guide/sections/ce-express-api.md",
+    "text": "The (currently incomplete) documentation for the CE Express API endpoints can be found here:\nhttps://cecom2.cellular-expert.com/ce_express_api_documentation/"
+  }
+]

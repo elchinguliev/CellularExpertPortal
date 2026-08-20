@@ -1,0 +1,13 @@
+[
+  {
+    "chunk_id": "ce-pro-sound-tools_chunk_1",
+    "document_id": "ce-pro-sound-tools",
+    "document_title": "Sound Tools",
+    "section_title": "Sound Tools",
+    "product": "CE Pro",
+    "version": "Unknown",
+    "category": "Sound Tools",
+    "source_file": "docs/ce-pro/sound-tools.md",
+    "text": "Sound uses the same common CE Desktop Pro workflow as every other module — Overview, Geographic Data, Workspace, Data Management, Profile, and Coverage Prediction all apply exactly as described in those sections, with no Sound-specific variation in the current release.\nThere is no additional Sound-specific tooling at the moment. If Sound-only features are added to the product in the future, document them on this page."
+  }
+]

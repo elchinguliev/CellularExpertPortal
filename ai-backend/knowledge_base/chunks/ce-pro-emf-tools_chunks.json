@@ -1,0 +1,13 @@
+[
+  {
+    "chunk_id": "ce-pro-emf-tools_chunk_1",
+    "document_id": "ce-pro-emf-tools",
+    "document_title": "EMF Tools",
+    "section_title": "8.1 EMF",
+    "product": "CE Pro",
+    "version": "Unknown",
+    "category": "EMF Tools",
+    "source_file": "docs/ce-pro/emf-tools.md",
+    "text": "The EMF Calculation Tool analyzes and visualizes electromagnetic field (EMF) exposure based on various\nenvironmental and technical parameters, such as resolution, cell template, reflection factor, and receiver\nheight. This tool allows users to perform EMF calculations for selected cells by specifying these parameters.\n![Image p115](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-pro%2Femf-guide%2Fp115-img1.png)\nThese are then processed to provide results for EMF limit usage (%), EMF in mV/m, and EMF in mW/m².\nThe results are displayed on the map, highlighting areas with varying levels of EMF exposure, and the\nvalues are explained in the legend under the newly created calculation layer.\n| Parameter | Description |\n|---|---|\n| Calculation Name | Name of the calculation that will be displayed in the CE Calculation Task List. |\n| Resolution | Resolution for raster calculations. The output rasters will be produced with the indicated cell size. |\n| Cell template | Cell template that will be used in the prediction calculations. |\n| Reflection factor | Reflection factor, used for the electromagnetic field exposure prediction calculations. Available selections: no reflection, realistic reflection, or full reflection. |\n| Receiver height | Receiver height in meters. |\nThe results are displayed in newly added rasters of the calculation – electromagnetic field exposure results\nin mV/m and mW/m2. For example, the green indicates where mV/m exposure values are less than 50, and\nred indicates where they are higher than 100.\n![Image p116](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-pro%2Femf-guide%2Fp116-img1.png)\n![Image p116](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-pro%2Femf-guide%2Fp116-img2.png)"
+  }
+]

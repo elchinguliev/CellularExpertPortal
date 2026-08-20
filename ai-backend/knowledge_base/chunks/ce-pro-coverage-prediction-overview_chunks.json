@@ -1,0 +1,35 @@
+[
+  {
+    "chunk_id": "ce-pro-coverage-prediction-overview_chunk_1",
+    "document_id": "ce-pro-coverage-prediction-overview",
+    "document_title": "Coverage Prediction Overview",
+    "section_title": "Coverage Prediction Overview",
+    "product": "CE Pro",
+    "version": "Unknown",
+    "category": "Coverage Prediction",
+    "source_file": "docs/ce-pro/coverage-prediction-overview.md",
+    "text": "> **Note:** This basic part (CE Calculation Task List, Visibility Prediction) appears in every module. RCP has a much larger set of coverage tools — see \"RCP Coverage Tools\"."
+  },
+  {
+    "chunk_id": "ce-pro-coverage-prediction-overview_chunk_2",
+    "document_id": "ce-pro-coverage-prediction-overview",
+    "document_title": "Coverage Prediction Overview",
+    "section_title": "9.1 CE Calculation Task List",
+    "product": "CE Pro",
+    "version": "Unknown",
+    "category": "Coverage Prediction",
+    "source_file": "docs/ce-pro/coverage-prediction-overview.md",
+    "text": "All results of the prediction calculations can be found in the CE Calculation Task List tab. This includes\nfailed and successful calculations.\nClick on the button to open the CE Calculation Task List dialogue.\nThe task list refreshes automatically once calculation tasks are run. The task status is indicated by three\nmain colors: blue (in progress), green (completed), and red (failed). Calculation tasks can be deleted\nfrom the task list by clicking on the right side of the task. To open a result raster, select it from the results\n![Image p137](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-pro%2Findoor-guide%2Fp137-img1.png)\n![Image p137](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-pro%2Findoor-guide%2Fp137-img2.png)\n![Image p137](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-pro%2Findoor-guide%2Fp137-img3.png)\n![Image p137](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-pro%2Findoor-guide%2Fp137-img4.png)\n![Image p137](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-pro%2Findoor-guide%2Fp137-img5.png)\n![Image p137](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-pro%2Findoor-guide%2Fp137-img6.png)\ndropdown and click Open Results. Filtering by calculation spans these types: Antenna Visibility Prediction,\nEMF Calculation, Link Prediction, Model Tuning, Optimal Site Positions Calculation, RF Prediction, Siren\nSound Prediction, and Visibility Prediction."
+  },
+  {
+    "chunk_id": "ce-pro-coverage-prediction-overview_chunk_3",
+    "document_id": "ce-pro-coverage-prediction-overview",
+    "document_title": "Coverage Prediction Overview",
+    "section_title": "9.2 Visibility Prediction",
+    "product": "CE Pro",
+    "version": "Unknown",
+    "category": "Coverage Prediction",
+    "source_file": "docs/ce-pro/coverage-prediction-overview.md",
+    "text": "Visibility calculations refer to the determination of line-of-sight between transmitting and receiving\nantennas, assessing whether any obstructions might impede direct signal transmission.\nVisibility Prediction is a tool that calculates 4 different results:\n• Minimum Receiver Height – the minimum height of a receiver that could be visible to the transmitter\n• Line of Sight – confirms whether visibility exists between the receiver and transmitter with the\nprovided receiver height\n• Clearance Height – the distance from the profile that is covered or is not covered.\n• Best Server – the same calculation as for RF Prediction\nClick the button to open the Visibility Prediction dialogue.\n| Parameter | Description |\n|---|---|\n| Resolution | Cell size in meters |\n| Max Radius | The maximum radius of the prediction |\n| Receiver height | Receiver height above the ground. |\n| Effective Earth Radius | Earth radius in kilometers, used for the calculations. |\n| Layers to calculate | All present CE layers on which predictions can be performed |\n| Template | A template that corresponds to the selected layers. When the layer changes the templates change as well. |\n| Selected | Network objects that are present on the selected network layer. The visibility prediction will be performed on all of them. |\n| Run Calculations | Starts the prediction calculation. |\nResults:\n• Minimum Receiver Height in meters\n• Line of Sight – either visible (1) by the network objects or not (0)\n![Image p139](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-pro%2Findoor-guide%2Fp139-img1.png)\n![Image p139](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-pro%2Findoor-guide%2Fp139-img2.png)\n• Clearance in meters\n• Best Server\n![Image p140](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-pro%2Findoor-guide%2Fp140-img1.png)\n![Image p140](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-pro%2Findoor-guide%2Fp140-img2.png)"
+  }
+]

@@ -1,0 +1,13 @@
+[
+  {
+    "chunk_id": "ce-express-v73-3-1-5-prediction-history_chunk_1",
+    "document_id": "ce-express-v73-3-1-5-prediction-history",
+    "document_title": "Prediction history",
+    "section_title": "3.1.5 Prediction history",
+    "product": "CE Express",
+    "version": "Unknown",
+    "category": "Express Tools",
+    "source_file": "docs/ce-express/user-guide/v73-sections/3-1-5-prediction-history.md",
+    "text": "Click this button ![icon](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-express%2Fuser-guide-v73%2Fp073-img3.png) to open Prediction history tool.\nAll calculations performed in Cellular Expert Express are loaded in this tool. This includes failed and\nsuccessful calculations. The accessibility of prediction rasters is user specific. This means that users can\nnot view the prediction results of other users, except the owner of the prediction results shares them with\nthe organization.\n![Image p074](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-express%2Fuser-guide-v73%2Fp074-img1.png)\n**Calculation status**\nStatus of the current calculation.\n**Log**\nThe tool shows the progress of a prediction in the Task log section.\n**Results**\nSelect which prediction results you want to add to the Map view and manage in the layers tool.\n**Export**\nExports the selected prediction results layer as a TIF raster.\n**Open**\nOpens the selected prediction results layer.\nUpon hovering the mouse over a prediction result item, options for it appear.\n![Image p075](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-express%2Fuser-guide-v73%2Fp075-img5.png)\n**Rename layer**\n![Image p075](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-express%2Fuser-guide-v73%2Fp075-img3.png)\n**Share**\nMouse over the calculation you want to share with the organization members and click *Share calculation task* button.\n![Image p075](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-express%2Fuser-guide-v73%2Fp075-img4.png)\n**Delete**\nDeletes the calculation from the Prediction History widget.\n![Image p075](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-express%2Fuser-guide-v73%2Fp075-img1.png)"
+  }
+]

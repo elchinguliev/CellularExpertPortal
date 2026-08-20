@@ -1,0 +1,90 @@
+[
+  {
+    "chunk_id": "ce-pro-dm-import-export_chunk_1",
+    "document_id": "ce-pro-dm-import-export",
+    "document_title": "Import / Export",
+    "section_title": "Data Management — Import / Export",
+    "product": "CE Pro",
+    "version": "Unknown",
+    "category": "Data Management",
+    "source_file": "docs/ce-pro/data-management-import-export.md",
+    "text": "> **Note:** \"Model Tuning\" at the end of this page is an RCP-only feature."
+  },
+  {
+    "chunk_id": "ce-pro-dm-import-export_chunk_2",
+    "document_id": "ce-pro-dm-import-export",
+    "document_title": "Import / Export",
+    "section_title": "7.9 Import Objects",
+    "product": "CE Pro",
+    "version": "Unknown",
+    "category": "Data Management",
+    "source_file": "docs/ce-pro/data-management-import-export.md",
+    "text": "The Import Objects feature further enhances efficiency by allowing users to bring in network objects from\nmultiple external documents without manually creating them. This capability is invaluable when dealing with\n![Image p128](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-pro%2Frcp-guide%2Fp128-img1.png)\n![Image p128](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-pro%2Frcp-guide%2Fp128-img2.png)\nextensive or complex datasets. Cellular Expert for ArcGIS Pro supports the import of three widely used file\nformats: .xls, .xlsx, and .csv. Additionally, for mapping files, it supports the .json format.\nKey benefits of the Import Objects feature include:\n• Time-Saving: Instead of manually entering or recreating network objects, users can quickly import\ndata from existing documents, significantly reducing setup time.\n• Data Consistency: Importing ensures that all network objects maintain consistency with the original\ndata source, minimizing discrepancies and errors.\n• Support for Multiple Formats: With support for commonly used file formats like .xls, .xlsx, and .csv,\nthe tool is versatile and can integrate seamlessly with various data workflows.\nClick the button to open the Import Objects dialogue. Expand Import drop-down menu and select\nthe object, which should be imported.\nThe dialog will be filled with the options to define data and mapping files."
+  },
+  {
+    "chunk_id": "ce-pro-dm-import-export_chunk_3",
+    "document_id": "ce-pro-dm-import-export",
+    "document_title": "Import / Export",
+    "section_title": "7.9.1 Import Cells",
+    "product": "CE Pro",
+    "version": "Unknown",
+    "category": "Data Management",
+    "source_file": "docs/ce-pro/data-management-import-export.md",
+    "text": "The option enables possibility to import Cells in the Cellular Expert workspace. It has additional parameters\n![Image p129](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-pro%2Frcp-guide%2Fp129-img1.png)\ncompared to other import options.\nTemplate\nTake necessary parameters from the template during the import. Template values are taken if some\nparameters are missing in text file and mapping file.\nImport HCM Patterns\nAntenna patterns would be created and imported based on specific antenna name values provided in HCM\nagreement. HCM antenna pattern import requires the data files to have an antenna_type field.\nGenerate Cell Name\nGenerate a cell name for all selected cells based on these parameters in this exact order: \"longitude\",\n\"latitude\", \"height\", \"azimuth\", \"power\", \"antenna_gain\", and \"frequency\". If any of the fields are missing,\nthat field will be skipped.\nUse Default Mapping File\nA default mapping file will be applied to the imported data.\nSelect Data Files\nOpens a dialogue window where the user can select the files that define the network objects to be imported.\nThe supported formats: .xls, .xlsx,.csv, and tables from .sde connection. Upon successful selection, the\nbutton will light up green.\nSelect Mapping File (Optional)\nOpens a dialogue window where the user can select a file that defines the data to be imported and the\nconditions under which said data is processed. The supported format is .json. Upon successful selection,\n![Image p130](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-pro%2Frcp-guide%2Fp130-img1.png)\nthe button will light up green. More on mapping files are below.\nSteps.\n1. Click on Select Data Files, and define your text file. The file will be loaded into the dialog.\n2. If your data structure is different compared to Cellular Expert database, then Mapping file should\nbe used to map your data structure and Cellular Expert workspace, Cells layer structure. More\ninformation about mapping file is available below.\n3. Click on Import Cells button to start importing procedure.\nSites can be imported together with Cells, if:\n• The mapping file is not used, and text file has site_id field, which contains information about Site\nname. It must be text data.\n• The mapping file is used, then the data should be mapped with site_id field. It must be text data.\n7.9.1.1 Mapping file\nThe data in the import files may have names, values, and units that do not match the data in the Cellular\n![Image p131](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-pro%2Frcp-guide%2Fp131-img1.png)\n![Image p131](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-pro%2Frcp-guide%2Fp131-img2.png)\nExpert database. To resolve such issues an additional Mapping file should be imported in which these data\nconflicts ought to be addressed.\nThe empty mapping file can be found in the project’s workspace catalog, SystemFiles folder.\nThe mapping files are not necessary if the import file data corresponds to the Cellular Expert database\ndata, otherwise mapping files are a must for a successful import.\nValues that are not mentioned in the mapping file will not be affected.\nThe structure of a mapping file:\n“table_name” - defines which network object’s values are being mapped.\n“current_name” - the name of the value that is written in the data file. In this example “lat” is a column\nname in the data file and will be changed to “latitude” when the mapping file is applied, and objects are\nimported.\n“destination_name” - the proper name of the property (table column name) in the Cellular Expert\ndatabase. This property will be checked when the mapping file is imported.\n“default_value” – value that will be used when an object in the data file has no value for a particular\nproperty. In this example, if “latitude” is not set, then it will by default be assigned the value of 41.258.\n![Image p132](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-pro%2Frcp-guide%2Fp132-img1.png)\n![Image p132](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-pro%2Frcp-guide%2Fp132-img2.png)\nLeaving the default to empty quotation marks (“”) means that no default value will be applied."
+  },
+  {
+    "chunk_id": "ce-pro-dm-import-export_chunk_4",
+    "document_id": "ce-pro-dm-import-export",
+    "document_title": "Import / Export",
+    "section_title": "7.9.2 Import Sites, Radar, CPE, Sirens, or Repeaters",
+    "product": "CE Pro",
+    "version": "Unknown",
+    "category": "Data Management",
+    "source_file": "docs/ce-pro/data-management-import-export.md",
+    "text": "Other network objects can be imported to Cellular Expert workspace. The dialog contains information about.\nTemplate\nTake necessary parameters from the template during the import. Template values are taken if some\nparameters are missing in text file and mapping file.\nSelect Data Files\nOpens a dialogue window where the user can select the files that define the network objects to be imported.\nThe supported formats: .xls, .xlsx,.csv, and tables from .sde connection. Upon successful selection, the\nbutton will light up green.\nSelect Mapping File (Optional)\nOpens a dialogue window where the user can select a file that defines the data to be imported and the\nconditions under which said data is processed. The supported format is .json. Upon successful selection,\nthe button will light up green."
+  },
+  {
+    "chunk_id": "ce-pro-dm-import-export_chunk_5",
+    "document_id": "ce-pro-dm-import-export",
+    "document_title": "Import / Export",
+    "section_title": "7.10.1 Import Antennas",
+    "product": "CE Pro",
+    "version": "Unknown",
+    "category": "Data Management",
+    "source_file": "docs/ce-pro/data-management-import-export.md",
+    "text": "Click the toolbar button and select Import to import antenna patterns. The command opens a\ndialogue window where the user can select the antenna pattern files to be imported into the Cellular Expert\n![Image p133](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-pro%2Frcp-guide%2Fp133-img1.png)\ndatabase. Select the antenna type in the dropdown list and proceed.\nSelect Files\nThis button opens a dialogue in which you can select one or more antenna pattern files to be imported. The\nsupported type formats are Planet, Andrew, and NSMA.\nImport Antennas\nImports the selected Antenna pattern files to the Cellular Expert database.\nImport Antennas\nRefreshes the data table if changes have been made to it."
+  },
+  {
+    "chunk_id": "ce-pro-dm-import-export_chunk_6",
+    "document_id": "ce-pro-dm-import-export",
+    "document_title": "Import / Export",
+    "section_title": "7.10.2 Export Antennas",
+    "product": "CE Pro",
+    "version": "Unknown",
+    "category": "Data Management",
+    "source_file": "docs/ce-pro/data-management-import-export.md",
+    "text": "Exports selected antennas to a desired format.\nClick on the button and select Export to export antenna patterns. Select the Export path on your\nlocal hard drive, check the desired antennas, and click the Export button.\nExport Path\nThe destination folder on your local hard drive to which the selected antennas will be exported. Can be\nentered manually or by clicking the Open button and selecting it in the dialog. After defining the antenna\nformat, all available antennas of that format will be displayed in the Antennas table. The supported type\nformats are Planet, Andrew, and NSMA.\nExport Antennas\nExports the chosen antennas to the selected destination folder."
+  },
+  {
+    "chunk_id": "ce-pro-dm-import-export_chunk_7",
+    "document_id": "ce-pro-dm-import-export",
+    "document_title": "Import / Export",
+    "section_title": "7.10.3 Create Antennas",
+    "product": "CE Pro",
+    "version": "Unknown",
+    "category": "Data Management",
+    "source_file": "docs/ce-pro/data-management-import-export.md",
+    "text": "Create new antennas based on input parameters.\nClick on the button and select Create to create antenna patterns. Various parameters of the\nantenna can be entered, as well as horizontal and vertical beamwidth values or ranges. For the selected\nhorizontal and vertical values or ranges, the horizontal and vertical attenuations are set to 0, while all other\n![Image p134](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-pro%2Frcp-guide%2Fp134-img1.png)\nattenuations are set to 1000. Based on the horizontal and vertical beamwidths, the horizontal and vertical\nantenna patterns are displayed.\n| Parameter | Description |\n|---|---|\n| Manufacturer | Antenna manufacturer (company or entity). |\n| Model | Antenna identification or name. |\n| Frequency | Antenna frequency value in MHz. |\n| Gain | Antenna gain value in dBi. |\n| Horizontal beamwidth | Antenna’s horizontal beamwidth value or range in degrees. By default, the value is 60. |\n| Vertical beamwidth | Antenna’s vertical beamwidth value or range in degrees. By default, the value is 15. |\n| Create Antenna | Creates the antenna pattern in the database. |"
+  },
+  {
+    "chunk_id": "ce-pro-dm-import-export_chunk_8",
+    "document_id": "ce-pro-dm-import-export",
+    "document_title": "Import / Export",
+    "section_title": "7.11 Model Tuning",
+    "product": "CE Pro",
+    "version": "Unknown",
+    "category": "Data Management",
+    "source_file": "docs/ce-pro/data-management-import-export.md",
+    "text": "Click the button to open the Model Tuning dialogue.\nModel Tuning is used to optimize prediction model parameters based on drive test points. These\nmeasurements must be placed on a custom feature class and bound to a cell by its cell ID.\nThe custom drive test feature layer (class) must have these fields:\n• Field Strength (fs in the class table)\n• Latitude\n• Longitude\n• Cell_id (a field which binds the drive test to a cell network object)\nUpon the creation of the feature class, you should select the drive test layer. It is necessary to have cells\n![Image p136](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-pro%2Frcp-guide%2Fp136-img1.png)\n![Image p136](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-pro%2Frcp-guide%2Fp136-img2.png)\non the map for the calculations to work. Their OBJECTID should correspond to the cell_id present in the\nfeature class’s table.\nSelect a Drive Test Layer and the following properties should become visible:\n| Parameter | Description |\n|---|---|\n| Drive Test Layer | The feature layer (class) that will be used to tune prediction model parameters. |\n| Cell Identification | Cell name field name in drive test layer. The tool uses ObjectID value in Cells network objects to map drive test points. |\n| Field Strength | Field Strength field name in drive test layer. |\n| Resolution | Cell size for model tuning. |\n| Prediction Model | Prediction model name and type which will be used to tune its parameters. |\n| Selected | The count of all measurement points. |\nInvolved Cells\nInformation about the cell is given in this manner: cell name, cell ID, amount of measurements assigned to\n![Image p138](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-pro%2Frcp-guide%2Fp138-img1.png)\nthe cell. At the moment, measuring for a single cell is supported.\nToggle All\nInclude/Exclude all selected cells.\nToggle Button By the Cell\nInclude/exclude certain cells from the test calculations.\nSelect the Cells with which you want to do the drive test by clicking the checkboxes and pressing the Run\nCalculation button\nCalculation results will appear in the dockpane, which contains the general, prediction model and clutter\nvalues of the calculations.\nMeasurement points can be reselected by visibility: LOS (line of sight), OLOS (obstructed line of sight), or\n![Image p139](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-pro%2Frcp-guide%2Fp139-img1.png)\nNLOS (no line of sight). This allows for easy rerun of the tool with only relevant points to perform further\ntuning of the model.\nUntuned and Tuned statistics\nThe comparison between the untuned and tuned prediction models is presented by highlighting the\ndifferences in their mean values, standard deviations, and standard errors.\n• Difference Mean during model tuning measures how the average prediction accuracy or\nperformance improves after optimizing model parameters compared to the default settings. For\nexample, tuning might reduce the average prediction error, leading to more accurate coverage or\nsignal estimations.\n• Standard Deviation reflects the variability in prediction performance. Comparing standard\ndeviations between untuned and tuned models shows whether tuning makes predictions more\nconsistent and reliable. For example, lower standard deviation after tuning indicates the model's\npredictions are less scattered and more stable.\n• Standard Error during model tuning quantifies the precision of the mean prediction. A lower\nstandard error in the tuned model suggests that the average prediction is more reliable and less\ninfluenced by sample variability, indicating improved model stability and confidence in its\nperformance.\nStatistiscs by visibility and by clutter class are also available. Untuned and tuned difference points are also\n![Image p140](http://localhost:4000/api/synced-images?path=docs%2Fassets%2Fimages%2Fce-pro%2Frcp-guide%2Fp140-img1.png)\nnow visualized on the map as part of the model tuning calculation result in separate layers.\nSuggested prediction model values\nModel coefficients that are recommended to be changed.\n• Offset coefficient – represents the offset in decibels added to the path loss grid. The default value\nis 32 dB.\n• Slope coefficient distance – defines the slope based on the distance between the cell and the\nreceiver location, with a default value of 20.\n• Slope coefficient distance obstructed – represents the slope based on the obstructed distance\nbetween the cell and the receiver location. The default value is 40.\n| Parameter | Description |\n|---|---|\n| Suggested clutter class values | Recommended clutter loss values |\n| Apply | Edit the tuned prediction model with suggested model and clutter class values. |\n| Back | Get back to the main Model Tuning calculation window. |"
+  }
+]

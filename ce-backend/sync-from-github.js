@@ -130,6 +130,7 @@ async function syncDoc(entry) {
        product = EXCLUDED.product,
        category = EXCLUDED.category,
        tags = EXCLUDED.tags,
+       github_path = EXCLUDED.github_path,
        content = EXCLUDED.content,
        display_order = EXCLUDED.display_order,
        pdf_path = EXCLUDED.pdf_path,
@@ -148,6 +149,30 @@ async function syncDoc(entry) {
   return { ok: true, headingCount: headings.length, contentLength: content.length };
 }
 
+async function deleteDocsMissingFromIndex() {
+  const indexedIds = DOC_INDEX.map((d) => d.id);
+  if (indexedIds.length === 0) {
+    console.log('  ⚠️  doc-index.json is empty; skipping stale-document cleanup.');
+    return { deleted: 0 };
+  }
+
+  const { rows } = await pool.query(
+    `DELETE FROM documents
+     WHERE NOT (doc_id = ANY($1::text[]))
+     RETURNING doc_id`,
+    [indexedIds]
+  );
+
+  if (rows.length > 0) {
+    const preview = rows.slice(0, 10).map((r) => r.doc_id).join(', ');
+    const suffix = rows.length > 10 ? ', ...' : '';
+    console.log(`  🧹 removed ${rows.length} stale docs not present in doc-index.json`);
+    console.log(`     ${preview}${suffix}`);
+  }
+
+  return { deleted: rows.length };
+}
+
 async function main() {
   console.log(`Syncing ${DOC_INDEX.length} documents from GitHub → PostgreSQL...\n`);
   let success = 0, failed = 0;
@@ -163,7 +188,9 @@ async function main() {
     await new Promise(r => setTimeout(r, 100));
   }
 
-  console.log(`\nDone. ${success} synced, ${failed} failed.`);
+  const cleanup = await deleteDocsMissingFromIndex();
+
+  console.log(`\nDone. ${success} synced, ${failed} failed, ${cleanup.deleted} stale removed.`);
   await pool.end();
 }
 

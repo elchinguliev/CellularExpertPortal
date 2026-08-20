@@ -3,8 +3,6 @@ import ceLogoFull from '../assets/ce-logo-full.png';
 
 const labelSt = {display:'block',fontSize:10,color:'var(--text-dim)',fontFamily:'var(--font-mono)',letterSpacing:'.12em',textTransform:'uppercase',marginBottom:5};
 const inpSt   = {width:'100%',padding:'10px 13px',border:'1px solid var(--border)',borderRadius:9,fontSize:13,color:'var(--text-bright)',background:'var(--bg)',outline:'none',boxSizing:'border-box',fontFamily:'var(--font)',transition:'border-color .15s, box-shadow .15s'};
-const selSt   = {...inpSt, appearance:'none', cursor:'pointer'};
-
 function FocusInput(props) {
   const [focused, setFocused] = useState(false);
   return (
@@ -70,7 +68,6 @@ export default function LoginForm({ onLogin, onSendRegisterCode, onVerifyRegiste
   const [regEmail,   setRegEmail]   = useState('');
   const [regPass,    setRegPass]    = useState('');
   const [regCompany, setRegCompany] = useState('');
-  const [regProduct, setRegProduct] = useState('CE Pro');
   const [regCode,    setRegCode]    = useState('');
 
   // Forgot password
@@ -94,7 +91,7 @@ export default function LoginForm({ onLogin, onSendRegisterCode, onVerifyRegiste
     if (!regName || !regEmail || !regPass || !regCompany) { setError('Please fill in all fields.'); return; }
     if (regPass.length < 6) { setError('Password must be at least 6 characters.'); return; }
     setError(''); setBusy(true);
-    const result = await onSendRegisterCode({ name:regName, email:regEmail.trim(), password:regPass, company:regCompany, product:regProduct });
+    const result = await onSendRegisterCode({ name:regName, email:regEmail.trim(), password:regPass, company:regCompany });
     setBusy(false);
     if (!result.ok) { setError(result.error || 'Could not send verification code.'); return; }
     setInfo(`We sent a 6-digit code to ${regEmail.trim()}. Enter it below to finish creating your account.`);
@@ -192,12 +189,6 @@ export default function LoginForm({ onLogin, onSendRegisterCode, onVerifyRegiste
             <div style={{marginBottom:10}}>
               <label style={labelSt}>Company</label>
               <FocusInput type="text" value={regCompany} onChange={e=>setRegCompany(e.target.value)} placeholder="Your organisation"/>
-            </div>
-            <div style={{marginBottom:14}}>
-              <label style={labelSt}>Product</label>
-              <select value={regProduct} onChange={e=>setRegProduct(e.target.value)} style={selSt}>
-                {['CE Pro','CE Express','Both','Inventory3D'].map(o=><option key={o}>{o}</option>)}
-              </select>
             </div>
             <PrimaryButton onClick={doSendRegisterCode} busy={busy}>{busy ? 'SENDING CODE…' : 'SEND VERIFICATION CODE'}</PrimaryButton>
           </>
