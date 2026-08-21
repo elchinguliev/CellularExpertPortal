@@ -247,6 +247,41 @@ function normalizeDatabaseStructureFieldTables(text = "") {
   return out.join("\n");
 }
 
+function normalizeHtmlImageTags(text = "") {
+  const toImageUrl = (src = "") => {
+    const clean = String(src)
+      .replace(/&amp;/g, "&")
+      .replace(/\\/g, "/")
+      .trim();
+
+    if (/^https?:\/\//i.test(clean) || clean.startsWith("/api/")) return clean;
+
+    const marker = "assets/images/";
+    const idx = clean.indexOf(marker);
+
+    if (idx >= 0) {
+      const repoPath = "docs/" + clean.slice(idx);
+      return SERVER_BASE + "/api/synced-images?path=" + encodeURIComponent(repoPath);
+    }
+
+    return clean;
+  };
+
+  return String(text).replace(/<img\s+([^>]*?)\s*\/?\s*>/gi, (_, attrs = "") => {
+    const srcMatch = attrs.match(/\bsrc=["']([^"']+)["']/i);
+    const altMatch = attrs.match(/\balt=["']([^"']*)["']/i);
+
+    if (!srcMatch) return "";
+
+    const alt = (altMatch?.[1] || "Image")
+      .replace(/[\[\]]/g, "")
+      .replace(/\s+/g, " ")
+      .trim() || "Image";
+
+    return "![" + alt + "](" + toImageUrl(srcMatch[1]) + ")";
+  });
+}
+
 function normalizeIconTextRows(text = "") {
   const lines = String(text).split("\n");
   const out = [];
@@ -372,7 +407,9 @@ function renderMD(text) {
   const lines = normalizeBrokenTableRows(
     normalizeIconTextRows(
       normalizeDatabaseStructureFieldTables(
-        stripBrokenKeywordReferences(normalizeDocumentLeftovers(text))
+        normalizeHtmlImageTags(
+          stripBrokenKeywordReferences(normalizeDocumentLeftovers(text))
+        )
       )
     ),
   ).split("\n");

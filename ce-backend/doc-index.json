@@ -117,15 +117,6 @@
     "pdf": "ce-pro/training/000. Architecture.pdf"
   },
   {
-    "id": "ce-pro-tr-agenda",
-    "path": "docs/ce-pro/training/pdf/0000-agenda.md",
-    "title": "— Agenda",
-    "product": "CE Pro",
-    "category": "Training",
-    "order": 1103,
-    "pdf": "ce-pro/training/0000. Agenda.pdf"
-  },
-  {
     "id": "ce-pro-tr-workspace",
     "path": "docs/ce-pro/training/doc/01-workspace.md",
     "title": "— Workspace",
