@@ -2536,6 +2536,10 @@ const DocArticle = React.memo(function DocArticle({ doc, onSelect }) {
             ⬇ Download PDF
           </a>
         )}
+        {/* Print / Save as PDF temporarily disabled. Keep this block for future restore. */}
+
+        {false && (
+
         <button
           onClick={() => window.print()}
           className="no-print"
@@ -2558,6 +2562,8 @@ const DocArticle = React.memo(function DocArticle({ doc, onSelect }) {
         >
           🖶 Print / Save as PDF
         </button>
+
+        )}
         <div
           className="art"
           dangerouslySetInnerHTML={{
