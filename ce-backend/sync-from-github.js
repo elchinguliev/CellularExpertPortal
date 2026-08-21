@@ -58,23 +58,53 @@ async function downloadAndStoreImage(resolvedPath) {
 // image is served straight from Postgres, not from GitHub, at render time.
 async function resolveImagePaths(content, entryPath) {
   const baseDir = path.posix.dirname(entryPath);
-  const regex = /!\[([^\]]*)\]\((?!https?:\/\/)([^)\s]+)(\s+"[^"]*")?\)/g;
-  const resolvedMap = new Map(); // relPath -> resolved repo-relative path
 
-  for (const m of content.matchAll(regex)) {
-    const relPath = m[2];
-    if (!resolvedMap.has(relPath)) {
-      const resolved = path.posix.normalize(path.posix.join(baseDir, relPath));
-      resolvedMap.set(relPath, resolved);
-      await downloadAndStoreImage(resolved);
+  const markdownImageRegex = /!\[([^\]]*)\]\((?!https?:\/\/|\/api\/)([^)\s]+)(\s+"[^"]*")?\)/g;
+  const htmlImageRegex = /<img\s+([^>]*?\bsrc=["'])(?!https?:\/\/|\/api\/)([^"']+)(["'][^>]*)>/gi;
+
+  const resolvedMap = new Map();
+
+  const cleanRelPath = (relPath = "") =>
+    String(relPath)
+      .replace(/&amp;/g, "&")
+      .replace(/\\/g, "/")
+      .trim();
+
+  const resolveAndStore = async (relPath) => {
+    const clean = cleanRelPath(relPath);
+
+    if (resolvedMap.has(clean)) {
+      return resolvedMap.get(clean);
     }
+
+    const resolved = path.posix.normalize(path.posix.join(baseDir, clean));
+    resolvedMap.set(clean, resolved);
+    await downloadAndStoreImage(resolved);
+
+    return resolved;
+  };
+
+  for (const m of content.matchAll(markdownImageRegex)) {
+    await resolveAndStore(m[2]);
   }
 
-  return content.replace(regex, (match, alt, relPath, titlePart) => {
-    const resolved = resolvedMap.get(relPath);
-    const newUrl = `${SERVER_BASE}/api/synced-images?path=${encodeURIComponent(resolved)}`;
-    return `![${alt}](${newUrl}${titlePart || ''})`;
+  for (const m of content.matchAll(htmlImageRegex)) {
+    await resolveAndStore(m[2]);
+  }
+
+  let out = content.replace(markdownImageRegex, (match, alt, relPath, titlePart) => {
+    const resolved = resolvedMap.get(cleanRelPath(relPath));
+    const newUrl = SERVER_BASE + "/api/synced-images?path=" + encodeURIComponent(resolved);
+    return "![" + alt + "](" + newUrl + (titlePart || "") + ")";
   });
+
+  out = out.replace(htmlImageRegex, (match, beforeSrc, relPath, afterSrc) => {
+    const resolved = resolvedMap.get(cleanRelPath(relPath));
+    const newUrl = SERVER_BASE + "/api/synced-images?path=" + encodeURIComponent(resolved);
+    return "<img " + beforeSrc + newUrl + afterSrc + ">";
+  });
+
+  return out;
 }
 
 function extractHeadings(content) {
