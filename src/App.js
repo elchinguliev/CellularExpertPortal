@@ -247,6 +247,47 @@ function normalizeDatabaseStructureFieldTables(text = "") {
   return out.join("\n");
 }
 
+function normalizeIconTextRows(text = "") {
+  const lines = String(text).split("\n");
+  const out = [];
+
+  const isIconOnlyLine = (line = "") =>
+    /^!\[icon\]\([^)]+\)\s*$/.test(line.trim());
+
+  const isBlockStart = (line = "") => {
+    const t = line.trim();
+    return (
+      !t ||
+      /^#{1,6}\s+/.test(t) ||
+      /^!\[[^\]]*\]\([^)]+\)\s*$/.test(t) ||
+      /^\|/.test(t) ||
+      /^[-*+]\s+/.test(t) ||
+      /^\d+[.)]\s+/.test(t)
+    );
+  };
+
+  for (let i = 0; i < lines.length; i++) {
+    const line = lines[i];
+
+    if (!isIconOnlyLine(line)) {
+      out.push(line);
+      continue;
+    }
+
+    let j = i + 1;
+    while (j < lines.length && lines[j].trim() === "") j++;
+
+    if (j < lines.length && !isBlockStart(lines[j])) {
+      out.push(`${line.trim()} ${lines[j].trim()}`);
+      i = j;
+    } else {
+      out.push(line);
+    }
+  }
+
+  return out.join("\n");
+}
+
 function normalizeBrokenTableRows(text = "") {
   const input = String(text).split("\n");
   const out = [];
@@ -329,8 +370,10 @@ function normalizeBrokenTableRows(text = "") {
 function renderMD(text) {
   if (!text) return "";
   const lines = normalizeBrokenTableRows(
-    normalizeDatabaseStructureFieldTables(
-      stripBrokenKeywordReferences(normalizeDocumentLeftovers(text))
+    normalizeIconTextRows(
+      normalizeDatabaseStructureFieldTables(
+        stripBrokenKeywordReferences(normalizeDocumentLeftovers(text))
+      )
     ),
   ).split("\n");
   let html = "",
