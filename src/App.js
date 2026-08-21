@@ -690,7 +690,7 @@ const ART_CSS = `
   .art a{color:var(--accent);font-weight:500}
   .art a:hover{text-decoration:underline}
   .art img{max-width:100%;height:auto;display:block;border-radius:8px;margin:12px 0}
-  .art img[alt="icon"]{display:inline-block!important;max-width:22px!important;max-height:22px!important;width:auto!important;height:auto!important;vertical-align:middle!important;margin:0 4px!important;border-radius:4px!important}
+  .art img[alt="icon"]{display:inline-block!important;width:28px!important;height:28px!important;max-width:28px!important;max-height:28px!important;object-fit:contain!important;vertical-align:middle!important;margin:0 6px!important;border-radius:4px!important}
   .art p:has(img){margin:14px 0}
   .art strong{font-weight:600;color:var(--text-bright)}
   .art code{font-family:var(--font-mono);font-size:12px;background:var(--bg3);color:var(--accent);padding:2px 6px;border-radius:4px;border:1px solid var(--border)}
