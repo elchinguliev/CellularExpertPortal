@@ -49,6 +49,23 @@ CREATE INDEX IF NOT EXISTS idx_headings_slug      ON document_headings(heading_s
 
 ALTER TABLE documents ADD COLUMN IF NOT EXISTS search_vector tsvector;
 
+-- Raw GitHub folder-name chain a doc lives under, BELOW its auto-discovery
+-- root (e.g. {'3-ce-express-tools'} for a file under
+-- v73-sections/3-ce-express-tools/ — the root folder itself, "v73-sections",
+-- is a structural/version container and is deliberately excluded so it
+-- never becomes a visible nav node). Kept separate from `category` (a flat
+-- display label) and `github_path` (the exact file path) per the "one
+-- concept per column" split described in doc-discovery.js.
+--
+-- NULL (not '{}') for documents that were never auto-discovered — NULL is
+-- the "no real parent_path" sentinel the frontend nav builder checks via
+-- Array.isArray() to fall back to the flat `category` column, exactly as it
+-- always has. An auto-discovered doc always gets a real array here, even
+-- when legitimately empty (a file sitting directly in the root, with no
+-- group folder) — see sync-from-github.js's syncDoc().
+ALTER TABLE documents ADD COLUMN IF NOT EXISTS parent_path TEXT[];
+ALTER TABLE documents ALTER COLUMN parent_path DROP DEFAULT;
+
 CREATE OR REPLACE FUNCTION documents_search_vector_update() RETURNS trigger AS $$
 BEGIN
   NEW.search_vector :=

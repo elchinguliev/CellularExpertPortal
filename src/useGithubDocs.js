@@ -1,208 +1,220 @@
 const API_BASE = 'http://localhost:4000/api';
 const SERVER_BASE = 'http://localhost:4000'; // used for /downloads/... static PDF files
 
-export const DOC_INDEX = [
-  // ── CE Express — user guide (v73), mirrors the docs repo tree under
-  // docs/ce-express/user-guide/v73-sections/:
-  //   1-introduction.md
-  //   2-map-view/2-1-map-view-overview.md, 2-2-map.md, 2-3-maptable-view-modes.md
-  //   3-ce-express-tools/3-1-workspaces.md … 3-44-hcm-requests.md
-  //   4-database-structure.md, 5-ce-express-api.md, 6-network-data-management.md,
-  //   7-database-organization.md, 8-exploring-data.md
-  // followed by the Administrator Guide and Training PDFs, which live outside
-  // v73-sections and keep their own paths.
-  { id:'ce-express-v73-1-introduction', path:'docs/ce-express/user-guide/v73-sections/1-introduction.md', title:'Introduction', product:'CE Express', category:'Introduction', order:100 },
+// ── Display-name / sort-order helpers ────────────────────────────────────────
+// File and folder names carry numeric prefixes purely to control ordering —
+// they're never shown to a reader. This is the frontend half of the same
+// convention ce-backend/doc-discovery.js applies server-side (kept as a
+// small separate copy since the two bundles don't share a module); it's
+// applied uniformly to real folder segments (from `parent_path`, e.g.
+// "3-ce-express-tools") and to the flat `category` string older/manually
+// -configured docs still carry (e.g. "Data Management") — the latter has no
+// digits or dashes to strip, so it passes through unchanged.
+const ACRONYMS = {
+  ce: 'CE', rf: 'RF', api: 'API', dxf: 'DXF', emf: 'EMF', hcm: 'HCM',
+  fs: 'FS', gis: 'GIS', pdf: 'PDF', dem: 'DEM', csv: 'CSV', '3d': '3D',
+};
 
-  { id:'ce-express-v73-2-1-map-view-overview', path:'docs/ce-express/user-guide/v73-sections/2-map-view/2-1-map-view-overview.md', title:'Map View Overview', product:'CE Express', category:'Map View', order:200 },
-  { id:'ce-express-v73-2-2-map', path:'docs/ce-express/user-guide/v73-sections/2-map-view/2-2-map.md', title:'Map', product:'CE Express', category:'Map View', order:201 },
-  { id:'ce-express-v73-2-3-maptable-view-modes', path:'docs/ce-express/user-guide/v73-sections/2-map-view/2-3-maptable-view-modes.md', title:'Map / Table View Modes', product:'CE Express', category:'Map View', order:202 },
+function humanizeSegment(rawName = '') {
+  const stem = String(rawName).replace(/\.md$/i, '');
+  // "v73-sections" -> "v7.3" — a version folder should read as a version,
+  // not as its literal directory name.
+  const versionMatch = stem.match(/^v(\d)(\d)(?:-sections?)?$/i);
+  if (versionMatch) return `v${versionMatch[1]}.${versionMatch[2]}`;
+  const withoutPrefix = stem.replace(/^(\d+-)+/, '') || stem;
+  const words = withoutPrefix.split(/[-_]+/).filter(Boolean);
+  if (words.length === 0) return stem;
+  return words
+    .map((w) => ACRONYMS[w.toLowerCase()] || w.charAt(0).toUpperCase() + w.slice(1))
+    .join(' ');
+}
 
-  { id:'ce-express-v73-3-1-1-workspaces', path:'docs/ce-express/user-guide/v73-sections/3-ce-express-tools/3-1-workspaces.md', title:'Workspaces', product:'CE Express', category:'Express Tools', order:301 },
-  { id:'ce-express-v73-3-1-2-features', path:'docs/ce-express/user-guide/v73-sections/3-ce-express-tools/3-2-features.md', title:'Features', product:'CE Express', category:'Express Tools', order:302 },
-  { id:'ce-express-v73-3-1-3-networks', path:'docs/ce-express/user-guide/v73-sections/3-ce-express-tools/3-3-networks.md', title:'Networks', product:'CE Express', category:'Express Tools', order:303 },
-  { id:'ce-express-v73-3-1-4-layers', path:'docs/ce-express/user-guide/v73-sections/3-ce-express-tools/3-4-layers.md', title:'Layers', product:'CE Express', category:'Express Tools', order:304 },
-  { id:'ce-express-v73-3-1-5-prediction-history', path:'docs/ce-express/user-guide/v73-sections/3-ce-express-tools/3-5-prediction-history.md', title:'Prediction history', product:'CE Express', category:'Express Tools', order:305 },
-  { id:'ce-express-v73-3-1-6-antennas', path:'docs/ce-express/user-guide/v73-sections/3-ce-express-tools/3-6-antennas.md', title:'Antennas', product:'CE Express', category:'Express Tools', order:306 },
-  { id:'ce-express-v73-3-1-7-geodata-sets', path:'docs/ce-express/user-guide/v73-sections/3-ce-express-tools/3-7-geodata-sets.md', title:'Geodata sets', product:'CE Express', category:'Express Tools', order:307 },
-  { id:'ce-express-v73-3-1-8-feature-templates', path:'docs/ce-express/user-guide/v73-sections/3-ce-express-tools/3-8-feature-templates.md', title:'Feature templates', product:'CE Express', category:'Express Tools', order:308 },
-  { id:'ce-express-v73-3-1-9-prediction-models', path:'docs/ce-express/user-guide/v73-sections/3-ce-express-tools/3-9-prediction-models.md', title:'Prediction models', product:'CE Express', category:'Express Tools', order:309 },
-  { id:'ce-express-v73-3-1-10-settings', path:'docs/ce-express/user-guide/v73-sections/3-ce-express-tools/3-10-settings.md', title:'Settings', product:'CE Express', category:'Express Tools', order:310 },
-  { id:'ce-express-v73-3-1-11-identify', path:'docs/ce-express/user-guide/v73-sections/3-ce-express-tools/3-11-identify.md', title:'Identify', product:'CE Express', category:'Express Tools', order:311 },
-  { id:'ce-express-v73-3-1-12-measurement-tool', path:'docs/ce-express/user-guide/v73-sections/3-ce-express-tools/3-12-measurement-tool.md', title:'Measurement tool', product:'CE Express', category:'Express Tools', order:312 },
-  { id:'ce-express-v73-3-1-13-network-statistics', path:'docs/ce-express/user-guide/v73-sections/3-ce-express-tools/3-13-network-statistics.md', title:'Network statistics', product:'CE Express', category:'Express Tools', order:313 },
-  { id:'ce-express-v73-3-1-14-street-view', path:'docs/ce-express/user-guide/v73-sections/3-ce-express-tools/3-14-street-view.md', title:'Street view', product:'CE Express', category:'Express Tools', order:314 },
-  { id:'ce-express-v73-3-1-15-feature-report', path:'docs/ce-express/user-guide/v73-sections/3-ce-express-tools/3-15-feature-report.md', title:'Feature report', product:'CE Express', category:'Express Tools', order:315 },
-  { id:'ce-express-v73-3-1-16-profile', path:'docs/ce-express/user-guide/v73-sections/3-ce-express-tools/3-16-profile.md', title:'Profile', product:'CE Express', category:'Express Tools', order:316 },
-  { id:'ce-express-v73-3-1-17-quick-rf-prediction', path:'docs/ce-express/user-guide/v73-sections/3-ce-express-tools/3-17-quick-rf-prediction.md', title:'Quick RF Prediction', product:'CE Express', category:'Express Tools', order:317 },
-  { id:'ce-express-v73-3-1-18-rf-prediction', path:'docs/ce-express/user-guide/v73-sections/3-ce-express-tools/3-18-rf-prediction.md', title:'RF Prediction', product:'CE Express', category:'Express Tools', order:318 },
-  { id:'ce-express-v73-3-1-19-3d-rf-prediction', path:'docs/ce-express/user-guide/v73-sections/3-ce-express-tools/3-19-3d-rf-prediction.md', title:'3D RF Prediction', product:'CE Express', category:'Express Tools', order:319 },
-  { id:'ce-express-v73-3-1-20-visibility-prediction', path:'docs/ce-express/user-guide/v73-sections/3-ce-express-tools/3-20-visibility-prediction.md', title:'Visibility prediction', product:'CE Express', category:'Express Tools', order:320 },
-  { id:'ce-express-v73-3-1-21-antenna-visibility-prediction', path:'docs/ce-express/user-guide/v73-sections/3-ce-express-tools/3-21-antenna-visibility-prediction.md', title:'Antenna visibility prediction', product:'CE Express', category:'Express Tools', order:321 },
-  { id:'ce-express-v73-3-1-22-minimum-receiver-height', path:'docs/ce-express/user-guide/v73-sections/3-ce-express-tools/3-22-minimum-receiver-height.md', title:'Minimum receiver height', product:'CE Express', category:'Express Tools', order:322 },
-  { id:'ce-express-v73-3-1-23-quick-minimum-receiver-height', path:'docs/ce-express/user-guide/v73-sections/3-ce-express-tools/3-23-quick-minimum-receiver-height.md', title:'Quick minimum receiver height', product:'CE Express', category:'Express Tools', order:323 },
-  { id:'ce-express-v73-3-1-24-radar-prediction', path:'docs/ce-express/user-guide/v73-sections/3-ce-express-tools/3-24-radar-prediction.md', title:'Radar prediction', product:'CE Express', category:'Express Tools', order:324 },
-  { id:'ce-express-v73-3-1-25-network-availability', path:'docs/ce-express/user-guide/v73-sections/3-ce-express-tools/3-25-network-availability.md', title:'Network availability', product:'CE Express', category:'Express Tools', order:325 },
-  { id:'ce-express-v73-3-1-26-model-tuning', path:'docs/ce-express/user-guide/v73-sections/3-ce-express-tools/3-26-model-tuning.md', title:'Model Tuning', product:'CE Express', category:'Express Tools', order:326 },
-  { id:'ce-express-v73-3-1-27-optimal-placement', path:'docs/ce-express/user-guide/v73-sections/3-ce-express-tools/3-27-optimal-placement.md', title:'Optimal placement', product:'CE Express', category:'Express Tools', order:327 },
-  { id:'ce-express-v73-3-1-28-utilities', path:'docs/ce-express/user-guide/v73-sections/3-ce-express-tools/3-28-utilities.md', title:'Utilities', product:'CE Express', category:'Express Tools', order:328 },
-  { id:'ce-express-v73-3-1-29-points-to-dxf', path:'docs/ce-express/user-guide/v73-sections/3-ce-express-tools/3-29-points-to-dxf.md', title:'Points to DXF', product:'CE Express', category:'Express Tools', order:329 },
-  { id:'ce-express-v73-3-1-30-emf', path:'docs/ce-express/user-guide/v73-sections/3-ce-express-tools/3-30-emf.md', title:'EMF', product:'CE Express', category:'Express Tools', order:330 },
-  { id:'ce-express-v73-3-1-31-audibility', path:'docs/ce-express/user-guide/v73-sections/3-ce-express-tools/3-31-audibility.md', title:'Audibility', product:'CE Express', category:'Express Tools', order:331 },
-  { id:'ce-express-v73-3-1-32-lux-calculation', path:'docs/ce-express/user-guide/v73-sections/3-ce-express-tools/3-32-lux-calculation.md', title:'Lux calculation', product:'CE Express', category:'Express Tools', order:332 },
-  { id:'ce-express-v73-3-1-33-geoclimatic-data', path:'docs/ce-express/user-guide/v73-sections/3-ce-express-tools/3-33-geoclimatic-data.md', title:'Geoclimatic data', product:'CE Express', category:'Express Tools', order:333 },
-  { id:'ce-express-v73-3-1-34-spectrum-masks', path:'docs/ce-express/user-guide/v73-sections/3-ce-express-tools/3-34-spectrum-masks.md', title:'Spectrum masks', product:'CE Express', category:'Express Tools', order:334 },
-  { id:'ce-express-v73-3-1-35-radios', path:'docs/ce-express/user-guide/v73-sections/3-ce-express-tools/3-35-radios.md', title:'Radios', product:'CE Express', category:'Express Tools', order:335 },
-  { id:'ce-express-v73-3-1-36-frequency-plans', path:'docs/ce-express/user-guide/v73-sections/3-ce-express-tools/3-36-frequency-plans.md', title:'Frequency plans', product:'CE Express', category:'Express Tools', order:336 },
-  { id:'ce-express-v73-3-1-37-link-prediction', path:'docs/ce-express/user-guide/v73-sections/3-ce-express-tools/3-37-link-prediction.md', title:'Link prediction', product:'CE Express', category:'Express Tools', order:337 },
-  { id:'ce-express-v73-3-1-38-automatic-frequency-planning', path:'docs/ce-express/user-guide/v73-sections/3-ce-express-tools/3-38-automatic-frequency-planning.md', title:'Automatic frequency planning', product:'CE Express', category:'Express Tools', order:338 },
-  { id:'ce-express-v73-3-1-39-link-hcm-fs-prediction', path:'docs/ce-express/user-guide/v73-sections/3-ce-express-tools/3-39-link-hcm-fs-prediction.md', title:'Link HCM-FS prediction', product:'CE Express', category:'Express Tools', order:339 },
-  { id:'ce-express-v73-3-1-40-mesh-topology-builder', path:'docs/ce-express/user-guide/v73-sections/3-ce-express-tools/3-40-mesh-topology-builder.md', title:'Mesh topology builder', product:'CE Express', category:'Express Tools', order:340 },
-  { id:'ce-express-v73-3-1-41-mesh-connectivity', path:'docs/ce-express/user-guide/v73-sections/3-ce-express-tools/3-41-mesh-connectivity.md', title:'Mesh connectivity', product:'CE Express', category:'Express Tools', order:341 },
-  { id:'ce-express-v73-3-1-42-quick-mesh-connectivity', path:'docs/ce-express/user-guide/v73-sections/3-ce-express-tools/3-42-quick-mesh-connectivity.md', title:'Quick mesh connectivity', product:'CE Express', category:'Express Tools', order:342 },
-  { id:'ce-express-v73-3-1-43-quick-hcm-fs-prediction', path:'docs/ce-express/user-guide/v73-sections/3-ce-express-tools/3-43-quick-hcm-fs-prediction.md', title:'Quick HCM-FS prediction', product:'CE Express', category:'Express Tools', order:343 },
-  { id:'ce-express-v73-3-1-44-hcm-requests', path:'docs/ce-express/user-guide/v73-sections/3-ce-express-tools/3-44-hcm-requests.md', title:'HCM requests', product:'CE Express', category:'Express Tools', order:344 },
+// Leading numeric-prefix groups as an array, e.g. "3-1-workspaces.md" ->
+// [3, 1], "2-map-view" -> [2], "Data Management" -> [] (no digits).
+// Array (not a single number) so multi-digit-group prefixes compare
+// correctly — "3-9-x" before "3-10-x" — instead of a naive decimal collapse.
+function numericPrefixKey(rawName = '') {
+  const stem = String(rawName).replace(/\.md$/i, '');
+  const m = stem.match(/^(\d+(?:-\d+)*)-?/);
+  if (!m) return [];
+  return m[1].split('-').map(Number);
+}
 
-  { id:'ce-express-v73-4-database-structure', path:'docs/ce-express/user-guide/v73-sections/4-database-structure.md', title:'Database Structure', product:'CE Express', category:'Database Structure', order:400 },
-  { id:'ce-express-v73-5-ce-express-api', path:'docs/ce-express/user-guide/v73-sections/5-ce-express-api.md', title:'CE Express API', product:'CE Express', category:'CE Express API', order:500 },
-  { id:'ce-express-v73-6-network-data-management', path:'docs/ce-express/user-guide/v73-sections/6-network-data-management.md', title:'Network Data Management', product:'CE Express', category:'Network Data Management', order:600 },
-  { id:'ce-express-v73-7-database-organization', path:'docs/ce-express/user-guide/v73-sections/7-database-organization.md', title:'Database Organization', product:'CE Express', category:'Database Organization', order:700 },
-  { id:'ce-express-v73-8-exploring-data', path:'docs/ce-express/user-guide/v73-sections/8-exploring-data.md', title:'Exploring Data', product:'CE Express', category:'Exploring Data', order:800 },
+function compareKeys(a, b) {
+  const len = Math.max(a.length, b.length);
+  for (let i = 0; i < len; i++) {
+    const av = a[i] ?? -1;
+    const bv = b[i] ?? -1;
+    if (av !== bv) return av - bv;
+  }
+  return 0;
+}
 
-  { id:'ce-express-admin-guide', path:'docs/ce-express/user-guide/admin-guide-v7.2.md', title:'Administrator Guide', product:'CE Express', category:'Administrator Guide', order:1000 },
-  { id:'ce-express-tr-workspace', path:'docs/ce-express/training/01-creating-workspace.md', title:'— Creating Workspace', product:'CE Express', category:'Training', order:900 },
-  { id:'ce-express-tr-objects', path:'docs/ce-express/training/02-create-objects.md', title:'— Create Objects', product:'CE Express', category:'Training', order:901 },
-  { id:'ce-express-tr-los', path:'docs/ce-express/training/03-line-of-sight.md', title:'— Line of Sight', product:'CE Express', category:'Training', order:902 },
-  { id:'ce-express-tr-rf', path:'docs/ce-express/training/04-rf-prediction.md', title:'— RF Prediction', product:'CE Express', category:'Training', order:903 },
-  { id:'ce-express-tr-import', path:'docs/ce-express/training/05-import-data.md', title:'— Import Data', product:'CE Express', category:'Training', order:904 },
-  { id:'ce-express-tr-models', path:'docs/ce-express/training/06-prediction-models.md', title:'— Prediction Models', product:'CE Express', category:'Training', order:905 },
-  { id:'ce-express-tr-mw-eq', path:'docs/ce-express/training/07-mw-equipment.md', title:'— MW Equipment', product:'CE Express', category:'Training', order:906 },
-  { id:'ce-express-tr-mw-pred', path:'docs/ce-express/training/08-mw-prediction.md', title:'— MW Prediction', product:'CE Express', category:'Training', order:907 },
-  { id:'ce-express-tr-geodata', path:'docs/ce-express/training/09-preparing-geodata.md', title:'— Preparing Geodata', product:'CE Express', category:'Training', order:908 },
+function keyMin(a, b) {
+  return compareKeys(a, b) <= 0 ? a : b;
+}
 
-  // ── CE Pro — unchanged, not part of this reorg.
-  { id:'ce-pro-tr-install', path:'docs/ce-pro/training/pdf/0-installation.md', title:'— Installation', product:'CE Pro', category:'Training', order:1100 },
-  { id:'ce-pro-tr-data', path:'docs/ce-pro/training/pdf/00-data-types.md', title:'— Data Types', product:'CE Pro', category:'Training', order:1101 },
-  { id:'ce-pro-tr-arch', path:'docs/ce-pro/training/pdf/000-architecture.md', title:'— Architecture', product:'CE Pro', category:'Training', order:1102 },
-  { id:'ce-pro-tr-workspace', path:'docs/ce-pro/training/doc/01-workspace.md', title:'— Workspace', product:'CE Pro', category:'Training', order:1104 },
-  { id:'ce-pro-tr-los', path:'docs/ce-pro/training/doc/02-line-of-sight.md', title:'— Line of Sight', product:'CE Pro', category:'Training', order:1105 },
-  { id:'ce-pro-tr-objects', path:'docs/ce-pro/training/doc/03-objects.md', title:'— Objects', product:'CE Pro', category:'Training', order:1106 },
-  { id:'ce-pro-tr-cell-pred', path:'docs/ce-pro/training/doc/04-cell-prediction.md', title:'— Cell Prediction', product:'CE Pro', category:'Training', order:1107 },
-  { id:'ce-pro-tr-models', path:'docs/ce-pro/training/doc/05-prediction-models.md', title:'— Prediction Models', product:'CE Pro', category:'Training', order:1108 },
-  { id:'ce-pro-tr-import', path:'docs/ce-pro/training/doc/06-importing-data.md', title:'— Importing Data', product:'CE Pro', category:'Training', order:1109 },
-  { id:'ce-pro-tr-rl', path:'docs/ce-pro/training/doc/07-rl-prediction.md', title:'— RL Prediction', product:'CE Pro', category:'Training', order:1110 },
-  { id:'geodata-requirements', path:'docs/geodata/geodata-requirements.md', title:'Geodata Requirements', product:'Both', category:'Geodata Requirements', order:100 },
-  { id:'geodata-network-objects', path:'docs/geodata/network-objects-requirements.md', title:'Network Object Requirements', product:'Both', category:'Network Object Requirements', order:200 },
-  { id:'inventory3d-user-guide', path:'docs/inventory3d/user-guide.md', title:'Inventory3D User Guide v4.6', product:'Inventory3D', category:'User Guides', order:1 },
-  { id:'ce-pro-overview', path:'docs/ce-pro/overview.md', title:'Overview / Getting Started', product:'CE Pro', category:'Getting Started', order:100 },
-  { id:'ce-pro-geographic-data', path:'docs/ce-pro/geographic-data.md', title:'Geographic Data', product:'CE Pro', category:'Geographic Data', order:200 },
-  { id:'ce-pro-workspace-merged', path:'docs/ce-pro/workspace.md', title:'Workspace', product:'CE Pro', category:'Workspace', order:300 },
-  { id:'ce-pro-indoor-workspace', path:'docs/ce-pro/indoor-workspace.md', title:'Indoor Workspace', product:'CE Pro', category:'Workspace', order:301 },
-  { id:'ce-pro-dm-network-objects', path:'docs/ce-pro/data-management-network-objects.md', title:'Network Objects', product:'CE Pro', category:'Data Management', order:400 },
-  { id:'ce-pro-dm-object-editor', path:'docs/ce-pro/data-management-object-editor.md', title:'Object Editor', product:'CE Pro', category:'Data Management', order:401 },
-  { id:'ce-pro-dm-clutter-classes', path:'docs/ce-pro/data-management-clutter-classes.md', title:'Clutter Classes', product:'CE Pro', category:'Data Management', order:402 },
-  { id:'ce-pro-dm-antenna-viewer', path:'docs/ce-pro/data-management-antenna-viewer.md', title:'Antenna Viewer', product:'CE Pro', category:'Data Management', order:403 },
-  { id:'ce-pro-dm-prediction-model-manager', path:'docs/ce-pro/data-management-prediction-model-manager.md', title:'Prediction Model Manager', product:'CE Pro', category:'Data Management', order:404 },
-  { id:'ce-pro-dm-template-manager', path:'docs/ce-pro/data-management-template-manager.md', title:'Template Manager', product:'CE Pro', category:'Data Management', order:405 },
-  { id:'ce-pro-dm-import-export', path:'docs/ce-pro/data-management-import-export.md', title:'Import / Export', product:'CE Pro', category:'Data Management', order:406 },
-  { id:'ce-pro-dm-radio-frequency-data', path:'docs/ce-pro/data-management-radio-frequency-data.md', title:'Radio / Frequency Data', product:'CE Pro', category:'Data Management', order:407 },
-  { id:'ce-pro-profile-merged', path:'docs/ce-pro/profile.md', title:'Profile', product:'CE Pro', category:'Profile', order:500 },
-  { id:'ce-pro-coverage-prediction-overview', path:'docs/ce-pro/coverage-prediction-overview.md', title:'Coverage Prediction Overview', product:'CE Pro', category:'Coverage Prediction', order:600 },
-  { id:'ce-pro-rcp-coverage-tools', path:'docs/ce-pro/rcp-coverage-tools.md', title:'RCP Coverage Tools', product:'CE Pro', category:'Coverage Prediction', order:601 },
-  { id:'ce-pro-rlp-mesh-networks', path:'docs/ce-pro/rlp-mesh-networks.md', title:'Mesh Networks', product:'CE Pro', category:'RLP Tools', order:700 },
-  { id:'ce-pro-rlp-radio-links', path:'docs/ce-pro/rlp-radio-links.md', title:'Radio Links', product:'CE Pro', category:'RLP Tools', order:701 },
-  { id:'ce-pro-emf-tools', path:'docs/ce-pro/emf-tools.md', title:'EMF Tools', product:'CE Pro', category:'EMF Tools', order:800 },
-  { id:'ce-pro-about', path:'docs/ce-pro/about.md', title:'About', product:'CE Pro', category:'About', order:1200 },
-  { id:'ce-pro-technical-support', path:'docs/ce-pro/technical-support.md', title:'Technical Support', product:'CE Pro', category:'Technical Support', order:1300 },
-  { id:'ce-pro-indoor-tools', path:'docs/ce-pro/indoor-tools.md', title:'Indoor Tools', product:'CE Pro', category:'Indoor Tools', order:900 },
-  { id:'ce-pro-sound-tools', path:'docs/ce-pro/sound-tools.md', title:'Sound Tools', product:'CE Pro', category:'Sound Tools', order:1000 },
-];
-
-// Friendlier display names for known products. Anything not listed here
-// (i.e. a brand new product) just uses its raw product string as the
-// section label — so a new product shows up automatically with no code
-// change required here.
+// ── Product-level config ─────────────────────────────────────────────────────
+// The one thing that genuinely can't be derived from the docs repo: which
+// products exist and what to call/order them. Everything below this line
+// (categories, sections, page titles, sort order within a product) is
+// derived from what's actually in the database, which in turn mirrors
+// whatever's actually in the docs repo — see ce-backend/doc-discovery.js.
 const PRODUCT_LABELS = {
   'CE Express': 'CE Express',
   'CE Pro': 'CE Desktop Pro',
   'Both': 'Geodata & Data',
   'Inventory3D': 'Inventory3D',
 };
-// Preferred product ordering in the sidebar; anything not listed here is
-// appended afterwards, alphabetically.
 const PRODUCT_ORDER = ['CE Express', 'CE Pro', 'Both', 'Inventory3D'];
 
-function buildNav(docIndex) {
-  const products = Array.from(new Set(docIndex.map((d) => d.product)));
-  products.sort((a, b) => {
-    const ia = PRODUCT_ORDER.indexOf(a);
-    const ib = PRODUCT_ORDER.indexOf(b);
-    if (ia === -1 && ib === -1) return a.localeCompare(b);
-    if (ia === -1) return 1;
-    if (ib === -1) return -1;
-    return ia - ib;
-  });
+// ── Doc index ─────────────────────────────────────────────────────────────────
+// The full doc list now comes from Postgres (`/api/docs`) instead of a
+// hand-maintained array — every row already reflects whatever
+// sync-from-github.js last pulled from the docs repo (auto-discovered
+// nested docs and the still-flat/manually-categorized ones alike), plus any
+// doc created directly from the admin panel. DOC_INDEX is populated in
+// place (same array reference) so existing `.find()`/`.map()` call sites
+// keep working once loadDocIndex() resolves; getDocIndex()/getNav() exist
+// so React code can re-read it as state after that happens (see App.js).
+export const DOC_INDEX = [];
 
-  const nav = {};
-  products.forEach((product) => {
-    const label = PRODUCT_LABELS[product] || product;
-    const categories = {};
-    docIndex
-      .filter((d) => d.product === product)
-      .forEach((d) => {
-        if (!categories[d.category]) categories[d.category] = [];
-        categories[d.category].push(d);
-      });
-    Object.values(categories).forEach((list) =>
-      list.sort((a, b) => (a.order || 0) - (b.order || 0))
-    );
-    // Categories themselves are ordered by the lowest `order` value among
-    // their items — so where a category shows up in the sidebar follows the
-    // same numbering used for the pages inside it, instead of just "whatever
-    // order they happened to appear in DOC_INDEX".
-    const orderedCategories = {};
-    Object.keys(categories)
-      .sort((a, b) => categories[a][0].order - categories[b][0].order)
-      .forEach((cat) => {
-        orderedCategories[cat] = categories[cat];
-      });
-    nav[label] = orderedCategories;
-  });
-  return nav;
+let loadPromise = null;
+
+function rowToEntry(row) {
+  return {
+    id: row.doc_id,
+    path: row.github_path,
+    title: row.title,
+    product: row.product,
+    category: row.category,
+    order: row.display_order ?? 99,
+    // Deliberately NOT coerced to [] here — null vs. a real (possibly
+    // empty) array is the signal buildNav()/leafSortKey() use to tell "this
+    // doc's nav placement comes from real folder discovery" apart from
+    // "this doc is still flat/manually-categorized", per doc-discovery.js.
+    parent_path: Array.isArray(row.parent_path) ? row.parent_path : null,
+    tags: row.tags || [],
+  };
 }
 
-export const NAV = buildNav(DOC_INDEX);
+export async function loadDocIndex() {
+  if (loadPromise) return loadPromise;
+  loadPromise = (async () => {
+    try {
+      const res = await fetch(`${API_BASE}/docs`);
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const rows = await res.json();
+      DOC_INDEX.length = 0;
+      rows.forEach((row) => DOC_INDEX.push(rowToEntry(row)));
+      return true;
+    } catch {
+      return false;
+    }
+  })();
+  return loadPromise;
+}
 
-// Admin-created pages (added via the admin panel, POST /api/docs) live only
-// in Postgres — they were never part of the GitHub-synced static DOC_INDEX
-// above. Call this once when the app loads to pull in anything the admin
-// has added since, merging it into DOC_INDEX (same array reference, so
-// existing lookups like fetchDoc's `.find()` pick it up automatically).
-// Returns true if anything new was found, so the caller can trigger a re-render.
-export async function syncLiveDocs() {
-  try {
-    const res = await fetch(`${API_BASE}/docs`);
-    if (!res.ok) return false;
-    const rows = await res.json();
-    const knownIds = new Set(DOC_INDEX.map((d) => d.id));
-    let changed = false;
-    rows.forEach((row) => {
-      if (!knownIds.has(row.doc_id)) {
-        DOC_INDEX.push({
-          id: row.doc_id,
-          path: row.github_path,
-          title: row.title,
-          product: row.product,
-          category: row.category,
-          order: row.display_order ?? 99,
-        });
-        knownIds.add(row.doc_id);
-        changed = true;
-      }
-    });
-    return changed;
-  } catch {
-    return false;
+export function getDocIndex() {
+  return DOC_INDEX;
+}
+
+// ── Navigation tree ───────────────────────────────────────────────────────────
+// Builds real nested sections instead of a flattened product/category pair:
+// each doc nests under its actual `parent_path` folder chain (e.g.
+// ["3-ce-express-tools"], BELOW the invisible auto-discovery root — see
+// doc-discovery.js) when it has one, or under a single synthetic level
+// named after its flat `category` when it doesn't (CE Pro/Geodata/
+// Inventory3D and admin-created docs, none of which live in a folder
+// structure that encodes grouping).
+//
+// `parent_path` being a real array (even an empty one, for a doc sitting
+// directly in the discovery root with no group folder) vs. null is exactly
+// that distinction — NOT whether the array happens to be non-empty, since a
+// root-level discovered doc legitimately has parent_path: [].
+function leafSortKey(doc) {
+  // Only derive from the filename when this doc actually came from folder
+  // auto-discovery (it has a real parent_path) — a statically-configured
+  // doc's filename prefix (e.g. training PDFs numbered 01, 02, 03...) has
+  // nothing to do with any other section's numbering and would produce
+  // false ties/misorderings against it. Those use their curated `order`
+  // field instead, exactly as before this refactor.
+  if (Array.isArray(doc.parent_path)) {
+    const basename = (doc.path || '').split('/').pop() || '';
+    const fromName = numericPrefixKey(basename);
+    if (fromName.length) return fromName;
   }
+  return [Number.isFinite(doc.order) ? doc.order : 99];
+}
+
+function getOrCreateFolder(parent, rawSegment) {
+  let node = parent.children.find((c) => c.type === 'folder' && c.key === rawSegment);
+  if (!node) {
+    node = {
+      type: 'folder',
+      key: rawSegment,
+      label: humanizeSegment(rawSegment),
+      sortKey: numericPrefixKey(rawSegment),
+      children: [],
+    };
+    parent.children.push(node);
+  }
+  return node;
+}
+
+// A folder that has no numeric prefix of its own (a synthetic category
+// level, e.g. "Data Management") sorts by the lowest sort key among its own
+// descendants instead — the same "category takes the position of its
+// earliest item" rule the old flat nav used, generalized to any depth. A
+// folder that DOES have its own numeric prefix is unaffected: that prefix
+// is always <= anything nested under it, so this is a no-op for it.
+function finalizeSortKeys(node) {
+  if (node.type === 'doc') return node.sortKey;
+  let effective = node.sortKey.length ? node.sortKey : [Infinity];
+  node.children.forEach((child) => {
+    effective = keyMin(effective, finalizeSortKeys(child));
+  });
+  node.sortKey = effective;
+  return effective;
+}
+
+function sortTree(node) {
+  if (node.type !== 'folder') return;
+  node.children.forEach(sortTree);
+  node.children.sort(
+    (a, b) => compareKeys(a.sortKey, b.sortKey) || a.label.localeCompare(b.label)
+  );
+}
+
+export function buildNav(docIndex) {
+  const productNodes = new Map();
+
+  docIndex.forEach((doc) => {
+    if (!productNodes.has(doc.product)) {
+      productNodes.set(doc.product, { type: 'folder', key: doc.product, children: [] });
+    }
+    let cursor = productNodes.get(doc.product);
+
+    const chain = Array.isArray(doc.parent_path) ? doc.parent_path : [doc.category];
+    chain.forEach((rawSegment) => {
+      cursor = getOrCreateFolder(cursor, rawSegment);
+    });
+
+    cursor.children.push({ type: 'doc', id: doc.id, label: doc.title, sortKey: leafSortKey(doc) });
+  });
+
+  productNodes.forEach((node) => {
+    node.children.forEach(finalizeSortKeys);
+    sortTree(node);
+  });
+
+  const known = PRODUCT_ORDER.filter((p) => productNodes.has(p));
+  const unknown = [...productNodes.keys()].filter((p) => !PRODUCT_ORDER.includes(p)).sort();
+
+  return [...known, ...unknown].map((product) => {
+    const node = productNodes.get(product);
+    return { ...node, label: PRODUCT_LABELS[product] || product };
+  });
 }
 
 export function getNav() {
@@ -215,31 +227,53 @@ let preloadStarted = false;
 export function preloadAllDocs() {
   if (preloadStarted) return;
   preloadStarted = true;
-  DOC_INDEX.forEach((entry, i) => {
-    setTimeout(() => { fetchDoc(entry.id).catch(() => {}); }, i * 60);
+  loadDocIndex().then(() => {
+    DOC_INDEX.forEach((entry, i) => {
+      setTimeout(() => { fetchDoc(entry.id).catch(() => {}); }, i * 60);
+    });
   });
 }
 
 export async function fetchDoc(docId) {
-  const entry = DOC_INDEX.find(d => d.id === docId);
-  if (!entry) return null;
+  // Guards the case where a direct link (e.g. /docs/some-id opened fresh)
+  // is loaded before the initial /api/docs fetch has resolved — cheap after
+  // the first call since loadDocIndex() caches its own promise.
+  await loadDocIndex();
+  let entry = DOC_INDEX.find(d => d.id === docId);
+  // Not found under this id — it may be an old, pre-cleanup id from a
+  // bookmark or shared link (doc-discovery.js's id scheme has changed
+  // before). Don't give up yet: the request below can still resolve it via
+  // the backend's own legacy-id fallback (see GET /api/docs/:docId in
+  // server.js) — only return null if that also comes back empty.
   // Always fetch live documentation so DB/source fixes are visible immediately.
   // if (cache[docId]) return cache[docId];
   try {
     const res = await fetch(`${API_BASE}/docs/${docId}`);
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    if (!res.ok) {
+      if (!entry) return null;
+      throw new Error(`HTTP ${res.status}`);
+    }
     const data = await res.json();
-   const doc = {
+    // The backend resolves an old id to the doc's real, current doc_id —
+    // when that differs from what we requested, this was a legacy link;
+    // fall back to the canonical entry's metadata and flag the mismatch so
+    // the caller (loadDoc in App.js) can quietly fix the address bar.
+    const canonicalId = data.doc_id;
+    if (!entry) entry = DOC_INDEX.find(d => d.id === canonicalId) || rowToEntry(data);
+    const doc = {
       ...entry,
+      id: canonicalId,
       content: data.content,
       images: data.images || [],
       headings: data.headings || [],
       tags: data.tags || [],
       pdf_path: data.pdf_path,
+      redirectedFrom: canonicalId !== docId ? docId : null,
     };
-    cache[docId] = doc;
+    cache[canonicalId] = doc;
     return doc;
   } catch (err) {
+    if (!entry) return null;
     return {
       ...entry,
       content: `# ${entry.title}\n\n> ⚠️ **Backend not reachable.**\n>\n> Make sure the API server is running: \`npm start\` in the \`ce-backend\` folder.\n>\n> Expected at: \`${API_BASE}\`\n\n---\n\nFor help: [support@cellular-expert.com](mailto:support@cellular-expert.com)`,

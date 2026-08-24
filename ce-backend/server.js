@@ -12,6 +12,7 @@ const multer = require('multer');
 const fs = require('fs');
 const jwt = require('jsonwebtoken');
 const cookieParser = require('cookie-parser');
+const { legacyIdFromGithubPath } = require('./doc-discovery');
 
 const app = express();
 
@@ -121,7 +122,7 @@ app.get('/api/health', async (req, res) => {
 app.get('/api/docs', async (req, res) => {
   try {
     const { rows } = await pool.query(
-      `SELECT doc_id, title, product, category, github_path, display_order, tags
+      `SELECT doc_id, title, product, category, github_path, display_order, tags, parent_path
        FROM documents ORDER BY product, category, display_order`
     );
     res.json(rows);
@@ -134,7 +135,30 @@ app.get('/api/docs', async (req, res) => {
 app.get('/api/docs/:docId', async (req, res) => {
   try {
     const { docId } = req.params;
-    const docRes = await pool.query(`SELECT * FROM documents WHERE doc_id = $1`, [docId]);
+    let docRes = await pool.query(`SELECT * FROM documents WHERE doc_id = $1`, [docId]);
+
+    // Not found under its current id — doc-discovery.js's id scheme has
+    // changed before (numeric ordering prefixes used to leak into the id,
+    // e.g. ce-express-v73-3-1-31-audibility instead of today's
+    // ce-express-v73-ce-express-tools-audibility) and may again. Recompute
+    // what the OLD-style id would've been for each auto-discovered doc's
+    // github_path and see if the requested id matches one of those, so a
+    // bookmarked/shared link from before a rename keeps working — the
+    // response below still carries the doc's real, current doc_id, and the
+    // frontend uses that to fix the address bar (see fetchDoc in
+    // src/useGithubDocs.js).
+    if (docRes.rows.length === 0) {
+      const candidates = await pool.query(
+        `SELECT doc_id, product, github_path FROM documents WHERE github_path IS NOT NULL`
+      );
+      const match = candidates.rows.find(
+        (r) => legacyIdFromGithubPath(r.product, r.github_path) === docId
+      );
+      if (match) {
+        docRes = await pool.query(`SELECT * FROM documents WHERE doc_id = $1`, [match.doc_id]);
+      }
+    }
+
     if (docRes.rows.length === 0) return res.status(404).json({ error: 'Not found' });
 
     // Exclude inline UI icons (gear/book/button glyphs scraped alongside real

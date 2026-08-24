@@ -1,10 +1,10 @@
 import React, { useState, useEffect, useRef, useCallback, useMemo } from "react";
 import {
-  DOC_INDEX,
   fetchDoc,
   preloadAllDocs,
   SERVER_BASE,
-  syncLiveDocs,
+  loadDocIndex,
+  getDocIndex,
   getNav,
   API_BASE,
 } from "./useGithubDocs";
@@ -1035,7 +1035,7 @@ background:
 });
 
 // ── Hero Section ──────────────────────────────────────────────────────────────
-const HeroSection = ({ onDocsClick, onSupportClick }) => {
+const HeroSection = ({ onDocsClick, onSupportClick, docIndex }) => {
   const canvasRef = useRef(null);
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -1274,8 +1274,8 @@ const HeroSection = ({ onDocsClick, onSupportClick }) => {
           {/* Stats */}
           <div style={{ display: "flex", gap: 32, marginTop: 48 }}>
             {[
-              [`${DOC_INDEX.length}+`, "Docs"],
-              [`${new Set(DOC_INDEX.map((d) => d.product)).size}`, "Products"],
+              [`${docIndex.length}+`, "Docs"],
+              [`${new Set(docIndex.map((d) => d.product)).size}`, "Products"],
               ["24/7", "AI Support"],
             ].map(([n, l]) => (
               <div key={l}>
@@ -1853,6 +1853,96 @@ const AboutSection = () => (
 );
 
 // ── Docs Sidebar ──────────────────────────────────────────────────────────────
+// Renders one node of the nav tree built by useGithubDocs.buildNav(),
+// recursing into real nested folders (a "v7.3" version folder containing a
+// "CE Express Tools" folder containing pages, etc.) instead of the old fixed
+// two-level product/category shape. A folder with exactly one child that's
+// itself a page collapses straight into that page — no point showing a
+// header for a section that only ever holds one doc — which mirrors the old
+// sidebar's "only show a category header when it has more than one item"
+// rule, generalized to any depth.
+const NavTreeNode = React.memo(function NavTreeNode({
+  node,
+  depth,
+  pathKey,
+  activeDocId,
+  onSelect,
+  isOpen,
+  toggle,
+}) {
+  if (node.type === "doc") {
+    return (
+      <div
+        onClick={() => onSelect(node.id)}
+        style={{
+          padding: `5px 14px 5px ${14 + depth * 12}px`,
+          fontSize: 12.5,
+          lineHeight: 1.4,
+          cursor: "pointer",
+          color: activeDocId === node.id ? "var(--accent)" : "var(--text)",
+          background: activeDocId === node.id ? "var(--accent-l)" : "transparent",
+          borderLeft: `2px solid ${activeDocId === node.id ? "var(--accent)" : "transparent"}`,
+          transition: "all .1s",
+          marginBottom: 1,
+        }}
+      >
+        {node.label}
+      </div>
+    );
+  }
+
+  if (node.children.length === 1 && node.children[0].type === "doc") {
+    return (
+      <NavTreeNode
+        node={node.children[0]}
+        depth={depth}
+        pathKey={pathKey}
+        activeDocId={activeDocId}
+        onSelect={onSelect}
+        isOpen={isOpen}
+        toggle={toggle}
+      />
+    );
+  }
+
+  const open = isOpen(pathKey);
+  return (
+    <div>
+      <div
+        onClick={() => toggle(pathKey)}
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          padding: `6px 16px 6px ${16 + depth * 12}px`,
+          cursor: "pointer",
+          fontSize: 12,
+          fontWeight: 600,
+          color: open ? "var(--accent)" : "var(--text)",
+          userSelect: "none",
+          transition: "color 0.1s",
+        }}
+      >
+        <span>{node.label}</span>
+        <span style={{ fontSize: 10, opacity: 0.5 }}>{open ? "▼" : "▶"}</span>
+      </div>
+      {open &&
+        node.children.map((child) => (
+          <NavTreeNode
+            key={child.type === "doc" ? child.id : child.key}
+            node={child}
+            depth={depth + 1}
+            pathKey={`${pathKey}::${child.type === "doc" ? child.id : child.key}`}
+            activeDocId={activeDocId}
+            onSelect={onSelect}
+            isOpen={isOpen}
+            toggle={toggle}
+          />
+        ))}
+    </div>
+  );
+});
+
 const DocsSidebar = React.memo(function DocsSidebar({ activeDocId, onSelect, nav }) {
   const [openSecs, setOpenSecs] = useState({});
   const isOpen = (key) => openSecs[key] !== false;
@@ -1899,8 +1989,8 @@ const DocsSidebar = React.memo(function DocsSidebar({ activeDocId, onSelect, nav
           <span>Documentation Home</span>
         </div>
       </div>
-      {Object.entries(nav).map(([section, cats]) => (
-        <div key={section} style={{ padding: "4px 0 8px" }}>
+      {nav.map((product) => (
+        <div key={product.key} style={{ padding: "4px 0 8px" }}>
           <div
             style={{
               padding: "6px 16px 4px",
@@ -1912,67 +2002,20 @@ const DocsSidebar = React.memo(function DocsSidebar({ activeDocId, onSelect, nav
               fontFamily: "var(--font-mono)",
             }}
           >
-            {section}
+            {product.label}
           </div>
-          {Object.entries(cats)
-            .filter(([, items]) => items.length > 0)
-            .map(([cat, items]) => {
-              const key = `${section}::${cat}`;
-              const open = isOpen(key);
-              const multi = items.length > 1;
-              return (
-                <div key={cat}>
-                  {multi && (
-                    <div
-                      onClick={() => toggle(key)}
-                      style={{
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "space-between",
-                        padding: "6px 16px",
-                        cursor: "pointer",
-                        fontSize: 12,
-                        fontWeight: 600,
-                        color: open ? "var(--accent)" : "var(--text)",
-                        userSelect: "none",
-                        transition: "color 0.1s",
-                      }}
-                    >
-                      <span>{cat}</span>
-                      <span style={{ fontSize: 10, opacity: 0.5 }}>
-                        {open ? "▼" : "▶"}
-                      </span>
-                    </div>
-                  )}
-                  {open &&
-                    items.map((item) => (
-                      <div
-                        key={item.id}
-                        onClick={() => onSelect(item.id)}
-                        style={{
-                          padding: `5px 14px 5px ${multi ? 26 : 14}px`,
-                          fontSize: 12.5,
-                          lineHeight: 1.4,
-                          cursor: "pointer",
-                          color:
-                            activeDocId === item.id
-                              ? "var(--accent)"
-                              : "var(--text)",
-                          background:
-                            activeDocId === item.id
-                              ? "var(--accent-l)"
-                              : "transparent",
-                          borderLeft: `2px solid ${activeDocId === item.id ? "var(--accent)" : "transparent"}`,
-                          transition: "all .1s",
-                          marginBottom: 1,
-                        }}
-                      >
-                        {item.title}
-                      </div>
-                    ))}
-                </div>
-              );
-            })}
+          {product.children.map((child) => (
+            <NavTreeNode
+              key={child.type === "doc" ? child.id : child.key}
+              node={child}
+              depth={0}
+              pathKey={`${product.key}::${child.type === "doc" ? child.id : child.key}`}
+              activeDocId={activeDocId}
+              onSelect={onSelect}
+              isOpen={isOpen}
+              toggle={toggle}
+            />
+          ))}
         </div>
       ))}
       <div style={{ height: 32 }} />
@@ -2064,12 +2107,12 @@ const TOC = React.memo(function TOC({ toc }) {
 });
 
 // ── Docs Home ─────────────────────────────────────────────────────────────────
-const DocsHome = React.memo(function DocsHome({ onSelect, onSupportClick }) {
+const DocsHome = React.memo(function DocsHome({ onSelect, onSupportClick, docIndex }) {
   // Count documents per actual product value — no fallback bucket, so a
   // product that doesn't match one of the known keys below just won't be
   // shown, instead of silently being lumped into the wrong card.
   const counts = {};
-  DOC_INDEX.forEach((d) => {
+  docIndex.forEach((d) => {
     counts[d.product] = (counts[d.product] || 0) + 1;
   });
 
@@ -2433,7 +2476,7 @@ const DocsHome = React.memo(function DocsHome({ onSelect, onSupportClick }) {
 });
 
 // ── Doc Article ───────────────────────────────────────────────────────────────
-const DocArticle = React.memo(function DocArticle({ doc, onSelect }) {
+const DocArticle = React.memo(function DocArticle({ doc, onSelect, docIndex }) {
   const toc = extractTOC(doc.content);
   const [pc, bg] = PC[doc.product] || ["#64748b", "var(--bg3)"];
   return (
@@ -2572,7 +2615,7 @@ const DocArticle = React.memo(function DocArticle({ doc, onSelect }) {
         />
 
         {doc.related?.filter(
-          (r) => r.trim() && DOC_INDEX.find((d) => d.id === r.trim()),
+          (r) => r.trim() && docIndex.find((d) => d.id === r.trim()),
         ).length > 0 && (
           <div
             style={{
@@ -2597,10 +2640,10 @@ const DocArticle = React.memo(function DocArticle({ doc, onSelect }) {
             <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
               {doc.related
                 .filter(
-                  (r) => r.trim() && DOC_INDEX.find((d) => d.id === r.trim()),
+                  (r) => r.trim() && docIndex.find((d) => d.id === r.trim()),
                 )
                 .map((r) => {
-                  const rel = DOC_INDEX.find((d) => d.id === r.trim());
+                  const rel = docIndex.find((d) => d.id === r.trim());
                   return rel ? (
                     <div
                       key={r}
@@ -2971,15 +3014,15 @@ export default function App() {
   }, []);
   const [navVersion, setNavVersion] = useState(0);
 
-  // Documents created directly from the admin panel live only in Postgres —
-  // pull them into DOC_INDEX once on load so they show up in the sidebar too,
-  // not just in the admin's own document list.
+  // The doc list lives in Postgres, not in portal code — load it once on
+  // mount (this is also what admin-created docs and anything
+  // sync-from-github.js auto-discovered from the docs repo come in through)
+  // and re-derive nav/docIndex as state once it resolves.
   useEffect(() => {
-    syncLiveDocs().then((changed) => {
-      if (changed) setNavVersion((v) => v + 1);
-    });
+    loadDocIndex().then(() => setNavVersion((v) => v + 1));
   }, []);
   const nav = useMemo(() => getNav(), [navVersion]);
+  const docIndex = useMemo(() => getDocIndex(), [navVersion]);
 
   // Preload all docs in background so search has full-text data to work with
   useEffect(() => {
@@ -3039,6 +3082,15 @@ export default function App() {
     const result = await fetchDoc(id);
     setDoc(result);
     setLoading(false);
+    // A pre-cleanup/legacy id (e.g. an old bookmark) resolved to a doc that
+    // now lives under a different, current id — quietly swap the address
+    // bar and active-doc state to the real one instead of leaving a stale
+    // id sitting in the URL. New navigation always uses the current id
+    // already, so this only ever fires for an old inbound link.
+    if (result?.redirectedFrom) {
+      setActiveDocId(result.id);
+      window.history.replaceState({ view: "docs", docId: result.id }, "", `/docs/${encodeURIComponent(result.id)}`);
+    }
     if (anchorId) {
       // Wait a tick for the article HTML to actually be in the DOM before
       // trying to scroll to a heading inside it.
@@ -3130,6 +3182,7 @@ export default function App() {
               window.scrollTo(0, 0);
             }}
             onSupportClick={() => setView("support")}
+            docIndex={docIndex}
           />
 <ProductsSection onDocsClick={loadDoc} />
           <SolutionsSection />
@@ -3177,9 +3230,10 @@ export default function App() {
               <DocsHome
                 onSelect={loadDoc}
                 onSupportClick={() => setView("support")}
+                docIndex={docIndex}
               />
             ) : doc ? (
-              <DocArticle doc={doc} onSelect={loadDoc} />
+              <DocArticle doc={doc} onSelect={loadDoc} docIndex={docIndex} />
             ) : null}
           </div>
         </div>
