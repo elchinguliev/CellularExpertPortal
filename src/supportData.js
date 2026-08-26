@@ -3,7 +3,7 @@ export const KB = [
   { id:'ws-express', tags:['workspace','create','express','server','project'], title:'Creating a Workspace — CE Express',
     answer:`To create a workspace in CE Express:\n1. Log in → click **Workspaces** tool in left toolbar\n2. Click **New workspace**\n3. Enter workspace name, EPSG coordinate system code (e.g. 32635 for UTM35N), and draw the extent on the map\n4. Select your **Geodata set** (DEM + clutter)\n5. Click **Save**\n\nThe map zooms to the workspace extent and only objects in this workspace will be visible.\n\n→ See full docs: [Workspaces](#ce-express-workspace)` },
 
-  { id:'ws-pro', tags:['workspace','create','pro','desktop','arcgis'], title:'Creating a Workspace — CE Desktop Pro',
+  { id:'ws-pro', tags:['workspace','create','pro','desktop','arcgis'], title:'Creating a Workspace — CE Pro',
     answer:`To create a workspace in CE Desktop (Pro):\n1. Open ArcGIS Pro → CE toolbar → **Workspace Tool**\n2. Click **Create Workspace**\n3. Choose or create a File Geodatabase (.gdb)\n4. Enter workspace name\n5. Browse to your **geodata folder** (DEM, clutter, antennas)\n6. Select **projected coordinate system** (UTM or national grid — NOT WGS84)\n7. Click **Create**\n\n⚠️ Always use a projected coordinate system — geographic (lat/lon) will give inaccurate distance calculations.\n\n→ See full docs: [CE Pro Workspace](#ce-pro-workspace)` },
 
   { id:'rf-run', tags:['rf','prediction','run','coverage','how to','required'], title:'Running RF Prediction',
@@ -15,7 +15,7 @@ export const KB = [
   { id:'prop-models', tags:['propagation','model','okumura','cost231','ray tracing','which'], title:'Propagation Models Available',
     answer:`CE Express/Pro includes these propagation models:\n\n| Model | Frequency | Best For |\n|-------|-----------|----------|\n| Okumura-Hata | 150–1500 MHz | Rural/suburban macro |\n| COST-231 Hata | Up to 2 GHz | Urban/suburban macro |\n| COST-231 W-I | 800MHz–2GHz | Dense urban micro |\n| SPM | Configurable | General, can be tuned |\n| Ray Tracing 3D | Any | Highest accuracy, needs 3D buildings |\n| CE Custom | Any | Tuned against drive-test data |\n\nCE evaluates LOS/NLOS1/NLOS per pixel and applies the most appropriate model.\n\n→ Full guide: [Prediction Models](#ce-express-prediction-models)` },
 
-  { id:'install-pro', tags:['install','installation','activate','activation','ce pro','desktop','arcgis pro'], title:'Installing CE Desktop Pro',
+  { id:'install-pro', tags:['install','installation','activate','activation','ce pro','desktop','arcgis pro'], title:'Installing CE Pro',
     answer:`**Installation order (important!):**\n1. Install **ArcGIS Pro** first (v2.8 or later)\n2. Run **CE Desktop installer** as Administrator\n\n**Activation:**\n1. Open ArcGIS Pro → **Project → Settings → Licensing**\n2. Enable the **CE Desktop** extension\n3. A User Key is generated → send it to support@cellular-expert.com\n4. You receive an activation file → apply it in License Manager\n\n**For upgrades:** Uninstall old CE version first, then install new one.\n\n→ Full guide: [Installation](#ce-pro-installation)` },
 
   { id:'install-express', tags:['install','express','server','admin','prerequisites'], title:'Installing CE Express (Server)',

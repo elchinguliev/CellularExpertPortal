@@ -11,8 +11,11 @@ const SERVER_BASE = 'http://localhost:4000'; // used for /downloads/... static P
 // -configured docs still carry (e.g. "Data Management") — the latter has no
 // digits or dashes to strip, so it passes through unchanged.
 const ACRONYMS = {
-  ce: 'CE', rf: 'RF', api: 'API', dxf: 'DXF', emf: 'EMF', hcm: 'HCM',
-  fs: 'FS', gis: 'GIS', pdf: 'PDF', dem: 'DEM', csv: 'CSV', '3d': '3D',
+  ce: 'CE', rf: 'RF', api: 'API', dxf: 'DXF', emf: 'EMF', hcm: 'HCM', mw: 'MW',
+  fs: 'FS', gis: 'GIS', pdf: 'PDF', dem: 'DEM', csv: 'CSV', cpe: 'CPE',
+  rcp: 'RCP', rlp: 'RLP', rl: 'RL', sat: 'SAT', fwa: 'FWA', wifi: 'WiFi',
+  gsm: 'GSM', cdma: 'CDMA', lte: 'LTE', cbrs: 'CBRS',
+  '2g': '2G', '3g': '3G', '4g': '4G', '5g': '5G', '3d': '3D',
 };
 
 function humanizeSegment(rawName = '') {
@@ -62,7 +65,7 @@ function keyMin(a, b) {
 // whatever's actually in the docs repo — see ce-backend/doc-discovery.js.
 const PRODUCT_LABELS = {
   'CE Express': 'CE Express',
-  'CE Pro': 'CE Desktop Pro',
+  'CE Pro': 'CE Pro',
   'Both': 'Geodata & Data',
   'Inventory3D': 'Inventory3D',
 };
@@ -89,6 +92,7 @@ function rowToEntry(row) {
     product: row.product,
     category: row.category,
     order: row.display_order ?? 99,
+    nav_group_order: Number.isFinite(row.nav_group_order) ? row.nav_group_order : 0,
     // Deliberately NOT coerced to [] here — null vs. a real (possibly
     // empty) array is the signal buildNav()/leafSortKey() use to tell "this
     // doc's nav placement comes from real folder discovery" apart from
@@ -147,7 +151,11 @@ function leafSortKey(doc) {
   return [Number.isFinite(doc.order) ? doc.order : 99];
 }
 
-function getOrCreateFolder(parent, rawSegment) {
+function navGroupOrder(doc) {
+  return Number.isFinite(doc.nav_group_order) ? doc.nav_group_order : 0;
+}
+
+function getOrCreateFolder(parent, rawSegment, groupOrder) {
   let node = parent.children.find((c) => c.type === 'folder' && c.key === rawSegment);
   if (!node) {
     node = {
@@ -155,11 +163,22 @@ function getOrCreateFolder(parent, rawSegment) {
       key: rawSegment,
       label: humanizeSegment(rawSegment),
       sortKey: numericPrefixKey(rawSegment),
+      navGroupOrder: groupOrder,
       children: [],
     };
     parent.children.push(node);
+  } else {
+    node.navGroupOrder = Math.min(node.navGroupOrder, groupOrder);
   }
   return node;
+}
+
+function finalizeGroupOrder(node) {
+  if (node.type === 'doc') return node.navGroupOrder;
+  node.children.forEach((child) => {
+    node.navGroupOrder = Math.min(node.navGroupOrder, finalizeGroupOrder(child));
+  });
+  return node.navGroupOrder;
 }
 
 // A folder that has no numeric prefix of its own (a synthetic category
@@ -182,7 +201,7 @@ function sortTree(node) {
   if (node.type !== 'folder') return;
   node.children.forEach(sortTree);
   node.children.sort(
-    (a, b) => compareKeys(a.sortKey, b.sortKey) || a.label.localeCompare(b.label)
+    (a, b) => a.navGroupOrder - b.navGroupOrder || compareKeys(a.sortKey, b.sortKey) || a.label.localeCompare(b.label)
   );
 }
 
@@ -191,20 +210,24 @@ export function buildNav(docIndex) {
 
   docIndex.forEach((doc) => {
     if (!productNodes.has(doc.product)) {
-      productNodes.set(doc.product, { type: 'folder', key: doc.product, children: [] });
+      productNodes.set(doc.product, { type: 'folder', key: doc.product, navGroupOrder: Infinity, children: [] });
     }
     let cursor = productNodes.get(doc.product);
 
+    const groupOrder = navGroupOrder(doc);
     const chain = Array.isArray(doc.parent_path) ? doc.parent_path : [doc.category];
     chain.forEach((rawSegment) => {
-      cursor = getOrCreateFolder(cursor, rawSegment);
+      cursor = getOrCreateFolder(cursor, rawSegment, groupOrder);
     });
 
-    cursor.children.push({ type: 'doc', id: doc.id, label: doc.title, sortKey: leafSortKey(doc) });
+    cursor.children.push({ type: 'doc', id: doc.id, label: doc.title, sortKey: leafSortKey(doc), navGroupOrder: groupOrder });
   });
 
   productNodes.forEach((node) => {
-    node.children.forEach(finalizeSortKeys);
+    node.children.forEach((child) => {
+      finalizeSortKeys(child);
+      finalizeGroupOrder(child);
+    });
     sortTree(node);
   });
 

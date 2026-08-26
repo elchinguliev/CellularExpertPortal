@@ -1,6 +1,6 @@
 # Cellular Expert Portal
 
-A support & documentation portal for the Cellular Expert product family (CE Express, CE Desktop Pro, Inventory3D, Geodata), with:
+A support & documentation portal for the Cellular Expert product family (CE Express, CE Pro, Inventory3D, Geodata), with:
 
 - **Documentation browser** — content synced from a GitHub docs repo into PostgreSQL
 - **AI support chatbot** — a RAG (Retrieval-Augmented Generation) pipeline over the same documentation, answered by a local LLM (Ollama)

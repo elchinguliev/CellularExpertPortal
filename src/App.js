@@ -1224,7 +1224,7 @@ const HeroSection = ({ onDocsClick, onSupportClick, docIndex }) => {
               maxWidth: 520,
             }}
           >
-            Browse complete guides for CE Express, CE Desktop Pro,
+            Browse complete guides for CE Express, CE Pro,
             Inventory3D, and Geodata — or ask our{" "}
             <strong style={{ color: "var(--text-bright)" }}>
               AI assistant
@@ -1322,7 +1322,7 @@ const HeroSection = ({ onDocsClick, onSupportClick, docIndex }) => {
 const ProductsSection = ({ onDocsClick }) => {
   const products = [
     {
-      name: "CE Desktop Pro",
+      name: "CE Pro",
       tag: "ArcGIS Pro",
       icon: "🖥",
       color: "#00b4ff",
@@ -1368,7 +1368,7 @@ const ProductsSection = ({ onDocsClick }) => {
       tag: "Data Requirements",
       icon: "🗺",
       color: "#f59e0b",
-      desc: "Geographic data foundation shared across CE Express and CE Desktop Pro — terrain, clutter, buildings, and antenna patterns.",
+      desc: "Geographic data foundation shared across CE Express and CE Pro — terrain, clutter, buildings, and antenna patterns.",
       features: [
         "DTM / terrain grid formats",
         "Clutter classes & heights",
@@ -2126,7 +2126,7 @@ const DocsHome = React.memo(function DocsHome({ onSelect, onSupportClick, docInd
       firstDoc: "ce-express-overview-merged",
     },
     {
-      key: "CE Desktop Pro",
+      key: "CE Pro",
       product: "CE Pro",
       icon: "🖥",
       color: "#00d4a0",
@@ -2155,7 +2155,7 @@ const DocsHome = React.memo(function DocsHome({ onSelect, onSupportClick, docInd
     {
       n: "01",
       title: "Pick a product",
-      desc: "Choose CE Express, CE Desktop Pro, Geodata, Inventory3D, or Training below.",
+      desc: "Choose CE Express, CE Pro, Geodata, Inventory3D, or Training below.",
     },
     {
       n: "02",
@@ -2216,7 +2216,7 @@ const DocsHome = React.memo(function DocsHome({ onSelect, onSupportClick, docInd
           <strong style={{ color: "var(--text-bright)" }}>CE Express</strong>{" "}
           (web),{" "}
           <strong style={{ color: "var(--text-bright)" }}>
-            CE Desktop Pro
+            CE Pro
           </strong>{" "}
           (ArcGIS Pro — RCP, RLP, Indoor, Sound, EMF),{" "}
           <strong style={{ color: "var(--text-bright)" }}>Inventory3D</strong>,
@@ -2699,7 +2699,7 @@ const SupportSection = ({ onSupportClick }) => {
       icon: "✦",
       color: "#5b4feb",
       title: "AI Chat Assistant",
-      desc: "A documentation-aware chatbot that instantly answers questions about CE Express, CE Desktop Pro, Geodata, and Inventory3D — pulling the exact article you need straight into the conversation, no digging through pages required.",
+      desc: "A documentation-aware chatbot that instantly answers questions about CE Express, CE Pro, Geodata, and Inventory3D — pulling the exact article you need straight into the conversation, no digging through pages required.",
     },
     {
       icon: "◉",

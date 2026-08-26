@@ -66,6 +66,11 @@ ALTER TABLE documents ADD COLUMN IF NOT EXISTS search_vector tsvector;
 ALTER TABLE documents ADD COLUMN IF NOT EXISTS parent_path TEXT[];
 ALTER TABLE documents ALTER COLUMN parent_path DROP DEFAULT;
 
+-- Root-level navigation priority, distinct from a document's numeric reading
+-- order. This keeps versioned documentation before Training, and Training
+-- before an Administrator Guide without changing any page-level ordering.
+ALTER TABLE documents ADD COLUMN IF NOT EXISTS nav_group_order INTEGER NOT NULL DEFAULT 0;
+
 CREATE OR REPLACE FUNCTION documents_search_vector_update() RETURNS trigger AS $$
 BEGIN
   NEW.search_vector :=

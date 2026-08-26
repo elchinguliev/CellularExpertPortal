@@ -122,7 +122,7 @@ app.get('/api/health', async (req, res) => {
 app.get('/api/docs', async (req, res) => {
   try {
     const { rows } = await pool.query(
-      `SELECT doc_id, title, product, category, github_path, display_order, tags, parent_path
+      `SELECT doc_id, title, product, category, github_path, display_order, tags, parent_path, nav_group_order
        FROM documents ORDER BY product, category, display_order`
     );
     res.json(rows);

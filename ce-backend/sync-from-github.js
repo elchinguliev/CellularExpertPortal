@@ -216,8 +216,8 @@ async function syncDoc(entry) {
   const headings = extractHeadings(content);
 
   await pool.query(
-    `INSERT INTO documents (doc_id, title, product, category, tags, github_path, content, display_order, pdf_path, parent_path, updated_at)
-     VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10, NOW())
+    `INSERT INTO documents (doc_id, title, product, category, tags, github_path, content, display_order, pdf_path, parent_path, nav_group_order, updated_at)
+     VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11, NOW())
      ON CONFLICT (doc_id) DO UPDATE SET
        title = EXCLUDED.title,
        product = EXCLUDED.product,
@@ -228,6 +228,7 @@ async function syncDoc(entry) {
        display_order = EXCLUDED.display_order,
        pdf_path = EXCLUDED.pdf_path,
        parent_path = EXCLUDED.parent_path,
+       nav_group_order = EXCLUDED.nav_group_order,
        updated_at = NOW()`,
     [
       entry.id, title, entry.product, entry.category, tags, entry.path, content,
@@ -238,6 +239,7 @@ async function syncDoc(entry) {
       // an auto-discovered root, with no group folder). See buildNav() in
       // src/useGithubDocs.js, which relies on telling those two cases apart.
       Array.isArray(entry.parent_path) ? entry.parent_path : null,
+      entry.nav_group_order ?? 0,
     ]
   );
 

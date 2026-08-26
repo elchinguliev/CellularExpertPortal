@@ -7,19 +7,20 @@
 //
 // Only ONE thing stays hand-configured: which root folders are actually
 // organized into real nested sections (AUTO_DISCOVER_ROOTS below). Anywhere
-// else in the docs repo still uses flat, hand-grouped files (CE Pro,
-// Geodata, Inventory3D, the admin guide, training PDFs) — those have no
-// folder signal to derive a category or reading order from, so they stay
-// listed explicitly in doc-index.json until they get the same folder
-// treatment. Add a root here and its whole subtree — at any depth — starts
-// showing up with no further code change.
+// else in the docs repo still uses flat, hand-grouped files (Geodata,
+// Inventory3D, the administrator guide) — those have no folder signal to
+// derive a category or reading order from, so they stay listed explicitly in
+// doc-index.json until they get the same folder treatment. Add a root here
+// and its whole subtree — at any depth — starts showing up with no further
+// code change.
 //
-// A root's own folder (e.g. "v73-sections") is a structural/version
-// container, not something a reader should ever see as a nav item — it's
-// stripped out of `parent_path` (the real, visible nesting) and folded into
-// the id/route instead as a version token (see idFromParts below). Folders
-// *below* the root (e.g. "3-ce-express-tools") are real, visible nav groups
-// and stay in parent_path untouched, at whatever depth they're nested.
+// A root's own folder is normally a structural/version container, not
+// something a reader should ever see as a nav item — it's stripped out of
+// `parent_path` (the real, visible nesting) and folded into the id/route
+// instead as a version token (see idFromParts below). A root can opt into a
+// visible `navPath` instead (for a non-version type such as Training).
+// Folders below the root always stay in parent_path untouched, at whatever
+// depth they're nested.
 
 const GITHUB_RAW = process.env.GITHUB_RAW_BASE || '';
 const ghMatch = GITHUB_RAW.match(/raw\.githubusercontent\.com\/([^/]+)\/([^/]+)\/([^/]+)/);
@@ -28,7 +29,10 @@ const GH_REPO = ghMatch?.[2];
 const GH_BRANCH = ghMatch?.[3] || 'main';
 
 const AUTO_DISCOVER_ROOTS = [
-  { product: 'CE Express', rootPath: 'docs/ce-express/user-guide/v73-sections' },
+  { product: 'CE Express', rootPath: 'docs/ce-express/v7.3', navGroupOrder: 0 },
+  { product: 'CE Express', rootPath: 'docs/ce-express/training', navPath: ['training'], navGroupOrder: 1 },
+  { product: 'CE Pro', rootPath: 'docs/ce-pro/v5.0', navGroupOrder: 0 },
+  { product: 'CE Pro', rootPath: 'docs/ce-pro/training', navPath: ['training'], navGroupOrder: 1 },
 ];
 
 // Small acronym allowlist so filename-derived titles read naturally
@@ -37,9 +41,11 @@ const AUTO_DISCOVER_ROOTS = [
 // vast majority of real filenames. A document can always override this by
 // starting its markdown with `---\ntitle: Something Nicer\n---`.
 const ACRONYMS = {
-  ce: 'CE', rf: 'RF', api: 'API', dxf: 'DXF', emf: 'EMF', hcm: 'HCM',
-  fs: 'FS', gis: 'GIS', pdf: 'PDF', dem: 'DEM', csv: 'CSV',
-  '3d': '3D',
+  ce: 'CE', rf: 'RF', api: 'API', dxf: 'DXF', emf: 'EMF', hcm: 'HCM', mw: 'MW',
+  fs: 'FS', gis: 'GIS', pdf: 'PDF', dem: 'DEM', csv: 'CSV', cpe: 'CPE',
+  rcp: 'RCP', rlp: 'RLP', rl: 'RL', sat: 'SAT', fwa: 'FWA', wifi: 'WiFi',
+  gsm: 'GSM', cdma: 'CDMA', lte: 'LTE', cbrs: 'CBRS',
+  '2g': '2G', '3g': '3G', '4g': '4G', '5g': '5G', '3d': '3D',
 };
 
 function stripExt(rawName) {
@@ -108,6 +114,10 @@ function splitRelPath(githubPath, rootPath) {
   return { middleFolders: segments, filename };
 }
 
+function isHiddenPath({ middleFolders, filename }) {
+  return [...middleFolders, filename].some((segment) => segment.startsWith('_'));
+}
+
 // product: ce-express, version: v73, parent: [ce-express-tools], page: audibility
 // -> ce-express-v73-ce-express-tools-audibility
 function idFromParts(product, rootSlug, middleFolders, filename, slugify) {
@@ -174,7 +184,10 @@ async function discoverDocs() {
   const entries = [];
   for (const root of AUTO_DISCOVER_ROOTS) {
     const { rootFolderName, rootSlug } = rootInfo(root.rootPath);
-    const matches = files.filter((f) => splitRelPath(f.path, root.rootPath));
+    const matches = files.filter((f) => {
+      const split = splitRelPath(f.path, root.rootPath);
+      return split && !isHiddenPath(split);
+    });
 
     for (const f of matches) {
       const { middleFolders, filename } = splitRelPath(f.path, root.rootPath);
@@ -191,7 +204,8 @@ async function discoverDocs() {
         title: humanizeSegment(filename),
         product: root.product,
         category: humanizeSegment(lastFolder),
-        parent_path: middleFolders,
+        parent_path: [...(root.navPath || []), ...middleFolders],
+        nav_group_order: root.navGroupOrder ?? 0,
         order: leadingNumber ? Number(leadingNumber[1]) : 99,
       });
     }
