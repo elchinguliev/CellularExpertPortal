@@ -30,9 +30,9 @@ function esc(s = "") {
     .replace(/>/g, "&gt;");
 }
 
-// Older synced records may still contain the local development API origin.
-// Keep them deployable without mutating the database by routing them through
-// the configured public API base at render time.
+// Current sync records intentionally use a root-relative `/api/...` URL so
+// development can use CRA's API proxy and production can use IIS's same-origin
+// reverse proxy. Older synced records may still contain a localhost API origin.
 function normalizePortalUrl(value = "") {
   return String(value).replace(
     /^https?:\/\/(?:localhost|127\.0\.0\.1)(?::\d+)?(\/api\/synced-images\?[^\s"')]+)/i,
