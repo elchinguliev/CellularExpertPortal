@@ -1,5 +1,9 @@
-const API_BASE = 'http://localhost:4000/api';
-const SERVER_BASE = 'http://localhost:4000'; // used for /downloads/... static PDF files
+// Production is normally served by IIS with the API proxied at /api. Local
+// development keeps the old ports unless an explicit build-time override is set.
+const API_BASE = process.env.REACT_APP_API_BASE || (
+  process.env.NODE_ENV === 'production' ? '/api' : 'http://localhost:4000/api'
+);
+const SERVER_BASE = API_BASE.endsWith('/api') ? API_BASE.slice(0, -4) : API_BASE;
 
 // ── Display-name / sort-order helpers ────────────────────────────────────────
 // File and folder names carry numeric prefixes purely to control ordering —
@@ -66,17 +70,17 @@ function keyMin(a, b) {
 const PRODUCT_LABELS = {
   'CE Express': 'CE Express',
   'CE Pro': 'CE Pro',
-  'Both': 'Geodata & Data',
+  'Geodata': 'Geodata',
   'Inventory3D': 'Inventory3D',
 };
-const PRODUCT_ORDER = ['CE Express', 'CE Pro', 'Both', 'Inventory3D'];
+const PRODUCT_ORDER = ['CE Express', 'CE Pro', 'Geodata', 'Inventory3D'];
 
 // ── Doc index ─────────────────────────────────────────────────────────────────
 // The full doc list now comes from Postgres (`/api/docs`) instead of a
 // hand-maintained array — every row already reflects whatever
-// sync-from-github.js last pulled from the docs repo (auto-discovered
-// nested docs and the still-flat/manually-categorized ones alike), plus any
-// doc created directly from the admin panel. DOC_INDEX is populated in
+// sync-from-github.js last pulled from the docs repo (auto-discovered nested
+// docs plus the still-flat Administrator Guide and admin-created docs).
+// DOC_INDEX is populated in
 // place (same array reference) so existing `.find()`/`.map()` call sites
 // keep working once loadDocIndex() resolves; getDocIndex()/getNav() exist
 // so React code can re-read it as state after that happens (see App.js).
@@ -128,9 +132,9 @@ export function getDocIndex() {
 // each doc nests under its actual `parent_path` folder chain (e.g.
 // ["3-ce-express-tools"], BELOW the invisible auto-discovery root — see
 // doc-discovery.js) when it has one, or under a single synthetic level
-// named after its flat `category` when it doesn't (CE Pro/Geodata/
-// Inventory3D and admin-created docs, none of which live in a folder
-// structure that encodes grouping).
+// named after its flat `category` when it doesn't (the Administrator Guide
+// and admin-created docs, which have no folder structure that encodes
+// grouping).
 //
 // `parent_path` being a real array (even an empty one, for a doc sitting
 // directly in the discovery root with no group folder) vs. null is exactly
@@ -153,6 +157,32 @@ function leafSortKey(doc) {
 
 function navGroupOrder(doc) {
   return Number.isFinite(doc.nav_group_order) ? doc.nav_group_order : 0;
+}
+
+// Product entry points are always selected from the primary documentation
+// group. This keeps product cards on the versioned guide even when the same
+// product also has Training or an Administrator Guide in later nav groups.
+// For recursively discovered guides, a page at the discovery root is the
+// product's natural landing page; flat/manual docs fall back to their existing
+// curated order.
+export function getProductLandingDocId(product, docIndex = DOC_INDEX) {
+  const mainDocs = docIndex.filter(
+    (doc) => doc.product === product && navGroupOrder(doc) === 0
+  );
+
+  mainDocs.sort((a, b) => {
+    const aIsRootPage = Array.isArray(a.parent_path) && a.parent_path.length === 0;
+    const bIsRootPage = Array.isArray(b.parent_path) && b.parent_path.length === 0;
+    if (aIsRootPage !== bIsRootPage) return aIsRootPage ? -1 : 1;
+
+    return (
+      compareKeys(leafSortKey(a), leafSortKey(b)) ||
+      a.title.localeCompare(b.title) ||
+      a.id.localeCompare(b.id)
+    );
+  });
+
+  return mainDocs[0]?.id || null;
 }
 
 function getOrCreateFolder(parent, rawSegment, groupOrder) {

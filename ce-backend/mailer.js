@@ -5,6 +5,13 @@
 require('dotenv').config();
 const nodemailer = require('nodemailer');
 
+const escapeHtml = (value) => String(value ?? '')
+  .replace(/&/g, '&amp;')
+  .replace(/</g, '&lt;')
+  .replace(/>/g, '&gt;')
+  .replace(/"/g, '&quot;')
+  .replace(/'/g, '&#39;');
+
 const transporter = nodemailer.createTransport({
   service: 'gmail',
   auth: {
@@ -20,7 +27,7 @@ async function sendWelcomeEmail(toEmail, name) {
     subject: 'Welcome to Cellular Expert Support',
     html: `
       <div style="font-family: Arial, sans-serif; max-width: 480px; margin: 0 auto;">
-        <h2 style="color:#5b4feb;">Welcome, ${name}! 👋</h2>
+        <h2 style="color:#5b4feb;">Welcome, ${escapeHtml(name)}! 👋</h2>
         <p>Your Cellular Expert Support account has been created successfully.</p>
         <p>You can now sign in to ask questions, browse documentation, and open support tickets.</p>
         <p style="color:#888; font-size:12px; margin-top:24px;">
@@ -39,7 +46,7 @@ async function sendPasswordChangedEmail(toEmail, name) {
     html: `
       <div style="font-family: Arial, sans-serif; max-width: 480px; margin: 0 auto;">
         <h2 style="color:#5b4feb;">Password Changed</h2>
-        <p>Hi ${name}, your Cellular Expert Support password was just changed.</p>
+        <p>Hi ${escapeHtml(name)}, your Cellular Expert Support password was just changed.</p>
         <p style="color:#888; font-size:12px; margin-top:24px;">
           If you did not make this change, please contact support@cellular-expert.com immediately.
         </p>
@@ -76,7 +83,7 @@ async function sendVerificationCode(toEmail, code, purpose) {
         <h2 style="color:#5b4feb;">${heading}</h2>
         <p>${intro}</p>
         <div style="font-size:28px; font-weight:700; letter-spacing:6px; background:#f5f4ff; color:#5b4feb; padding:16px; border-radius:10px; text-align:center; margin:16px 0;">
-          ${code}
+          ${escapeHtml(code)}
         </div>
         <p style="color:#888; font-size:12px;">This code expires in 10 minutes. If you did not request this, you can safely ignore this email.</p>
       </div>
@@ -99,13 +106,13 @@ async function sendSupportRequest({ email, company, fullName, product, descripti
       <div style="font-family: Arial, sans-serif; max-width: 560px; margin: 0 auto;">
         <h2 style="color:#5b4feb;">New Support Request</h2>
         <table style="width:100%; border-collapse: collapse; font-size:13px;">
-          <tr><td style="padding:6px 0; color:#888; width:120px;">Full name</td><td style="padding:6px 0;">${fullName}</td></tr>
-          <tr><td style="padding:6px 0; color:#888;">Email</td><td style="padding:6px 0;">${email}</td></tr>
-          <tr><td style="padding:6px 0; color:#888;">Company</td><td style="padding:6px 0;">${company || '—'}</td></tr>
-          <tr><td style="padding:6px 0; color:#888;">Product</td><td style="padding:6px 0;">${product || '—'}</td></tr>
+          <tr><td style="padding:6px 0; color:#888; width:120px;">Full name</td><td style="padding:6px 0;">${escapeHtml(fullName)}</td></tr>
+          <tr><td style="padding:6px 0; color:#888;">Email</td><td style="padding:6px 0;">${escapeHtml(email)}</td></tr>
+          <tr><td style="padding:6px 0; color:#888;">Company</td><td style="padding:6px 0;">${escapeHtml(company || '—')}</td></tr>
+          <tr><td style="padding:6px 0; color:#888;">Product</td><td style="padding:6px 0;">${escapeHtml(product || '—')}</td></tr>
         </table>
         <p style="color:#888; font-size:12px; margin-top:16px; margin-bottom:4px;">Question / description:</p>
-        <div style="background:#f5f4ff; padding:14px 16px; border-radius:10px; font-size:13px; white-space:pre-line;">${description}</div>
+        <div style="background:#f5f4ff; padding:14px 16px; border-radius:10px; font-size:13px; white-space:pre-line;">${escapeHtml(description)}</div>
         ${attachments.length > 0 ? `<p style="color:#888; font-size:12px; margin-top:16px;">${attachments.length} screenshot(s) attached.</p>` : ''}
       </div>
     `,

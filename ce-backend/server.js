@@ -12,32 +12,96 @@ const multer = require('multer');
 const fs = require('fs');
 const jwt = require('jsonwebtoken');
 const cookieParser = require('cookie-parser');
+const crypto = require('crypto');
 const { legacyIdFromGithubPath } = require('./doc-discovery');
 
 const app = express();
 
-// credentials: true + an explicit origin (not "*") are both required for the
-// browser to actually send/accept the session cookie set below.
+const JWT_SECRET = process.env.JWT_SECRET;
+if (!JWT_SECRET || JWT_SECRET.length < 32) {
+  throw new Error('JWT_SECRET must be configured with at least 32 characters.');
+}
+
+const corsOrigins = (process.env.CORS_ORIGINS || '')
+  .split(',')
+  .map((origin) => origin.trim())
+  .filter(Boolean);
+if (corsOrigins.length === 0) {
+  throw new Error('CORS_ORIGINS must list the permitted frontend origin(s).');
+}
+
+// IIS terminates TLS before proxying to Node. Trust only its immediate proxy
+// hop, so req.secure and secure cookies work without trusting client headers.
+if (process.env.NODE_ENV === 'production') app.set('trust proxy', 1);
+
+// credentials: true + explicit origins are required for browser session cookies.
 app.use(cors({
-  origin: [
-    'http://localhost:3000',
-    'http://10.8.0.11:3000'
-  ],
+  origin: corsOrigins,
   credentials: true,
 }));
-app.use(express.json());
+app.disable('x-powered-by');
+app.use((req, res, next) => {
+  res.set({
+    'X-Content-Type-Options': 'nosniff',
+    'X-Frame-Options': 'SAMEORIGIN',
+    'Referrer-Policy': 'strict-origin-when-cross-origin',
+  });
+  next();
+});
+app.use(express.json({ limit: '1mb' }));
 app.use(cookieParser());
 
 // ── Session auth (JWT stored in an httpOnly cookie) ───────────────────────────
 // Replaces trusting whatever role the frontend happens to have in
 // localStorage — the server now verifies who's making each request instead
 // of just taking the client's word for it.
-const JWT_SECRET = process.env.JWT_SECRET || 'dev-only-secret-change-me';
 const COOKIE_NAME = 'ce_session';
+const SESSION_MAX_AGE_MS = 7 * 24 * 60 * 60 * 1000;
+
+function serverError(res, err) {
+  console.error('Request failed:', err.message);
+  return res.status(500).json({ error: 'An unexpected server error occurred.' });
+}
+
+function createRateLimiter({ windowMs, max, key }) {
+  const attempts = new Map();
+  return (req, res, next) => {
+    const now = Date.now();
+    const bucketKey = key(req);
+    const current = attempts.get(bucketKey);
+    const entries = current && now - current.startedAt < windowMs
+      ? current
+      : { startedAt: now, count: 0 };
+    entries.count += 1;
+    attempts.set(bucketKey, entries);
+    if (entries.count > max) {
+      res.set('Retry-After', String(Math.ceil((windowMs - (now - entries.startedAt)) / 1000)));
+      return res.status(429).json({ error: 'Too many requests. Please try again later.' });
+    }
+    next();
+  };
+}
+
+const authAttemptLimiter = createRateLimiter({
+  windowMs: 15 * 60 * 1000,
+  max: 10,
+  key: (req) => `${req.ip}:${String(req.body?.email || '').trim().toLowerCase()}`,
+});
+const emailAttemptLimiter = createRateLimiter({
+  windowMs: 15 * 60 * 1000,
+  max: 5,
+  key: (req) => `${req.ip}:${String(req.body?.email || '').trim().toLowerCase()}`,
+});
 
 function signSession(user) {
   return jwt.sign(
-    { id: user.id, name: user.name, email: user.email, role: user.role },
+    {
+      id: user.id,
+      name: user.name,
+      email: user.email,
+      role: user.role,
+      sessionVersion: user.session_version ?? 0,
+    },
     JWT_SECRET,
     { expiresIn: '7d' }
   );
@@ -48,7 +112,7 @@ function setSessionCookie(res, user) {
     httpOnly: true,       // not readable from JS — protects against XSS reading it
     sameSite: 'lax',
     secure: process.env.NODE_ENV === 'production',
-    maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+    maxAge: SESSION_MAX_AGE_MS,
   });
 }
 
@@ -67,15 +131,44 @@ function readSession(req, res, next) {
 }
 app.use(readSession);
 
-function requireAuth(req, res, next) {
-  if (!req.user) return res.status(401).json({ error: 'Please log in.' });
-  next();
+async function loadCurrentUser(req) {
+  if (!req.user) return null;
+  const { rows } = await pool.query(
+    'SELECT id, name, email, role, session_version FROM users WHERE id = $1 AND deleted_at IS NULL',
+    [req.user.id],
+  );
+  return rows[0] || null;
 }
 
-function requireAdmin(req, res, next) {
+async function requireAuth(req, res, next) {
   if (!req.user) return res.status(401).json({ error: 'Please log in.' });
-  if (req.user.role !== 'admin') return res.status(403).json({ error: 'Admins only.' });
-  next();
+  try {
+    const user = await loadCurrentUser(req);
+    if (!user || req.user.sessionVersion !== user.session_version) {
+      return res.status(401).json({ error: 'Please log in.' });
+    }
+    req.user = user;
+    next();
+  } catch (err) {
+    serverError(res, err);
+  }
+}
+
+async function requireAdmin(req, res, next) {
+  if (!req.user) return res.status(401).json({ error: 'Please log in.' });
+  try {
+    // Look up the role on each privileged request so a role change takes
+    // effect immediately, rather than when an existing JWT expires.
+    const user = await loadCurrentUser(req);
+    if (!user || req.user.sessionVersion !== user.session_version) {
+      return res.status(401).json({ error: 'Please log in.' });
+    }
+    if (user.role !== 'admin') return res.status(403).json({ error: 'Admins only.' });
+    req.user = user;
+    next();
+  } catch (err) {
+    serverError(res, err);
+  }
 }
 
 function blockDocumentationEditing(req, res) {
@@ -97,8 +190,6 @@ app.use('/images', express.static(path.join(__dirname, 'public', 'images')));
 
 // Serves ticket screenshots at:
 //   http://localhost:4000/ticket-attachments/<ticket-id>/<file>.png
-app.use('/ticket-attachments', express.static(path.join(__dirname, 'public', 'ticket-attachments')));
-
 const pool = new Pool({
   host: process.env.DB_HOST,
   port: process.env.DB_PORT,
@@ -114,7 +205,8 @@ app.get('/api/health', async (req, res) => {
     await pool.query('SELECT 1');
     res.json({ ok: true, db: 'connected' });
   } catch (err) {
-    res.status(500).json({ ok: false, error: err.message });
+    console.error('Health check failed:', err.message);
+    res.status(503).json({ ok: false });
   }
 });
 
@@ -127,7 +219,7 @@ app.get('/api/docs', async (req, res) => {
     );
     res.json(rows);
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    serverError(res, err);
   }
 });
 
@@ -185,7 +277,7 @@ const imagesRes = await pool.query(
       headings: headingsRes.rows,
     });
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    serverError(res, err);
   }
 });
 
@@ -208,7 +300,7 @@ app.get('/api/search', async (req, res) => {
     );
     res.json(rows);
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    serverError(res, err);
   }
 });
 
@@ -224,60 +316,42 @@ app.post('/api/docs/:docId/images', blockDocumentationEditing, async (req, res) 
     );
     res.json(rows[0]);
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    serverError(res, err);
   }
 });
 
 // ── Register a new account ───────────────────────────────────────────────────
-app.post('/api/auth/register', async (req, res) => {
-  try {
-    const { name, email, password, company } = req.body;
-    if (!name || !email || !password) {
-      return res.status(400).json({ error: 'Name, email, and password are required' });
-    }
-    const hash = await bcrypt.hash(password, 10);
-    const avatar = name.trim().split(/\s+/).map(w => w[0]).join('').slice(0, 2).toUpperCase();
-
-    const { rows } = await pool.query(
-      `INSERT INTO users (name, email, password_hash, company, product, role, avatar)
-       VALUES ($1, $2, $3, $4, $5, 'user', $6)
-       RETURNING id, name, email, company, product, role, avatar, created_at`,
-      [name, email.toLowerCase(), hash, company || null, product || 'CE Express', avatar]
-    );
-    res.status(201).json(rows[0]);
-  } catch (err) {
-    if (err.code === '23505') {
-      return res.status(409).json({ error: 'An account with this email already exists' });
-    }
-    res.status(500).json({ error: err.message });
-  }
+// Registration is deliberately only available through the verification-code
+// flow below. Keeping an unverified shortcut would bypass account ownership.
+app.post('/api/auth/register', (_req, res) => {
+  res.status(404).json({ error: 'Use the verified registration flow.' });
 });
 
 // ── Log in ────────────────────────────────────────────────────────────────────
-app.post('/api/auth/login', async (req, res) => {
+app.post('/api/auth/login', authAttemptLimiter, async (req, res) => {
   try {
     const { email, password } = req.body;
     if (!email || !password) {
       return res.status(400).json({ error: 'Email and password are required' });
     }
     const { rows } = await pool.query(
-      `SELECT id, name, email, password_hash, company, product, role, avatar, created_at
-       FROM users WHERE email = $1`,
-      [email.toLowerCase()]
+      `SELECT id, name, email, password_hash, company, product, role, avatar, session_version, created_at
+       FROM users WHERE LOWER(email) = $1 AND deleted_at IS NULL`,
+      [email.trim().toLowerCase()]
     );
     if (rows.length === 0) {
-      return res.status(401).json({ error: 'Account not found' });
+      return res.status(401).json({ error: 'Invalid email or password' });
     }
     const user = rows[0];
     const match = await bcrypt.compare(password, user.password_hash);
     if (!match) {
-      return res.status(401).json({ error: 'Incorrect password' });
+      return res.status(401).json({ error: 'Invalid email or password' });
     }
     delete user.password_hash;
     setSessionCookie(res, user);
     res.json(user);
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    serverError(res, err);
   }
 });
 
@@ -292,18 +366,31 @@ app.get('/api/auth/me', async (req, res) => {
     // rather than trusting whatever was baked into the token at login time.
     const { rows } = await pool.query(
       `SELECT id, name, email, company, product, role, avatar, created_at
-       FROM users WHERE id = $1`,
+       FROM users WHERE id = $1 AND deleted_at IS NULL`,
       [req.user.id]
     );
     if (rows.length === 0) return res.status(401).json({ error: 'Account not found' });
     res.json(rows[0]);
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    serverError(res, err);
   }
 });
 
-app.post('/api/auth/logout', (req, res) => {
-  res.clearCookie(COOKIE_NAME);
+app.post('/api/auth/logout', async (req, res) => {
+  // Invalidate all sessions for this account when possible. This protects
+  // against a copied cookie remaining usable after the user signs out.
+  if (req.user?.id) {
+    try {
+      await pool.query('UPDATE users SET session_version = session_version + 1 WHERE id = $1', [req.user.id]);
+    } catch (err) {
+      console.error('Logout invalidation failed:', err.message);
+    }
+  }
+  res.clearCookie(COOKIE_NAME, {
+    httpOnly: true,
+    sameSite: 'lax',
+    secure: process.env.NODE_ENV === 'production',
+  });
   res.json({ ok: true });
 });
 
@@ -315,12 +402,13 @@ app.get('/api/auth/users', requireAdmin, async (req, res) => {
               COUNT(t.id)::int AS ticket_count
        FROM users u
        LEFT JOIN tickets t ON t.user_id = u.id
+       WHERE u.deleted_at IS NULL
        GROUP BY u.id
        ORDER BY u.created_at DESC`
     );
     res.json(rows);
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    serverError(res, err);
   }
 });
 
@@ -328,26 +416,38 @@ app.get('/api/auth/users', requireAdmin, async (req, res) => {
 app.post('/api/auth/users', requireAdmin, async (req, res) => {
   try {
     const { name, email, password, company, role } = req.body;
+    const cleanName = String(name || '').trim();
     const normalizedEmail = String(email || '').trim().toLowerCase();
+    const cleanCompany = String(company || '').trim();
     const allowedRoles = ['user', 'admin'];
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-    if (!name || !normalizedEmail || !password || !company) {
+    if (!cleanName || !normalizedEmail || !password || !cleanCompany) {
       return res.status(400).json({ error: 'Name, email, password, and company are required' });
     }
-    if (String(password).length < 6) {
-      return res.status(400).json({ error: 'Password must be at least 6 characters' });
+    if (!emailPattern.test(normalizedEmail)) {
+      return res.status(400).json({ error: 'Enter a valid email address.' });
+    }
+    if (String(password).length < 12) {
+      return res.status(400).json({ error: 'Password must be at least 12 characters' });
     }
     if (!allowedRoles.includes(role)) {
       return res.status(400).json({ error: 'Invalid user role' });
     }
+    const existing = await pool.query(
+      'SELECT id FROM users WHERE LOWER(email) = $1 AND deleted_at IS NULL',
+      [normalizedEmail],
+    );
+    if (existing.rows.length > 0) {
+      return res.status(409).json({ error: 'A user with this email already exists' });
+    }
     const hash = await bcrypt.hash(password, 10);
-    const cleanName = String(name).trim();
     const avatar = cleanName.split(/\s+/).map((word) => word[0]).join('').slice(0, 2).toUpperCase();
     const { rows } = await pool.query(
       `INSERT INTO users (name, email, password_hash, company, product, role, avatar)
        VALUES ($1, $2, $3, $4, $5, $6, $7)
        RETURNING id, name, email, company, product, role, avatar, created_at`,
-      [cleanName, normalizedEmail, hash, String(company).trim(), 'Both', role, avatar]
+      [cleanName, normalizedEmail, hash, cleanCompany, 'Both', role, avatar]
     );
 
     res.status(201).json({ ...rows[0], ticket_count: 0 });
@@ -355,7 +455,55 @@ app.post('/api/auth/users', requireAdmin, async (req, res) => {
     if (err.code === '23505') {
       return res.status(409).json({ error: 'A user with this email already exists' });
     }
-    res.status(500).json({ error: err.message });
+    serverError(res, err);
+  }
+});
+
+// Soft deletion preserves all ticket/history relationships while immediately
+// removing the account from sign-in and Users management. The transaction
+// serializes the last-admin check with the deletion itself.
+app.delete('/api/auth/users/:id', requireAdmin, async (req, res) => {
+  const userId = Number(req.params.id);
+  if (!Number.isSafeInteger(userId) || userId < 1) {
+    return res.status(400).json({ error: 'Invalid user ID.' });
+  }
+  if (userId === req.user.id) {
+    return res.status(400).json({ error: 'You cannot delete your own account.' });
+  }
+
+  let client;
+  try {
+    client = await pool.connect();
+    await client.query('BEGIN');
+    const target = await client.query(
+      'SELECT id, role FROM users WHERE id = $1 AND deleted_at IS NULL FOR UPDATE',
+      [userId],
+    );
+    if (target.rows.length === 0) {
+      await client.query('ROLLBACK');
+      return res.status(404).json({ error: 'User not found.' });
+    }
+    if (target.rows[0].role === 'admin') {
+      const admins = await client.query(
+        "SELECT id FROM users WHERE role = 'admin' AND deleted_at IS NULL FOR UPDATE",
+      );
+      if (admins.rows.length <= 1) {
+        await client.query('ROLLBACK');
+        return res.status(400).json({ error: 'You cannot delete the last remaining admin account.' });
+      }
+    }
+
+    await client.query(
+      'UPDATE users SET deleted_at = NOW(), session_version = session_version + 1 WHERE id = $1',
+      [userId],
+    );
+    await client.query('COMMIT');
+    res.json({ ok: true });
+  } catch (err) {
+    if (client) await client.query('ROLLBACK').catch(() => {});
+    serverError(res, err);
+  } finally {
+    client?.release();
   }
 });
 
@@ -368,7 +516,7 @@ app.put('/api/auth/users/:id/role', requireAdmin, async (req, res) => {
       return res.status(400).json({ error: 'role must be user, agent, or admin' });
     }
     const { rows } = await pool.query(
-      `UPDATE users SET role = $2 WHERE id = $1
+      `UPDATE users SET role = $2 WHERE id = $1 AND deleted_at IS NULL
        RETURNING id, name, email, company, product, role, avatar, created_at`,
       [id, role]
     );
@@ -376,7 +524,7 @@ app.put('/api/auth/users/:id/role', requireAdmin, async (req, res) => {
     const countRes = await pool.query(`SELECT COUNT(*)::int AS c FROM tickets WHERE user_id = $1`, [id]);
     res.json({ ...rows[0], ticket_count: countRes.rows[0].c });
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    serverError(res, err);
   }
 });
 
@@ -386,7 +534,7 @@ app.put('/api/auth/users/:id/product', blockProductAccessChanges, async (req, re
     const { id } = req.params;
     const { product } = req.body;
     const { rows } = await pool.query(
-      `UPDATE users SET product = $2 WHERE id = $1
+      `UPDATE users SET product = $2 WHERE id = $1 AND deleted_at IS NULL
        RETURNING id, name, email, company, product, role, avatar, created_at`,
       [id, product]
     );
@@ -394,7 +542,7 @@ app.put('/api/auth/users/:id/product', blockProductAccessChanges, async (req, re
     const countRes = await pool.query(`SELECT COUNT(*)::int AS c FROM tickets WHERE user_id = $1`, [id]);
     res.json({ ...rows[0], ticket_count: countRes.rows[0].c });
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    serverError(res, err);
   }
 });
 
@@ -417,7 +565,7 @@ app.put('/api/docs/:docId', blockDocumentationEditing, async (req, res) => {
     if (rows.length === 0) return res.status(404).json({ error: 'Not found' });
     res.json(rows[0]);
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    serverError(res, err);
   }
 });
 
@@ -429,7 +577,7 @@ app.delete('/api/docs/:docId', blockDocumentationEditing, async (req, res) => {
     if (rowCount === 0) return res.status(404).json({ error: 'Not found' });
     res.json({ ok: true, deleted: docId });
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    serverError(res, err);
   }
 });
 
@@ -451,7 +599,7 @@ app.post('/api/docs', blockDocumentationEditing, async (req, res) => {
     if (err.code === '23505') {
       return res.status(409).json({ error: 'A document with this ID already exists' });
     }
-    res.status(500).json({ error: err.message });
+    serverError(res, err);
   }
 });
 
@@ -486,7 +634,7 @@ app.post('/api/docs/:docId/images/upload', blockDocumentationEditing, upload.sin
     );
     res.status(201).json(rows[0]);
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    serverError(res, err);
   }
 });
 
@@ -498,7 +646,7 @@ app.delete('/api/docs/:docId/images/:imageId', blockDocumentationEditing, async 
     if (rowCount === 0) return res.status(404).json({ error: 'Not found' });
     res.json({ ok: true });
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    serverError(res, err);
   }
 });
 
@@ -517,7 +665,7 @@ app.get('/api/synced-images', async (req, res) => {
     res.set('Cache-Control', 'public, max-age=86400');
     res.send(rows[0].data);
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    serverError(res, err);
   }
 });
 
@@ -547,12 +695,12 @@ app.post('/api/support/send-code', async (req, res) => {
     await sendVerificationCode(email, code, 'support_request');
     res.json({ ok: true });
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    serverError(res, err);
   }
 });
 
 // Step 2 — verify the code, then email the full request straight to the helpdesk inbox
-app.post('/api/support/submit', supportUpload.array('screenshots', 5), async (req, res) => {
+app.post('/api/support/submit', emailAttemptLimiter, supportUpload.array('screenshots', 5), async (req, res) => {
   try {
     const { email, code, company, fullName, product, description } = req.body;
     if (!email || !code || !fullName || !description) {
@@ -576,7 +724,7 @@ app.post('/api/support/submit', supportUpload.array('screenshots', 5), async (re
 
     res.json({ ok: true });
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    serverError(res, err);
   }
 });
 
@@ -590,7 +738,7 @@ app.get('/api/faq', async (req, res) => {
     );
     res.json(rows);
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    serverError(res, err);
   }
 });
 
@@ -606,7 +754,7 @@ app.post('/api/faq', requireAdmin, async (req, res) => {
     );
     res.status(201).json(rows[0]);
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    serverError(res, err);
   }
 });
 
@@ -628,7 +776,7 @@ app.put('/api/faq/:id', requireAdmin, async (req, res) => {
     if (rows.length === 0) return res.status(404).json({ error: 'Not found' });
     res.json(rows[0]);
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    serverError(res, err);
   }
 });
 
@@ -640,69 +788,89 @@ app.delete('/api/faq/:id', requireAdmin, async (req, res) => {
     if (rowCount === 0) return res.status(404).json({ error: 'Not found' });
     res.json({ ok: true });
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    serverError(res, err);
   }
 });
 
 // ── Tickets ──────────────────────────────────────────────────────────────────
 
-// List tickets — pass ?userId=X for a specific user's tickets, omit for all (admin)
-app.get('/api/tickets', async (req, res) => {
+async function getTicketForUser(ticketId, user) {
+  const { rows } = await pool.query('SELECT * FROM tickets WHERE id = $1', [ticketId]);
+  const ticket = rows[0];
+  if (!ticket) return null;
+  return user.role === 'admin' || ticket.user_id === user.id ? ticket : false;
+}
+
+async function requireTicketAccess(req, res, next) {
   try {
-    const { userId } = req.query;
-    const query = userId
+    const ticket = await getTicketForUser(req.params.id, req.user);
+    if (ticket === null) return res.status(404).json({ error: 'Ticket not found' });
+    if (!ticket) return res.status(403).json({ error: 'Not permitted.' });
+    req.ticket = ticket;
+    next();
+  } catch (err) {
+    serverError(res, err);
+  }
+}
+
+// Admins may list all tickets; users can only list their own tickets. The
+// client-supplied userId is never used as an authorization decision.
+app.get('/api/tickets', requireAuth, async (req, res) => {
+  try {
+    const isAdmin = req.user.role === 'admin';
+    const query = isAdmin
       ? `SELECT t.*, u.name AS user_name, u.email AS user_email
-         FROM tickets t LEFT JOIN users u ON u.id = t.user_id
-         WHERE t.user_id = $1 ORDER BY t.created_at DESC`
+           FROM tickets t LEFT JOIN users u ON u.id = t.user_id
+           ORDER BY t.created_at DESC`
       : `SELECT t.*, u.name AS user_name, u.email AS user_email
-         FROM tickets t LEFT JOIN users u ON u.id = t.user_id
-         ORDER BY t.created_at DESC`;
-    const { rows } = await pool.query(query, userId ? [userId] : []);
+           FROM tickets t LEFT JOIN users u ON u.id = t.user_id
+           WHERE t.user_id = $1 ORDER BY t.created_at DESC`;
+    const { rows } = await pool.query(query, isAdmin ? [] : [req.user.id]);
     res.json(rows);
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    serverError(res, err);
   }
 });
 
 // Get one ticket with its messages
-app.get('/api/tickets/:id', async (req, res) => {
+app.get('/api/tickets/:id', requireAuth, async (req, res) => {
   try {
     const { id } = req.params;
-    const t = await pool.query(`SELECT * FROM tickets WHERE id = $1`, [id]);
-    if (t.rows.length === 0) return res.status(404).json({ error: 'Not found' });
+    const ticket = await getTicketForUser(id, req.user);
+    if (ticket === null) return res.status(404).json({ error: 'Not found' });
+    if (!ticket) return res.status(403).json({ error: 'Not permitted.' });
     const m = await pool.query(`SELECT * FROM ticket_messages WHERE ticket_id = $1 ORDER BY created_at ASC`, [id]);
-    res.json({ ...t.rows[0], messages: m.rows });
+    res.json({ ...ticket, messages: m.rows });
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    serverError(res, err);
   }
 });
 
 // Create a ticket
-app.post('/api/tickets', async (req, res) => {
+app.post('/api/tickets', requireAuth, async (req, res) => {
   try {
-    const { userId, title, product, version, category, priority, description, senderName } = req.body;
-    if (!userId || !title) return res.status(400).json({ error: 'userId and title are required' });
+    const { title, product, version, category, priority, description } = req.body;
+    if (!title) return res.status(400).json({ error: 'title is required' });
 
-    const countRes = await pool.query(`SELECT COUNT(*) FROM tickets`);
-    const ticketNumber = 'T-' + String(parseInt(countRes.rows[0].count, 10) + 1).padStart(3, '0');
+    const ticketNumber = `T-${crypto.randomUUID()}`;
 
     const { rows } = await pool.query(
       `INSERT INTO tickets (ticket_number, user_id, title, product, version, category, priority, status)
        VALUES ($1,$2,$3,$4,$5,$6,$7,'Open') RETURNING *`,
-      [ticketNumber, userId, title, product, version, category, priority || 'Normal']
+      [ticketNumber, req.user.id, title, product, version, category, priority || 'Normal']
     );
     const ticket = rows[0];
 
     if (description) {
       await pool.query(
         `INSERT INTO ticket_messages (ticket_id, sender_id, sender_name, message) VALUES ($1,$2,$3,$4)`,
-        [ticket.id, userId, senderName || 'User', description]
+        [ticket.id, req.user.id, req.user.name, description]
       );
     }
 
     res.status(201).json(ticket);
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    serverError(res, err);
   }
 });
 
@@ -727,12 +895,12 @@ const ticketUpload = multer({
 });
 
 // Upload/replace the screenshot attached to a ticket (client, right after creating it)
-app.post('/api/tickets/:id/attachment', ticketUpload.single('screenshot'), async (req, res) => {
+app.post('/api/tickets/:id/attachment', requireAuth, requireTicketAccess, ticketUpload.single('screenshot'), async (req, res) => {
   try {
     const { id } = req.params;
     if (!req.file) return res.status(400).json({ error: 'No file uploaded' });
 
-    const attachment_url = `http://localhost:${process.env.PORT || 4000}/ticket-attachments/${id}/${req.file.filename}`;
+    const attachment_url = `/ticket-attachments/${id}/${req.file.filename}`;
 
     const { rows } = await pool.query(
       `UPDATE tickets SET attachment_url = $2, updated_at = NOW() WHERE id = $1 RETURNING *`,
@@ -741,12 +909,12 @@ app.post('/api/tickets/:id/attachment', ticketUpload.single('screenshot'), async
     if (rows.length === 0) return res.status(404).json({ error: 'Ticket not found' });
     res.status(201).json(rows[0]);
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    serverError(res, err);
   }
 });
 
 // Update ticket status
-app.put('/api/tickets/:id/status', async (req, res) => {
+app.put('/api/tickets/:id/status', requireAdmin, async (req, res) => {
   try {
     const { id } = req.params;
     const { status } = req.body;
@@ -757,41 +925,61 @@ app.put('/api/tickets/:id/status', async (req, res) => {
     if (rows.length === 0) return res.status(404).json({ error: 'Not found' });
     res.json(rows[0]);
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    serverError(res, err);
   }
 });
 
 // Add a reply message to a ticket
-app.post('/api/tickets/:id/messages', async (req, res) => {
+app.post('/api/tickets/:id/messages', requireAuth, async (req, res) => {
   try {
     const { id } = req.params;
-    const { senderId, senderName, message } = req.body;
+    const { message } = req.body;
     if (!message) return res.status(400).json({ error: 'message is required' });
+    const ticket = await getTicketForUser(id, req.user);
+    if (ticket === null) return res.status(404).json({ error: 'Ticket not found' });
+    if (!ticket) return res.status(403).json({ error: 'Not permitted.' });
 
     const { rows } = await pool.query(
       `INSERT INTO ticket_messages (ticket_id, sender_id, sender_name, message) VALUES ($1,$2,$3,$4) RETURNING *`,
-      [id, senderId, senderName, message]
+      [id, req.user.id, req.user.name, message]
     );
     await pool.query(`UPDATE tickets SET updated_at = NOW() WHERE id = $1`, [id]);
     res.status(201).json(rows[0]);
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    serverError(res, err);
+  }
+});
+
+app.get('/ticket-attachments/:ticketId/:filename', requireAuth, async (req, res) => {
+  try {
+    const { ticketId, filename } = req.params;
+    if (path.basename(filename) !== filename) return res.status(400).json({ error: 'Invalid filename.' });
+    const ticket = await getTicketForUser(ticketId, req.user);
+    if (ticket === null) return res.status(404).json({ error: 'Not found' });
+    if (!ticket) return res.status(403).json({ error: 'Not permitted.' });
+    res.sendFile(path.join(__dirname, 'public', 'ticket-attachments', ticketId, filename));
+  } catch (err) {
+    serverError(res, err);
   }
 });
 
 // ── Email verification helpers ────────────────────────────────────────────────
 function generateCode() {
-  return String(Math.floor(100000 + Math.random() * 900000)); // 6-digit code
+  return String(crypto.randomInt(100000, 1000000));
 }
 
 // ── Registration: step 1 — send verification code ────────────────────────────
-app.post('/api/auth/register/send-code', async (req, res) => {
+app.post('/api/auth/register/send-code', emailAttemptLimiter, async (req, res) => {
   try {
     const { name, email, password, company, product } = req.body;
     if (!name || !email || !password) {
       return res.status(400).json({ error: 'Name, email, and password are required' });
     }
-    const existing = await pool.query(`SELECT id FROM users WHERE email = $1`, [email.toLowerCase()]);
+    const normalizedEmail = email.trim().toLowerCase();
+    const existing = await pool.query(
+      `SELECT id FROM users WHERE LOWER(email) = $1 AND deleted_at IS NULL`,
+      [normalizedEmail],
+    );
     if (existing.rows.length > 0) {
       return res.status(409).json({ error: 'An account with this email already exists' });
     }
@@ -799,23 +987,23 @@ app.post('/api/auth/register/send-code', async (req, res) => {
     const hash = await bcrypt.hash(password, 10);
     const avatar = name.trim().split(/\s+/).map(w => w[0]).join('').slice(0, 2).toUpperCase();
     const code = generateCode();
-    const payload = { name, email: email.toLowerCase(), password_hash: hash, company: company || null, product: 'Both', avatar };
+    const payload = { name, email: normalizedEmail, password_hash: hash, company: company || null, product: 'Both', avatar };
 
     await pool.query(
       `INSERT INTO verification_codes (email, code, purpose, payload, expires_at)
        VALUES ($1, $2, 'register', $3, NOW() + INTERVAL '10 minutes')`,
-      [email.toLowerCase(), code, JSON.stringify(payload)]
+      [normalizedEmail, code, JSON.stringify(payload)]
     );
 
     await sendVerificationCode(email, code, 'register');
     res.json({ ok: true });
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    serverError(res, err);
   }
 });
 
 // ── Registration: step 2 — verify code, create account ───────────────────────
-app.post('/api/auth/register/verify', async (req, res) => {
+app.post('/api/auth/register/verify', authAttemptLimiter, async (req, res) => {
   try {
     const { email, code } = req.body;
     if (!email || !code) return res.status(400).json({ error: 'Email and code are required' });
@@ -829,6 +1017,13 @@ app.post('/api/auth/register/verify', async (req, res) => {
     if (rows.length === 0) return res.status(401).json({ error: 'Invalid or expired code' });
 
     const payload = rows[0].payload;
+    const existing = await pool.query(
+      `SELECT id FROM users WHERE LOWER(email) = $1 AND deleted_at IS NULL`,
+      [payload.email],
+    );
+    if (existing.rows.length > 0) {
+      return res.status(409).json({ error: 'An account with this email already exists' });
+    }
     const created = await pool.query(
       `INSERT INTO users (name, email, password_hash, company, product, role, avatar)
        VALUES ($1,$2,$3,$4,$5,'user',$6)
@@ -843,41 +1038,45 @@ app.post('/api/auth/register/verify', async (req, res) => {
     res.status(201).json(created.rows[0]);
   } catch (err) {
     if (err.code === '23505') return res.status(409).json({ error: 'An account with this email already exists' });
-    res.status(500).json({ error: err.message });
+    serverError(res, err);
   }
 });
 
 // ── Forgot password: step 1 — send verification code ──────────────────────────
-app.post('/api/auth/forgot-password/send-code', async (req, res) => {
+app.post('/api/auth/forgot-password/send-code', emailAttemptLimiter, async (req, res) => {
   try {
     const { email } = req.body;
     if (!email) return res.status(400).json({ error: 'Email is required' });
 
-    const user = await pool.query(`SELECT id, name FROM users WHERE email = $1`, [email.toLowerCase()]);
+    const normalizedEmail = email.trim().toLowerCase();
+    const user = await pool.query(
+      `SELECT id, name FROM users WHERE LOWER(email) = $1 AND deleted_at IS NULL`,
+      [normalizedEmail],
+    );
     if (user.rows.length === 0) return res.status(404).json({ error: 'No account found with this email' });
 
     const code = generateCode();
     await pool.query(
-      `INSERT INTO verification_codes (email, code, purpose, expires_at)
-       VALUES ($1, $2, 'reset_password', NOW() + INTERVAL '10 minutes')`,
-      [email.toLowerCase(), code]
+      `INSERT INTO verification_codes (email, code, purpose, payload, expires_at)
+       VALUES ($1, $2, 'reset_password', $3, NOW() + INTERVAL '10 minutes')`,
+      [normalizedEmail, code, JSON.stringify({ user_id: user.rows[0].id })]
     );
 
     await sendVerificationCode(email, code, 'reset_password');
     res.json({ ok: true });
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    serverError(res, err);
   }
 });
 
 // ── Forgot password: step 2 — verify code, set new password ──────────────────
-app.post('/api/auth/forgot-password/verify', async (req, res) => {
+app.post('/api/auth/forgot-password/verify', authAttemptLimiter, async (req, res) => {
   try {
     const { email, code, newPassword } = req.body;
     if (!email || !code || !newPassword) {
       return res.status(400).json({ error: 'Email, code, and new password are required' });
     }
-    if (newPassword.length < 6) return res.status(400).json({ error: 'Password must be at least 6 characters' });
+    if (String(newPassword).length < 12) return res.status(400).json({ error: 'Password must be at least 12 characters' });
 
     const { rows } = await pool.query(
       `SELECT * FROM verification_codes
@@ -887,19 +1086,46 @@ app.post('/api/auth/forgot-password/verify', async (req, res) => {
     );
     if (rows.length === 0) return res.status(401).json({ error: 'Invalid or expired code' });
 
+    // Bind a reset code to the account ID that requested it. If that account
+    // is soft-deleted and the address is later reused, the old code cannot
+    // reset the replacement account's password.
+    const resetUserId = Number(rows[0].payload?.user_id);
+    if (!Number.isSafeInteger(resetUserId) || resetUserId < 1) {
+      return res.status(401).json({ error: 'Invalid or expired code' });
+    }
+
     const newHash = await bcrypt.hash(newPassword, 10);
     const updated = await pool.query(
-      `UPDATE users SET password_hash = $2 WHERE email = $1 RETURNING name, email`,
-      [email.toLowerCase(), newHash]
+      `UPDATE users
+       SET password_hash = $2, session_version = session_version + 1
+       WHERE id = $1 AND LOWER(email) = $3 AND deleted_at IS NULL
+       RETURNING name, email`,
+      [resetUserId, newHash, email.trim().toLowerCase()]
     );
+    if (updated.rows.length === 0) {
+      return res.status(404).json({ error: 'No active account found with this email' });
+    }
 
     await pool.query(`UPDATE verification_codes SET used = TRUE WHERE id = $1`, [rows[0].id]);
     sendPasswordChangedEmail(updated.rows[0].email, updated.rows[0].name).catch(err => console.error('Email error:', err.message));
 
     res.json({ ok: true });
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    serverError(res, err);
   }
+});
+
+// Keeps malformed JSON and Multer failures from falling through to Express's
+// development error page, which can include implementation details.
+app.use((err, _req, res, _next) => {
+  if (err?.type === 'entity.too.large' || err?.code === 'LIMIT_FILE_SIZE') {
+    return res.status(413).json({ error: 'Request or file is too large.' });
+  }
+  if (err instanceof multer.MulterError || err?.message === 'Only image files are allowed') {
+    return res.status(400).json({ error: 'Invalid upload.' });
+  }
+  console.error('Unhandled request error:', err?.message || err);
+  return res.status(500).json({ error: 'An unexpected server error occurred.' });
 });
 const PORT = process.env.PORT || 4000;
 app.listen(PORT, () => {

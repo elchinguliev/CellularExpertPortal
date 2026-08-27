@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { searchIndex, searchAPI } from '../useGithubDocs';
 
-const PC = {'CE Express':'#0077cc','CE Pro':'#059669','Both':'#d97706','Training':'#7c3aed','Inventory3D':'#0ea5e9'};
+const PC = {'CE Express':'#0077cc','CE Pro':'#059669','Geodata':'#d97706','Training':'#7c3aed','Inventory3D':'#0ea5e9'};
 function cleanSearchSnippet(text = '') {
   return String(text)
     // remove markdown images, usually noisy in search previews

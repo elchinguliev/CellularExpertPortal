@@ -2,7 +2,6 @@ import React, { useState, useEffect, useRef } from "react";
 import {
   findAnswer,
   SUGGESTED,
-  SEED_TICKETS,
   AGENTS,
 } from "../supportData";
 import { API_BASE } from "../useGithubDocs";
@@ -13,9 +12,75 @@ import ChatComposer from "./ChatComposer";
 import { StableInput, StableTextarea } from "./StableInput";
 import SupportRequestForm from "./SupportRequestForm";
 
+const AI_API_BASE = process.env.REACT_APP_AI_API_BASE || (
+  process.env.NODE_ENV === "production" ? "/ai" : "http://localhost:8000"
+);
+
 // Every request needs to carry the session cookie (credentials: 'include')
 const apiFetch = (url, options = {}) =>
   window.fetch(url, { ...options, credentials: "include" });
+
+const NEW_USER_ALLOWED_ROLES = ["user", "admin"];
+const NEW_USER_FIELD_LABELS = {
+  name: "Name",
+  email: "Email",
+  password: "Password",
+  company: "Company",
+  role: "Role",
+};
+
+function validateNewUserDraft(user) {
+  const errors = {};
+  const name = String(user.name || "").trim();
+  const email = String(user.email || "").trim();
+  const password = String(user.password || "");
+  const company = String(user.company || "").trim();
+  const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+  if (!name) errors.name = "Name is required.";
+  if (!email) errors.email = "Email is required.";
+  else if (!emailPattern.test(email)) errors.email = "Enter a valid email address.";
+  if (!password) errors.password = "Password is required.";
+  else if (password.length < 12) errors.password = "Password must be at least 12 characters.";
+  // Company is required by the current backend endpoint.
+  if (!company) errors.company = "Company is required.";
+  if (!NEW_USER_ALLOWED_ROLES.includes(user.role)) errors.role = "Choose a valid role.";
+
+  return errors;
+}
+
+function mapCreateUserError(status, backendError, user) {
+  const message = String(backendError || "").toLowerCase();
+
+  if (status === 409 || message.includes("already exists")) {
+    return {
+      fieldErrors: { email: "An active account already uses this email address." },
+      formError: "Use a different email address.",
+    };
+  }
+  if (message.includes("valid email")) {
+    return { fieldErrors: { email: "Enter a valid email address." }, formError: "Check the highlighted field." };
+  }
+  if (message.includes("password")) {
+    return { fieldErrors: { password: "Password must be at least 12 characters." }, formError: "Check the highlighted field." };
+  }
+  if (message.includes("role")) {
+    return { fieldErrors: { role: "Choose a valid role." }, formError: "Check the highlighted field." };
+  }
+  if (message.includes("required") || message.includes("missing")) {
+    const fieldErrors = validateNewUserDraft(user);
+    return {
+      fieldErrors,
+      formError: Object.keys(fieldErrors).length > 0
+        ? "Check the highlighted fields."
+        : "Complete all required fields.",
+    };
+  }
+  if (status >= 500) {
+    return { fieldErrors: {}, formError: "The server could not create the user. Please try again." };
+  }
+  return { fieldErrors: {}, formError: "Could not create user. Please review the details and try again." };
+}
 
 
 const SC = {
@@ -103,7 +168,13 @@ export default function SupportPortal({ onViewDocs, currentUser, setCurrentUser 
     role: "user",
   });
   const [newUserError, setNewUserError] = useState("");
+  const [newUserFieldErrors, setNewUserFieldErrors] = useState({});
+  const [newUserFailedFields, setNewUserFailedFields] = useState({});
   const [newUserSaving, setNewUserSaving] = useState(false);
+  const newUserInputRefs = useRef({});
+  const [userActionFeedback, setUserActionFeedback] = useState(null);
+  const [deletingUserId, setDeletingUserId] = useState(null);
+  const [userPendingDeletion, setUserPendingDeletion] = useState(null);
 
   // Admin — Documentation CRUD state
   const [docsList, setDocsList] = useState([]);
@@ -341,13 +412,11 @@ export default function SupportPortal({ onViewDocs, currentUser, setCurrentUser 
   ).length;
   const logActivity = (activityType, page, details = "") => {
     if (!currentUser) return;
-    fetch("http://localhost:8000/admin/log-activity", {
+    fetch(`${AI_API_BASE}/admin/log-activity`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
+      credentials: "include",
       body: JSON.stringify({
-        user_id: currentUser.id,
-        user_name: currentUser.name,
-        user_role: currentUser.role,
         activity_type: activityType,
         page: page,
         details: details,
@@ -503,12 +572,12 @@ export default function SupportPortal({ onViewDocs, currentUser, setCurrentUser 
     setTyping(true);
 
     try {
-      const response = await fetch("http://127.0.0.1:8000/ask", {
+      const response = await fetch(`${AI_API_BASE}/ask`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
+        credentials: "include",
         body: JSON.stringify({
           question: t,
-          user: currentUser?.name || "Demo User",
           conversation: messages.map((m) => ({
             role: m.from === "bot" ? "assistant" : "user",
             message: m.text || "",
@@ -589,7 +658,7 @@ export default function SupportPortal({ onViewDocs, currentUser, setCurrentUser 
           from: "bot",
           time: now(),
           type: "no-answer",
-          text: "AI backend is not reachable. Please check if FastAPI is running on http://127.0.0.1:8000.",
+          text: "AI assistant is temporarily unavailable. Please try again later.",
         },
       ]);
     }
@@ -601,14 +670,12 @@ export default function SupportPortal({ onViewDocs, currentUser, setCurrentUser 
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          userId: currentUser.id,
           title: data.title,
           product: data.product,
           version: data.version,
           category: data.category,
           priority: data.priority,
           description: data.description,
-          senderName: currentUser.name,
         }),
       });
       const ticket = await res.json();
@@ -641,8 +708,6 @@ export default function SupportPortal({ onViewDocs, currentUser, setCurrentUser 
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        senderId: currentUser.id,
-        senderName: currentUser.name,
         message: text,
       }),
     });
@@ -2479,6 +2544,19 @@ export default function SupportPortal({ onViewDocs, currentUser, setCurrentUser 
   const createUser = async (event) => {
     event.preventDefault();
     setNewUserError("");
+    setUserActionFeedback(null);
+    const validationErrors = validateNewUserDraft(newUser);
+    const invalidFields = Object.keys(validationErrors);
+    if (invalidFields.length > 0) {
+      setNewUserFieldErrors(validationErrors);
+      setNewUserFailedFields((previous) => ({
+        ...previous,
+        ...Object.fromEntries(invalidFields.map((field) => [field, true])),
+      }));
+      newUserInputRefs.current[invalidFields[0]]?.focus();
+      return;
+    }
+
     setNewUserSaving(true);
     try {
       const res = await apiFetch(`${API_BASE}/auth/users`, {
@@ -2486,9 +2564,17 @@ export default function SupportPortal({ onViewDocs, currentUser, setCurrentUser 
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(newUser),
       });
-      const data = await res.json();
+      const data = await res.json().catch(() => ({}));
       if (!res.ok) {
-        setNewUserError(data.error || "Could not create user.");
+        const mappedError = mapCreateUserError(res.status, data.error, newUser);
+        setNewUserFieldErrors(mappedError.fieldErrors);
+        setNewUserFailedFields((previous) => ({
+          ...previous,
+          ...Object.fromEntries(Object.keys(mappedError.fieldErrors).map((field) => [field, true])),
+        }));
+        setNewUserError(mappedError.formError);
+        const firstInvalidField = Object.keys(mappedError.fieldErrors)[0];
+        if (firstInvalidField) newUserInputRefs.current[firstInvalidField]?.focus();
         return;
       }
       setUsers((previous) => [data, ...previous]);
@@ -2499,13 +2585,73 @@ export default function SupportPortal({ onViewDocs, currentUser, setCurrentUser 
         company: "",
         role: "user",
       });
+      setNewUserFieldErrors({});
+      setNewUserFailedFields({});
       setShowCreateUser(false);
+      setUserActionFeedback({ type: "success", text: "User created successfully." });
     } catch {
-      setNewUserError("Could not reach the server.");
+      setNewUserError("Could not reach the server. Please try again.");
     } finally {
       setNewUserSaving(false);
     }
   };
+
+  const updateNewUserField = (field, value) => {
+    const nextUser = { ...newUser, [field]: value };
+    setNewUser(nextUser);
+    if (newUserError) setNewUserError("");
+    if (!newUserFailedFields[field]) return;
+
+    const nextError = validateNewUserDraft(nextUser)[field];
+    setNewUserFieldErrors((previous) => {
+      const nextErrors = { ...previous };
+      if (nextError) nextErrors[field] = nextError;
+      else delete nextErrors[field];
+      return nextErrors;
+    });
+  };
+
+  const deleteUser = async (user) => {
+    if (!user) return;
+
+    setUserActionFeedback(null);
+    setDeletingUserId(user.id);
+    try {
+      const res = await apiFetch(`${API_BASE}/auth/users/${user.id}`, { method: "DELETE" });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) {
+        setUserActionFeedback({ type: "error", text: data.error || "Could not delete user." });
+        return;
+      }
+      setUsers((previous) => previous.filter((candidate) => candidate.id !== user.id));
+      setUserPendingDeletion(null);
+      setUserActionFeedback({ type: "success", text: "User deleted successfully." });
+    } catch {
+      setUserActionFeedback({ type: "error", text: "Could not reach the server." });
+    } finally {
+      setDeletingUserId(null);
+    }
+  };
+
+  const requestUserDeletion = (user) => {
+    if (user.id === currentUser?.id) {
+      setUserActionFeedback({ type: "error", text: "You cannot delete your own account." });
+      return;
+    }
+    setUserActionFeedback(null);
+    setUserPendingDeletion(user);
+  };
+
+  useEffect(() => {
+    if (!userPendingDeletion) return undefined;
+    const onKeyDown = (event) => {
+      if (event.key === "Escape" && !deletingUserId) {
+        setUserPendingDeletion(null);
+      }
+    };
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, [userPendingDeletion, deletingUserId]);
 
   const openEditFaq = (item) => {
     setFaqDraft({
@@ -2865,6 +3011,8 @@ export default function SupportPortal({ onViewDocs, currentUser, setCurrentUser 
           type="button"
           onClick={() => {
             setNewUserError("");
+            setNewUserFieldErrors({});
+            setNewUserFailedFields({});
             setShowCreateUser((open) => !open);
           }}
           style={{
@@ -2883,8 +3031,26 @@ export default function SupportPortal({ onViewDocs, currentUser, setCurrentUser 
         </button>
       </div>
 
+      {userActionFeedback && (
+        <div
+          role="status"
+          style={{
+            marginBottom: 10,
+            padding: "8px 10px",
+            borderRadius: 7,
+            fontSize: 11,
+            color: userActionFeedback.type === "success" ? "#15803d" : "#dc2626",
+            background: userActionFeedback.type === "success" ? "#dcfce7" : "#fef2f2",
+            border: `1px solid ${userActionFeedback.type === "success" ? "#86efac" : "#fecaca"}`,
+          }}
+        >
+          {userActionFeedback.text}
+        </div>
+      )}
+
       {showCreateUser && (
         <form
+          noValidate
           onSubmit={createUser}
           style={{
             background: "var(--bg2)",
@@ -2922,51 +3088,116 @@ export default function SupportPortal({ onViewDocs, currentUser, setCurrentUser 
               gap: 8,
             }}
           >
-            {["name", "email", "password", "company"].map((field) => (
-              <input
-                key={field}
-                required
-                type={field === "password" ? "password" : field === "email" ? "email" : "text"}
-                minLength={field === "password" ? 6 : undefined}
-                placeholder={field[0].toUpperCase() + field.slice(1)}
-                value={newUser[field]}
-                onChange={(event) =>
-                  setNewUser((previous) => ({
-                    ...previous,
-                    [field]: event.target.value,
-                  }))
-                }
-                style={{
-                  width: "100%",
-                  boxSizing: "border-box",
-                  padding: "8px 10px",
-                  border: "1px solid var(--border)",
-                  borderRadius: 7,
-                  background: "var(--bg)",
-                  color: "var(--text-bright)",
-                  fontSize: 11,
-                  outline: "none",
-                }}
-              />
-            ))}
-            <select
-              value={newUser.role}
-              onChange={(event) =>
-                setNewUser((previous) => ({ ...previous, role: event.target.value }))
-              }
-              style={{
-                padding: "8px 10px",
-                border: "1px solid var(--border)",
-                borderRadius: 7,
-                background: "var(--bg)",
-                color: "var(--text-bright)",
-                fontSize: 11,
-              }}
-            >
-              {["user", "admin"].map((role) => (
-                <option key={role} value={role}>{role}</option>
-              ))}
-            </select>
+            {["name", "email", "password", "company"].map((field) => {
+              const error = newUserFieldErrors[field];
+              const inputId = `new-user-${field}`;
+              return (
+                <div key={field}>
+                  <label
+                    htmlFor={inputId}
+                    style={{
+                      display: "block",
+                      marginBottom: 4,
+                      color: "var(--text-dim)",
+                      fontFamily: "var(--font-mono)",
+                      fontSize: 9,
+                      fontWeight: 700,
+                      letterSpacing: ".05em",
+                      textTransform: "uppercase",
+                    }}
+                  >
+                    {NEW_USER_FIELD_LABELS[field]}
+                  </label>
+                  <input
+                    ref={(element) => { newUserInputRefs.current[field] = element; }}
+                    id={inputId}
+                    name={field}
+                    type={field === "password" ? "password" : field === "email" ? "email" : "text"}
+                    autoComplete={field === "password" ? "new-password" : field === "email" ? "email" : "off"}
+                    aria-invalid={Boolean(error)}
+                    aria-describedby={error ? `${inputId}-error` : undefined}
+                    placeholder={NEW_USER_FIELD_LABELS[field]}
+                    value={newUser[field]}
+                    onChange={(event) => updateNewUserField(field, event.target.value)}
+                    style={{
+                      width: "100%",
+                      boxSizing: "border-box",
+                      padding: "8px 10px",
+                      border: `1px solid ${error ? "#dc2626" : "var(--border)"}`,
+                      borderRadius: 7,
+                      background: "var(--bg)",
+                      color: "var(--text-bright)",
+                      fontSize: 11,
+                      outline: "none",
+                    }}
+                  />
+                  {error && (
+                    <div
+                      id={`${inputId}-error`}
+                      role="alert"
+                      style={{ marginTop: 4, color: "#dc2626", fontSize: 10, lineHeight: 1.35 }}
+                    >
+                      {error}
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+            {(() => {
+              const error = newUserFieldErrors.role;
+              const inputId = "new-user-role";
+              return (
+                <div>
+                  <label
+                    htmlFor={inputId}
+                    style={{
+                      display: "block",
+                      marginBottom: 4,
+                      color: "var(--text-dim)",
+                      fontFamily: "var(--font-mono)",
+                      fontSize: 9,
+                      fontWeight: 700,
+                      letterSpacing: ".05em",
+                      textTransform: "uppercase",
+                    }}
+                  >
+                    Role
+                  </label>
+                  <select
+                    ref={(element) => { newUserInputRefs.current.role = element; }}
+                    id={inputId}
+                    name="role"
+                    value={newUser.role}
+                    onChange={(event) => updateNewUserField("role", event.target.value)}
+                    aria-invalid={Boolean(error)}
+                    aria-describedby={error ? `${inputId}-error` : undefined}
+                    style={{
+                      width: "100%",
+                      boxSizing: "border-box",
+                      padding: "8px 10px",
+                      border: `1px solid ${error ? "#dc2626" : "var(--border)"}`,
+                      borderRadius: 7,
+                      background: "var(--bg)",
+                      color: "var(--text-bright)",
+                      fontSize: 11,
+                    }}
+                  >
+                    {NEW_USER_ALLOWED_ROLES.map((role) => (
+                      <option key={role} value={role}>{role}</option>
+                    ))}
+                  </select>
+                  {error && (
+                    <div
+                      id={`${inputId}-error`}
+                      role="alert"
+                      style={{ marginTop: 4, color: "#dc2626", fontSize: 10, lineHeight: 1.35 }}
+                    >
+                      {error}
+                    </div>
+                  )}
+                </div>
+              );
+            })()}
           </div>
           <button
             type="submit"
@@ -3085,6 +3316,26 @@ export default function SupportPortal({ onViewDocs, currentUser, setCurrentUser 
               </option>
             ))}
           </select>
+          <button
+            type="button"
+            onClick={() => requestUserDeletion(u)}
+            disabled={deletingUserId === u.id || u.id === currentUser?.id}
+            title={u.id === currentUser?.id ? "You cannot delete your own account" : "Delete user"}
+            style={{
+              padding: "4px 8px",
+              border: "1px solid #dc2626",
+              borderRadius: 7,
+              fontSize: 10,
+              color: "#dc2626",
+              background: "transparent",
+              outline: "none",
+              cursor: deletingUserId === u.id || u.id === currentUser?.id ? "default" : "pointer",
+              opacity: deletingUserId === u.id || u.id === currentUser?.id ? 0.5 : 1,
+              fontWeight: 600,
+            }}
+          >
+            {deletingUserId === u.id ? "DELETING..." : "DELETE"}
+          </button>
         </div>
       ))}
     </div>
@@ -3095,7 +3346,7 @@ export default function SupportPortal({ onViewDocs, currentUser, setCurrentUser 
     const [error, setError] = useState("");
 
     useEffect(() => {
-      fetch("http://localhost:8000/admin/ai-insights")
+      fetch(`${AI_API_BASE}/admin/ai-insights`, { credentials: "include" })
         .then((response) => {
           if (!response.ok) {
             throw new Error("Failed to load AI insights");
@@ -3108,7 +3359,7 @@ export default function SupportPortal({ onViewDocs, currentUser, setCurrentUser 
         })
         .catch(() => {
           setError(
-            "AI insights backend is not reachable. Please check FastAPI on port 8000.",
+            "AI insights are temporarily unavailable.",
           );
           setLoading(false);
         });
@@ -4579,7 +4830,10 @@ export default function SupportPortal({ onViewDocs, currentUser, setCurrentUser 
       case "adm-agents":
         return <AdminAgents />;
       case "adm-users":
-        return <AdminUsers />;
+        // AdminUsers is declared inside SupportPortal. Calling it here keeps
+        // the form in the parent reconciliation tree instead of remounting it
+        // whenever a controlled input changes.
+        return AdminUsers();
       case "adm-faq":
         return AdminFaq();
       case "adm-ai-insights":
@@ -4668,6 +4922,112 @@ export default function SupportPortal({ onViewDocs, currentUser, setCurrentUser 
                   onClose={() => setShowSupportForm(false)}
                   onSubmitted={() => {}}
                 />
+              </div>
+            </div>
+          )}
+          {userPendingDeletion && (
+            <div
+              role="presentation"
+              onMouseDown={(event) => {
+                if (event.target === event.currentTarget && !deletingUserId) {
+                  setUserPendingDeletion(null);
+                }
+              }}
+              style={{
+                position: "fixed",
+                inset: 0,
+                background: "rgba(0,0,0,0.45)",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                zIndex: 1001,
+                padding: 16,
+              }}
+            >
+              <div
+                role="dialog"
+                aria-modal="true"
+                aria-labelledby="delete-user-title"
+                aria-describedby="delete-user-description"
+                style={{
+                  width: 400,
+                  maxWidth: "100%",
+                  background: "var(--bg)",
+                  border: "1px solid var(--border)",
+                  borderRadius: 14,
+                  padding: 18,
+                  boxShadow: "0 20px 60px -20px rgba(0,0,0,0.5)",
+                }}
+              >
+                <div
+                  id="delete-user-title"
+                  style={{ fontSize: 14, fontWeight: 700, color: "var(--text-bright)" }}
+                >
+                  Delete user?
+                </div>
+                <div
+                  id="delete-user-description"
+                  style={{ marginTop: 10, fontSize: 12, color: "var(--text-dim)", lineHeight: 1.55 }}
+                >
+                  <strong style={{ color: "var(--text-bright)" }}>{userPendingDeletion.name}</strong>
+                  {" "}({userPendingDeletion.email}) will no longer be able to sign in.
+                  Their ticket and message history will be preserved.
+                </div>
+                {userActionFeedback?.type === "error" && (
+                  <div
+                    role="alert"
+                    style={{
+                      marginTop: 12,
+                      padding: "8px 10px",
+                      borderRadius: 8,
+                      background: "rgba(239,68,68,0.12)",
+                      color: "#f87171",
+                      fontSize: 12,
+                    }}
+                  >
+                    {userActionFeedback.text}
+                  </div>
+                )}
+                <div style={{ display: "flex", justifyContent: "flex-end", gap: 8, marginTop: 18 }}>
+                  <button
+                    type="button"
+                    disabled={Boolean(deletingUserId)}
+                    onClick={() => setUserPendingDeletion(null)}
+                    style={{
+                      padding: "8px 12px",
+                      border: "1px solid var(--border)",
+                      borderRadius: 7,
+                      background: "transparent",
+                      color: "var(--text-bright)",
+                      fontSize: 10,
+                      fontWeight: 700,
+                      cursor: deletingUserId ? "default" : "pointer",
+                      opacity: deletingUserId ? 0.6 : 1,
+                      fontFamily: "var(--font-mono)",
+                    }}
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="button"
+                    disabled={Boolean(deletingUserId)}
+                    onClick={() => deleteUser(userPendingDeletion)}
+                    style={{
+                      padding: "8px 12px",
+                      border: "1px solid #dc2626",
+                      borderRadius: 7,
+                      background: "#dc2626",
+                      color: "#fff",
+                      fontSize: 10,
+                      fontWeight: 700,
+                      cursor: deletingUserId ? "default" : "pointer",
+                      opacity: deletingUserId ? 0.7 : 1,
+                      fontFamily: "var(--font-mono)",
+                    }}
+                  >
+                    {deletingUserId ? "Deleting..." : "Delete User"}
+                  </button>
+                </div>
               </div>
             </div>
           )}

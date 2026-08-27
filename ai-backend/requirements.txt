@@ -7,3 +7,4 @@ fastapi
 uvicorn
 psycopg2-binary
 python-dotenv
+PyJWT==2.10.1

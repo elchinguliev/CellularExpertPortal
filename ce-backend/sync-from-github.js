@@ -16,7 +16,8 @@ const pool = new Pool({
 });
 
 const GITHUB_RAW = process.env.GITHUB_RAW_BASE;
-const SERVER_BASE = `http://localhost:${process.env.PORT || 4000}`;
+// Relative URLs work both through IIS's reverse proxy and the local React app.
+const SERVER_BASE = process.env.PUBLIC_BASE_URL || '';
 const STATIC_DOCS = require('./doc-index.json');
 const { discoverDocs } = require('./doc-discovery');
 

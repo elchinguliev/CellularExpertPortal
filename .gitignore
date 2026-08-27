@@ -1,12 +1,34 @@
+# Frontend
 node_modules/
+build/
+
+# Backend
 ce-backend/node_modules/
 ce-backend/.env
+
+# AI backend
 ai-backend/.env
 ai-backend/venv/
 ai-backend/vector_db/
-ai-backend/__pycache__/
-ai-backend/app/__pycache__/
-ai-backend/app/services/__pycache__/
+
+# Python
 **/__pycache__/
 *.pyc
+
+# Local env
+.env
+.env.local
+.env.*.local
+
+# Logs / backups
+*.log
+*.dump
+*.backup
+*.bak
+
+# OS junk
+.DS_Store
+Thumbs.db
+
+# Local config
 *.conf

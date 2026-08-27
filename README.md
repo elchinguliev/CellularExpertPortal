@@ -100,7 +100,8 @@ This creates all tables the app needs:
 
 ### 4.3 Create an admin account
 
-Handled by a script later in step 6 (`node seed-admin.js`) — don't do this manually.
+After the schema is ready, use the explicit one-time bootstrap command in step 6.
+It never runs during normal application startup and never changes an existing account.
 
 ---
 
@@ -122,10 +123,16 @@ GITHUB_RAW_BASE=https://raw.githubusercontent.com/elchinguliev/CellularExpertDoc
 
 EMAIL_USER=your_gmail_address@gmail.com
 EMAIL_PASS=your_gmail_app_password
+SUPPORT_INBOX=support@example.internal
+
+NODE_ENV=production
+CORS_ORIGINS=https://portal.example.internal
+JWT_SECRET=<a unique random value of at least 32 characters>
 ```
 
 > `EMAIL_PASS` must be a Gmail **App Password**, not your normal account password.
-> Never commit this `.env` file — check it's listed in `ce-backend/.gitignore`.
+> Never commit this `.env` file — it is ignored by the repository. Start from
+> `ce-backend/.env.example`; do not use the example values in a real deployment.
 
 ---
 
@@ -138,8 +145,9 @@ npm install
 # Pull documentation content from GitHub into PostgreSQL
 npm run sync
 
-# Create the default admin account (prints login credentials — change the password after logging in)
-node seed-admin.js
+# One-time, explicit admin bootstrap. It refuses to run without all values,
+# never prints the password, and never resets an existing account.
+ADMIN_EMAIL=admin@example.internal ADMIN_NAME="Portal Administrator" ADMIN_PASSWORD="use-a-unique-12-plus-character-password" npm run seed-admin
 
 # Start the API server
 node server.js
@@ -193,6 +201,10 @@ uvicorn main:app --reload --port 8000
 
 Sanity check: `http://localhost:8000/health` → `{"status":"ok"}`
 
+Create `ai-backend/.env` from `ai-backend/.env.example` with the same database
+settings, `JWT_SECRET`, and `CORS_ORIGINS` as the main backend. The AI service
+now requires the portal session for chat and administrative endpoints.
+
 ---
 
 ## 8. Install & run the frontend
@@ -221,11 +233,24 @@ You need **4 things running at once**, each in its own terminal:
 
 If the frontend shows "Backend not reachable" — terminal 1 isn't running or crashed. If the AI chat doesn't respond — check terminals 2 and 3.
 
+## Production / IIS notes
+
+Serve the React `build/` directory as the site root and configure IIS to:
+
+- rewrite unknown non-file routes to `index.html` for the SPA;
+- proxy `/api/*` to the Node service and `/ai/*` to the FastAPI service;
+- terminate HTTPS at IIS and pass `X-Forwarded-Proto: https` to Node;
+- bind Node, FastAPI, PostgreSQL, and Ollama to loopback/private network only — do not publish their ports directly.
+
+The production frontend defaults to relative `/api` and `/ai` paths. Configure
+`REACT_APP_API_BASE` or `REACT_APP_AI_API_BASE` only when using a different proxy path.
+
 ---
 
 ## 10. Logging in
 
-Use the credentials printed by `node seed-admin.js` (default: `admin@cellular-expert.com` / `ChangeMe123!` — **change this password after first login**). Regular users can self-register through the app (with email verification).
+Log in with the administrator credentials you explicitly supplied to `npm run seed-admin`.
+The script is a useful controlled bootstrap utility: keep it unexposed and run it only when an administrator must be created. It is safe to remove only after confirming no future bootstrap is needed; normal startup does not depend on it.
 
 ---
 

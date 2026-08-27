@@ -8,32 +8,5 @@
     "nav_group_order": 2,
     "order": 1000,
     "pdf": "ce-express/user-guide/CE Express Administrator Guide v7.2.pdf"
-  },
-  {
-    "id": "geodata-requirements",
-    "path": "docs/geodata/geodata-requirements.md",
-    "title": "Geodata Requirements",
-    "product": "Both",
-    "category": "Geodata Requirements",
-    "order": 100,
-    "pdf": "geodata/Cellular Expert Geodata Requirements 2025.pdf"
-  },
-  {
-    "id": "geodata-network-objects",
-    "path": "docs/geodata/network-objects-requirements.md",
-    "title": "Network Object Requirements",
-    "product": "Both",
-    "category": "Network Object Requirements",
-    "order": 200,
-    "pdf": "geodata/Requirements for CE Network Objects.pdf"
-  },
-  {
-    "id": "inventory3d-user-guide",
-    "path": "docs/inventory3d/user-guide.md",
-    "title": "Inventory3D User Guide v4.6",
-    "product": "Inventory3D",
-    "category": "User Guides",
-    "order": 1,
-    "pdf": "inventory3d/Inventory3D User Guide v4.6.pdf"
   }
 ]

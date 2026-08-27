@@ -6,13 +6,11 @@
 // a rename, or a folder move on GitHub needs zero changes here.
 //
 // Only ONE thing stays hand-configured: which root folders are actually
-// organized into real nested sections (AUTO_DISCOVER_ROOTS below). Anywhere
-// else in the docs repo still uses flat, hand-grouped files (Geodata,
-// Inventory3D, the administrator guide) — those have no folder signal to
-// derive a category or reading order from, so they stay listed explicitly in
-// doc-index.json until they get the same folder treatment. Add a root here
-// and its whole subtree — at any depth — starts showing up with no further
-// code change.
+// organized into real nested sections (AUTO_DISCOVER_ROOTS below). The
+// administrator guide remains flat and hand-configured because it has no
+// filesystem structure to derive a category or reading order from. Add a root
+// here and its whole subtree — at any depth — starts showing up with no
+// further code change.
 //
 // A root's own folder is normally a structural/version container, not
 // something a reader should ever see as a nav item — it's stripped out of
@@ -33,6 +31,8 @@ const AUTO_DISCOVER_ROOTS = [
   { product: 'CE Express', rootPath: 'docs/ce-express/training', navPath: ['training'], navGroupOrder: 1 },
   { product: 'CE Pro', rootPath: 'docs/ce-pro/v5.0', navGroupOrder: 0 },
   { product: 'CE Pro', rootPath: 'docs/ce-pro/training', navPath: ['training'], navGroupOrder: 1 },
+  { product: 'Geodata', rootPath: 'docs/geodata/v1.0', navGroupOrder: 0 },
+  { product: 'Inventory3D', rootPath: 'docs/inventory3d/v4.6', navGroupOrder: 0 },
 ];
 
 // Small acronym allowlist so filename-derived titles read naturally

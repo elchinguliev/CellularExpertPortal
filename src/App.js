@@ -6,6 +6,7 @@ import {
   loadDocIndex,
   getDocIndex,
   getNav,
+  getProductLandingDocId,
   API_BASE,
 } from "./useGithubDocs";
 import SupportPortal from "./components/SupportPortal";
@@ -29,8 +30,18 @@ function esc(s = "") {
     .replace(/>/g, "&gt;");
 }
 
+// Older synced records may still contain the local development API origin.
+// Keep them deployable without mutating the database by routing them through
+// the configured public API base at render time.
+function normalizePortalUrl(value = "") {
+  return String(value).replace(
+    /^https?:\/\/(?:localhost|127\.0\.0\.1)(?::\d+)?(\/api\/synced-images\?[^\s"')]+)/i,
+    `${SERVER_BASE}$1`,
+  );
+}
+
 function inline(t = "") {
-  let text = String(t);
+  let text = normalizePortalUrl(t);
 
   // Convert raw HTML links accidentally stored in documentation content
   text = text.replace(
@@ -254,7 +265,7 @@ function normalizeHtmlImageTags(text = "") {
       .replace(/\\/g, "/")
       .trim();
 
-    if (/^https?:\/\//i.test(clean) || clean.startsWith("/api/")) return clean;
+    if (/^https?:\/\//i.test(clean) || clean.startsWith("/api/")) return normalizePortalUrl(clean);
 
     const marker = "assets/images/";
     const idx = clean.indexOf(marker);
@@ -561,10 +572,11 @@ function renderMD(text) {
 
 // Builds the HTML for one image/icon figure (shared by inline placement and fallback).
 function buildFigureHtml(img) {
+  const imageUrl = normalizePortalUrl(img.image_url);
   const isIcon =
-    /\.svg(\?.*)?$/i.test(img.image_url) ||
-    /icons?\//i.test(img.image_url) ||
-    /-?(16|24|32)\.(png|svg)(\?.*)?$/i.test(img.image_url);
+    /\.svg(\?.*)?$/i.test(imageUrl) ||
+    /icons?\//i.test(imageUrl) ||
+    /-?(16|24|32)\.(png|svg)(\?.*)?$/i.test(imageUrl);
   const caption = (img.caption || "").replace(/</g, "&lt;");
   const imgStyle = isIcon
     ? "width:32px;height:32px;min-width:32px;flex-shrink:0;object-fit:contain;display:block;"
@@ -575,7 +587,7 @@ function buildFigureHtml(img) {
   const capStyle = isIcon
     ? "font-size:12px;color:var(--text-dim);font-style:italic;text-align:left;"
     : "margin-top:8px;font-size:12px;color:var(--text-dim);font-style:italic;text-align:center;";
-  return `<figure style="${figureStyle}" data-img-fig="1"><img src="${img.image_url}" alt="${caption}" style="${imgStyle}" onerror="this.closest('figure').style.display='none'" />${
+  return `<figure style="${figureStyle}" data-img-fig="1"><img src="${imageUrl}" alt="${caption}" style="${imgStyle}" onerror="this.closest('figure').style.display='none'" />${
     caption ? `<figcaption style="${capStyle}">${caption}</figcaption>` : ""
   }</figure>`;
 }
@@ -675,10 +687,17 @@ function extractTOC(c) {
 const PC = {
   "CE Express": ["#5b4feb", "rgba(91,79,235,0.1)"],
   "CE Pro": ["#e94fc9", "rgba(233,79,201,0.1)"],
-  Both: ["#f59e0b", "rgba(245,158,11,0.1)"],
+  Geodata: ["#f59e0b", "rgba(245,158,11,0.1)"],
+  Inventory3D: ["#a78bfa", "rgba(167,139,250,0.1)"],
   Training: ["#8b5cf6", "rgba(139,92,246,0.1)"],
 };
-const PI = { "CE Express": "🌐", "CE Pro": "🖥", Both: "🗺", Training: "🎓" };
+const PI = {
+  "CE Express": "🌐",
+  "CE Pro": "🖥",
+  Geodata: "🗺",
+  Inventory3D: "🗄",
+  Training: "🎓",
+};
 
 const ART_CSS = `
   .art h1{font-size:26px;font-weight:700;color:var(--text-bright);letter-spacing:-0.02em;margin:0 0 8px}
@@ -1168,6 +1187,7 @@ const HeroSection = ({ onDocsClick, onSupportClick, docIndex }) => {
       >
         {/* Left */}
         <div style={{ flex: 1, animation: "fadeUp 0.8s ease forwards" }}>
+          {/* Temporarily hidden until AI Support is ready for public launch.
           <div
             style={{
               display: "inline-flex",
@@ -1201,6 +1221,7 @@ const HeroSection = ({ onDocsClick, onSupportClick, docIndex }) => {
              DOCUMENTATION · AI SUPPORT PORTAL
             </span>
           </div>
+          */}
           <h1
             style={{
               fontSize: "clamp(32px,4vw,52px)",
@@ -1212,8 +1233,8 @@ const HeroSection = ({ onDocsClick, onSupportClick, docIndex }) => {
             }}
           >
             Documentation
-            <br />
-            <span style={{ color: "var(--accent)" }}>& AI Support</span>
+            {" "}
+            <span style={{ color: "var(--accent)" }}>and support</span>
           </h1>
           <p
             style={{
@@ -1224,13 +1245,8 @@ const HeroSection = ({ onDocsClick, onSupportClick, docIndex }) => {
               maxWidth: 520,
             }}
           >
-            Browse complete guides for CE Express, CE Pro,
-            Inventory3D, and Geodata — or ask our{" "}
-            <strong style={{ color: "var(--text-bright)" }}>
-              AI assistant
-            </strong>{" "}
-            for an instant answer and open a support ticket in seconds if you
-            need more help.
+            Browse the complete Cellular Expert documentation for CE Express,
+            CE Pro, Inventory3D, and Geodata.
           </p>
           <div style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>
             <button
@@ -1276,7 +1292,8 @@ const HeroSection = ({ onDocsClick, onSupportClick, docIndex }) => {
             {[
               [`${docIndex.length}+`, "Docs"],
               [`${new Set(docIndex.map((d) => d.product)).size}`, "Products"],
-              ["24/7", "AI Support"],
+              // Temporarily hidden until AI Support is ready for public launch.
+              // ["24/7", "AI Support"],
             ].map(([n, l]) => (
               <div key={l}>
                 <div
@@ -1319,7 +1336,7 @@ const HeroSection = ({ onDocsClick, onSupportClick, docIndex }) => {
 };
 
 // ── Products Section ──────────────────────────────────────────────────────────
-const ProductsSection = ({ onDocsClick }) => {
+const ProductsSection = ({ onDocsClick, docIndex }) => {
   const products = [
     {
       name: "CE Pro",
@@ -1333,7 +1350,7 @@ const ProductsSection = ({ onDocsClick }) => {
         "Best server, SINR, throughput maps",
         "Drive-test data validation",
       ],
-      docId: "ce-pro-overview",
+      product: "CE Pro",
     },
     {
       name: "CE Express",
@@ -1347,7 +1364,7 @@ const ProductsSection = ({ onDocsClick }) => {
         "CE Inventory3D integrated",
         "Full RF prediction suite",
       ],
-      docId: "ce-express-overview-merged",
+      product: "CE Express",
     },
     {
       name: "Inventory3D",
@@ -1361,7 +1378,7 @@ const ProductsSection = ({ onDocsClick }) => {
         "OSS/BSS integration",
         "SketchUp plug-in available",
       ],
-      docId: "inventory3d-user-guide",
+      product: "Inventory3D",
     },
     {
       name: "Geodata",
@@ -1375,7 +1392,7 @@ const ProductsSection = ({ onDocsClick }) => {
         "Building & antenna pattern data",
         "Resolution & format requirements",
       ],
-      docId: "geodata-requirements",
+      product: "Geodata",
     },
   ];
   return (
@@ -1516,7 +1533,10 @@ const ProductsSection = ({ onDocsClick }) => {
                 </div>
               ))}
               <button
-                onClick={() => onDocsClick(p.docId)}
+                onClick={() => {
+                  const docId = getProductLandingDocId(p.product, docIndex);
+                  if (docId) onDocsClick(docId);
+                }}
                 style={{
                   marginTop: 16,
                   width: "100%",
@@ -1745,9 +1765,10 @@ const AboutSection = () => (
           "Documentation content, sections, images, and metadata are organized and stored in the database.",
           "The website displays this content as searchable documentation pages.",
           'Users can browse by product, use the sidebar, and use "On this page" to navigate inside each article.',
-          "If users cannot find an answer, they can ask the AI assistant.",
-          "The AI uses the documentation content to answer questions and logs useful insights.",
-          "Admins can review AI questions, low-confidence answers, and unclear topics to improve the documentation.",
+          // Temporarily hidden until AI Support is ready for public launch.
+          // "If users cannot find an answer, they can ask the AI assistant.",
+          // "The AI uses the documentation content to answer questions and logs useful insights.",
+          // "Admins can review AI questions, low-confidence answers, and unclear topics to improve the documentation.",
           "If the issue still cannot be solved, the user can contact support.",
         ].map((step, i) => (
           <li
@@ -1821,8 +1842,9 @@ const AboutSection = () => (
           "Structured documentation",
           "PostgreSQL database",
           "Website documentation pages",
-          "AI assistant",
-          "AI insights / admin review",
+          // Temporarily hidden until AI Support is ready for public launch.
+          // "AI assistant",
+          // "AI insights / admin review",
           "Support (if needed)",
         ].map((step, i, arr) => (
           <React.Fragment key={step}>
@@ -2123,7 +2145,6 @@ const DocsHome = React.memo(function DocsHome({ onSelect, onSupportClick, docInd
       icon: "🌐",
       color: "#00b4ff",
       desc: "Web-based RF planning — browser access, multi-user, CE Inventory3D integrated.",
-      firstDoc: "ce-express-overview-merged",
     },
     {
       key: "CE Pro",
@@ -2131,15 +2152,13 @@ const DocsHome = React.memo(function DocsHome({ onSelect, onSupportClick, docInd
       icon: "🖥",
       color: "#00d4a0",
       desc: "ArcGIS Pro extension — RCP, RLP, Indoor, Sound, EMF modules. 10 kHz–350 GHz.",
-      firstDoc: "ce-pro-overview",
     },
     {
-      key: "Geodata & Data",
-      product: "Both",
+      key: "Geodata",
+      product: "Geodata",
       icon: "🗺",
       color: "#f59e0b",
       desc: "DEM, clutter, buildings, antenna patterns — formats, resolutions, requirements.",
-      firstDoc: "geodata-requirements",
     },
     {
       key: "Inventory3D",
@@ -2147,7 +2166,6 @@ const DocsHome = React.memo(function DocsHome({ onSelect, onSupportClick, docInd
       icon: "📦",
       color: "#a78bfa",
       desc: "3D indoor/outdoor asset inventory and visualization tool.",
-      firstDoc: "inventory3d-user-guide",
     },
   ];
 
@@ -2355,7 +2373,10 @@ const DocsHome = React.memo(function DocsHome({ onSelect, onSupportClick, docInd
         {cards.map((c) => (
           <div
             key={c.key}
-            onClick={() => onSelect(c.firstDoc)}
+            onClick={() => {
+              const docId = getProductLandingDocId(c.product, docIndex);
+              if (docId) onSelect(docId);
+            }}
             style={{
               padding: "22px",
               border: `1px solid var(--border)`,
@@ -2418,59 +2439,6 @@ const DocsHome = React.memo(function DocsHome({ onSelect, onSupportClick, docInd
         ))}
       </div>
 
-      <div style={{ marginBottom: 36 }}>
-        <div
-          style={{
-            fontSize: 12,
-            fontWeight: 600,
-            color: "var(--text-dim)",
-            letterSpacing: "0.06em",
-            textTransform: "uppercase",
-            marginBottom: 12,
-            fontFamily: "var(--font-mono)",
-          }}
-        >
-          Popular Topics
-        </div>
-        <div style={{ display: "flex", flexWrap: "wrap", gap: 7 }}>
-          {[
-            ["ce-express-v73-3-1-1-workspaces", "Creating Workspaces"],
-            ["ce-express-v73-3-1-18-rf-prediction", "RF Prediction"],
-            ["ce-express-v73-3-1-9-prediction-models", "Propagation Models"],
-            ["ce-express-v73-3-1-3-networks", "Network Objects"],
-            ["geodata-requirements", "Geodata Requirements"],
-            ["geodata-network-objects", "Network Object Requirements"],
-            ["ce-express-v73-3-1-37-link-prediction", "Microwave Link Planning"],
-            ["ce-express-admin-guide", "CE Express Installation"],
-            ["ce-pro-tr-install", "CE Pro Installation"],
-            ["ce-pro-workspace-merged", "CE Pro Workspace"],
-          ].map(([id, label]) => (
-            <div
-              key={id}
-              onClick={() => onSelect(id)}
-              style={{
-                padding: "5px 13px",
-                border: "1px solid var(--border)",
-                borderRadius: 20,
-                fontSize: 12,
-                color: "var(--accent)",
-                cursor: "pointer",
-                transition: "all .12s",
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.background = "var(--accent-l)";
-                e.currentTarget.style.borderColor = "var(--accent)";
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.background = "transparent";
-                e.currentTarget.style.borderColor = "var(--border)";
-              }}
-            >
-              {label}
-            </div>
-          ))}
-        </div>
-      </div>
     </div>
   );
 });
@@ -3184,9 +3152,11 @@ export default function App() {
             onSupportClick={() => setView("support")}
             docIndex={docIndex}
           />
-<ProductsSection onDocsClick={loadDoc} />
+          <ProductsSection onDocsClick={loadDoc} docIndex={docIndex} />
           <SolutionsSection />
+          {/* TODO: Re-enable the main-page Support promo when this experience is implemented.
           <SupportSection onSupportClick={() => setView("support")} />
+          */}
           <AboutSection />
           <Footer />
         </>
@@ -3234,7 +3204,33 @@ export default function App() {
               />
             ) : doc ? (
               <DocArticle doc={doc} onSelect={loadDoc} docIndex={docIndex} />
-            ) : null}
+            ) : (
+              <div style={{ padding: "80px", textAlign: "center", flex: 1 }}>
+                <h1 style={{ color: "var(--text-bright)", fontSize: 24, marginBottom: 12 }}>
+                  Document not found
+                </h1>
+                <p style={{ color: "var(--text-dim)", marginBottom: 22 }}>
+                  This documentation page is no longer available. Browse the current guides instead.
+                </p>
+                <button
+                  onClick={() => {
+                    setActiveDocId(null);
+                    setDoc(null);
+                    window.history.replaceState({ view: "docs", docId: null }, "", "/docs");
+                  }}
+                  style={{
+                    padding: "9px 14px",
+                    border: "1px solid var(--accent)",
+                    borderRadius: 8,
+                    background: "transparent",
+                    color: "var(--accent)",
+                    cursor: "pointer",
+                  }}
+                >
+                  Browse documentation
+                </button>
+              </div>
+            )}
           </div>
         </div>
       )}
@@ -3255,4 +3251,3 @@ export default function App() {
     </div>
   );
 }
-

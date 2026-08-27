@@ -95,14 +95,48 @@ CREATE INDEX IF NOT EXISTS idx_documents_search ON documents USING GIN(search_ve
 CREATE TABLE IF NOT EXISTS users (
   id            SERIAL PRIMARY KEY,
   name          TEXT NOT NULL,
-  email         TEXT UNIQUE NOT NULL,
+  email         TEXT NOT NULL,
   password_hash TEXT NOT NULL,
   company       TEXT,
   product       TEXT DEFAULT 'CE Express',
   role          TEXT NOT NULL DEFAULT 'user',   -- 'user' | 'agent' | 'admin'
   avatar        TEXT,
+  session_version INTEGER NOT NULL DEFAULT 0,
+  deleted_at    TIMESTAMP,
   created_at    TIMESTAMP DEFAULT NOW()
 );
+
+-- Compatible with databases created by earlier versions of this schema.
+ALTER TABLE users ADD COLUMN IF NOT EXISTS session_version INTEGER NOT NULL DEFAULT 0;
+ALTER TABLE users ADD COLUMN IF NOT EXISTS deleted_at TIMESTAMP;
+
+-- Active-user email uniqueness upgrade (safe to run repeatedly).
+-- Email addresses are unique only among active accounts. This permits a new
+-- account to reuse the address of a soft-deleted account while its historical
+-- user ID remains available to tickets and messages. Abort before replacing
+-- the legacy users_email_key constraint if an older database contains active
+-- addresses that differ only by letter case.
+DO $$
+BEGIN
+  IF EXISTS (
+    SELECT 1
+    FROM users
+    WHERE deleted_at IS NULL
+    GROUP BY LOWER(email)
+    HAVING COUNT(*) > 1
+  ) THEN
+    RAISE EXCEPTION 'Cannot create active-user email index: active emails differ only by case';
+  END IF;
+END
+$$;
+
+-- IF EXISTS checks for the only legacy email constraint before dropping it.
+-- A fresh database has no such constraint; an upgraded database has it only
+-- until the first successful execution of this schema.
+ALTER TABLE users DROP CONSTRAINT IF EXISTS users_email_key;
+CREATE UNIQUE INDEX IF NOT EXISTS idx_users_active_email_unique
+  ON users (LOWER(email))
+  WHERE deleted_at IS NULL;
 
 CREATE INDEX IF NOT EXISTS idx_users_email ON users(email);
 
@@ -120,8 +154,7 @@ CREATE TABLE IF NOT EXISTS tickets (
   assigned_to   INTEGER REFERENCES users(id),
   created_at    TIMESTAMP DEFAULT NOW(),
   updated_at    TIMESTAMP DEFAULT NOW(),
-  assigned_to   INTEGER REFERENCES users(id),
-  attachment_url TEXT,
+  attachment_url TEXT
 );
 
 CREATE TABLE IF NOT EXISTS ticket_messages (
