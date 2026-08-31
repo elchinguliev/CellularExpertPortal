@@ -1128,7 +1128,9 @@ app.use((err, _req, res, _next) => {
   return res.status(500).json({ error: 'An unexpected server error occurred.' });
 });
 const PORT = process.env.PORT || 4000;
-app.listen(PORT, () => {
+// IIS is the only public entry point in production. Keep the Node listener on
+// loopback so it cannot be reached directly from the network.
+app.listen(PORT, '127.0.0.1', () => {
   console.log(`✅ CE Docs API running at http://localhost:${PORT}`);
   console.log(`   Try: http://localhost:${PORT}/api/health`);
   console.log(`        http://localhost:${PORT}/api/docs`);

@@ -1,9 +1,19 @@
-// Production is normally served by IIS with the API proxied at /api. Local
-// development keeps the old ports unless an explicit build-time override is set.
+// Production is served by IIS under its application path. Local development
+// keeps CRA's root-relative API calls and development proxy unchanged.
 const API_BASE = process.env.REACT_APP_API_BASE || (
   process.env.NODE_ENV === 'production' ? '/api' : 'http://localhost:4000/api'
 );
 const SERVER_BASE = API_BASE.endsWith('/api') ? API_BASE.slice(0, -4) : API_BASE;
+
+// Documentation records and ticket attachments created before the IIS move can
+// contain either localhost URLs or root-relative backend paths. Keep those
+// assets inside the mounted IIS application in production.
+function toPortalUrl(value = '') {
+  return String(value).replace(
+    /(?:https?:\/\/(?:localhost|127\.0\.0\.1)(?::\d+)?)?\/(api|images|downloads|ticket-attachments)(?=\/|\?|#|$)/gi,
+    `${SERVER_BASE}/$1`,
+  );
+}
 
 // ── Display-name / sort-order helpers ────────────────────────────────────────
 // File and folder names carry numeric prefixes purely to control ordering —
@@ -457,4 +467,4 @@ export function searchIndex(query) {
     .slice(0, 10);
 }
 
-export { API_BASE, SERVER_BASE };
+export { API_BASE, SERVER_BASE, toPortalUrl };

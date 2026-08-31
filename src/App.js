@@ -8,6 +8,7 @@ import {
   getNav,
   getProductLandingDocId,
   API_BASE,
+  toPortalUrl,
 } from "./useGithubDocs";
 import SupportPortal from "./components/SupportPortal";
 import SearchBar from "./components/SearchBar";
@@ -34,10 +35,28 @@ function esc(s = "") {
 // development can use CRA's API proxy and production can use IIS's same-origin
 // reverse proxy. Older synced records may still contain a localhost API origin.
 function normalizePortalUrl(value = "") {
-  return String(value).replace(
-    /^https?:\/\/(?:localhost|127\.0\.0\.1)(?::\d+)?(\/api\/synced-images\?[^\s"')]+)/i,
-    `${SERVER_BASE}$1`,
-  );
+  return toPortalUrl(value);
+}
+
+// CRA supplies PUBLIC_URL from `.env.production` for production builds.
+// Deliberately use no base path in development so `npm start` stays at `/`.
+const APP_BASE_PATH = (
+  process.env.NODE_ENV === "production" ? process.env.PUBLIC_URL || "" : ""
+).replace(/\/+$/, "");
+
+function appPath(path = "/") {
+  const suffix = path.startsWith("/") ? path : `/${path}`;
+  return `${APP_BASE_PATH}${suffix}` || "/";
+}
+
+function appRelativePath(pathname) {
+  if (
+    APP_BASE_PATH &&
+    (pathname === APP_BASE_PATH || pathname.startsWith(`${APP_BASE_PATH}/`))
+  ) {
+    return pathname.slice(APP_BASE_PATH.length) || "/";
+  }
+  return pathname;
 }
 
 function inline(t = "") {
@@ -3045,7 +3064,7 @@ export default function App() {
     setDoc(null);
     window.scrollTo(0, 0);
     if (!skipHistory) {
-      window.history.pushState({ view: "docs", docId: id }, "", `/docs/${encodeURIComponent(id)}`);
+      window.history.pushState({ view: "docs", docId: id }, "", appPath(`/docs/${encodeURIComponent(id)}`));
     }
     const result = await fetchDoc(id);
     setDoc(result);
@@ -3057,7 +3076,7 @@ export default function App() {
     // already, so this only ever fires for an old inbound link.
     if (result?.redirectedFrom) {
       setActiveDocId(result.id);
-      window.history.replaceState({ view: "docs", docId: result.id }, "", `/docs/${encodeURIComponent(result.id)}`);
+      window.history.replaceState({ view: "docs", docId: result.id }, "", appPath(`/docs/${encodeURIComponent(result.id)}`));
     }
     if (anchorId) {
       // Wait a tick for the article HTML to actually be in the DOM before
@@ -3082,7 +3101,7 @@ export default function App() {
     }
     if (!skipHistory) {
       const path = newView === "support" ? "/support" : newView === "docs" ? "/docs" : "/";
-      window.history.pushState({ view: newView, docId: null }, "", path);
+      window.history.pushState({ view: newView, docId: null }, "", appPath(path));
     }
   }, []);
 
@@ -3103,16 +3122,16 @@ export default function App() {
 
     // On first load, honor a direct URL (e.g. someone bookmarked or shared
     // a /docs/:id link) and establish a matching history entry.
-    const path = window.location.pathname;
+    const path = appRelativePath(window.location.pathname);
     const docMatch = path.match(/^\/docs\/(.+)/);
     if (docMatch) {
       loadDoc(decodeURIComponent(docMatch[1]), null, true);
-      window.history.replaceState({ view: "docs", docId: decodeURIComponent(docMatch[1]) }, "", path);
+      window.history.replaceState({ view: "docs", docId: decodeURIComponent(docMatch[1]) }, "", appPath(path));
     } else if (path === "/support") {
       setView("support", true);
-      window.history.replaceState({ view: "support", docId: null }, "", path);
+      window.history.replaceState({ view: "support", docId: null }, "", appPath(path));
     } else {
-      window.history.replaceState({ view: "main", docId: null }, "", "/");
+      window.history.replaceState({ view: "main", docId: null }, "", appPath("/"));
     }
 
     return () => window.removeEventListener("popstate", onPopState);
@@ -3216,7 +3235,7 @@ export default function App() {
                   onClick={() => {
                     setActiveDocId(null);
                     setDoc(null);
-                    window.history.replaceState({ view: "docs", docId: null }, "", "/docs");
+                    window.history.replaceState({ view: "docs", docId: null }, "", appPath("/docs"));
                   }}
                   style={{
                     padding: "9px 14px",

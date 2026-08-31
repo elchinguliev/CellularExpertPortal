@@ -4,7 +4,7 @@ import {
   SUGGESTED,
   AGENTS,
 } from "../supportData";
-import { API_BASE } from "../useGithubDocs";
+import { API_BASE, toPortalUrl } from "../useGithubDocs";
 import LoginForm from "./LoginForm";
 import NewTicketForm from "./NewTicketForm";
 import ReplyBox from "./ReplyBox";
@@ -12,9 +12,12 @@ import ChatComposer from "./ChatComposer";
 import { StableInput, StableTextarea } from "./StableInput";
 import SupportRequestForm from "./SupportRequestForm";
 
-const AI_API_BASE = process.env.REACT_APP_AI_API_BASE || (
-  process.env.NODE_ENV === "production" ? "/ai" : "http://localhost:8000"
+// AI is opt-in. The IIS deployment deliberately leaves this false, so it
+// neither starts nor calls an `/ai` service. Development remains unchanged.
+const AI_ENABLED = process.env.REACT_APP_AI_ENABLED === "true" || (
+  process.env.NODE_ENV !== "production" && process.env.REACT_APP_AI_ENABLED !== "false"
 );
+const AI_API_BASE = AI_ENABLED && (process.env.REACT_APP_AI_API_BASE || "http://localhost:8000");
 
 // Every request needs to carry the session cookie (credentials: 'include')
 const apiFetch = (url, options = {}) =>
@@ -411,7 +414,7 @@ export default function SupportPortal({ onViewDocs, currentUser, setCurrentUser 
     (t) => t.status === "Open" || t.status === "In Progress",
   ).length;
   const logActivity = (activityType, page, details = "") => {
-    if (!currentUser) return;
+    if (!AI_ENABLED || !currentUser) return;
     fetch(`${AI_API_BASE}/admin/log-activity`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -569,6 +572,19 @@ export default function SupportPortal({ onViewDocs, currentUser, setCurrentUser 
 
     setShowSug(false);
     setMessages((p) => [...p, { from: "user", text: t, time: now() }]);
+
+    if (!AI_ENABLED) {
+      setMessages((p) => [
+        ...p,
+        {
+          from: "bot",
+          time: now(),
+          type: "no-answer",
+          text: "The automated assistant is not enabled on this portal. Please contact support with your question.",
+        },
+      ]);
+      return;
+    }
     setTyping(true);
 
     try {
@@ -1188,12 +1204,12 @@ export default function SupportPortal({ onViewDocs, currentUser, setCurrentUser 
                           {m.images.map((img, imgIdx) => (
                             <a
                               key={imgIdx}
-                              href={img.image_url}
+                              href={toPortalUrl(img.image_url)}
                               target="_blank"
                               rel="noreferrer"
                             >
                               <img
-                                src={img.image_url}
+                                src={toPortalUrl(img.image_url)}
                                 alt={img.caption || "Documentation screenshot"}
                                 loading="lazy"
                                 style={{
@@ -1565,13 +1581,13 @@ export default function SupportPortal({ onViewDocs, currentUser, setCurrentUser 
             >
               {t.attachment_url && (
                 <a
-                  href={t.attachment_url}
+                  href={toPortalUrl(t.attachment_url)}
                   target="_blank"
                   rel="noreferrer"
                   style={{ display: "inline-block", marginBottom: 10 }}
                 >
                   <img
-                    src={t.attachment_url}
+                    src={toPortalUrl(t.attachment_url)}
                     alt="Ticket screenshot"
                     style={{
                       maxWidth: 220,
@@ -2340,13 +2356,13 @@ export default function SupportPortal({ onViewDocs, currentUser, setCurrentUser 
             >
               {t.attachment_url && (
                 <a
-                  href={t.attachment_url}
+                  href={toPortalUrl(t.attachment_url)}
                   target="_blank"
                   rel="noreferrer"
                   style={{ display: "inline-block", marginBottom: 10 }}
                 >
                   <img
-                    src={t.attachment_url}
+                    src={toPortalUrl(t.attachment_url)}
                     alt="Ticket screenshot"
                     style={{
                       maxWidth: 220,
@@ -4281,7 +4297,7 @@ export default function SupportPortal({ onViewDocs, currentUser, setCurrentUser 
                   }}
                 >
                   <img
-                    src={img.image_url}
+                    src={toPortalUrl(img.image_url)}
                     alt=""
                     style={{
                       width: 36,
