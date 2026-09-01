@@ -59,7 +59,53 @@ function appRelativePath(pathname) {
   return pathname;
 }
 
-function inline(t = "") {
+// Source paths in the docs index use POSIX separators, matching GitHub paths.
+// Normalize without using the browser URL resolver, because these are source
+// repository paths rather than public URLs.
+function normalizeSourcePath(path = "") {
+  const segments = [];
+  String(path)
+    .replace(/\\/g, "/")
+    .split("/")
+    .forEach((segment) => {
+      if (!segment || segment === ".") return;
+      if (segment === "..") {
+        segments.pop();
+        return;
+      }
+      segments.push(segment);
+    });
+  return segments.join("/");
+}
+
+// Markdown filenames are source-repository references, while the portal uses
+// generated document ids as its public routes. Resolve only relative .md links
+// through the already-loaded document index; all other link types retain their
+// existing behavior.
+function resolveMarkdownDocumentLink(href = "", sourcePath = "", docIndex = []) {
+  const rawHref = String(href);
+  const hashIndex = rawHref.indexOf("#");
+  const filePath = hashIndex === -1 ? rawHref : rawHref.slice(0, hashIndex);
+  const anchor = hashIndex === -1 ? "" : rawHref.slice(hashIndex);
+
+  if (
+    !/\.md$/i.test(filePath) ||
+    !sourcePath ||
+    /^(?:[a-z][a-z\d+.-]*:|\/|\\\\)/i.test(filePath)
+  ) {
+    return rawHref;
+  }
+
+  const sourceDir = String(sourcePath).replace(/\\/g, "/").split("/").slice(0, -1);
+  const targetPath = normalizeSourcePath([...sourceDir, filePath].join("/"));
+  const targetDoc = docIndex.find(
+    (entry) => normalizeSourcePath(entry.path) === targetPath,
+  );
+
+  return targetDoc ? `${targetDoc.id}${anchor}` : rawHref;
+}
+
+function inline(t = "", resolveLinkTarget = (target) => target) {
   let text = normalizePortalUrl(t);
 
   // Convert raw HTML links accidentally stored in documentation content
@@ -76,7 +122,11 @@ function inline(t = "") {
     .replace(/\[([^\]]+)\]\(#([^)]+)\)/g, '<a href="#" data-doc="$2" class="doc-lnk">$1 →</a>')
     .replace(/\[([^\]]+)\]\(mailto:([^)]+)\)/g, '<a href="mailto:$2">$1</a>')
     .replace(/\[([^\]]+)\]\((https?:\/\/[^)]+)\)/g, '<a href="$2" target="_blank" rel="noopener">$1</a>')
-    .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="#" data-doc="$2" class="doc-lnk">$1 →</a>')
+    .replace(
+      /\[([^\]]+)\]\(([^)]+)\)/g,
+      (_, label, target) =>
+        `<a href="#" data-doc="${resolveLinkTarget(target)}" class="doc-lnk">${label} →</a>`,
+    )
     .replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>")
     .replace(/\*(.+?)\*/g, "<em>$1</em>")
     .replace(/`(.+?)`/g, "<code>$1</code>");
@@ -432,7 +482,7 @@ function normalizeBrokenTableRows(text = "") {
   return out.join("\n");
 }
 
-function renderMD(text) {
+function renderMD(text, resolveLinkTarget) {
   if (!text) return "";
   const lines = normalizeBrokenTableRows(
     normalizeIconTextRows(
@@ -501,7 +551,7 @@ function renderMD(text) {
         inTable = true;
       }
       const isH = lines[i + 1]?.includes("---");
-      html += `<tr>${cells.map((c) => `<${isH ? "th" : "td"}>${inline(c.trim())}</${isH ? "th" : "td"}>`).join("")}</tr>`;
+      html += `<tr>${cells.map((c) => `<${isH ? "th" : "td"}>${inline(c.trim(), resolveLinkTarget)}</${isH ? "th" : "td"}>`).join("")}</tr>`;
       continue;
     } else if (inTable) {
       html += "</table>";
@@ -518,7 +568,7 @@ function renderMD(text) {
         .trim()
         .replace(/\s+/g, "-");
       const displayText = hm[2].replace(/^\d+(?:\\?\.\d+)*\\?\.?\s+/, "");
-      html += `<h${lvl} id="${id}">${inline(displayText)}</h${lvl}>`;
+      html += `<h${lvl} id="${id}">${inline(displayText, resolveLinkTarget)}</h${lvl}>`;
       continue;
     }
     const numberedSection = line.match(/^\s*\d+(?:\\?\.\d+)+\\?\.?\s+(.+)/);
@@ -533,7 +583,7 @@ function renderMD(text) {
         .trim()
         .replace(/\s+/g, "-");
 
-      html += `<h3 id="${id}">${inline(displayText)}</h3>`;
+      html += `<h3 id="${id}">${inline(displayText, resolveLinkTarget)}</h3>`;
       continue;
     }
     if (/^---+$/.test(line.trim())) {
@@ -547,7 +597,7 @@ function renderMD(text) {
         html += "<blockquote>";
         inBq = true;
       }
-      html += `<p>${inline(line.slice(2))}</p>`;
+      html += `<p>${inline(line.slice(2), resolveLinkTarget)}</p>`;
       continue;
     }
     if (/^\s*[-*]\s/.test(line)) {
@@ -557,7 +607,7 @@ function renderMD(text) {
         inList = true;
         lt = "ul";
       }
-      html += `<li>${inline(line.trim().slice(2))}</li>`;
+      html += `<li>${inline(line.trim().slice(2), resolveLinkTarget)}</li>`;
       continue;
     }
     const orderedMatch = line.match(/^\s*(\d+)\.\s+(.+)/);
@@ -571,7 +621,7 @@ function renderMD(text) {
         lt = "ol";
       }
 
-      html += `<li>${inline(orderedMatch[2].trim())}</li>`;
+      html += `<li>${inline(orderedMatch[2].trim(), resolveLinkTarget)}</li>`;
       continue;
     }
     if (line.trim() === "") {
@@ -580,7 +630,7 @@ function renderMD(text) {
       html += '<div class="sp"></div>';
       continue;
     }
-    html += `<p>${inline(line)}</p>`;
+    html += `<p>${inline(line, resolveLinkTarget)}</p>`;
   }
   if (inCode) html += "</code></pre>";
   if (inTable) html += "</table>";
@@ -2466,6 +2516,10 @@ const DocsHome = React.memo(function DocsHome({ onSelect, onSupportClick, docInd
 const DocArticle = React.memo(function DocArticle({ doc, onSelect, docIndex }) {
   const toc = extractTOC(doc.content);
   const [pc, bg] = PC[doc.product] || ["#64748b", "var(--bg3)"];
+  const resolveLinkTarget = useCallback(
+    (href) => resolveMarkdownDocumentLink(href, doc.path, docIndex),
+    [doc.path, docIndex],
+  );
   return (
     <>
       <article
@@ -2597,7 +2651,7 @@ const DocArticle = React.memo(function DocArticle({ doc, onSelect, docIndex }) {
         <div
           className="art"
           dangerouslySetInnerHTML={{
-            __html: injectImages(renderMD(doc.content), doc.images),
+            __html: injectImages(renderMD(doc.content, resolveLinkTarget), doc.images),
           }}
         />
 
@@ -3046,7 +3100,10 @@ export default function App() {
       }
 
       // Otherwise treat as a doc id navigation
-      loadDoc(target);
+      const hashIndex = target.indexOf("#");
+      const docId = hashIndex === -1 ? target : target.slice(0, hashIndex);
+      const anchorId = hashIndex === -1 ? undefined : target.slice(hashIndex + 1);
+      loadDoc(docId, anchorId);
     };
     document.addEventListener("click", h);
     return () => document.removeEventListener("click", h);
